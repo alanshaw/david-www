@@ -8,20 +8,24 @@ module.exports = function(grunt) {
 				files: {
 					// Copy all (non hidden) files (not directories) from src
 					'dist/': 'src/*',
-					// Copy the following hidden files
-					'dist/.htaccess': 'src/.htaccess',
 					
-					// For the time being, you'll have to uncomment parts of this when you add files to folders that currently
-					// have nothing in them!
-					// @see https://github.com/gruntjs/grunt-contrib-copy/issues/6
+					// Copy the following hidden files
+					//'dist/.htaccess': 'src/.htaccess',
 					
 					// Copy any JavaScript files (not CoffeeScript src)
-					//'dist/js/': 'src/js/**/*.js',
+					'dist/js/': 'src/js/**/*.js',
+					
+					// For the time being, you'll have to uncomment parts of this when you add files to folders that 
+					// currently have nothing in them!
+					// @see https://github.com/gruntjs/grunt-contrib-copy/issues/6
+					
+					
 					// Copy any CSS files (not LESS src)
-					//'dist/css/': 'src/css/**/*.css',
+					'dist/css/': 'src/css/**/*.css',
+					
 					// Copy other resources
-					//'dist/img/': 'src/img/**',
-					//'dist/font/': 'src/font/**'
+					'dist/img/': 'src/img/**',
+					'dist/font/': 'src/font/**'
 				}
 			}
 		},
