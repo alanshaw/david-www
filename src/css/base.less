@@ -93,6 +93,20 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+////////////////////////////////////////////////////////////////////////////////
+// Palette
+////////////////////////////////////////////////////////////////////////////////
+
+@purple0: #211426;
+@purple1: #413659;
+@purple2: #656F8C;
+@green0: #9BBFAB;
+@yellow0: #F2EFDF;
+
+////////////////////////////////////////////////////////////////////////////////
+// Font
+////////////////////////////////////////////////////////////////////////////////
+
 @font-face {
 	font-family: 'NeutonRegular';
 	src: url('../font/Neuton-Regular-webfont.eot');
@@ -104,9 +118,30 @@ textarea {
 	font-style: normal;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Element
+////////////////////////////////////////////////////////////////////////////////
+
 body {
-	background: url(../img/bg-david.jpg) no-repeat center 10em;
-	font-family: HelveticaNeue, Helvetica, sans-serif;
+	font-family: 'Helvetica Neue', Helvetica, sans-serif;
+	letter-spacing: -1px;
+}
+h1 {
+	font-size: 1.250em;
+}
+h2 {
+	font-size: 1.125em;
+}
+a {
+	color: @purple1;
+	text-decoration: none;
+}
+a:hover {
+	color: @purple2;
+	text-decoration: underline;
+}
+a:visited {
+	color: @purple0;
 }
 
 
