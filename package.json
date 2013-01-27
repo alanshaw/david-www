@@ -26,6 +26,7 @@
 		"express": "~3.0.6",
 		"handlebars": "~1.0.8",
 		"consolidate": "~0.8.0",
-		"david": "~0.0.1"
+		"david": "~0.0.1",
+		"moment": "~1.7.2"
 	}
 }
