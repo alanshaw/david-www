@@ -1,6 +1,6 @@
 var express = require('express');
 var consolidate = require('consolidate');
-var david = require('./david');
+var david = require('david');
 var manifest = require('./manifest');
 
 var app = express();
