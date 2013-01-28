@@ -12,18 +12,15 @@ Getting Started
 
 With [Node.js](http://nodejs.org/) and [Grunt](http://gruntjs.com/) installed already, do the following:
 
-Install david and david-www:
+Install david-www:
 
-	cd /path/to/david
-	npm install
-	
 	cd /path/to/david-www
 	npm install
 	grunt
 
 Run david-www:
 
-	node main.js 8080
+	node main 8080
 
 
 Example usage
