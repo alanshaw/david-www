@@ -3,12 +3,12 @@
 <!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"><![endif]-->
 <!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
 <!--[if gt IE 8]><!-->
-<html class="no-js" xmlns="http://www.w3.org/1999/html"><!--<![endif]-->
+<html class="no-js" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"><!--<![endif]-->
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title></title>
-<meta name="description" content="">
+<title>David, a dependency management tool for Nodejs projects</title>
+<meta name="description" content="Identifies your project out of date project dependencies and shows the latest version you need to upgrade to">
 <meta name="viewport" content="width=device-width">
 <!--[if IE 7]><link rel="stylesheet" href="css/font-awesome-ie7.css"><![endif]-->
 <!--[if (gt IE 8) | (IEMobile)]><!--><link rel="stylesheet" href="css/main.css"><!--<![endif]-->
@@ -25,8 +25,34 @@
 </header>
 
 <div id="main" role="main">
-	<h1>Hello David.</h1>
-	<p>Visit /[username]/[repo]/ to see a list of in date and out of date dependencies your project uses.</p>
+	
+	<h1>David helps keep your Nodejs project dependencies up to date.</h1>
+	
+	<p>Your project depends on other projects. It's unavoidable. You don't want to reinvent the wheel. Good. With that established it seems reasonable to assume that you'd like to be using the latest and greatest versions of your dependencies. There are reasons for this: security fixes, bug fixes, optimisations, obsessive compulsion, new functionality...etc. but how do <em>you</em> know when your dependencies are out of date?</p>
+	
+	<p>Daivd shows you a list of your project dependencies, the version you depend on and the latest version so you can quickly see which ones you need to update. Each project also has a badge that shows the current dependency status of your project, which you can embed on your website, company intranet, or GitHub README.</p>
+	
+	<img src="img/uptodate.png"/> <img src="img/outofdate.png"/>
+	
+	<h2>Can I have a David?</h2>
+	
+	<p>David is a free service for open source projects hosted on <a href="http://github.com/">GitHub</a>. The only other requirement is that your project includes a <a href="http://package.json.nodejitsu.com/">package.json</a> file in it's root. Visit <strong>http://david-dm.org/[username]/[repo]/</strong> to see a list of in date and out of date dependencies your project uses. Here's some examples:</p>
+	
+	<ul>
+		<li><a href="/twitter/bower">twitter / bower</a></li>
+		<li><a href="/gruntjs/grunt">gruntjs / grunt</a></li>
+		<li><a href="/visionmedia/express">visionmedia / express</a></li>
+	</ul>
+	
+	<h3>How do I get the badge thing?</h3>
+	
+	<p>Your badge is at <strong>http://david-dm.org/[username]/[repo]/status.png</strong></p>
+	
+	<p>David is currently in <em>ALPHA</em>, which means it may be unreliable, unavailable or not working.</p>
+	
+	<a href="https://twitter.com/share" class="twitter-share-button" data-text="David, a new dependency management tool for #Nodejs projects">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	
 </div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
