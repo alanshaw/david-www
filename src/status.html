@@ -33,8 +33,12 @@
 		</h1>
 	</div>
 	<div id="deps">
-		<h2>Dependencies</h2>
 		{{#hasDeps}}
+		<p class="summary">
+			<strong>{{totalDeps}}</strong> dependencies total.
+			<strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{totalUpToDateDeps}}</strong> up to date,
+			<strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{totalOutOfDateDeps}}</strong> out of date.
+		</p>
 		<table summary="Repository dependencies and their status">
 			<tr>
 				<th>Dependency</th>
@@ -55,7 +59,11 @@
 			</tr>
 			{{/deps}}
 		</table>
-		<p><strong>{{totalDeps}}</strong> dependencies total. <strong>{{totalUpToDateDeps}}</strong> up to date, <strong>{{totalOutOfDateDeps}}</strong> out of date.</p>
+		<p class="summary">
+			<strong>{{totalDeps}}</strong> dependencies total.
+			<strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{totalUpToDateDeps}}</strong> up to date,
+			<strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{totalOutOfDateDeps}}</strong> out of date.
+		</p>
 		{{/hasDeps}}
 		{{^hasDeps}}
 		<p>No dependencies</p>
