@@ -10,16 +10,20 @@ Currently David works with package.json files found in _public_ github repositor
 Getting Started
 ---------------
 
-Install [Node.js](http://nodejs.org/)
+With [Node.js](http://nodejs.org/) and [Grunt](http://gruntjs.com/) installed already, do the following:
 
-Install dependencies:
+Install david and david-www:
 
 	cd /path/to/david
 	npm install
+	
+	cd /path/to/david-www
+	npm install
+	grunt
 
-Run david:
+Run david-www:
 
-	node david 8080
+	node main.js 8080
 
 
 Example usage
