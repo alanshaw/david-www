@@ -11,10 +11,10 @@ app.configure(function() {
 	app.set('views', __dirname + '/dist');
 });
 
-app.use("/js", express.static(__dirname + '/dist/js'));
-app.use("/css", express.static(__dirname + '/dist/css'));
-app.use("/img", express.static(__dirname + '/dist/img'));
-app.use("/font", express.static(__dirname + '/dist/font'));
+app.use('/js', express.static(__dirname + '/dist/js'));
+app.use('/css', express.static(__dirname + '/dist/css'));
+app.use('/img', express.static(__dirname + '/dist/img'));
+app.use('/font', express.static(__dirname + '/dist/font'));
 
 app.get('/', function(req, res) {
 	res.render('index');
@@ -31,7 +31,7 @@ app.get('/:user/:repo', function(req, res) {
 		
 		if(err) {
 			console.log('Failed to get manifest', err);
-			res.json(500, {err: 'Failed to get package.json'});
+			res.status(500).render(500, {err: 'Failed to get package.json'});
 			return;
 		}
 		
@@ -39,7 +39,7 @@ app.get('/:user/:repo', function(req, res) {
 			
 			if(err) {
 				console.log('Failed to get dependencies', err);
-				res.json(500, {err: 'Failed to get dependencies'});
+				res.status(500).render(500, {err: 'Failed to get dependencies'});
 				return;
 			}
 			
@@ -47,7 +47,7 @@ app.get('/:user/:repo', function(req, res) {
 				
 				if(err) {
 					console.log('Failed to get updated dependencies', err);
-					res.json(500, {err: 'Failed to get updated dependencies'});
+					res.status(500).render(500, {err: 'Failed to get updated dependencies'});
 					return;
 				}
 				
@@ -79,6 +79,9 @@ app.get('/:user/:repo', function(req, res) {
 	});
 });
 
+/**
+ * Send the status badge for this user and repository
+ */
 app.get('/:user/:repo/status.png', function(req, res) {
 	
 	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
@@ -87,7 +90,7 @@ app.get('/:user/:repo/status.png', function(req, res) {
 		
 		if(err) {
 			console.log('Failed to get manifest', err);
-			res.json(500, {err: 'Failed to get package.json'});
+			res.status(500).render(500, {err: 'Failed to get package.json'});
 			return;
 		}
 		
@@ -95,7 +98,7 @@ app.get('/:user/:repo/status.png', function(req, res) {
 			
 			if(err) {
 				console.log('Failed to get updated dependencies', err);
-				res.json(500, {err: 'Failed to get updated dependencies'});
+				res.status(500).render(500, {err: 'Failed to get updated dependencies'});
 				return;
 			}
 			
@@ -110,51 +113,23 @@ app.get('/:user/:repo/status.png', function(req, res) {
 	});
 });
 
-/**
- * Get updated dependencies for the GitHub :repo owned by :user 
- */
-app.get('/:user/:repo/deps/updated', function(req, res) {
+app.use(function(req, res, next){
+	res.status(404);
 	
-	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
+	// respond with html page
+	if (req.accepts('html')) {
+		res.render('404');
+		return;
+	}
 	
-	manifest.getManifest(url, function(err, manifest) {
-		
-		if(err) {
-			console.log('Failed to get manifest', err);
-			res.json(500, {err: 'Failed to get package.json'});
-			return;
-		}
-		
-		david.getUpdatedDependencies(manifest, function(err, deps) {
-			
-			if(err) {
-				console.log('Failed to get updated dependencies', err);
-				res.json(500, {err: 'Failed to get updated dependencies'});
-				return;
-			}
-			
-			res.json(deps);
-		});
-	});
-});
-
-/**
- * Get all dependencies for GitHub :repo owned by :user 
- */
-app.get('/:user/:repo/deps', function(req, res) {
+	// respond with json
+	if (req.accepts('json')) {
+		res.send({err: 'Not found'});
+		return;
+	}
 	
-	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
-	
-	manifest.getManifest(url, function(err, manifest) {
-		
-		if(err) {
-			console.log('Failed to get manifest', err);
-			res.json(500, {err: 'Failed to get package.json'});
-			return;
-		}
-		
-		res.json(manifest.dependencies);
-	});
+	// default to plain-text. send()
+	res.type('txt').send('Not found');
 });
 
 if(!process.argv[2]) {

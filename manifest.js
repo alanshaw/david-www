@@ -31,7 +31,7 @@ exports.getManifest = function(url, callback) {
 			var data = JSON.parse(body);
 			
 			if(!data) {
-				callback(new Error('Failed to parse package.json'));
+				callback(new Error('Failed to parse package.json: ' + body));
 			} else {
 				
 				console.log('Got manifest', data.name, data.version);
@@ -45,7 +45,7 @@ exports.getManifest = function(url, callback) {
 			
 		} else if(!err) {
 			
-			callback(new Error('Failed to add package. HTTP response was: ' + response.statusCode));
+			callback(new Error(response.statusCode + ' Failed to retrieve manifest from ' + url));
 			
 		} else {
 			
