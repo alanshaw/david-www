@@ -99,6 +99,8 @@ app.get('/:user/:repo/status.png', function(req, res) {
 				return;
 			}
 			
+			res.setHeader('Cache-Control', 'no-cache');
+			
 			if(Object.keys(manifest.dependencies || {}).length && Object.keys(deps).length) {
 				res.sendfile('dist/img/outofdate.png');
 			} else {
