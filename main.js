@@ -69,7 +69,6 @@ app.get('/:user/:repo', function(req, res) {
 						}
 					}),
 					hasDeps: !!depNames.length,
-					hasUpToDateDeps: !updatedDepNames.length,
 					totalDeps: depNames.length,
 					totalUpToDateDeps: depNames.length - updatedDepNames.length,
 					totalOutOfDateDeps: updatedDepNames.length
@@ -104,8 +103,17 @@ app.get('/:user/:repo/status.png', function(req, res) {
 			
 			res.setHeader('Cache-Control', 'no-cache');
 			
-			if(Object.keys(manifest.dependencies || {}).length && Object.keys(deps).length) {
-				res.sendfile('dist/img/outofdate.png');
+			var totalDeps = Object.keys(manifest.dependencies || {}).length;
+			var totalUpdatedDeps = Object.keys(deps).length;
+			
+			if(totalDeps && totalUpdatedDeps) {
+				
+				if(totalUpdatedDeps / totalDeps > 0.25) {
+					res.sendfile('dist/img/outofdate.png');
+				} else {
+					res.sendfile('dist/img/notsouptodate.png');
+				}
+				
 			} else {
 				res.sendfile('dist/img/uptodate.png');
 			}
