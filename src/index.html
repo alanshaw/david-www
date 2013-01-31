@@ -26,42 +26,77 @@
 
 <div id="main" role="main">
 	
-	<h1>David helps keep your Nodejs project dependencies up to date.</h1>
-	
-	<p>Your project depends on other projects. It's unavoidable. You don't want to reinvent the wheel. Good. With that established it seems reasonable to assume that you'd like to be using the latest and greatest versions of your dependencies. There are reasons for this: security fixes, bug fixes, optimisations, obsessive compulsion, new functionality...etc. but how do <em>you</em> know when your dependencies are out of date?</p>
-	
-	<p>David shows you a list of your project dependencies, the version you depend on and the latest version so you can quickly see which ones you need to update. Each project also has a badge that shows the current dependency status of your project, which you can embed on your website, company intranet, or GitHub README.</p>
-	
-	<img src="img/uptodate.png"/> <img src="img/outofdate.png"/>
-	
-	<h2>Can I have a David?</h2>
-	
-	<p>David is a free service for open source projects hosted on <a href="http://github.com/">GitHub</a>. The only other requirement is that your project includes a <a href="http://package.json.nodejitsu.com/">package.json</a> file in it's root. Visit <strong>http://david-dm.org/[username]/[repo]/</strong> to see a list of in date and out of date dependencies your project uses. Here's some examples:</p>
-	
-	<ul>
-		<li><a href="/twitter/bower">twitter / bower</a></li>
-		<li><a href="/mikeal/request">mikeal / request</a></li>
-		<li><a href="/gruntjs/grunt">gruntjs / grunt</a></li>
-		<li><a href="/visionmedia/express">visionmedia / express</a></li>
+	<h1>Watching your Node dependencies.</h1>
+
+	<p>You depend on other projects. You want to stay up to date. David's got your back.</p>
+
+	<p>David gets you an overview of your project dependencies, the version you use and the latest available, so you can quickly see what's drifting. Then it's all boiled down into a badge showing the current status, which you can embed on your site.</p>
+
+	<ul id="examples">
+		<li><a href="/twitter/bower">
+			<span>twitter / bower</span> <img src="http://david-dm.org/twitter/bower/status.png">
+		</a></li>
+		<li><a href="/mikeal/request">
+			<span>mikeal / request</span> <img src="http://david-dm.org/mikeal/request/status.png">
+		</a></li>
+		<li><a href="/gruntjs/grunt">
+			<span>gruntjs / grunt</span> <img src="http://david-dm.org/gruntjs/grunt/status.png">
+		</a></li>
+		<li><a href="/visionmedia/express">
+			<span>visionmedia / express</span> <img src="http://david-dm.org/visionmedia/express/status.png">
+		</a></li>
+		<li><a href="/alanshaw/david">
+			<span>alanshaw / david</span> <img src="http://david-dm.org/alanshaw/david/status.png">
+		</a></li>
 	</ul>
 	
-	<h3>How do I get the badge thing?</h3>
+	<!--<img src="img/uptodate.png"/> <img src="img/outofdate.png"/>-->
 	
-	<p>Your badge is at <strong>http://david-dm.org/[username]/[repo]/status.png</strong></p>
+	<h2>Giving you badges.</h2>
 	
-	<p>David is currently in <em>ALPHA</em>, which means it may be unreliable, unavailable or not working.</p>
+	<p>Got a <a href="http://nodejs.org/">Node</a> project? Get a badge. David is free for public projects on <a href="http://github.com/">Github</a>.</p>
+	
+	<p>Declare your dependencies in a <a href="http://package.json.nodejitsu.com/">package.json</a> file and you're good. David will go work the rest out and you'll get your own project status page, listing your dependencies and their freshness. Click on the examples above for a preview.</p>
+
+	<p>Type your username / repo name in below and get yours...</p>
+
+	<p class="badge-maker"><strong>http://david-dm.org/<span contenteditable class="nope" id="username" title="[Github username] / [repo name]">username/repo</span>/status.png</strong> <img id="badge" src="/img/outofdate.png"></p>
+	
+	<p>David is currently <em>ALPHA</em>, which means it may be unreliable, unavailable or not working. That said, it's already useful and we're working to make it rock solid. It's all in Github so <a href="https://github.com/alanshaw/david-www">feel free to help</a>.</p>
 	
 	<a href="https://twitter.com/share" class="twitter-share-button" data-text="David, a new dependency management tool for #Nodejs projects">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-	
-</div>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-<a href="https://github.com/alanshaw/david-www"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+</div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
 <script src="js/plugins.js"></script>
 <script src="js/main.js"></script>
+<script>
+	$(document).ready(function(){
+
+		// Update the image when the user changes the url
+		$('.badge-maker span').on('input', function(evt){
+			$('#badge').attr('src', $('.badge-maker').text());
+		})
+
+		// Red text if the url isn't good for it.
+		$('.badge-maker img').error(function(){
+			$('.badge-maker span').addClass('nope');
+			$(this).hide();
+		})
+
+		// Green text if it is... wait a minute should this be tied to repo health not.
+		$('.badge-maker img').load(function(){
+			if ( $(this).attr('src') === '/img/outofdate.png'){
+				return; // bail, it's the placeholder image load.
+			}
+			$('.badge-maker span').removeClass('nope');
+			$(this).show();
+		})
+	})
+</script>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 <script>

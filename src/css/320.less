@@ -2,6 +2,14 @@
 // Generic
 ////////////////////////////////////////////////////////////////////////////////
 
+a, a:visited {
+	color:green;
+}
+
+a:hover, a:active{
+	color:#911;
+}
+
 .uptodate {
 	color: #00ac01;
 	i {
@@ -58,6 +66,41 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Page
 ////////////////////////////////////////////////////////////////////////////////
+#home-page {
+	h1{
+		font-size:1.5;
+	}
+
+	h2{
+		font-size:1.3;
+	}
+	#examples {
+		li{
+			margin:0 0 5px;
+		}
+		span {
+			display: inline-block;
+			width: 9em;
+		}
+		a:hover{
+			text-decoration: none;
+		}
+		span:hover{
+			text-decoration: underline;
+		}
+	}
+	.badge-maker{
+		strong{
+			padding-right: 1em;
+		}
+		span {
+			color: green
+		}
+		span.nope {
+			color: #911;
+		}
+	}
+}
 
 #status-page {
 	#repo {
@@ -100,10 +143,6 @@
 			.dep {
 				width: 100%;
 			}
-
 		}
-	}
-	.badge-maker input {
-		width: 100px;
 	}
 }
