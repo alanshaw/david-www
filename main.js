@@ -1,6 +1,7 @@
 var express = require('express');
 var consolidate = require('consolidate');
 var david = require('david');
+var stats = require('./stats');
 var manifest = require('./manifest');
 
 var app = express();
@@ -18,6 +19,22 @@ app.use('/font', express.static(__dirname + '/dist/font'));
 
 app.get('/', function(req, res) {
 	res.render('index');
+});
+
+app.get('/stats', function(req, res) {
+	
+	var recentlyUpdatedPackages = stats.getRecentlyUpdatedPackages();
+	var recentlyRetrievedManifests = stats.getRecentlyRetrievedManifests();
+	var recentlyUpdatedManifests = stats.getRecentlyUpdatedManifests();
+	
+	res.render('stats', {
+		recentlyUpdatedPackages: recentlyUpdatedPackages,
+		hasRecentlyUpdatedPackages: !!recentlyUpdatedPackages.length,
+		recentlyRetrievedManifests: recentlyRetrievedManifests,
+		hasRecentlyRetrievedManifests: !!recentlyRetrievedManifests.length,
+		recentlyUpdatedManifests: recentlyUpdatedManifests,
+		hasRecentlyUpdatedManifests: !!recentlyUpdatedManifests.length
+	});
 });
 
 /**
