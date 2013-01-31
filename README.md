@@ -1,6 +1,6 @@
 <img src="https://raw.github.com/alanshaw/david-www/master/david.png"/>
 
-David www
+David www [![Dependency Status](http://david-dm.org/alanshaw/david-www/status.png)](http://david-dm.org/alanshaw/david-www)
 =========
 
 Nodejs based web service that tells you when your project npm dependencies are out of date. To use David, your project must include a [package.json](https://npmjs.org/doc/json.html) file in the root of your repository.
@@ -12,18 +12,15 @@ Getting Started
 
 With [Node.js](http://nodejs.org/) and [Grunt](http://gruntjs.com/) installed already, do the following:
 
-Install david and david-www:
+Install david-www:
 
-	cd /path/to/david
-	npm install
-	
 	cd /path/to/david-www
 	npm install
 	grunt
 
 Run david-www:
 
-	node main.js 8080
+	node main 8080
 
 
 Example usage
