@@ -97,11 +97,8 @@ textarea {
 // Palette
 ////////////////////////////////////////////////////////////////////////////////
 
-@purple0: #211426;
-@purple1: #413659;
-@purple2: #656F8C;
-@green0: #9BBFAB;
-@yellow0: #F2EFDF;
+@yellow0: #F6E128;
+@red0: #911;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Font
@@ -124,7 +121,7 @@ textarea {
 
 body {
 	font-family: 'Helvetica Neue', Helvetica, sans-serif;
-	letter-spacing: -1px;
+	letter-spacing: -0.5px;
 }
 h1 {
 	font-size: 1.4em;
@@ -135,16 +132,18 @@ h2 {
 h3 {
 	font-size: 1.063em;
 }
-a {
-	color: @purple1;
+a, a:visited {
+	color: #000;
+	background: @yellow0;
+	font-weight: bold;
 	text-decoration: none;
 }
-a:hover {
-	color: @purple2;
-	text-decoration: underline;
+a:hover, a:active{
+	color: @red0;
+	text-decoration: none;
 }
-a:visited {
-	color: @purple0;
+li {
+	margin: 0.25em 0;
 }
 
 

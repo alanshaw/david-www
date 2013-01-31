@@ -2,13 +2,7 @@
 // Generic
 ////////////////////////////////////////////////////////////////////////////////
 
-a, a:visited {
-	color:green;
-}
 
-a:hover, a:active{
-	color:#911;
-}
 
 .uptodate {
 	color: #00ac01;
@@ -45,6 +39,7 @@ a:hover, a:active{
 	padding-left: 1.5em;
 	font-family: NeutonRegular, sans-serif;
 	font-size: 2em;
+	font-weight: normal;
 	color: #fff;
 	text-decoration: none;
 	
@@ -75,18 +70,12 @@ a:hover, a:active{
 		font-size:1.3;
 	}
 	#examples {
-		li{
-			margin:0 0 5px;
+		li {
+			max-width: 18em;
 		}
-		span {
-			display: inline-block;
-			width: 9em;
-		}
-		a:hover{
-			text-decoration: none;
-		}
-		span:hover{
-			text-decoration: underline;
+		img {
+			float: right;
+			margin-top: 0.25em;
 		}
 	}
 	.badge-maker{
@@ -112,6 +101,7 @@ a:hover, a:active{
 	}
 	#status {
 		padding: 0 0.5em;
+		background-color: transparent;
 	}
 	.summary {
 		margin-bottom:0.6em;
