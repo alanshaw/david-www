@@ -43,7 +43,7 @@ function getDependencyDiffs(deps1, deps2) {
 			// Dep has been deleted
 			diffs.push(new PackageDiff(key, null, deps1[key]));
 			
-		} else if(dep1[key] !== dep2[key]) {
+		} else if(deps1[key] !== deps2[key]) {
 			
 			// Dep has been changed
 			diffs.push(new PackageDiff(key, deps2[key], deps1[key]));
