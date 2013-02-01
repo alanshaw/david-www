@@ -37,6 +37,52 @@ app.get('/stats', function(req, res) {
 	});
 });
 
+function onGetStatusBadge(req, res) {
+	
+	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
+	
+	manifest.getManifest(url, function(err, manifest) {
+		
+		if(err) {
+			console.log('Failed to get manifest', err);
+			res.status(500).render(500, {err: 'Failed to get package.json'});
+			return;
+		}
+		
+		david.getUpdatedDependencies(manifest, function(err, deps) {
+			
+			if(err) {
+				console.log('Failed to get updated dependencies', err);
+				res.status(500).render(500, {err: 'Failed to get updated dependencies'});
+				return;
+			}
+			
+			res.setHeader('Cache-Control', 'no-cache');
+			
+			var totalDeps = Object.keys(manifest.dependencies || {}).length;
+			var totalUpdatedDeps = Object.keys(deps).length;
+			
+			if(totalDeps && totalUpdatedDeps) {
+				
+				if(totalUpdatedDeps / totalDeps > 0.25) {
+					res.sendfile('dist/img/outofdate.png');
+				} else {
+					res.sendfile('dist/img/notsouptodate.png');
+				}
+				
+			} else {
+				res.sendfile('dist/img/uptodate.png');
+			}
+		});
+	});
+}
+
+/**
+ * Send the status badge for this user and repository
+ */
+app.get('/:user/:repo/status.png', onGetStatusBadge);
+app.get('/:user/:repo.png', onGetStatusBadge);
+
 /**
  * Display the status page for this user and repository
  */
@@ -91,49 +137,6 @@ app.get('/:user/:repo', function(req, res) {
 					totalOutOfDateDeps: updatedDepNames.length
 				});
 			});
-		});
-	});
-});
-
-/**
- * Send the status badge for this user and repository
- */
-app.get('/:user/:repo/status.png', function(req, res) {
-	
-	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
-	
-	manifest.getManifest(url, function(err, manifest) {
-		
-		if(err) {
-			console.log('Failed to get manifest', err);
-			res.status(500).render(500, {err: 'Failed to get package.json'});
-			return;
-		}
-		
-		david.getUpdatedDependencies(manifest, function(err, deps) {
-			
-			if(err) {
-				console.log('Failed to get updated dependencies', err);
-				res.status(500).render(500, {err: 'Failed to get updated dependencies'});
-				return;
-			}
-			
-			res.setHeader('Cache-Control', 'no-cache');
-			
-			var totalDeps = Object.keys(manifest.dependencies || {}).length;
-			var totalUpdatedDeps = Object.keys(deps).length;
-			
-			if(totalDeps && totalUpdatedDeps) {
-				
-				if(totalUpdatedDeps / totalDeps > 0.25) {
-					res.sendfile('dist/img/outofdate.png');
-				} else {
-					res.sendfile('dist/img/notsouptodate.png');
-				}
-				
-			} else {
-				res.sendfile('dist/img/uptodate.png');
-			}
 		});
 	});
 });

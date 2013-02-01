@@ -50,8 +50,6 @@
 		</a></li>
 	</ul>
 	
-	<!--<img src="img/uptodate.png"/> <img src="img/outofdate.png"/>-->
-	
 	<h2>Giving you badges.</h2>
 	
 	<p>Got a <a href="http://nodejs.org/">Node</a> project? Get a badge. David is free for public projects on <a href="http://github.com/">Github</a>.</p>
@@ -60,7 +58,7 @@
 
 	<p>Type your username / repo name in below and get yours...</p>
 
-	<p class="badge-maker"><strong>http://david-dm.org/<span contenteditable class="nope" id="username" title="[Github username] / [repo name]">username/repo</span>/status.png</strong> <img id="badge" src="/img/outofdate.png"></p>
+	<p class="badge-maker"><strong>http://david-dm.org/<span contenteditable class="nope" id="username" title="[Github username] / [repo name]">username/repo</span>.png</strong> <img id="badge" src="/img/outofdate.png"></p>
 	
 	<p>David is currently <em>ALPHA</em>, which means it may be unreliable, unavailable or not working. That said, it's already useful and we're working to make it rock solid. It's all in Github so <a href="https://github.com/alanshaw/david-www">feel free to help</a>.</p>
 	
@@ -78,7 +76,7 @@
 
 		// Update the image when the user changes the url
 		$('.badge-maker span').on('input', function(evt){
-			$('#badge').attr('src', $('.badge-maker').text());
+			$('#badge').attr('src', $('.badge-maker span').text() + '.png');
 		})
 
 		// Red text if the url isn't good for it.
