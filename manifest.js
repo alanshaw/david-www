@@ -30,20 +30,17 @@ function getDependencyDiffs(deps1, deps2) {
 	deps1 = deps1 || {};
 	deps2 = deps2 || {};
 	
-	var keys1 = Object.keys(deps1);
-	var keys2 = Object.keys(deps2);
-	
 	var diffs = [];
 	
 	// Check for deletions and changes
-	keys1.forEach(function(key) {
+	Object.keys(deps1).forEach(function(key) {
 		
 		if(!deps2[key]) {
 			
 			// Dep has been deleted
 			diffs.push(new PackageDiff(key, null, deps1[key]));
 			
-		} else if(deps1[key] !== deps2[key]) {
+		} else if(deps1[key] != deps2[key]) {
 			
 			// Dep has been changed
 			diffs.push(new PackageDiff(key, deps2[key], deps1[key]));
@@ -51,7 +48,7 @@ function getDependencyDiffs(deps1, deps2) {
 	});
 	
 	// Check for additions
-	keys2.forEach(function(key) {
+	Object.keys(deps2).forEach(function(key) {
 		if(!deps1[key]) {
 			diffs.push(new PackageDiff(key, deps2[key], null));
 		}
@@ -118,8 +115,8 @@ exports.getManifest = function(url, callback) {
 	});
 };
 
-exports.getGithubManifestUrl = function(username, repo) {
-	return 'https://raw.github.com/' + username + '/' + repo + '/master/package.json';
+exports.getGithubManifestUrl = function(user, repo) {
+	return 'https://raw.github.com/' + user + '/' + repo + '/master/package.json';
 };
 
 /**

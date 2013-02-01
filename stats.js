@@ -3,6 +3,20 @@ var manifest = require('./manifest');
 
 var exports = {};
 
+/**
+ * Metadata for a package url
+ * 
+ * @param {String} url Manifest URL
+ */
+function ManifestMeta(url) {
+	
+	// We only support github URLs...
+	var userRepo = url.replace('https://raw.github.com/', '').replace('/master/package.json', '').split('/');
+	
+	this.user = userRepo[0];
+	this.repo = userRepo[1];
+}
+
 // Recently updated packages //////////////////////////////////////////////////
 
 function UpdatedPackage(name, version, previous) {
@@ -34,6 +48,7 @@ exports.getRecentlyUpdatedPackages = function() {
 function RetrievedManifest(manifest, url) {
 	this.manifest = manifest;
 	this.url = url;
+	this.meta = new ManifestMeta(url);
 }
 
 var recentlyRetrievedManifests = [];
@@ -68,6 +83,7 @@ function UpdatedManifest(diffs, manifest, url) {
 	this.diffs = diffs;
 	this.manifest = manifest;
 	this.url = url;
+	this.meta = new ManifestMeta(url);
 }
 
 var recentlyUpdatedManifests = [];

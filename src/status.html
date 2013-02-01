@@ -33,7 +33,7 @@
 		</h1>
 	</div>
 	<div id="deps">
-		{{#hasDeps}}
+		{{#if deps.length}}
 		<p class="summary">
 			<strong>{{totalDeps}}</strong> dependencies total.
 			<strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{totalUpToDateDeps}}</strong> up to date,
@@ -64,10 +64,9 @@
 			<strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{totalUpToDateDeps}}</strong> up to date,
 			<strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{totalOutOfDateDeps}}</strong> out of date.
 		</p>
-		{{/hasDeps}}
-		{{^hasDeps}}
+		{{else}}
 		<p>No dependencies</p>
-		{{/hasDeps}}
+		{{/if}}
 	</div>
 </div>
 

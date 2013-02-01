@@ -23,17 +23,10 @@ app.get('/', function(req, res) {
 
 app.get('/stats', function(req, res) {
 	
-	var recentlyUpdatedPackages = stats.getRecentlyUpdatedPackages();
-	var recentlyRetrievedManifests = stats.getRecentlyRetrievedManifests();
-	var recentlyUpdatedManifests = stats.getRecentlyUpdatedManifests();
-	
 	res.render('stats', {
-		recentlyUpdatedPackages: recentlyUpdatedPackages,
-		hasRecentlyUpdatedPackages: !!recentlyUpdatedPackages.length,
-		recentlyRetrievedManifests: recentlyRetrievedManifests,
-		hasRecentlyRetrievedManifests: !!recentlyRetrievedManifests.length,
-		recentlyUpdatedManifests: recentlyUpdatedManifests,
-		hasRecentlyUpdatedManifests: !!recentlyUpdatedManifests.length
+		recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages(),
+		recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
+		recentlyUpdatedManifests: stats.getRecentlyUpdatedManifests()
 	});
 });
 
@@ -131,7 +124,6 @@ app.get('/:user/:repo', function(req, res) {
 							upToDate: !updatedDeps[depName]
 						}
 					}),
-					hasDeps: !!depNames.length,
 					totalDeps: depNames.length,
 					totalUpToDateDeps: depNames.length - updatedDepNames.length,
 					totalOutOfDateDeps: updatedDepNames.length
