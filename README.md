@@ -1,6 +1,6 @@
 <img src="https://raw.github.com/alanshaw/david-www/master/david.png"/>
 
-David www [![Dependency Status](http://david-dm.org/alanshaw/david-www/status.png)](http://david-dm.org/alanshaw/david-www)
+David www [![Dependency Status](http://david-dm.org/alanshaw/david-www.png)](http://david-dm.org/alanshaw/david-www)
 =========
 
 Nodejs based web service that tells you when your project npm dependencies are out of date. To use David, your project must include a [package.json](https://npmjs.org/doc/json.html) file in the root of your repository.
@@ -32,4 +32,4 @@ View a web page of all dependencies (and their updates, and their versions) for 
 
 Get the current build status badge:
 
-	curl http://localhost:8080/alanshaw/grunt-jsio/status.png
+	curl http://localhost:8080/alanshaw/grunt-jsio.png
