@@ -21,7 +21,7 @@
 <![endif]-->
 
 <header id="hd">
-	<a id="logo" href="/">David <i class="icon-home icon-small"></i></a>
+	<div><a id="logo" href="/">David <i class="icon-home icon-small"></i></a></div>
 </header>
 
 <div id="main" role="main">
@@ -66,6 +66,36 @@
 	<p>No projects were recently updated</p>
 	{{/if}}
 </div>
+
+<footer id="ft">
+	<small>Copyright &copy; 2013 david.dm.org</small>
+	<div>
+		<ul>
+			<li><a href="https://github.com/alanshaw/david-www"><i class="icon-github"></i> GitHub</a></li>
+			<li><a href="https://github.com/alanshaw/david-www/graphs/contributors"><i class="icon-user"></i> Contributors</a></li>
+			<li><a href="https://github.com/alanshaw/david-www/issues"><i class="icon-warning-sign"></i> Issues</a></li>
+			<li><a href="/stats"><i class="icon-bar-chart"></i> Stats</a></li>
+		</ul>
+		<ul class="social">
+			<li>
+				<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://david-dm.org" data-text="David, a new dependency management tool for #Nodejs projects" data-count="none">Tweet</a>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+			</li>
+			<li>
+				<div class="g-plusone" data-size="medium" data-annotation="none" data-href="http://david-dm.org"></div>
+				<script>
+				  window.___gcfg = {lang: 'en-GB'};
+				
+				  (function() {
+					var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+					po.src = 'https://apis.google.com/js/plusone.js';
+					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+				  })();
+				</script>
+			</li>
+		</ul>
+	</div>
+</footer>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>

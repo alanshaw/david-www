@@ -18,6 +18,10 @@
 	top: 0;
 	left: 0;
 	width: 100%;
+	
+	> div {
+		padding: 0.25em 0;
+	}
 }
 #logo {
 	background: url(../img/logo-david.png) no-repeat left center;
@@ -45,6 +49,36 @@
 	background-size: 100% auto;
 	margin: 4.5em 1em 0;
 	min-height: 44em;
+}
+#ft {
+	border-top: 1px solid #ccc;
+	margin: 1em 0;
+	padding: 4em 1em 1em;
+	background: url(../img/icon-david-ft.jpg) no-repeat center 1em;
+	text-align: center;
+	
+	small {
+		font-size: 0.857em;
+		color: #ccc;
+	}
+	ul {
+		list-style-type: none;
+		margin: 0 0 0.5em 0;
+		padding: 0;
+		
+		li {
+			display: inline-block;
+			margin: 0 0 0 1em;
+			
+			&:first-child {
+				margin: 0;
+			}
+			a {
+				font-weight: normal;
+				font-size: 0.857em;
+			}
+		}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,7 +148,6 @@
 	#deps {
 		table {
 			width: 100%;
-			margin: 0 0 0 -0.714em;
 			
 			tr:nth-child(even) td {
 				background: rgba(0, 0, 0, 0.05);
@@ -129,7 +162,7 @@
 				min-width: 5em;
 			}
 			.status {
-				padding-left:1.4em;
+				padding-left: 1.75em;
 				min-width: 3em;
 			}
 			.dep {
