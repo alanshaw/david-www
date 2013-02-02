@@ -120,7 +120,7 @@ app.get('/:user/:repo', function(req, res) {
 							version: manifest.dependencies[depName],
 							latest: deps[depName],
 							upToDate: !updatedDeps[depName]
-						}
+						};
 					}),
 					totalDeps: depNames.length,
 					totalUpToDateDeps: depNames.length - updatedDepNames.length,

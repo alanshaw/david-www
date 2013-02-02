@@ -67,6 +67,11 @@ module.exports = function(grunt) {
 			}
 		},
 		
+		// Lint the server JavaScript
+		lint: {
+			files: '*.js'
+		},
+		
 		// Watch CoffeeScript, LESS & HTML files for changes, copy & compile but not minify for easy debug during dev
 		watch: {
 			project: {
