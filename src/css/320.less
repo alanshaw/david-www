@@ -14,10 +14,15 @@
 	border-bottom: 2px solid #999;
 	padding: 0 1em;
 	box-shadow: inset 0 0 0.5em #000;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
 }
 #logo {
-	background: url(../img/logo-david.gif) no-repeat left center;
-	padding-left: 1.5em;
+	background: url(../img/logo-david.png) no-repeat left center;
+	background-size: auto 82%;
+	padding-left: 1.75em;
 	font-family: NeutonRegular, sans-serif;
 	font-size: 2em;
 	font-weight: normal;
@@ -31,12 +36,15 @@
 		font-size: 0.5em;
 		visibility: hidden;
 	}
+	.no-backgroundsize & {
+		background-image: url(../img/logo-david.gif);
+	}
 }
 #main {
 	background: url(../img/bg-david.jpg) no-repeat center 10em;
 	background-size: 100% auto;
-	margin: 0 1em;
-	min-height: 40em;
+	margin: 4.5em 1em 0;
+	min-height: 44em;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,8 +70,10 @@
 
 #home-page {
 	#examples {
+		padding-left: 1em;
+		
 		li {
-			max-width: 18em;
+			max-width: 19em;
 		}
 		img {
 			float: right;
@@ -104,7 +114,7 @@
 	#deps {
 		table {
 			width: 100%;
-			margin: 0 -0.5em;
+			margin: 0 0 0 -0.714em;
 			
 			tr:nth-child(even) td {
 				background: rgba(0, 0, 0, 0.05);
@@ -113,7 +123,7 @@
 				text-align: left;
 			}
 			th, td {
-				padding: 0.5em;
+				padding: 0.714em;
 			}
 			td {
 				min-width: 5em;
