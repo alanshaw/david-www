@@ -7,8 +7,8 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title></title>
-<meta name="description" content="">
+<title>Dependency status for {{user}} / {{manifest.name}}</title>
+<meta name="description" content="{{totalDeps}} dependencies total. {{totalUpToDateDeps}} up to date, {{totalOutOfDateDeps}} out of date.">
 <meta name="viewport" content="width=device-width">
 <!--[if IE 7]><link rel="stylesheet" href="/css/font-awesome-ie7.css"><![endif]-->
 <!--[if (gt IE 8) | (IEMobile)]><!--><link rel="stylesheet" href="/css/main.css"><!--<![endif]-->
@@ -31,6 +31,9 @@
 			<a href="https://github.com/{{user}}/{{repo}}">{{manifest.name}}</a>
 			<a id="status" href="/{{user}}/{{repo}}.png"><img src="/{{user}}/{{repo}}.png" alt="Dependency status" /></a>
 		</h1>
+		{{#if manifest.description}}
+		<p>{{manifest.description}}</p>
+		{{/if}}
 	</div>
 	<div id="deps">
 		{{#if deps.length}}
