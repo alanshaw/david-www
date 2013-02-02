@@ -101,30 +101,6 @@
 <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
 <script src="js/plugins.js"></script>
 <script src="js/main.js"></script>
-<script>
-	$(document).ready(function(){
-
-		// Update the image when the user changes the url
-		$('.badge-maker span').on('input', function(evt){
-			$('#badge').attr('src', $('.badge-maker span').text() + '.png');
-		})
-
-		// Red text if the url isn't good for it.
-		$('.badge-maker img').error(function(){
-			$('.badge-maker span').addClass('nope');
-			$(this).hide();
-		})
-
-		// Green text if it is... wait a minute should this be tied to repo health not.
-		$('.badge-maker img').load(function(){
-			if ( $(this).attr('src') === '/img/outofdate.png'){
-				return; // bail, it's the placeholder image load.
-			}
-			$('.badge-maker span').removeClass('nope');
-			$(this).show();
-		})
-	})
-</script>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 <script>
