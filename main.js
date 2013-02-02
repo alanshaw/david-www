@@ -3,6 +3,7 @@ var consolidate = require('consolidate');
 var david = require('david');
 var stats = require('./stats');
 var manifest = require('./manifest');
+var statics = require('./statics');
 
 var app = express();
 
@@ -12,10 +13,7 @@ app.configure(function() {
 	app.set('views', __dirname + '/dist');
 });
 
-app.use('/js', express.static(__dirname + '/dist/js'));
-app.use('/css', express.static(__dirname + '/dist/css'));
-app.use('/img', express.static(__dirname + '/dist/img'));
-app.use('/font', express.static(__dirname + '/dist/font'));
+statics.init(app);
 
 app.get('/', function(req, res) {
 	res.render('index');
