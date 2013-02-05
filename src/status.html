@@ -1,30 +1,5 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->
-<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"><![endif]-->
-<!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js" xmlns="http://www.w3.org/1999/html"><!--<![endif]-->
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title>Dependency status for {{user}} / {{manifest.name}}</title>
-<meta name="description" content="{{totalDeps}} dependencies total. {{totalUpToDateDeps}} up to date, {{totalOutOfDateDeps}} out of date.">
-<meta name="viewport" content="width=device-width">
-<!--[if IE 7]><link rel="stylesheet" href="/css/font-awesome-ie7.css"><![endif]-->
-<!--[if (gt IE 8) | (IEMobile)]><!--><link rel="stylesheet" href="/css/main.css"><!--<![endif]-->
-<!--[if (lt IE 9) & (!IEMobile)]><link rel="stylesheet" href="/css/ie.css"><![endif]-->
-<script src="/js/vendor/modernizr-2.6.2.min.js"></script>
-</head>
-<body id="status-page">
-<!--[if lt IE 7]> 
-	<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-<![endif]-->
+@@include('inc/top.html', {"id": "status-page", "title": "Dependency status for {{user}} / {{manifest.name}}"})
 
-<header id="hd">
-	<div><a id="logo" href="/">David <i class="icon-home icon-small"></i></a></div>
-</header>
-
-<div id="main" role="main">
 	<div id="repo">
 		<h1>
 			<a href="https://github.com/{{user}}">{{user}}</a> /
@@ -71,52 +46,5 @@
 		<p>No dependencies</p>
 		{{/if}}
 	</div>
-</div>
 
-<footer id="ft">
-	<small>Copyright &copy; 2013 david.dm.org</small>
-	<div>
-		<ul>
-			<li><a href="https://github.com/alanshaw/david-www"><i class="icon-github"></i> GitHub</a></li>
-			<li><a href="https://github.com/alanshaw/david-www/graphs/contributors"><i class="icon-user"></i> Contributors</a></li>
-			<li><a href="https://github.com/alanshaw/david-www/issues"><i class="icon-warning-sign"></i> Issues</a></li>
-			<li><a href="/stats"><i class="icon-bar-chart"></i> Stats</a></li>
-		</ul>
-		<ul class="social">
-			<li>
-				<iframe src="http://ghbtns.com/github-btn.html?user=alanshaw&repo=david-www&type=watch" allowtransparency="true" frameborder="0" scrolling="0" width="52" height="20"></iframe>
-			</li>
-			<li>
-				<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://david-dm.org" data-text="David, a new dependency management tool for #Nodejs projects" data-count="none">Tweet</a>
-				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-			</li>
-			<li>
-				<div class="g-plusone" data-size="medium" data-annotation="none" data-href="http://david-dm.org"></div>
-				<script>
-				  window.___gcfg = {lang: 'en-GB'};
-				
-				  (function() {
-					var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-					po.src = 'https://apis.google.com/js/plusone.js';
-					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-				  })();
-				</script>
-			</li>
-		</ul>
-	</div>
-</footer>
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
-<script src="/js/plugins.js"></script>
-<script src="/js/main.js"></script>
-
-<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-<script>
-	var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-	(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-	g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-	s.parentNode.insertBefore(g,s)}(document,'script'));
-</script>
-</body>
-</html>
+@@include('inc/bottom.html')

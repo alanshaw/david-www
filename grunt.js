@@ -30,6 +30,13 @@ module.exports = function(grunt) {
 			}
 		},
 		
+		includereplace: {
+			dist: {
+				src: 'src/*.html',
+				dest: 'dist/'
+			}
+		},
+		
 		// Compile all CoffeScript into main.js
 		coffee: {
 			compile: {
@@ -76,13 +83,14 @@ module.exports = function(grunt) {
 		watch: {
 			project: {
 				files: ['src/js/**/*.coffee', 'src/css/**/*.less', 'src/**/*.html'],
-				tasks: 'copy less coffee'
+				tasks: 'copy includereplace less coffee'
 			}
 		}
 	});
 	
 	// Load the grunt-conrtib plugin so we can compile and compress CoffeeScript and LESS files
 	grunt.loadNpmTasks('grunt-contrib');
+	grunt.loadNpmTasks('grunt-include-replace');
 	
-	grunt.registerTask('default', 'copy coffee less min mincss');
+	grunt.registerTask('default', 'copy includereplace coffee less min mincss');
 };
