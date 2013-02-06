@@ -15,21 +15,37 @@ app.configure(function() {
 
 statics.init(app);
 
-app.get('/', function(req, res) {
-	res.render('index');
-});
+app.get('/:user/:repo/status.png', statusBadge);
+app.get('/:user/:repo.png',        statusBadge);
+app.get('/:user/:repo',            statusPage);
+app.get('/stats',                  statsPage);
+app.get('/',                       indexPage);
 
-app.get('/stats', function(req, res) {
-	
+/**
+ * Do a home page
+ */
+function indexPage(req, res) {
+
+	res.render('index');
+}
+
+/**
+ * Show pretty graphs and gaudy baubles
+ */
+function statsPage(req, res) {
+
 	res.render('stats', {
 		recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages(),
 		recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
 		recentlyUpdatedManifests: stats.getRecentlyUpdatedManifests()
 	});
-});
+}
 
-function onGetStatusBadge(req, res) {
-	
+/**
+ * Send the status badge for this user and repository
+ */
+function statusBadge(req, res) {
+
 	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
 	
 	manifest.getManifest(url, function(err, manifest) {
@@ -69,47 +85,41 @@ function onGetStatusBadge(req, res) {
 }
 
 /**
- * Send the status badge for this user and repository
- */
-app.get('/:user/:repo/status.png', onGetStatusBadge);
-app.get('/:user/:repo.png', onGetStatusBadge);
-
-/**
  * Display the status page for this user and repository
  */
-app.get('/:user/:repo', function(req, res) {
-	
+function statusPage(req, res) {
+
 	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
-	
+
 	manifest.getManifest(url, function(err, manifest) {
-		
+
 		if(err) {
 			console.log('Failed to get manifest', err);
 			res.status(500).render(500, {err: 'Failed to get package.json'});
 			return;
 		}
-		
+
 		david.getDependencies(manifest, function(err, deps) {
-			
+
 			if(err) {
 				console.log('Failed to get dependencies', err);
 				res.status(500).render(500, {err: 'Failed to get dependencies'});
 				return;
 			}
-			
+
 			david.getUpdatedDependencies(manifest, function(err, updatedDeps) {
-				
+
 				if(err) {
 					console.log('Failed to get updated dependencies', err);
 					res.status(500).render(500, {err: 'Failed to get updated dependencies'});
 					return;
 				}
-				
+
 				manifest.dependencies = manifest.dependencies || {};
-				
+
 				var depNames = Object.keys(deps).sort();
 				var updatedDepNames = Object.keys(updatedDeps);
-				
+
 				res.render('status', {
 					user: req.params.user,
 					repo: req.params.repo,
@@ -129,7 +139,7 @@ app.get('/:user/:repo', function(req, res) {
 			});
 		});
 	});
-});
+}
 
 app.use(function(req, res, next){
 	res.status(404);
