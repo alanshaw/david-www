@@ -97,6 +97,11 @@
 		text-shadow: 0 0 5px #ab0101;
 	}
 }
+.pinned {
+	i {
+		text-shadow: -1px -1px 1px #000;
+	}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Page
@@ -152,7 +157,9 @@
 		background-color: transparent;
 	}
 	.summary {
-		margin-bottom:0.6em;
+		padding: 0;
+		list-style-type: none;
+		
 		i {
 			padding: 0 0.14em 0 0.3em;
 		}
@@ -161,6 +168,19 @@
 		table {
 			width: 100%;
 			
+			.js & {
+				display: none;
+			}
+			&.stacktable {
+				display: table;
+				
+				.st-head-row.st-head-row-main {
+					display: none;
+				}
+				.st-head-row {
+					padding-top: 1.429em;
+				}
+			}
 			tr:nth-child(even) td {
 				background: rgba(0, 0, 0, 0.05);
 			}

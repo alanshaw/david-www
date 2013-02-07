@@ -19,3 +19,5 @@ $('#home-page').each ->
 		if $(@).attr('src') is '/img/outofdate.png' then return # bail, it's the placeholder image load.
 		url.removeClass 'nope'
 		$(@).show()
+
+$('#status-page #deps table').stacktable()
