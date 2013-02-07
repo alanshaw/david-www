@@ -31,7 +31,7 @@ david.on('latestVersionChange', function(name, fromVersion, toVersion) {
 	
 	if(fromVersion) {
 		
-		recentlyUpdatedPackages.unshift(new UpdatedPackage(name, fromVersion, toVersion));
+		recentlyUpdatedPackages.unshift(new UpdatedPackage(name, toVersion, fromVersion));
 		
 		if(recentlyUpdatedPackages.length > 10) {
 			recentlyUpdatedPackages.pop();
