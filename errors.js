@@ -41,29 +41,23 @@ var util = require('util');
  * @param err {Object | String | Error}
  * @param req
  * @param res
- * @param info {String} Additional info for the error message
+ * @param msg {String} Additional message to display to the user
  * @return {Boolean}
  */
-function happened(err, req, res, info) {
+module.exports.happened = function(err, req, res, msg) {
 
 	if (!err) { return false; }
 
-	var info = info || '';
-
-	var message = err;
+	console.log(msg, err);
 
 	if (util.isError(err)) {
-		message = err.stack;
+		console.log(err.stack);
 	}
 
-	console.log(info, err);
-
-	res.status(500).render(500, {err: message});
+	res.status(500).render(500, {err: msg});
 
 	return true;
-}
-
-module.exports.happened = happened;
+};
 
 
 
