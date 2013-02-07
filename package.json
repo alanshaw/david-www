@@ -30,7 +30,8 @@
 		"express": "~3.1.0",
 		"handlebars": "~1.0.8",
 		"consolidate": "~0.8.0",
-		"david": "~0.0.2",
-		"moment": "~1.7.2"
+		"david": "~1.1.0",
+		"moment": "~1.7.2",
+		"semver": "~1.1.3"
 	}
 }

@@ -27,11 +27,11 @@ function UpdatedPackage(name, version, previous) {
 
 var recentlyUpdatedPackages = [];
 
-david.on('dependencyVersionChange', function(dep, previous) {
+david.on('latestVersionChange', function(name, fromVersion, toVersion) {
 	
-	if(previous) {
+	if(fromVersion) {
 		
-		recentlyUpdatedPackages.unshift(new UpdatedPackage(dep.name, dep.version, previous));
+		recentlyUpdatedPackages.unshift(new UpdatedPackage(name, fromVersion, toVersion));
 		
 		if(recentlyUpdatedPackages.length > 10) {
 			recentlyUpdatedPackages.pop();

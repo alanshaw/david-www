@@ -11,36 +11,40 @@
 		{{/if}}
 	</div>
 	<div id="deps">
-		{{#if deps.length}}
+		{{#if info.deps.length}}
 		<p class="summary">
-			<strong>{{totalDeps}}</strong> dependencies total.
-			<strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{totalUpToDateDeps}}</strong> up to date,
-			<strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{totalOutOfDateDeps}}</strong> out of date.
+			<strong>{{info.deps.length}}</strong> dependencies total.
+			<strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{info.totalUpToDate}}</strong> up to date,
+			<strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{info.totalOutOfDate}}</strong> out of date.
+			<strong class="pinned"> <i class="icon-circle" title="Pinned"></i> {{info.totalPinned}}</strong> pinned.
 		</p>
 		<table summary="Repository dependencies and their status">
 			<tr>
 				<th>Dependency</th>
-				<th>Version</th>
+				<th>Required</th>
+				<th>Stable</th>
 				<th>Latest</th>
 				<th>Status</th>
 			</tr>
-			{{#deps}}
+			{{#info.deps}}
 			<tr>
 				<td class="dep">
 					<a href="http://npmjs.org/package/{{name}}">{{name}}</a>
 				</td>
-				<td class="version">{{version}}</td>
+				<td class="required">{{required}}</td>
+				<td class="stable">{{stable}}</td>
 				<td class="latest">{{latest}}</td>
-				<td class="status {{#upToDate}}uptodate{{/upToDate}}{{^upToDate}}outofdate{{/upToDate}}">
-					<i class="icon-circle" title="{{#upToDate}}Up to date{{/upToDate}}{{^upToDate}}Out of date{{/upToDate}}"></i>
+				<td class="status {{status}}">
+					<i class="icon-circle" title="{{status}}"></i>
 				</td>
 			</tr>
-			{{/deps}}
+			{{/info.deps}}
 		</table>
 		<p class="summary">
-			<strong>{{totalDeps}}</strong> dependencies total.
-			<strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{totalUpToDateDeps}}</strong> up to date,
-			<strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{totalOutOfDateDeps}}</strong> out of date.
+			<strong>{{info.deps.length}}</strong> dependencies total.
+			<strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{info.totalUpToDate}}</strong> up to date,
+			<strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{info.totalOutOfDate}}</strong> out of date.
+			<strong class="pinned"> <i class="icon-circle" title="Pinned"></i> {{info.totalPinned}}</strong> pinned.
 		</p>
 		{{else}}
 		<p>No dependencies</p>

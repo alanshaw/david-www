@@ -1,9 +1,9 @@
 var express = require('express');
 var consolidate = require('consolidate');
-var david = require('david');
 var stats = require('./stats');
 var manifest = require('./manifest');
 var statics = require('./statics');
+var brains = require('./brains');
 
 var app = express();
 
@@ -56,22 +56,21 @@ function statusBadge(req, res) {
 			return;
 		}
 		
-		david.getUpdatedDependencies(manifest, function(err, deps) {
+		brains.getInfo(manifest, function(err, info) {
 			
 			if(err) {
-				console.log('Failed to get updated dependencies', err);
-				res.status(500).render(500, {err: 'Failed to get updated dependencies'});
+				console.log('Failed to get dependency info', err);
+				res.status(500).render(500, {err: 'Failed to get dependency info'});
 				return;
 			}
 			
 			res.setHeader('Cache-Control', 'no-cache');
 			
-			var totalDeps = Object.keys(manifest.dependencies || {}).length;
-			var totalUpdatedDeps = Object.keys(deps).length;
+			var totalDeps = info.deps.length;
 			
-			if(totalDeps && totalUpdatedDeps) {
+			if(totalDeps && info.totalOutOfDate) {
 				
-				if(totalUpdatedDeps / totalDeps > 0.25) {
+				if(info.totalOutOfDate / totalDeps > 0.25) {
 					res.sendfile('dist/img/outofdate.png');
 				} else {
 					res.sendfile('dist/img/notsouptodate.png');
@@ -98,44 +97,20 @@ function statusPage(req, res) {
 			res.status(500).render(500, {err: 'Failed to get package.json'});
 			return;
 		}
-
-		david.getDependencies(manifest, function(err, deps) {
-
+		
+		brains.getInfo(manifest, function(err, info) {
+			
 			if(err) {
-				console.log('Failed to get dependencies', err);
-				res.status(500).render(500, {err: 'Failed to get dependencies'});
+				console.log('Failed to get dependency info', err);
+				res.status(500).render(500, {err: 'Failed to get dependency info'});
 				return;
 			}
-
-			david.getUpdatedDependencies(manifest, function(err, updatedDeps) {
-
-				if(err) {
-					console.log('Failed to get updated dependencies', err);
-					res.status(500).render(500, {err: 'Failed to get updated dependencies'});
-					return;
-				}
-
-				manifest.dependencies = manifest.dependencies || {};
-
-				var depNames = Object.keys(deps).sort();
-				var updatedDepNames = Object.keys(updatedDeps);
-
-				res.render('status', {
-					user: req.params.user,
-					repo: req.params.repo,
-					manifest: manifest,
-					deps: depNames.map(function(depName) {
-						return {
-							name: depName,
-							version: manifest.dependencies[depName],
-							latest: deps[depName],
-							upToDate: !updatedDeps[depName]
-						};
-					}),
-					totalDeps: depNames.length,
-					totalUpToDateDeps: depNames.length - updatedDepNames.length,
-					totalOutOfDateDeps: updatedDepNames.length
-				});
+			
+			res.render('status', {
+				user: req.params.user,
+				repo: req.params.repo,
+				manifest: manifest,
+				info: info
 			});
 		});
 	});
