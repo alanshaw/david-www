@@ -45,10 +45,10 @@
 	}
 }
 #main {
-	background: url(../img/bg-david.gif) no-repeat center 10em;
+	background: url(../img/bg-david.gif) no-repeat center 11em;
 	background-size: 100% auto;
 	margin: 4.5em 1em 0;
-	min-height: 44em;
+	min-height: 45em;
 }
 #ft {
 	border-top: 1px solid #ccc;
@@ -95,6 +95,11 @@
 	color: #ab0101;
 	i {
 		text-shadow: 0 0 5px #ab0101;
+	}
+}
+.pinned {
+	i {
+		text-shadow: -1px -1px 1px #000;
 	}
 }
 
@@ -152,7 +157,9 @@
 		background-color: transparent;
 	}
 	.summary {
-		margin-bottom:0.6em;
+		padding: 0;
+		list-style-type: none;
+		
 		i {
 			padding: 0 0.14em 0 0.3em;
 		}
@@ -161,6 +168,19 @@
 		table {
 			width: 100%;
 			
+			.js & {
+				display: none;
+			}
+			&.stacktable {
+				display: table;
+				
+				.st-head-row.st-head-row-main {
+					display: none;
+				}
+				.st-head-row {
+					padding-top: 1.429em;
+				}
+			}
 			tr:nth-child(even) td {
 				background: rgba(0, 0, 0, 0.05);
 			}

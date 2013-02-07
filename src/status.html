@@ -12,12 +12,12 @@
 	</div>
 	<div id="deps">
 		{{#if info.deps.length}}
-		<p class="summary">
-			<strong>{{info.deps.length}}</strong> dependencies total.
-			<strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{info.totalUpToDate}}</strong> up to date,
-			<strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{info.totalOutOfDate}}</strong> out of date.
-			<strong class="pinned"> <i class="icon-circle" title="Pinned"></i> {{info.totalPinned}}</strong> pinned.
-		</p>
+		<ul class="summary">
+			<li><strong>{{info.deps.length}}</strong> dependencies total.</li>
+			<li><strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{info.totalUpToDate}}</strong> up to date,</li>
+			<li><strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{info.totalOutOfDate}}</strong> out of date,</li>
+			<li><strong class="pinned"> <i class="icon-circle" title="Pinned"></i> {{info.totalPinned}}</strong> pinned.</li>
+		</ul>
 		<table summary="Repository dependencies and their status">
 			<tr>
 				<th>Dependency</th>
@@ -34,18 +34,18 @@
 				<td class="required">{{required}}</td>
 				<td class="stable">{{stable}}</td>
 				<td class="latest">{{latest}}</td>
-				<td class="status {{status}}">
-					<i class="icon-circle" title="{{status}}"></i>
+				<td class="status">
+					<span class="{{status}}"><i class="icon-circle" title="{{status}}"></i></span>
 				</td>
 			</tr>
 			{{/info.deps}}
 		</table>
-		<p class="summary">
-			<strong>{{info.deps.length}}</strong> dependencies total.
-			<strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{info.totalUpToDate}}</strong> up to date,
-			<strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{info.totalOutOfDate}}</strong> out of date.
-			<strong class="pinned"> <i class="icon-circle" title="Pinned"></i> {{info.totalPinned}}</strong> pinned.
-		</p>
+		<ul class="summary">
+			<li><strong>{{info.deps.length}}</strong> dependencies total.</li>
+			<li><strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{info.totalUpToDate}}</strong> up to date,</li>
+			<li><strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{info.totalOutOfDate}}</strong> out of date,</li>
+			<li><strong class="pinned"> <i class="icon-circle" title="Pinned"></i> {{info.totalPinned}}</strong> pinned.</li>
+		</ul>
 		{{else}}
 		<p>No dependencies</p>
 		{{/if}}
