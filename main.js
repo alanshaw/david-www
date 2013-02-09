@@ -4,6 +4,8 @@ var stats = require('./stats');
 var manifest = require('./manifest');
 var statics = require('./statics');
 var brains = require('./brains');
+var errors = require('./errors');
+
 
 var app = express();
 
@@ -44,74 +46,65 @@ function statsPage(req, res) {
 /**
  * Send the status badge for this user and repository
  */
-function statusBadge(req, res) {
+function statusPage(req, res) {
 
-	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
-	
-	manifest.getManifest(url, function(err, manifest) {
-		
-		if(err) {
-			console.log('Failed to get manifest', err);
-			res.status(500).render(500, {err: 'Failed to get package.json'});
-			return;
-		}
-		
-		brains.getInfo(manifest, function(err, info) {
-			
-			if(err) {
-				console.log('Failed to get dependency info', err);
-				res.status(500).render(500, {err: 'Failed to get dependency info'});
-				return;
-			}
-			
-			res.setHeader('Cache-Control', 'no-cache');
-			
-			var totalDeps = info.deps.length;
-			
-			if(totalDeps && info.totalOutOfDate) {
-				
-				if(info.totalOutOfDate / totalDeps > 0.25) {
-					res.sendfile('dist/img/outofdate.png');
-				} else {
-					res.sendfile('dist/img/notsouptodate.png');
-				}
-				
-			} else {
-				res.sendfile('dist/img/uptodate.png');
-			}
+	withManifestAndInfo(req, res, function(manifest, info) {
+
+		res.render('status', {
+			user: req.params.user,
+			repo: req.params.repo,
+			manifest: manifest,
+			info: info
 		});
-	});
+
+	})
 }
 
 /**
- * Display the status page for this user and repository
+ * Send the status badge for this user and repository
  */
-function statusPage(req, res) {
+function statusBadge(req, res) {
+
+	withManifestAndInfo(req, res, function(manifest, info) {
+
+		res.setHeader('Cache-Control', 'no-cache');
+
+		var totalDeps = info.deps.length;
+
+		if(totalDeps && info.totalOutOfDate) {
+
+			if(info.totalOutOfDate / totalDeps > 0.25) {
+				res.sendfile('dist/img/outofdate.png');
+			} else {
+				res.sendfile('dist/img/notsouptodate.png');
+			}
+
+		} else {
+			res.sendfile('dist/img/uptodate.png');
+		}
+	})
+}
+
+/**
+ * Common callback boilerplate of getting a manifest and info for the status page and badge
+ */
+function withManifestAndInfo(req, res, callback){
 
 	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
 
 	manifest.getManifest(url, function(err, manifest) {
 
-		if(err) {
-			console.log('Failed to get manifest', err);
-			res.status(500).render(500, {err: 'Failed to get package.json'});
+		if(errors.happened(err, req, res, 'Failed to get package.json')) {
 			return;
 		}
-		
+
 		brains.getInfo(manifest, function(err, info) {
-			
-			if(err) {
-				console.log('Failed to get dependency info', err);
-				res.status(500).render(500, {err: 'Failed to get dependency info'});
+
+			if(errors.happened(err, req, res, 'Failed to get dependency info')) {
 				return;
 			}
-			
-			res.render('status', {
-				user: req.params.user,
-				repo: req.params.repo,
-				manifest: manifest,
-				info: info
-			});
+
+			callback(manifest, info);
 		});
 	});
 }

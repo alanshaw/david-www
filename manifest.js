@@ -57,6 +57,23 @@ function getDependencyDiffs(deps1, deps2) {
 	return diffs;
 }
 
+/**
+ * Prevent JSON.parse errors from going postal and killing us all.
+ * Currently we smother SyntaxError and the like into a more manageable null.
+ * We may do something more clever soon.
+ *
+ * @param body
+ * @return {*}
+ */
+function parseManifest(body) {
+	try {
+		// JSON.parse will barf with a SyntaxError if the body is ill.
+		return JSON.parse(body);
+	} catch (error) {
+		return null
+	}
+}
+
 exports.getManifest = function(url, callback) {
 	
 	var manifest = manifests[url];
@@ -72,9 +89,9 @@ exports.getManifest = function(url, callback) {
 		if(!err && response.statusCode == 200) {
 			
 			console.log('Successfully retrieved package.json');
-			
-			var data = JSON.parse(body);
-			
+
+			var data = parseManifest(body);
+
 			if(!data) {
 				callback(new Error('Failed to parse package.json: ' + body));
 			} else {
