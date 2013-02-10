@@ -20,4 +20,15 @@ $('#home-page').each ->
 		url.removeClass 'nope'
 		$(@).show()
 
-$('#status-page #deps table').stacktable()
+$('#status-page').each ->
+	
+	$('#deps table').stacktable()
+	
+	$('#status').fancybox()
+	
+	$('#badge-embed input').each ->
+		clicked = false
+		$(@).click -> 
+			if not clicked 
+				$(@).select()
+				clicked = true
