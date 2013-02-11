@@ -1,6 +1,6 @@
 <img src="https://raw.github.com/alanshaw/david-www/master/david.png"/>
 
-David www [![Dependency Status](http://david-dm.org/alanshaw/david-www.png)](http://david-dm.org/alanshaw/david-www)
+David www [![Dependency Status](https://david-dm.org/alanshaw/david-www.png)](https://david-dm.org/alanshaw/david-www)
 =========
 
 Nodejs based web service that tells you when your project npm dependencies are out of date. To use David, your project must include a [package.json](https://npmjs.org/doc/json.html) file in the root of your repository.
