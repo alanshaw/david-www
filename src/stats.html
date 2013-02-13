@@ -4,7 +4,7 @@
 	{{#if recentlyUpdatedPackages.length}}
 	<ul>
 		{{#each recentlyUpdatedPackages}}
-		<li><a href="http://npmjs.org/package/{{name}}">{{name}}</a> {{previous}} -> {{version}}</li>
+		<li><a href="http://npmjs.org/package/{{name}}">{{name}}</a> {{previous}} <i class="icon-arrow-right"></i> {{version}}</li>
 		{{/each}}
 	</ul>
 	{{else}}
@@ -32,7 +32,7 @@
 				{{#each diffs}}
 				<li>
 					<a href="http://npmjs.org/package/{{name}}">{{name}}</a>
-					{{#if previous}}{{previous}}{{else}}Nothing{{/if}} -> {{#if version}}{{version}}{{else}}Nothing{{/if}}
+					{{#if previous}}{{previous}}{{else}}Nothing{{/if}} <i class="icon-arrow-right"></i> {{#if version}}{{version}}{{else}}Nothing{{/if}}
 				</li>
 				{{/each}}
 			</ul>
