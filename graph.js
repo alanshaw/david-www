@@ -32,25 +32,25 @@ var dependencies = {};
  */
 function getDependencyGraph(depName, version, callback) {
 	
-	process.nextTick(function() {
+	dependencies[depName] = dependencies[depName] || {};
+	
+	var dep = dependencies[depName][version];
+	
+	if(dep) {
 		
-		dependencies[depName] = dependencies[depName] || {};
-		
-		var dep = dependencies[depName][version];
-		
-		if(dep) {
-			
-			if(dep.expires > new Date()) {
-				callback(null, dep);
-				return;
-			}
-			
-			dep.deps = {};
-			dep.expires = moment().add(Package.TTL);
-			
-		} else {
-			dep = dependencies[depName][version] = new Package(depName, version);
+		if(dep.expires > new Date()) {
+			callback(null, dep);
+			return;
 		}
+		
+		dep.deps = {};
+		dep.expires = moment().add(Package.TTL);
+		
+	} else {
+		dep = dependencies[depName][version] = new Package(depName, version);
+	}
+	
+	process.nextTick(function() {
 		
 		npm.commands.view([depName + '@' + version, 'dependencies'], function(err, data) {
 			
@@ -58,8 +58,6 @@ function getDependencyGraph(depName, version, callback) {
 				callback(err);
 				return;
 			}
-			
-			console.log('data is', data);
 			
 			var depDeps = data[version] ? data[version].dependencies ? data[version].dependencies : {} : {},
 				depDepNames = depDeps ? Object.keys(depDeps) : [];
