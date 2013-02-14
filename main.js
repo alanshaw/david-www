@@ -5,6 +5,7 @@ var manifest = require('./manifest');
 var statics = require('./statics');
 var brains = require('./brains');
 var errors = require('./errors');
+var graph = require('./graph');
 
 
 var app = express();
@@ -17,6 +18,7 @@ app.configure(function() {
 
 statics.init(app);
 
+app.get('/:user/:repo/graph.json', dependencyGraph);
 app.get('/:user/:repo/status.png', statusBadge);
 app.get('/:user/:repo.png',        statusBadge);
 app.get('/:user/:repo',            statusPage);
@@ -27,7 +29,6 @@ app.get('/',                       indexPage);
  * Do a home page
  */
 function indexPage(req, res) {
-
 	res.render('index');
 }
 
@@ -57,7 +58,7 @@ function statusPage(req, res) {
 			info: info
 		});
 
-	})
+	});
 }
 
 /**
@@ -83,6 +84,21 @@ function statusBadge(req, res) {
 			res.sendfile('dist/img/uptodate.png');
 		}
 	})
+}
+
+function dependencyGraph(req, res) {
+	
+	withManifestAndInfo(req, res, function(manifest, info) {
+		
+		graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo, manifest.version, manifest.dependencies, function(err, graph) {
+			
+			if(errors.happened(err, req, res, 'Failed to get graph data')) {
+				return;
+			}
+			
+			res.json(graph);
+		});
+	});
 }
 
 /**
