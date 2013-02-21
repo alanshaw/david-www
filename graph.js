@@ -1,6 +1,7 @@
 var npm = require('npm');
 var moment = require('moment');
 var semver = require('semver');
+var JSON2 = require('JSON2');
 
 function Package(name, version) {
 	this.name = name;
@@ -144,7 +145,8 @@ var projects = {};
  * @param name
  * @param version
  * @param deps
- * @param callback
+ * @param {Function<Error, Object>} callback Second parameter is decycled dependency graph
+ * @see https://github.com/douglascrockford/JSON-js/blob/master/cycle.js
  */
 module.exports.getProjectDependencyGraph = function(name, version, deps, callback) {
 	
@@ -156,7 +158,7 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 		
 		if(project.expires > new Date()) {
 			console.log('Using cached project dependency graph', name, version);
-			callback(null, JSON.parse(JSON.stringify(project)));
+			callback(null, JSON2.decycle(project));
 			return;
 		}
 		
@@ -198,7 +200,7 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 					done++;
 					
 					if(done == depNames.length) {
-						callback(null, JSON.parse(JSON.stringify(project)));
+						callback(null, JSON2.decycle(project));
 					}
 				});
 			});
