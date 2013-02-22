@@ -19,15 +19,15 @@
 		</div>
 	</div>
 	{{#if info.deps.length}}
+	<ul class="switch">
+		<li><a href="#" title="Show dependencies in a list" class="selected"><i class="icon-list"></i> List</a></li>
+		<li><a href="#" title="Show dependencies in a tree"><i class="icon-sitemap"></i> Tree</a></li>
+	</ul>
 	<ul class="summary">
 		<li><strong>{{info.deps.length}}</strong> dependencies total.</li>
 		<li><strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{info.totalUpToDate}}</strong> up to date,</li>
 		<li><strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{info.totalOutOfDate}}</strong> out of date,</li>
 		<li><strong class="pinned"> <i class="icon-circle" title="Pinned"></i> {{info.totalPinned}}</strong> pinned.</li>
-	</ul>
-	<ul class="switch">
-		<li><a href="#">List</a></li>
-		<li><a href="#">Tree</a></li>
 	</ul>
 	<div id="deps">
 		<table summary="Repository dependencies and their status">

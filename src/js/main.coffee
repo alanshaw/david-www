@@ -1,6 +1,9 @@
 $ = jQuery
 
-# Do this on the homepage only
+########################################################################################################################
+# Homepage
+########################################################################################################################
+
 $('#home-page').each ->
 	
 	url = $ '.badge-maker span'
@@ -19,6 +22,10 @@ $('#home-page').each ->
 		if $(@).attr('src') is '/img/outofdate.png' then return # bail, it's the placeholder image load.
 		url.removeClass 'nope'
 		$(@).show()
+
+########################################################################################################################
+# Status page
+########################################################################################################################
 
 $('#status-page').each ->
 	
@@ -97,26 +104,6 @@ $('#status-page').each ->
 		.attr("height", h + m[0] + m[2])
 		.append("svg:g")
 		.attr("transform", "translate(" + m[3] + "," + m[0] + ")")
-	
-	d3.json window.location.pathname + "/graph.json", (json) ->
-		
-		transformData(
-			JSON.retrocycle(json)
-			(node) ->
-				console.log node
-				root = node
-				root.x0 = h / 2
-				root.y0 = 0
-				
-				toggleAll = (d) ->
-					if d.children
-						toggleAll child for child in d.children
-						toggle d
-				
-				# Initialize the display to show a few nodes.
-				toggleAll child for child in root.children
-				update root
-		)
 	
 	update = (source) ->
 		
@@ -214,3 +201,70 @@ $('#status-page').each ->
 		else
 			d.children = d._children
 			d._children = null
+	
+	# Load the graph data and render when change view
+	
+	graphLoaded = false
+	
+	graphContainer = $ '#graph'
+	tableContainer = $ '#deps'
+	
+	graphContainer.hide()
+	
+	viewSwitchers = $('.switch a')
+	
+	# Shows the correct view based on the currently selected viewSwitcher
+	showView = ->
+		
+		selectedViewSwitcher = $('.switch a.selected')
+		
+		if selectedViewSwitcher.closest('li').is ':first-child'
+			graphContainer.hide()
+			tableContainer.fadeIn()
+			window.location.hash = ''
+		else
+			graphContainer.fadeIn()
+			tableContainer.hide()
+			window.location.hash = '#tree'
+			
+			if not graphLoaded
+				graphLoaded = true
+				
+				loading = $ '<div class="loading"><i class="icon-spinner icon-spin icon-2x"></i> Reticulating splines...</div>'
+				graphContainer.prepend(loading)
+				
+				d3.json window.location.pathname + '/graph.json', (err, json) ->
+					
+					if err? then loading.empty().text('Error occurred retrieving graph data')
+					
+					transformData(
+						JSON.retrocycle(json)
+						(node) ->
+							root = node
+							root.x0 = h / 2
+							root.y0 = 0
+							
+							toggleAll = (d) ->
+								if d.children
+									toggleAll child for child in d.children
+									toggle d
+							
+							# Initialize the display to show a few nodes.
+							toggleAll child for child in root.children
+							update root
+							loading.remove()
+					)
+	
+	if window.location.hash is '#tree'
+		viewSwitchers.removeClass 'selected'
+		viewSwitchers.last().addClass 'selected'
+		showView()
+	
+	viewSwitchers.click (event) ->
+		
+		event.preventDefault()
+		
+		viewSwitchers.removeClass 'selected'
+		$(@).addClass 'selected'
+		
+		showView()
