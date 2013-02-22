@@ -12,20 +12,12 @@ function Package(name, version) {
 
 Package.TTL = moment.duration({days: 1});
 
-Package.prototype.toJSON = function() {
-	return {
-		name: this.name,
-		version: this.version,
-		deps: this.deps
-	};
-}
-
 var dependencies = {};
 
 /**
  * Get the dependency graph for a given NPM dependency name and version.
  * 
- * Must be executed in ```npm.load()``` callback.
+ * Must be executed in `npm.load()` callback.
  * 
  * @param depName Package name
  * @param version
@@ -64,7 +56,7 @@ function getDependencyGraph(depName, version, callback) {
 				depDepNames = depDeps ? Object.keys(depDeps) : [];
 			
 			// No dependencies?
-			if(depDepNames == 0) {
+			if(depDepNames.length == 0) {
 				callback(null, dep);
 				return;
 			}
@@ -73,21 +65,22 @@ function getDependencyGraph(depName, version, callback) {
 			
 			depDepNames.forEach(function(depDepName) {
 				
-				latestSatisfying(depDepName, depDeps[depDepName], function(err, depDepVersion) {
+				var depDepRange = depDeps[depDepName];
+				
+				latestSatisfying(depDepName, depDepRange, function(err, depDepVersion) {
 					
 					if(err) {
 						callback(err);
 						return;
 					}
 					
-					getDependencyGraph(depDepName, depDepVersion, function(err, depDep) {
+					// There should be a version that satisfies!
+					// But...
+					// The range could be a tag, or a git repo
+					if(!depDepVersion) {
 						
-						if(err) {
-							callback(err);
-							return;
-						}
-						
-						dep.deps[depDepName] = depDep;
+						// Add a dummy package with the range as it's version
+						dep.deps[depDepName] = new Package(depDepName, depDepRange);
 						
 						got++;
 						
@@ -95,7 +88,26 @@ function getDependencyGraph(depName, version, callback) {
 							dependencies[depName][version] = dep;
 							callback(null, dep);
 						}
-					});
+						
+					} else {
+						
+						getDependencyGraph(depDepName, depDepVersion, function(err, depDep) {
+							
+							if(err) {
+								callback(err);
+								return;
+							}
+							
+							dep.deps[depDepName] = depDep;
+							
+							got++;
+							
+							if(got == depDepNames.length) {
+								dependencies[depName][version] = dep;
+								callback(null, dep);
+							}
+						});
+					}
 					
 				}); // npm
 			});
@@ -103,12 +115,10 @@ function getDependencyGraph(depName, version, callback) {
 	});
 }
 
-module.exports.getDependencyGraph = getDependencyGraph;
-
 /**
  * Get the latest version for the passed dependency name that satisfies the passed range.
  * 
- * Must be executed in ```npm.load()``` callback.
+ * Must be executed in `npm.load()` callback.
  * 
  * @param depName
  * @param range
@@ -123,14 +133,12 @@ function latestSatisfying(depName, range, callback) {
 			return;
 		}
 		
+		if(range == 'latest') {
+			range = '';
+		}
+		
 		// Get the most recent version that satisfies the range
 		var version = semver.maxSatisfying(data[Object.keys(data)[0]].versions, range);
-		
-		// There should be a version that satisfies!
-		if(!version) {
-			callback(new Error('No versions for ' + depName + ' match range ' + range));
-			return;
-		}
 		
 		callback(null, version);
 	});
@@ -183,28 +191,47 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 		
 		depNames.forEach(function(depName) {
 			
-			latestSatisfying(depName, deps[depName], function(err, version) {
+			var range = deps[depName];
+			
+			latestSatisfying(depName, range, function(err, version) {
 				
 				if(err) {
 					callback(err);
 					return;
 				}
 				
-				getDependencyGraph(depName, version, function(err, dep) {
+				// There should be a version that satisfies!
+				// But...
+				// The range could be a tag, or a git repo
+				if(!version) {
 					
-					if(err) {
-						callback(err);
-						return;
-					}
-					
-					project.deps[depName] = dep;
+					// Add a dummy package with the range as it's version
+					project.deps[depName] = new Package(depName, range);
 					
 					done++;
 					
 					if(done == depNames.length) {
 						callback(null, JSON2.decycle(project));
 					}
-				});
+					
+				} else {
+					
+					getDependencyGraph(depName, version, function(err, dep) {
+						
+						if(err) {
+							callback(err);
+							return;
+						}
+						
+						project.deps[depName] = dep;
+						
+						done++;
+						
+						if(done == depNames.length) {
+							callback(null, JSON2.decycle(project));
+						}
+					});
+				}
 			});
 		});
 		
