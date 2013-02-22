@@ -158,8 +158,6 @@ var projects = {};
  */
 module.exports.getProjectDependencyGraph = function(name, version, deps, callback) {
 	
-	console.log(dependencies);
-	
 	projects[name] = projects[name] || {};
 	
 	var project = projects[name][version];
