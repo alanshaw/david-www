@@ -92,7 +92,7 @@ function getDependencyGraph(depName, version, callback) {
 						got++;
 						
 						if(got == depDepNames.length) {
-							dependencies[depDepName][depDepVersion] = dep;
+							dependencies[depName][version] = dep;
 							callback(null, dep);
 						}
 					});
@@ -149,6 +149,8 @@ var projects = {};
  * @see https://github.com/douglascrockford/JSON-js/blob/master/cycle.js
  */
 module.exports.getProjectDependencyGraph = function(name, version, deps, callback) {
+	
+	console.log(dependencies);
 	
 	projects[name] = projects[name] || {};
 	

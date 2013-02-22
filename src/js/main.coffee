@@ -63,21 +63,15 @@ $('#status-page').each ->
 		
 		transform = (dep, parentNode, level = 0, maxLevel = 10) ->
 			
-			keys = Object.keys(dep.deps)
-			
-			console.log(keys) if keys.length
-			
-			for depName in Object.keys(dep.deps)
+			$.each dep.deps, (depName, depDep) ->
 				
-				
-				
-				node = createNode(dep.deps[depName])
+				node = createNode(depDep)
 				
 				if level < maxLevel
 					
 					transformsCount++
 					
-					scheduleTransform(dep.deps[depName], node, level + 1, maxLevel)
+					scheduleTransform(depDep, node, level + 1, maxLevel)
 				
 				parentNode.children = [] if not parentNode.children
 				parentNode.children.push node
@@ -88,7 +82,8 @@ $('#status-page').each ->
 		transform(rootDep, rootNode)
 	
 	m = [20, 120, 20, 120]
-	w = 1024 - m[1] - m[3]
+	#w = 1024 - m[1] - m[3]
+	w = parseInt($(window).width() - $('#main').position().left) - m[1] - m[3]
 	h = 768 - m[0] - m[2]
 	i = 0
 	root = null
@@ -108,6 +103,7 @@ $('#status-page').each ->
 		transformData(
 			JSON.retrocycle(json)
 			(node) ->
+				console.log node
 				root = node
 				root.x0 = h / 2
 				root.y0 = 0
