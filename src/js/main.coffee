@@ -233,7 +233,10 @@ $('#status-page').each ->
 				loading = $ '<div class="loading"><i class="icon-spinner icon-spin icon-2x"></i> Reticulating splines...</div>'
 				graphContainer.prepend(loading)
 				
-				d3.json window.location.pathname + '/graph.json', (err, json) ->
+				pathname = window.location.pathname
+				pathname += '/' if pathname[pathname.length - 1] isnt '/'
+				
+				d3.json pathname + 'graph.json', (err, json) ->
 					
 					if err? then loading.empty().text('Error occurred retrieving graph data')
 					
