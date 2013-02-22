@@ -18,14 +18,18 @@
 			<input id="badge-html" type="text" value="&lt;a href=&quot;https://david-dm.org/{{user}}/{{repo}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;https://david-dm.org/{{user}}/{{repo}}.png&quot;/&gt;&lt;/a&gt;"/>
 		</div>
 	</div>
+	{{#if info.deps.length}}
+	<ul class="switch">
+		<li><a href="#" title="Show dependencies in a list" class="selected"><i class="icon-list"></i> List</a></li>
+		<li><a href="#" title="Show dependencies in a tree"><i class="icon-sitemap"></i> Tree</a></li>
+	</ul>
+	<ul class="summary">
+		<li><strong>{{info.deps.length}}</strong> dependencies total.</li>
+		<li><strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{info.totalUpToDate}}</strong> up to date,</li>
+		<li><strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{info.totalOutOfDate}}</strong> out of date,</li>
+		<li><strong class="pinned"> <i class="icon-circle" title="Pinned"></i> {{info.totalPinned}}</strong> pinned.</li>
+	</ul>
 	<div id="deps">
-		{{#if info.deps.length}}
-		<ul class="summary">
-			<li><strong>{{info.deps.length}}</strong> dependencies total.</li>
-			<li><strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{info.totalUpToDate}}</strong> up to date,</li>
-			<li><strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{info.totalOutOfDate}}</strong> out of date,</li>
-			<li><strong class="pinned"> <i class="icon-circle" title="Pinned"></i> {{info.totalPinned}}</strong> pinned.</li>
-		</ul>
 		<table summary="Repository dependencies and their status">
 			<tr>
 				<th>Dependency</th>
@@ -48,15 +52,16 @@
 			</tr>
 			{{/info.deps}}
 		</table>
-		<ul class="summary">
-			<li><strong>{{info.deps.length}}</strong> dependencies total.</li>
-			<li><strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{info.totalUpToDate}}</strong> up to date,</li>
-			<li><strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{info.totalOutOfDate}}</strong> out of date,</li>
-			<li><strong class="pinned"> <i class="icon-circle" title="Pinned"></i> {{info.totalPinned}}</strong> pinned.</li>
-		</ul>
-		{{else}}
-		<p>No dependencies</p>
-		{{/if}}
 	</div>
+	<div id="graph"></div>
+	<ul class="summary">
+		<li><strong>{{info.deps.length}}</strong> dependencies total.</li>
+		<li><strong class="uptodate"> <i class="icon-circle" title="Up to date"></i> {{info.totalUpToDate}}</strong> up to date,</li>
+		<li><strong class="outofdate"> <i class="icon-circle" title="Out of date"></i> {{info.totalOutOfDate}}</strong> out of date,</li>
+		<li><strong class="pinned"> <i class="icon-circle" title="Pinned"></i> {{info.totalPinned}}</strong> pinned.</li>
+	</ul>
+	{{else}}
+	<p>No dependencies</p>
+	{{/if}}
 
 @@include('inc/bottom.html')

@@ -27,3 +27,52 @@ body {
 	margin: 4em auto;
 	max-width: 73.143em;
 }
+
+#status-page {
+	
+	.node {
+		
+		circle {
+			cursor: pointer;
+			fill: #fff;
+			stroke: #7E827A;
+			stroke-width: 1.5px;
+		}
+		text {
+			font-size: 11px;
+		}
+	}
+	path.link {
+		fill: none;
+		stroke: #ccc;
+		stroke-width: 1.5px;
+	}
+	.switch {
+		display: block;
+		list-stype-type: none;
+		margin: 0;
+		padding: 0;
+		float: right;
+		
+		li {
+			display: inline;
+			margin-left: 1em;
+		}
+		a {
+			&:focus {
+				outline: 0;
+			}
+			&.selected {
+				color: #444;
+			}
+		}
+	}
+	.loading {
+		margin: 10em;
+		text-align: center;
+		
+		* {
+			vertical-align: middle;
+		}
+	}
+}
