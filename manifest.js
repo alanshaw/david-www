@@ -70,7 +70,7 @@ function parseManifest(body) {
 		// JSON.parse will barf with a SyntaxError if the body is ill.
 		return JSON.parse(body);
 	} catch (error) {
-		return null
+		return null;
 	}
 }
 

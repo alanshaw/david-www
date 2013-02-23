@@ -83,7 +83,7 @@ function statusBadge(req, res) {
 		} else {
 			res.sendfile('dist/img/uptodate.png');
 		}
-	})
+	});
 }
 
 function dependencyGraph(req, res) {

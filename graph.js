@@ -56,7 +56,7 @@ function getDependencyGraph(depName, version, callback) {
 				depDepNames = depDeps ? Object.keys(depDeps) : [];
 			
 			// No dependencies?
-			if(depDepNames.length == 0) {
+			if(depDepNames.length === 0) {
 				callback(null, dep);
 				return;
 			}
