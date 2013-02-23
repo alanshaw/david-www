@@ -1,9 +1,10 @@
-@@include('inc/top.html', {"id": "status-page", "title": "Dependency status for {{user}} / {{manifest.name}}"})
+@@include('inc/top.html', {"id": "status-page", "title": "Dependency status for {{user}} / {{manifest.name}} {{manifest.version}}"})
 
 	<div id="repo">
 		<h1>
 			<a href="https://github.com/{{user}}">{{user}}</a> /
 			<a href="https://github.com/{{user}}/{{repo}}">{{manifest.name}}</a>
+			<span>{{manifest.version}}</span>
 			<a id="status" href="#badge-embed"><img src="/{{user}}/{{repo}}.png" alt="Dependency status" /></a>
 		</h1>
 		{{#if manifest.description}}
