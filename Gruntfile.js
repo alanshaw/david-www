@@ -74,6 +74,11 @@ module.exports = function(grunt) {
 			files: '*.js'
 		},
 		
+		// Test the things
+		nodeunit: {
+			all: ['test/**/*_test.js']
+		},
+		
 		// Watch CoffeeScript, LESS & HTML files for changes, copy & compile but not minify for easy debug during dev
 		watch: {
 			project: {
@@ -92,6 +97,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-include-replace');
+	grunt.loadNpmTasks('grunt-contrib-nodeunit');
 	
-	grunt.registerTask('default', ['jshint', 'copy', 'includereplace', 'coffee', 'less', 'uglify', 'cssmin']);
+	grunt.registerTask('default', ['jshint', 'nodeunit', 'copy', 'includereplace', 'coffee', 'less', 'uglify', 'cssmin']);
 };

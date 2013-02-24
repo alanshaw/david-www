@@ -26,7 +26,7 @@ function deleteExpires(decycledPkg) {
 	
 	Object.keys(decycledPkg.deps).forEach(function(depName) {
 		// Delete expires from this dependency if it isn't a decycle reference
-		if(!decycledPkg.deps[depName]['$ref']) {
+		if(!decycledPkg.deps[depName].$ref) {
 			deleteExpires(decycledPkg.deps[depName]);
 		}
 	});
