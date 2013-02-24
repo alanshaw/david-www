@@ -72,9 +72,9 @@ function statusBadge(req, res) {
 
 		var totalDeps = info.deps.length;
 
-		if(totalDeps && info.totalOutOfDate) {
+		if(totalDeps && info.totals.unpinned.outOfDate) {
 
-			if(info.totalOutOfDate / totalDeps > 0.25) {
+			if(info.totals.unpinned.outOfDate / totalDeps > 0.25) {
 				res.sendfile('dist/img/outofdate.png');
 			} else {
 				res.sendfile('dist/img/notsouptodate.png');

@@ -93,13 +93,16 @@
 }
 .outofdate {
 	color: #ab0101;
+	
+	&.pinned {
+		color: orange;
+		
+		i {
+			text-shadow: 0 0 5px orange;
+		}
+	}
 	i {
 		text-shadow: 0 0 5px #ab0101;
-	}
-}
-.pinned {
-	i {
-		text-shadow: -1px -1px 1px #000;
 	}
 }
 

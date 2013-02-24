@@ -46,40 +46,46 @@ module.exports.getInfo = function(manifest, callback) {
 				}
 				
 				var depNames = Object.keys(deps).sort(),
-					totalUpToDate = 0,
-					totalOutOfDate = 0,
-					totalPinned = 0;
+					totals = {
+						upToDate: 0,
+						outOfDate: 0,
+						pinned: {
+							upToDate: 0,
+							outOfDate: 0
+						},
+						unpinned: {
+							upToDate: 0,
+							outOfDate: 0
+						}
+					};
 				
 				var depList = depNames.map(function(depName) {
 					
 					// Lets disprove this
 					var status = 'uptodate';
-					var pinned = isPinned(deps[depName].required);
 					
-					// If a dependency isn't pinned, then it might be out of date
-					if(!pinned) {
-						
-						// If there is an updated STABLE dependency then this dep is out of date
-						// TODO: Remove secondary check when https://github.com/alanshaw/david/issues/8 is fixed
-						if(updatedStableDeps[depName] && updatedDeps[depName]) {
-							
-							status = 'outofdate';
-							
-						// If it is in the UNSTABLE list, and has no stable version then consider out of date
-						} else if(updatedDeps[depName] && !updatedDeps[depName].stable) {
-							
-							status = 'outofdate';
-						}
-						
-					} else {
-						status = 'pinned';
-						totalPinned++;
+					// If there is an updated STABLE dependency then this dep is out of date
+					if(updatedStableDeps[depName]) {
+						status = 'outofdate';
+					// If it is in the UNSTABLE list, and has no stable version then consider out of date
+					} else if(updatedDeps[depName] && !updatedDeps[depName].stable) {
+						status = 'outofdate';
 					}
 					
-					if(status == 'uptodate') {
-						totalUpToDate++;
-					} else if(status == 'outofdate') {
-						totalOutOfDate++;
+					var pinned = isPinned(deps[depName].required);
+					
+					if(status == 'uptodate' && pinned) {
+						totals.upToDate++;
+						totals.pinned.upToDate++;
+					} else if(status == 'uptodate' && !pinned) {
+						totals.upToDate++;
+						totals.unpinned.upToDate++;
+					} else if(status == 'outofdate' && pinned) {
+						totals.outOfDate++;
+						totals.pinned.outOfDate++;
+					} else if(status == 'outofdate' && !pinned) {
+						totals.outOfDate++;
+						totals.unpinned.outOfDate++;
 					}
 					
 					return {
@@ -87,16 +93,12 @@ module.exports.getInfo = function(manifest, callback) {
 						required: deps[depName].required,
 						stable: deps[depName].stable,
 						latest: deps[depName].latest,
-						status: status
+						status: status,
+						pinned: pinned
 					};
 				});
 				
-				callback(null, {
-					deps: depList,
-					totalUpToDate: totalUpToDate,
-					totalOutOfDate: totalOutOfDate,
-					totalPinned: totalPinned
-				});
+				callback(null, {deps: depList, totals: totals});
 			});
 		});
 	});
