@@ -12,6 +12,28 @@ function Package(name, version) {
 
 Package.TTL = moment.duration({days: 1});
 
+/**
+ * Recursively removes the expires property from a decycled Package.
+ * 
+ * Necessary until https://github.com/douglascrockford/JSON-js/pull/50 is pulled or a better solution becomes available.
+ * 
+ * @param {Object} decycledPkg A decycled Package
+ * @return {Object} decycledPkg
+ */
+function deleteExpires(decycledPkg) {
+	
+	delete decycledPkg.expires;
+	
+	Object.keys(decycledPkg.deps).forEach(function(depName) {
+		// Delete expires from this dependency if it isn't a decycle reference
+		if(!decycledPkg.deps[depName]['$ref']) {
+			deleteExpires(decycledPkg.deps[depName]);
+		}
+	});
+	
+	return decycledPkg;
+}
+
 var dependencies = {};
 
 /**
@@ -166,7 +188,7 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 		
 		if(project.expires > new Date()) {
 			console.log('Using cached project dependency graph', name, version);
-			callback(null, JSON2.decycle(project));
+			callback(null, deleteExpires(JSON2.decycle(project)));
 			return;
 		}
 		
@@ -226,7 +248,7 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 						done++;
 						
 						if(done == depNames.length) {
-							callback(null, JSON2.decycle(project));
+							callback(null, deleteExpires(JSON2.decycle(project)));
 						}
 					});
 				}
