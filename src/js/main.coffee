@@ -211,63 +211,55 @@ $('#status-page').each ->
 	
 	graphContainer.hide()
 	
+	initGraph = ->
+		
+		loading = $ '<div class="loading"><i class="icon-spinner icon-spin icon-2x"></i> Reticulating splines...</div>'
+		graphContainer.prepend(loading)
+		
+		pathname = window.location.pathname
+		pathname += '/' if pathname[pathname.length - 1] isnt '/'
+		
+		d3.json pathname + 'graph.json', (err, json) ->
+			
+			if err? then loading.empty().text('Error occurred retrieving graph data')
+			
+			transformData(
+				JSON.retrocycle(json)
+				(node) ->
+					root = node
+					root.x0 = h / 2
+					root.y0 = 0
+					
+					toggleAll = (d) ->
+						if d.children
+							toggleAll child for child in d.children
+							toggle d
+					
+					# Initialize the display to show a few nodes.
+					toggleAll child for child in root.children
+					update root
+					loading.remove()
+			)
+	
 	viewSwitchers = $('.switch a')
 	
-	# Shows the correct view based on the currently selected viewSwitcher
-	showView = ->
+	onHashChange = ->
 		
-		selectedViewSwitcher = $('.switch a.selected')
+		viewSwitchers.removeClass 'selected'
 		
-		if selectedViewSwitcher.closest('li').is ':first-child'
+		if window.location.hash isnt '#tree'
 			graphContainer.hide()
 			tableContainer.fadeIn()
-			window.location.hash = ''
+			viewSwitchers.first().addClass 'selected'
 		else
-			graphContainer.fadeIn()
 			tableContainer.hide()
-			window.location.hash = '#tree'
+			graphContainer.fadeIn()
+			viewSwitchers.last().addClass 'selected'
 			
 			if not graphLoaded
 				graphLoaded = true
-				
-				loading = $ '<div class="loading"><i class="icon-spinner icon-spin icon-2x"></i> Reticulating splines...</div>'
-				graphContainer.prepend(loading)
-				
-				pathname = window.location.pathname
-				pathname += '/' if pathname[pathname.length - 1] isnt '/'
-				
-				d3.json pathname + 'graph.json', (err, json) ->
-					
-					if err? then loading.empty().text('Error occurred retrieving graph data')
-					
-					transformData(
-						JSON.retrocycle(json)
-						(node) ->
-							root = node
-							root.x0 = h / 2
-							root.y0 = 0
-							
-							toggleAll = (d) ->
-								if d.children
-									toggleAll child for child in d.children
-									toggle d
-							
-							# Initialize the display to show a few nodes.
-							toggleAll child for child in root.children
-							update root
-							loading.remove()
-					)
+				initGraph()
 	
-	if window.location.hash is '#tree'
-		viewSwitchers.removeClass 'selected'
-		viewSwitchers.last().addClass 'selected'
-		showView()
+	onHashChange()
 	
-	viewSwitchers.click (event) ->
-		
-		event.preventDefault()
-		
-		viewSwitchers.removeClass 'selected'
-		$(@).addClass 'selected'
-		
-		showView()
+	$(window).bind 'hashchange', onHashChange
