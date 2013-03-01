@@ -82,7 +82,7 @@ module.exports = function(grunt) {
 		// Watch CoffeeScript, LESS & HTML files for changes, copy & compile but not minify for easy debug during dev
 		watch: {
 			project: {
-				files: ['src/js/**/*.coffee', 'src/css/**/*.less', 'src/**/*.html'],
+				files: ['src/js/**/*.coffee', 'src/css/**/*.less', 'src/**/*.html', 'src/img/**/*'],
 				tasks: ['copy', 'includereplace', 'coffee', 'less']
 			}
 		}

@@ -1,39 +1,73 @@
 @@include('inc/top.html', {"id": "home-page", "title": "David, a dependency management tool for Nodejs projects"})
 	
-	<h1>Watching your Node dependencies.</h1>
-
-	<p>You depend on other projects. You want to stay up to date. David's got your back.</p>
-
-	<p>David gets you an overview of your project dependencies, the version you use and the latest available, so you can quickly see what's drifting. Then it's all boiled down into a badge showing the current status, which you can embed on your site.</p>
-
-	<ul id="examples">
-		<li><a href="/twitter/bower">
-			twitter / bower <img src="/twitter/bower.png">
-		</a></li>
-		<li><a href="/mikeal/request">
-			mikeal / request <img src="/mikeal/request.png">
-		</a></li>
-		<li><a href="/gruntjs/grunt">
-			gruntjs / grunt <img src="/gruntjs/grunt.png">
-		</a></li>
-		<li><a href="/visionmedia/express">
-			visionmedia / express <img src="/visionmedia/express.png">
-		</a></li>
-		<li><a href="/alanshaw/david">
-			alanshaw / david <img src="/alanshaw/david.png">
-		</a></li>
-	</ul>
+	<div>
+		
+		<h1>Watching your Node dependencies.</h1>
 	
-	<h2>Giving you badges.</h2>
+		<p>You depend on other projects. You want to stay up to date. David's got your back.</p>
 	
-	<p>Got a <a href="http://nodejs.org/">Node</a> project? Get a badge. David is free for public projects on <a href="http://github.com/">Github</a>.</p>
+		<p>David gets you an overview of your project dependencies, the version you use and the latest available, so you can quickly see what's drifting. Then it's all boiled down into a badge showing the current status, which you can embed on your site.</p>
 	
-	<p>Declare your dependencies in a <a href="http://package.json.nodejitsu.com/">package.json</a> file and you're good. David will go work the rest out and you'll get your own project status page, listing your dependencies and their freshness. Click on the examples above for a preview.</p>
-
-	<p>Type your username / repo name in below and get yours...</p>
-
-	<p class="badge-maker"><strong>https://david-dm.org/<span contenteditable class="nope" id="username" title="[Github username] / [repo name]">username/repo</span>.png</strong> <img id="badge" src="/img/outofdate.png"></p>
+		<ul id="examples">
+			<li><a href="/twitter/bower">
+				twitter / bower <img src="/twitter/bower.png">
+			</a></li>
+			<li><a href="/mikeal/request">
+				mikeal / request <img src="/mikeal/request.png">
+			</a></li>
+			<li><a href="/gruntjs/grunt">
+				gruntjs / grunt <img src="/gruntjs/grunt.png">
+			</a></li>
+			<li><a href="/visionmedia/express">
+				visionmedia / express <img src="/visionmedia/express.png">
+			</a></li>
+			<li><a href="/alanshaw/david">
+				alanshaw / david <img src="/alanshaw/david.png">
+			</a></li>
+		</ul>
+		
+		<h2>Giving you badges.</h2>
+		
+		<p>Got a <a href="http://nodejs.org/">Node</a> project? Get a badge. David is free for public projects on <a href="http://github.com/">Github</a>.</p>
+		
+		<p>Declare your dependencies in a <a href="http://package.json.nodejitsu.com/">package.json</a> file and you're good. David will go work the rest out and you'll get your own project status page, listing your dependencies and their freshness. Click on the examples above for a preview.</p>
 	
-	<p>David is currently <em>BETA</em>, which means it may be unreliable, unavailable or not working. That said, it's already useful and we're working to make it rock solid. It's all in Github so <a href="https://github.com/alanshaw/david-www">feel free to help</a>.</p>
+		<p>Type your username / repo name in below and get yours...</p>
+	
+		<p class="badge-maker"><strong>https://david-dm.org/<span contenteditable class="nope" id="username" title="[Github username] / [repo name]">username/repo</span>.png</strong> <img id="badge" src="/img/outofdate.png"></p>
+		
+		<p>David is currently <em>BETA</em>, which means it may be unreliable, unavailable or not working. That said, it's already useful and we're working to make it rock solid. It's all in Github so <a href="https://github.com/alanshaw/david-www">feel free to help</a>.</p>
+		
+	</div>
+	
+	<aside id="stats">
+		
+		<div id="recently-watched">
+			<h2><span>Recently started watching</span></h2>
+			{{#if recentlyRetrievedManifests.length}}
+			<ul class="stats">
+				{{#each recentlyRetrievedManifests}}
+				<li><a href="/{{meta.user}}/{{meta.repo}}">{{meta.user}} / {{meta.repo}}</a></li>
+				{{/each}}
+			</ul>
+			{{else}}
+			<p>No recent projects</p>
+			{{/if}}
+		</div>
+		
+		<div id="recently-updated-npm">
+			<h2><span>Recently updated NPM packages</span></h2>
+			{{#if recentlyUpdatedPackages.length}}
+			<ul class="stats">
+				{{#each recentlyUpdatedPackages}}
+				<li><a href="http://npmjs.org/package/{{name}}">{{name}}</a> <span>{{previous}} <i class="icon-arrow-right"></i> {{version}}</span></li>
+				{{/each}}
+			</ul>
+			{{else}}
+			<p>No recently updated NPM packages</p>
+			{{/if}}
+		</div>
+		
+	</aside>
 
 @@include('inc/bottom.html')

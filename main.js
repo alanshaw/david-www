@@ -29,7 +29,10 @@ app.get('/',                       indexPage);
  * Do a home page
  */
 function indexPage(req, res) {
-	res.render('index');
+	res.render('index', {
+		recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
+		recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages()
+	});
 }
 
 /**
