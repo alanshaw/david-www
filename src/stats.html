@@ -1,46 +1,52 @@
 @@include('inc/top.html', {"id": "stats-page", "title": "Stats for David"})
 	
-	<h1>Recently updated NPM packages</h1>
-	{{#if recentlyUpdatedPackages.length}}
-	<ul>
-		{{#each recentlyUpdatedPackages}}
-		<li><a href="http://npmjs.org/package/{{name}}">{{name}}</a> {{previous}} <i class="icon-arrow-right"></i> {{version}}</li>
-		{{/each}}
-	</ul>
-	{{else}}
-	<p>No recently updated NPM packages</p>
-	{{/if}}
+	<div id="recently-watched">
+		<h1>Recently started watching</h1>
+		{{#if recentlyRetrievedManifests.length}}
+		<ul class="stats">
+			{{#each recentlyRetrievedManifests}}
+			<li><a href="/{{meta.user}}/{{meta.repo}}">{{meta.user}} / {{meta.repo}}</a></li>
+			{{/each}}
+		</ul>
+		{{else}}
+		<p>No recent projects</p>
+		{{/if}}
+	</div>
 	
-	<h1>Recently started watching</h1>
-	{{#if recentlyRetrievedManifests.length}}
-	<ul>
-		{{#each recentlyRetrievedManifests}}
-		<li><a href="/{{meta.user}}/{{meta.repo}}">{{meta.user}} / {{meta.repo}}</a></li>
-		{{/each}}
-	</ul>
-	{{else}}
-	<p>No recent projects</p>
-	{{/if}}
+	<div id="recently-updated-npm">
+		<h1>Recently updated NPM packages</h1>
+		{{#if recentlyUpdatedPackages.length}}
+		<ul class="stats">
+			{{#each recentlyUpdatedPackages}}
+			<li><a href="http://npmjs.org/package/{{name}}">{{name}}</a> <span>{{previous}} <i class="icon-arrow-right"></i> {{version}}</span></li>
+			{{/each}}
+		</ul>
+		{{else}}
+		<p>No recently updated NPM packages</p>
+		{{/if}}
+	</div>
 	
-	<h1>Recently updated projects</h1>
-	{{#if recentlyUpdatedManifests.length}}
-	<ul>
-		{{#each recentlyUpdatedManifests}}
-		<li>
-			<a href="/{{meta.user}}/{{meta.repo}}">{{meta.user}} / {{meta.repo}}</a>
-			<ul>
-				{{#each diffs}}
-				<li>
-					<a href="http://npmjs.org/package/{{name}}">{{name}}</a>
-					{{#if previous}}{{previous}}{{else}}Nothing{{/if}} <i class="icon-arrow-right"></i> {{#if version}}{{version}}{{else}}Nothing{{/if}}
-				</li>
-				{{/each}}
-			</ul>
-		</li>
-		{{/each}}
-	</ul>
-	{{else}}
-	<p>No projects were recently updated</p>
-	{{/if}}
+	<div id="recently-updated-proj">
+		<h1>Recently updated projects</h1>
+		{{#if recentlyUpdatedManifests.length}}
+		<ul class="stats">
+			{{#each recentlyUpdatedManifests}}
+			<li>
+				<a href="/{{meta.user}}/{{meta.repo}}">{{meta.user}} / {{meta.repo}}</a>
+				<ul>
+					{{#each diffs}}
+					<li>
+						<a href="http://npmjs.org/package/{{name}}">{{name}}</a>
+						<span>{{#if previous}}{{previous}}{{else}}Nothing{{/if}} <i class="icon-arrow-right"></i> {{#if version}}{{version}}{{else}}Nothing{{/if}}</span>
+					</li>
+					{{/each}}
+				</ul>
+			</li>
+			{{/each}}
+		</ul>
+		{{else}}
+		<p>No projects were recently updated</p>
+		{{/if}}
+	</div>
 
 @@include('inc/bottom.html')
