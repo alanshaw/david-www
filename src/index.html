@@ -55,18 +55,16 @@
 			{{/if}}
 		</div>
 		
+		{{#if recentlyUpdatedPackages.length}}
 		<div id="recently-updated-npm">
 			<h2><span>Recently updated NPM packages</span></h2>
-			{{#if recentlyUpdatedPackages.length}}
 			<ul class="stats">
 				{{#each recentlyUpdatedPackages}}
 				<li><a href="http://npmjs.org/package/{{name}}">{{name}}</a> <span>{{previous}} <i class="icon-arrow-right"></i> {{version}}</span></li>
 				{{/each}}
 			</ul>
-			{{else}}
-			<p>No recently updated NPM packages</p>
-			{{/if}}
 		</div>
+		{{/if}}
 		
 	</aside>
 
