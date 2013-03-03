@@ -10,11 +10,9 @@ var graph = require('./graph');
 
 var app = express();
 
-app.configure(function() {
-	app.engine('html', consolidate.handlebars);
-	app.set('view engine', 'html');
-	app.set('views', __dirname + '/dist');
-});
+app.engine('html', consolidate.handlebars);
+app.set('view engine', 'html');
+app.set('views', __dirname + '/dist');
 
 statics.init(app);
 
