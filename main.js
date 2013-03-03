@@ -89,7 +89,13 @@ function statusBadge(req, res) {
 
 function dependencyGraph(req, res) {
 	
-	withManifestAndInfo(req, res, function(manifest, info) {
+	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
+	
+	manifest.getManifest(url, function(err, manifest) {
+
+		if(errors.happened(err, req, res, 'Failed to get package.json')) {
+			return;
+		}
 		
 		graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo, manifest.version, manifest.dependencies, function(err, graph) {
 			
