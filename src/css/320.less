@@ -18,6 +18,7 @@
 	top: 0;
 	left: 0;
 	width: 100%;
+	z-index: 1;
 	
 	> div {
 		padding: 0.25em 0;
@@ -103,6 +104,19 @@
 	}
 	i {
 		text-shadow: 0 0 5px #ce563f;
+	}
+}
+ul.stats {
+	li {
+		margin: 0.5em 0;
+		
+		&:first-child {
+			margin-top: 0;
+		}
+		span {
+			font-size: 0.75em;
+			display: block;
+		}
 	}
 }
 

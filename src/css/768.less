@@ -32,6 +32,30 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #home-page {
+	#main {
+		overflow: hidden;
+	}
+	#main > div {
+		float: left;
+		width: 71%;
+	}
+	#stats {
+		float: left;
+		width: 25%;
+		margin: 1em 0 1em 2%;
+		padding-left: 2%;
+		position: relative;
+		
+		h2 {
+			font-size: 1.143em;
+		}
+		&:before {
+			content: url(../img/bg-stats-shadow.png);
+			position: absolute;
+			top: 0;
+			left: -24px;
+		}
+	}
 	#examples {
 		padding-left: 3em;
 	}
