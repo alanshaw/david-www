@@ -30,7 +30,7 @@ module.exports.getInfo = function(manifest, callback) {
 		}
 		
 		// Get ALL updated dependencies including unstable
-		david.getUpdatedDependencies(manifest, false, function(err, updatedDeps) {
+		david.getUpdatedDependencies(manifest, function(err, updatedDeps) {
 			
 			if(err) {
 				callback(err);
@@ -38,7 +38,7 @@ module.exports.getInfo = function(manifest, callback) {
 			}
 			
 			// Get STABLE updated dependencies
-			david.getUpdatedDependencies(manifest, true, function(err, updatedStableDeps) {
+			david.getUpdatedDependencies(manifest, {stable: true}, function(err, updatedStableDeps) {
 				
 				if(err) {
 					callback(err);
