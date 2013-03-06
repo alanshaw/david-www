@@ -5,7 +5,15 @@ var mockManifest = {};
 
 function mockDavid(deps, updatedDeps, updatedStableDeps) {
 	return {
-		getDependencies: function(manifest, callback) {
+		getDependencies: function(manifest, options, callback) {
+			
+			// Allow callback to be passed as second parameter
+			if(!callback) {
+				callback = options;
+				options = {};
+			} else {
+				options = options || {};
+			}
 			
 			if(manifest != mockManifest) {
 				callback(new Error('Mock david unexpected manifest'));
@@ -14,14 +22,22 @@ function mockDavid(deps, updatedDeps, updatedStableDeps) {
 			
 			callback(null, deps);
 		},
-		getUpdatedDependencies: function(manifest, onlyStable, callback) {
+		getUpdatedDependencies: function(manifest, options, callback) {
+			
+			// Allow callback to be passed as second parameter
+			if(!callback) {
+				callback = options;
+				options = {};
+			} else {
+				options = options || {};
+			}
 			
 			if(manifest != mockManifest) {
 				callback(new Error('Mock david unexpected manifest'));
 				return;
 			}
 			
-			callback(null, onlyStable ? updatedStableDeps : updatedDeps);
+			callback(null, options.stable ? updatedStableDeps : updatedDeps);
 		} 
 	};
 }

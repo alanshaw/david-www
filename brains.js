@@ -20,9 +20,25 @@ function isPinned(version) {
 	return true;
 }
 
-module.exports.getInfo = function(manifest, callback) {
+/**
+ * @param {Object} manifest Parsed package.json file contents
+ * @param {Object|Function<Error, Object>} [options] Options or callback
+ * @param {Boolean} [options.dev] Consider devDependencies
+ * @param {Function<Error, Object>} callback Function that receives the results
+ */
+module.exports.getInfo = function(manifest, options, callback) {
 	
-	david.getDependencies(manifest, function(err, deps) {
+	// Allow callback to be passed as second parameter
+	if(!callback) {
+		callback = options;
+		options = {};
+	} else {
+		options = options || {};
+	}
+	
+	var davidOptions = {dev: options.dev};
+	
+	david.getDependencies(manifest, davidOptions, function(err, deps) {
 		
 		if(err) {
 			callback(err);
@@ -30,15 +46,17 @@ module.exports.getInfo = function(manifest, callback) {
 		}
 		
 		// Get ALL updated dependencies including unstable
-		david.getUpdatedDependencies(manifest, function(err, updatedDeps) {
+		david.getUpdatedDependencies(manifest, davidOptions, function(err, updatedDeps) {
 			
 			if(err) {
 				callback(err);
 				return;
 			}
 			
+			davidOptions.stable = true;
+			
 			// Get STABLE updated dependencies
-			david.getUpdatedDependencies(manifest, {stable: true}, function(err, updatedStableDeps) {
+			david.getUpdatedDependencies(manifest, davidOptions, function(err, updatedStableDeps) {
 				
 				if(err) {
 					callback(err);

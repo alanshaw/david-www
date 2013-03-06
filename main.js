@@ -16,12 +16,13 @@ app.set('views', __dirname + '/dist');
 
 statics.init(app);
 
-app.get('/:user/:repo/graph.json', dependencyGraph);
-app.get('/:user/:repo/status.png', statusBadge);
-app.get('/:user/:repo.png',        statusBadge);
-app.get('/:user/:repo',            statusPage);
-app.get('/stats',                  statsPage);
-app.get('/',                       indexPage);
+app.get('/:user/:repo/dev-info.json', devInfo);
+app.get('/:user/:repo/graph.json',    dependencyGraph);
+app.get('/:user/:repo/status.png',    statusBadge);
+app.get('/:user/:repo.png',           statusBadge);
+app.get('/:user/:repo',               statusPage);
+app.get('/stats',                     statsPage);
+app.get('/',                          indexPage);
 
 /**
  * Do a home page
@@ -108,11 +109,25 @@ function dependencyGraph(req, res) {
 	});
 }
 
+function devInfo(req, res) {
+	withManifestAndInfo(req, res, {dev: true}, function(manifest, info) {
+		res.json(info);
+	});
+}
+
 /**
  * Common callback boilerplate of getting a manifest and info for the status page and badge
  */
-function withManifestAndInfo(req, res, callback){
-
+function withManifestAndInfo(req, res, options, callback) {
+	
+	// Allow callback to be passed as third parameter
+	if(!callback) {
+		callback = options;
+		options = {};
+	} else {
+		options = options || {};
+	}
+	
 	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
 
 	manifest.getManifest(url, function(err, manifest) {
@@ -121,7 +136,7 @@ function withManifestAndInfo(req, res, callback){
 			return;
 		}
 
-		brains.getInfo(manifest, function(err, info) {
+		brains.getInfo(manifest, options, function(err, info) {
 
 			if(errors.happened(err, req, res, 'Failed to get dependency info')) {
 				return;
