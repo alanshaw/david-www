@@ -19,11 +19,15 @@
 			<input id="badge-html" type="text" value="&lt;a href=&quot;https://david-dm.org/{{user}}/{{repo}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;https://david-dm.org/{{user}}/{{repo}}.png&quot;/&gt;&lt;/a&gt;"/>
 		</div>
 	</div>
+	<ul id="dep-switch">
+		<li><a href="#dev" title="Show devDependencies" class="selected"><i class="icon-cogs"></i> dependencies</a></li>
+		<li><a href="#dev" title="Show devDependencies"><i class="icon-wrench"></i> devDependencies</a></li>
+	</ul>
+	
 	{{#if info.deps.length}}
 	<ul class="switch">
 		<li><a href="#list" title="Show dependencies in a list" class="selected"><i class="icon-list"></i> List</a></li>
 		<li><a href="#tree" title="Show dependencies in a tree"><i class="icon-sitemap"></i> Tree</a></li>
-		<li><a href="#dev" title="Show devDependencies"><i class="icon-cog"></i> Dev</a></li>
 	</ul>
 	@@include('inc/summary.html')
 	<div id="deps">
@@ -55,6 +59,5 @@
 	{{else}}
 	<p>No dependencies</p>
 	{{/if}}
-	<h2><i class="icon-plus" style="font-size: 0.75em;"></i> <a href="#">devDependencies</a></h2>
 
 @@include('inc/bottom.html')
