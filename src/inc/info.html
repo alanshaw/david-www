@@ -1,0 +1,35 @@
+{{#if info.deps.length}}
+<ul class="switch">
+	<li><a href="#view=list" title="Show dependencies in a list" class="selected"><i class="icon-list"></i> List</a></li>
+	<li><a href="#view=tree" title="Show dependencies in a tree"><i class="icon-sitemap"></i> Tree</a></li>
+</ul>
+@@include('summary.html')
+<div class="dep-table">
+	<table summary="Repository dependencies and their status">
+		<tr>
+			<th>Dependency</th>
+			<th>Required</th>
+			<th>Stable</th>
+			<th>Latest</th>
+			<th>Status</th>
+		</tr>
+		{{#info.deps}}
+		<tr>
+			<td class="dep">
+				<a href="http://npmjs.org/package/{{name}}">{{name}}</a>
+			</td>
+			<td class="required">{{required}}</td>
+			<td class="stable">{{stable}}</td>
+			<td class="latest">{{latest}}</td>
+			<td class="status">
+				<span class="{{status}} {{#if pinned}}pinned{{else}}unpinned{{/if}}"><i class="icon-circle" title="{{status}}"></i></span>
+			</td>
+		</tr>
+		{{/info.deps}}
+	</table>
+</div>
+<div class="dep-graph"></div>
+@@include('summary.html')
+{{else}}
+<p>No dependencies</p>
+{{/if}}

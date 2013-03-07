@@ -29,8 +29,6 @@ $('#home-page').each ->
 
 $('#status-page').each ->
 	
-	$('#deps table').stacktable()
-	
 	$('#status').fancybox()
 	
 	$('#badge-embed input').each ->
@@ -39,6 +37,8 @@ $('#status-page').each ->
 			if not clicked 
 				$(@).select()
 				clicked = true
+	
+	$('.dep-table table').stacktable()
 	
 	###
 	# d3 graph
@@ -99,7 +99,7 @@ $('#status-page').each ->
 	
 	diagonal = d3.svg.diagonal().projection (d) -> [d.y, d.x]
 	
-	vis = d3.select("#graph").append("svg:svg")
+	vis = d3.select(".dep-graph").append("svg:svg")
 		.attr("width", w + m[1] + m[3])
 		.attr("height", h + m[0] + m[2])
 		.append("svg:g")
@@ -206,8 +206,8 @@ $('#status-page').each ->
 	
 	graphLoaded = false
 	
-	graphContainer = $ '#graph'
-	tableContainer = $ '#deps'
+	graphContainer = $ '.dep-graph'
+	tableContainer = $ '.dep-table'
 	
 	graphContainer.hide()
 	
@@ -245,9 +245,14 @@ $('#status-page').each ->
 	
 	onHashChange = ->
 		
+		info = $.bbq.getState('info', true);
+		view = $.bbq.getState('view', true);
+		
+		$.bbq.pushState({info: info, view: view});
+		
 		viewSwitchers.removeClass 'selected'
 		
-		if window.location.hash isnt '#tree'
+		if view isnt 'tree'
 			graphContainer.hide()
 			tableContainer.fadeIn()
 			viewSwitchers.first().addClass 'selected'

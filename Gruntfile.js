@@ -27,8 +27,10 @@ module.exports = function(grunt) {
 		
 		includereplace: {
 			dist: {
-				src: 'src/*.html',
-				dest: 'dist/'
+				files: {
+					'dist/': 'src/*.html', 
+					'dist/inc/': 'src/inc/*.html'
+				}
 			}
 		},
 		

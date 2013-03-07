@@ -20,44 +20,12 @@
 		</div>
 	</div>
 	<ul id="dep-switch">
-		<li><a href="#dev" title="Show devDependencies" class="selected"><i class="icon-cogs"></i> dependencies</a></li>
-		<li><a href="#dev" title="Show devDependencies"><i class="icon-wrench"></i> devDependencies</a></li>
+		<li><a href="#info=dependencies" title="Show devDependencies" class="selected"><i class="icon-cogs"></i> dependencies</a></li>
+		<li><a href="#info=devDependencies" title="Show devDependencies"><i class="icon-wrench"></i> devDependencies</a></li>
 	</ul>
-	
-	{{#if info.deps.length}}
-	<ul class="switch">
-		<li><a href="#list" title="Show dependencies in a list" class="selected"><i class="icon-list"></i> List</a></li>
-		<li><a href="#tree" title="Show dependencies in a tree"><i class="icon-sitemap"></i> Tree</a></li>
-	</ul>
-	@@include('inc/summary.html')
-	<div id="deps">
-		<table summary="Repository dependencies and their status">
-			<tr>
-				<th>Dependency</th>
-				<th>Required</th>
-				<th>Stable</th>
-				<th>Latest</th>
-				<th>Status</th>
-			</tr>
-			{{#info.deps}}
-			<tr>
-				<td class="dep">
-					<a href="http://npmjs.org/package/{{name}}">{{name}}</a>
-				</td>
-				<td class="required">{{required}}</td>
-				<td class="stable">{{stable}}</td>
-				<td class="latest">{{latest}}</td>
-				<td class="status">
-					<span class="{{status}} {{#if pinned}}pinned{{else}}unpinned{{/if}}"><i class="icon-circle" title="{{status}}"></i></span>
-				</td>
-			</tr>
-			{{/info.deps}}
-		</table>
+	<div id="dep-info">
+		@@include('inc/info.html')
 	</div>
-	<div id="graph"></div>
-	@@include('inc/summary.html')
-	{{else}}
-	<p>No dependencies</p>
-	{{/if}}
+	<div id="dev-dep-info"></div>
 
 @@include('inc/bottom.html')
