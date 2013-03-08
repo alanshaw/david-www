@@ -38,233 +38,297 @@ $('#status-page').each ->
 				$(@).select()
 				clicked = true
 	
-	$('.dep-table table').stacktable()
+	state = 
+		info: $.bbq.getState('info', true) || 'dependencies'
+		view: $.bbq.getState('view', true) || 'table'
 	
-	###
-	# d3 graph
-	###
+	# Normalized pathname for use with XHR requests
+	pathname = window.location.pathname
+	pathname += '/' if pathname[pathname.length - 1] isnt '/'
 	
-	createNode = (dep) ->
-		name: dep.name
-		version: dep.version
-		children: null
-	
-	# Transform data from possibly cyclic structure into max 10 levels deep visual structure
-	transformData = (rootDep, callback) ->
+	initInfo = (container, graphJsonUrl = 'graph.json') ->
 		
-		transformsCount = 0
+		$('.dep-table table', container).stacktable()
 		
-		rootNode = createNode(rootDep)
+		###
+		# d3 graph
+		###
 		
-		scheduleTransform = (dep, node, level, maxLevel) ->
+		createNode = (dep) ->
+			name: dep.name
+			version: dep.version
+			children: null
+		
+		# Transform data from possibly cyclic structure into max 10 levels deep visual structure
+		transformData = (rootDep, callback) ->
 			
-			setTimeout(
-				->
-					transform(dep, node, level, maxLevel)
-					
-					transformsCount--
-					
-					callback(rootNode) if transformsCount is 0
-				0
-			)
-		
-		transform = (dep, parentNode, level = 0, maxLevel = 10) ->
+			transformsCount = 0
 			
-			$.each dep.deps, (depName, depDep) ->
+			rootNode = createNode(rootDep)
+			
+			scheduleTransform = (dep, node, level, maxLevel) ->
 				
-				node = createNode(depDep)
+				setTimeout(
+					->
+						transform(dep, node, level, maxLevel)
+						
+						transformsCount--
+						
+						callback(rootNode) if transformsCount is 0
+					0
+				)
+			
+			transform = (dep, parentNode, level = 0, maxLevel = 10) ->
 				
-				if level < maxLevel
+				$.each dep.deps, (depName, depDep) ->
 					
-					transformsCount++
+					node = createNode(depDep)
 					
-					scheduleTransform(depDep, node, level + 1, maxLevel)
+					if level < maxLevel
+						
+						transformsCount++
+						
+						scheduleTransform(depDep, node, level + 1, maxLevel)
+					
+					parentNode.children = [] if not parentNode.children
+					parentNode.children.push node
 				
-				parentNode.children = [] if not parentNode.children
-				parentNode.children.push node
+				if parentNode.children?
+					parentNode.children = parentNode.children.sort (a, b) -> if a.name < b.name then -1 else if a.name > b.name then 1 else 0
 			
-			if parentNode.children?
-				parentNode.children = parentNode.children.sort (a, b) -> if a.name < b.name then -1 else if a.name > b.name then 1 else 0
+			transform(rootDep, rootNode)
 		
-		transform(rootDep, rootNode)
-	
-	m = [20, 120, 20, 120]
-	#w = 1024 - m[1] - m[3]
-	w = parseInt($(window).width() - $('#main').position().left) - m[1] - m[3]
-	h = 768 - m[0] - m[2]
-	i = 0
-	root = null
-	
-	tree = d3.layout.tree().size [h, w] 
-	
-	diagonal = d3.svg.diagonal().projection (d) -> [d.y, d.x]
-	
-	vis = d3.select(".dep-graph").append("svg:svg")
-		.attr("width", w + m[1] + m[3])
-		.attr("height", h + m[0] + m[2])
-		.append("svg:g")
-		.attr("transform", "translate(" + m[3] + "," + m[0] + ")")
-	
-	update = (source) ->
+		m = [20, 120, 20, 120]
+		#w = 1024 - m[1] - m[3]
+		w = parseInt($(window).width() - $('#main').position().left) - m[1] - m[3]
+		h = 768 - m[0] - m[2]
+		i = 0
+		root = null
 		
-		duration = if d3.event && d3.event.altKey then 5000 else 500
+		tree = d3.layout.tree().size [h, w] 
 		
-		# Compute the new tree layout.
-		nodes = tree.nodes(root).reverse()
+		diagonal = d3.svg.diagonal().projection (d) -> [d.y, d.x]
 		
-		# Normalize for fixed-depth.
-		(d.y = d.depth * 180) for d in nodes
+		vis = d3.select($('.dep-graph', container)[0]).append("svg:svg")
+			.attr("width", w + m[1] + m[3])
+			.attr("height", h + m[0] + m[2])
+			.append("svg:g")
+			.attr("transform", "translate(" + m[3] + "," + m[0] + ")")
 		
-		# Update the nodes...
-		node = vis.selectAll("g.node").data(nodes, (d) -> d.id or (d.id = ++i))
-		
-		# Enter any new nodes at the parent's previous position.
-		nodeEnter = node.enter().append("svg:g")
-			.attr("class", "node")
-			.attr("transform", -> "translate(#{source.y0}, #{source.x0})")
-			.on("click", (d) -> toggle d; update d)
-		
-		nodeEnter.append("svg:circle")
-			.attr("r", 1e-6)
-			.style("fill", (d) -> if d._children then "#ccc" else "#fff")
-		
-		nodeEnter.append("svg:text")
-			.attr("x", (d) -> if d.children or d._children then -10 else 10)
-			.attr("dy", ".25em")
-			.attr("text-anchor", (d) -> if d.children or d._children then "end" else "start")
-			.text((d) -> d.name + ' ' + d.version)
-			.style("fill-opacity", 1e-6)
-		
-		# Transition nodes to their new position.
-		nodeUpdate = node.transition()
-			.duration(duration)
-			.attr("transform", (d) -> "translate(#{d.y}, #{d.x})")
-		
-		nodeUpdate.select("circle")
-			.attr("r", 4.5)
-			.style("fill", (d) -> if d._children then "#ccc" else "#fff")
-		
-		nodeUpdate.select("text")
-			.style("fill-opacity", 1)
-		
-		# Transition exiting nodes to the parent's new position.
-		nodeExit = node.exit().transition()
-			.duration(duration)
-			.attr("transform", -> "translate(#{source.y}, #{source.x})")
-			.remove()
-		
-		nodeExit.select("circle")
-			.attr("r", 1e-6)
-		
-		nodeExit.select("text")
-			.style("fill-opacity", 1e-6)
-		
-		# Update the links…
-		link = vis.selectAll("path.link").data(tree.links(nodes), (d) -> d.target.id)
-		
-		# Enter any new links at the parent's previous position.
-		link.enter().insert("svg:path", "g")
-			.attr("class", "link")
-			.attr("d", ->
-				o = x: source.x0, y: source.y0
-				diagonal(source: o, target: o)
-			).transition()
-			.duration(duration)
-			.attr("d", diagonal)
-		
-		# Transition links to their new position.
-		link.transition()
-			.duration(duration)
-			.attr("d", diagonal)
-		
-		# Transition exiting nodes to the parent's new position.
-		link.exit().transition()
-			.duration(duration)
-			.attr("d", ->
-				o = x: source.x, y: source.y
-				diagonal(source: o, target: o)
-			).remove()
-		
-		# Stash the old positions for transition.
-		for d in nodes
-			d.x0 = d.x
-			d.y0 = d.y
-		
-		return
-	
-	# Toggle children.
-	toggle = (d) ->
-		
-		if d.children
-			d._children = d.children
-			d.children = null
-		else
-			d.children = d._children
-			d._children = null
-	
-	# Load the graph data and render when change view
-	
-	graphLoaded = false
-	
-	graphContainer = $ '.dep-graph'
-	tableContainer = $ '.dep-table'
-	
-	graphContainer.hide()
-	
-	initGraph = ->
-		
-		loading = $ '<div class="loading"><i class="icon-spinner icon-spin icon-2x"></i> Reticulating splines...</div>'
-		graphContainer.prepend(loading)
-		
-		pathname = window.location.pathname
-		pathname += '/' if pathname[pathname.length - 1] isnt '/'
-		
-		d3.json pathname + 'graph.json', (err, json) ->
+		update = (source) ->
 			
-			if err? then loading.empty().text('Error occurred retrieving graph data')
+			duration = if d3.event && d3.event.altKey then 5000 else 500
 			
-			transformData(
-				JSON.retrocycle(json)
-				(node) ->
-					root = node
-					root.x0 = h / 2
-					root.y0 = 0
-					
-					toggleAll = (d) ->
-						if d.children
-							toggleAll child for child in d.children
-							toggle d
-					
-					# Initialize the display to show a few nodes.
-					toggleAll child for child in root.children
-					update root
-					loading.remove()
-			)
+			# Compute the new tree layout.
+			nodes = tree.nodes(root).reverse()
+			
+			# Normalize for fixed-depth.
+			(d.y = d.depth * 180) for d in nodes
+			
+			# Update the nodes...
+			node = vis.selectAll("g.node").data(nodes, (d) -> d.id or (d.id = ++i))
+			
+			# Enter any new nodes at the parent's previous position.
+			nodeEnter = node.enter().append("svg:g")
+				.attr("class", "node")
+				.attr("transform", -> "translate(#{source.y0}, #{source.x0})")
+				.on("click", (d) -> toggle d; update d)
+			
+			nodeEnter.append("svg:circle")
+				.attr("r", 1e-6)
+				.style("fill", (d) -> if d._children then "#ccc" else "#fff")
+			
+			nodeEnter.append("svg:text")
+				.attr("x", (d) -> if d.children or d._children then -10 else 10)
+				.attr("dy", ".25em")
+				.attr("text-anchor", (d) -> if d.children or d._children then "end" else "start")
+				.text((d) -> d.name + ' ' + d.version)
+				.style("fill-opacity", 1e-6)
+			
+			# Transition nodes to their new position.
+			nodeUpdate = node.transition()
+				.duration(duration)
+				.attr("transform", (d) -> "translate(#{d.y}, #{d.x})")
+			
+			nodeUpdate.select("circle")
+				.attr("r", 4.5)
+				.style("fill", (d) -> if d._children then "#ccc" else "#fff")
+			
+			nodeUpdate.select("text")
+				.style("fill-opacity", 1)
+			
+			# Transition exiting nodes to the parent's new position.
+			nodeExit = node.exit().transition()
+				.duration(duration)
+				.attr("transform", -> "translate(#{source.y}, #{source.x})")
+				.remove()
+			
+			nodeExit.select("circle")
+				.attr("r", 1e-6)
+			
+			nodeExit.select("text")
+				.style("fill-opacity", 1e-6)
+			
+			# Update the links…
+			link = vis.selectAll("path.link").data(tree.links(nodes), (d) -> d.target.id)
+			
+			# Enter any new links at the parent's previous position.
+			link.enter().insert("svg:path", "g")
+				.attr("class", "link")
+				.attr("d", ->
+					o = x: source.x0, y: source.y0
+					diagonal(source: o, target: o)
+				).transition()
+				.duration(duration)
+				.attr("d", diagonal)
+			
+			# Transition links to their new position.
+			link.transition()
+				.duration(duration)
+				.attr("d", diagonal)
+			
+			# Transition exiting nodes to the parent's new position.
+			link.exit().transition()
+				.duration(duration)
+				.attr("d", ->
+					o = x: source.x, y: source.y
+					diagonal(source: o, target: o)
+				).remove()
+			
+			# Stash the old positions for transition.
+			for d in nodes
+				d.x0 = d.x
+				d.y0 = d.y
+			
+			return
+		
+		# Toggle children.
+		toggle = (d) ->
+			
+			if d.children
+				d._children = d.children
+				d.children = null
+			else
+				d.children = d._children
+				d._children = null
+		
+		# Load the graph data and render when change view
+		
+		graphLoaded = false
+		
+		graphContainer = $('.dep-graph', container)
+		tableContainer = $('.dep-table', container)
+		
+		graphContainer.hide()
+		
+		initGraph = ->
+			
+			loading = $ '<div class="loading"><i class="icon-spinner icon-spin icon-2x"></i> Reticulating splines...</div>'
+			graphContainer.prepend(loading)
+			
+			d3.json pathname + graphJsonUrl, (err, json) ->
+				
+				if err? then loading.empty().text('Error occurred retrieving graph data')
+				
+				transformData(
+					JSON.retrocycle(json)
+					(node) ->
+						root = node
+						root.x0 = h / 2
+						root.y0 = 0
+						
+						toggleAll = (d) ->
+							if d.children
+								toggleAll child for child in d.children
+								toggle d
+						
+						# Initialize the display to show a few nodes.
+						toggleAll child for child in root.children
+						update root
+						loading.remove()
+				)
+		
+		viewSwitchers = $('.switch a', container)
+		
+		viewSwitchers.click (event) ->
+			event.preventDefault()
+			
+			_.merge state, $.deparam.fragment $(@).attr('href')
+			
+			$.bbq.pushState state
+		
+		onHashChange = ->
+			
+			_.merge state, $.bbq.getState()
+			
+			viewSwitchers.removeClass 'selected'
+			
+			if state.view isnt 'tree'
+				graphContainer.hide()
+				tableContainer.fadeIn()
+				viewSwitchers.first().addClass 'selected'
+			else
+				tableContainer.hide()
+				graphContainer.fadeIn()
+				viewSwitchers.last().addClass 'selected'
+				
+				if not graphLoaded
+					graphLoaded = true
+					initGraph()
+		
+		$(window).bind 'hashchange', onHashChange
+		
+		onHashChange()
 	
-	viewSwitchers = $('.switch a')
+	devDepInfoLoaded = false
 	
+	depInfoContainer = $('#dep-info')
+	devDepInfoContainer = $('#dev-dep-info')
+	
+	devDepInfoContainer.hide()
+	
+	depSwitchers = $('#dep-switch a')
+	
+	depSwitchers.click (event) ->
+		event.preventDefault()
+		
+		_.merge state, $.deparam.fragment $(@).attr('href')
+		
+		$.bbq.pushState state
+	
+	# Hash change for info switch
 	onHashChange = ->
 		
-		info = $.bbq.getState('info', true);
-		view = $.bbq.getState('view', true);
+		_.merge state, $.bbq.getState()
 		
-		$.bbq.pushState({info: info, view: view});
+		depSwitchers.removeClass 'selected'
 		
-		viewSwitchers.removeClass 'selected'
-		
-		if view isnt 'tree'
-			graphContainer.hide()
-			tableContainer.fadeIn()
-			viewSwitchers.first().addClass 'selected'
+		if state.info isnt 'devDependencies'
+			devDepInfoContainer.hide()
+			depInfoContainer.fadeIn()
+			depSwitchers.first().addClass 'selected'
 		else
-			tableContainer.hide()
-			graphContainer.fadeIn()
-			viewSwitchers.last().addClass 'selected'
+			depInfoContainer.hide()
+			devDepInfoContainer.fadeIn()
+			depSwitchers.last().addClass 'selected'
 			
-			if not graphLoaded
-				graphLoaded = true
-				initGraph()
-	
-	onHashChange()
+			if not devDepInfoLoaded
+				
+				devDepInfoLoaded = true
+				
+				loading = $ '<div class="loading"><i class="icon-spinner icon-spin icon-2x"></i> Reticulating splines...</div>'
+				
+				devDepInfoContainer.prepend(loading)
+				
+				$.getJSON(pathname + 'dev-info.json', (data) ->
+					$.get('/inc/info.html', (template) ->
+						loading.remove()
+						devDepInfoContainer.html(Handlebars.compile(template)(info: data))
+						initInfo devDepInfoContainer, 'dev-graph.json'
+					)
+				)
 	
 	$(window).bind 'hashchange', onHashChange
+	
+	onHashChange()
+	initInfo depInfoContainer

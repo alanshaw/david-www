@@ -16,13 +16,14 @@ app.set('views', __dirname + '/dist');
 
 statics.init(app);
 
-app.get('/:user/:repo/dev-info.json', devInfo);
-app.get('/:user/:repo/graph.json',    dependencyGraph);
-app.get('/:user/:repo/status.png',    statusBadge);
-app.get('/:user/:repo.png',           statusBadge);
-app.get('/:user/:repo',               statusPage);
-app.get('/stats',                     statsPage);
-app.get('/',                          indexPage);
+app.get('/:user/:repo/dev-info.json',  devInfo);
+app.get('/:user/:repo/graph.json',     dependencyGraph);
+app.get('/:user/:repo/dev-graph.json', devDependencyGraph);
+app.get('/:user/:repo/status.png',     statusBadge);
+app.get('/:user/:repo.png',            statusBadge);
+app.get('/:user/:repo',                statusPage);
+app.get('/stats',                      statsPage);
+app.get('/',                           indexPage);
 
 /**
  * Do a home page
@@ -98,7 +99,28 @@ function dependencyGraph(req, res) {
 			return;
 		}
 		
-		graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo, manifest.version, manifest.dependencies, function(err, graph) {
+		graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo, manifest.version, manifest.dependencies || {}, function(err, graph) {
+			
+			if(errors.happened(err, req, res, 'Failed to get graph data')) {
+				return;
+			}
+			
+			res.json(graph);
+		});
+	});
+}
+
+function devDependencyGraph(req, res) {
+	
+	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
+	
+	manifest.getManifest(url, function(err, manifest) {
+
+		if(errors.happened(err, req, res, 'Failed to get package.json')) {
+			return;
+		}
+		
+		graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo + '#dev', manifest.version, manifest.devDependencies || {}, function(err, graph) {
 			
 			if(errors.happened(err, req, res, 'Failed to get graph data')) {
 				return;
