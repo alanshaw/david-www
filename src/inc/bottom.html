@@ -41,8 +41,7 @@
 <script src="/js/main.js"></script>
 <script>
 var diameter = $('#dependency-counts-graph').width(),
-    format = d3.format(",d"),
-    color = d3.scale.category20c();
+    format = d3.format(",d");
 
 var bubble = d3.layout.pack()
     .sort(null)
@@ -55,6 +54,17 @@ var svg = d3.select("#dependency-counts-graph").append("svg")
     .attr("class", "bubble");
 
 d3.json("dependency-counts.json", function(error, data) {
+	
+	// Get the max count
+	var max = 1;
+	for(var depName in data) {
+		if(data[depName] > max) {
+			max = data[depName];
+		}
+	}
+	
+	var color = d3.scale.linear().domain([1, max]).range(["#f0f0f0", "#737373"])
+	
   var node = svg.selectAll(".node")
       .data(bubble.nodes(transformData(data))
       .filter(function(d) { return !d.children; })
@@ -68,7 +78,7 @@ d3.json("dependency-counts.json", function(error, data) {
 
   node.append("circle")
       .attr("r", function(d) { return d.r; })
-      .style("fill", function(d) { return color(d.depName); });
+      .style("fill", function(d) { return color(d.value); });
 
   node.append("text")
       .attr("dy", ".3em")
@@ -85,9 +95,6 @@ function transformData(data) {
 	
 	return {children: array};
 }
-
-// What does this do?
-//d3.select(self.frameElement).style("height", diameter + "px");
 </script>
 
 <script>
