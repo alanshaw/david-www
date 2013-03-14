@@ -101,4 +101,41 @@ exports.getRecentlyUpdatedManifests = function() {
 	return recentlyUpdatedManifests.slice();
 };
 
+// Dependency counts //////////////////////////////////////////////////////////
+
+var dependencyCounts = {};
+
+// When manifest first retrieved, +1 all the dependencies
+manifest.on('retrieve', function(manifest) {
+	
+	var depNames = Object.keys(manifest.dependencies || {});
+	
+	depNames.forEach(function(depName) {
+		dependencyCounts[depName] = dependencyCounts[depName] || 0;
+		dependencyCounts[depName]++;
+	});
+});
+
+// If the manifest dependencies change, +1 or -1 if dependencies are added or removed
+manifest.on('dependenciesChange', function(diffs) {
+	
+	diffs.forEach(function(diff) {
+		
+		// Dependency added
+		if(!diff.previous) {
+			dependencyCounts[diff.name] = dependencyCounts[diff.name] || 0;
+			dependencyCounts[diff.name]++;
+		}
+		
+		// Dependency removed
+		if(!diff.version) {
+			dependencyCounts[diff.name]--;
+		}
+	});
+});
+
+exports.getDependencyCounts = function() {
+	return JSON.parse(JSON.stringify(dependencyCounts));
+};
+
 module.exports = exports;

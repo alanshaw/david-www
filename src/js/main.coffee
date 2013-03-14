@@ -22,6 +22,57 @@ $('#home-page').each ->
 		if $(@).attr('src') is '/img/outofdate.png' then return # bail, it's the placeholder image load.
 		url.removeClass 'nope'
 		$(@).show()
+	
+	###
+	# d3 dependency count graph
+	###
+	
+	diameter = $('#dependency-counts-graph').width()
+	format = d3.format(',d')
+	
+	bubble = d3.layout.pack().sort(null).size([diameter, diameter]).padding(1.5)
+	
+	svg = d3.select('#dependency-counts-graph').append('svg')
+		.attr('width', diameter)
+		.attr('height', diameter)
+		.attr('class', 'bubble');
+	
+	d3.json 'dependency-counts.json', (error, data) ->
+		
+		# Get the max count
+		max = 1
+		
+		for own depName of data
+			max = data[depName] if data[depName] > max
+		
+		color = d3.scale.linear().domain([1, max]).range(['#f0f0f0', '#969696'])
+		
+		transformData = (data) ->
+			array = for own depName of data
+				depName: depName, value: data[depName]
+			children: array
+		
+		node = svg.selectAll('.node')
+			.data(
+				bubble.nodes(transformData(data))
+					.filter((d) -> !d.children)
+					.filter((d) -> d.value > 1)
+			)
+			.enter().append('g')
+			.attr('class', 'node')
+			.attr('transform', (d) -> "translate(#{d.x}, #{d.y})")
+		
+		node.append('title') 
+			.text((d) -> d.depName + ': ' + format(d.value))
+		
+		node.append('circle')
+			.attr('r', (d) -> d.r)
+			.style('fill', (d) -> color(d.value))
+		
+		node.append('text')
+			.attr('dy', '.3em')
+			.style('text-anchor', 'middle')
+			.text((d) -> d.depName.substring(0, d.r / 3))
 
 ########################################################################################################################
 # Status page
