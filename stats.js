@@ -108,7 +108,7 @@ var dependencyCounts = {};
 // When manifest first retrieved, +1 all the dependencies
 manifest.on('retrieve', function(manifest) {
 	
-	var depNames = Object.keys(manifest.data.dependencies || {});
+	var depNames = Object.keys(manifest.dependencies || {});
 	
 	depNames.forEach(function(depName) {
 		dependencyCounts[depName] = dependencyCounts[depName] || 0;

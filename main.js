@@ -22,6 +22,7 @@ app.get('/:user/:repo/dev-graph.json', devDependencyGraph);
 app.get('/:user/:repo/status.png',     statusBadge);
 app.get('/:user/:repo.png',            statusBadge);
 app.get('/:user/:repo',                statusPage);
+app.get('/dependency-counts.json',     dependencyCounts);
 app.get('/stats',                      statsPage);
 app.get('/',                           indexPage);
 
@@ -45,6 +46,10 @@ function statsPage(req, res) {
 		recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
 		recentlyUpdatedManifests: stats.getRecentlyUpdatedManifests()
 	});
+}
+
+function dependencyCounts(req, res) {
+	res.json(stats.getDependencyCounts());
 }
 
 /**
