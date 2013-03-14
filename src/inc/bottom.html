@@ -40,64 +40,6 @@
 <script src="/js/plugins.js"></script>
 <script src="/js/main.js"></script>
 <script>
-var diameter = $('#dependency-counts-graph').width(),
-    format = d3.format(",d");
-
-var bubble = d3.layout.pack()
-    .sort(null)
-    .size([diameter, diameter])
-    .padding(1.5);
-
-var svg = d3.select("#dependency-counts-graph").append("svg")
-    .attr("width", diameter)
-    .attr("height", diameter)
-    .attr("class", "bubble");
-
-d3.json("dependency-counts.json", function(error, data) {
-	
-	// Get the max count
-	var max = 1;
-	for(var depName in data) {
-		if(data[depName] > max) {
-			max = data[depName];
-		}
-	}
-	
-	var color = d3.scale.linear().domain([1, max]).range(["#f0f0f0", "#969696"]);
-	
-  var node = svg.selectAll(".node")
-      .data(bubble.nodes(transformData(data))
-      .filter(function(d) { return !d.children; })
-      /*.filter(function(d) { return d.value > 1; })*/)
-    .enter().append("g")
-      .attr("class", "node")
-      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
-  node.append("title")
-      .text(function(d) { return d.depName + ": " + format(d.value); });
-
-  node.append("circle")
-      .attr("r", function(d) { return d.r; })
-      .style("fill", function(d) { return color(d.value); });
-
-  node.append("text")
-      .attr("dy", ".3em")
-      .style("text-anchor", "middle")
-      .text(function(d) { return d.depName.substring(0, d.r / 3); });
-});
-
-function transformData(data) {
-	var array = [];
-	
-	for(var depName in data) {
-		array.push({depName: depName, value: data[depName]});
-	}
-	
-	return {children: array};
-}
-</script>
-
-<script>
 	var _gaq=[['_setAccount','UA-38876227-1'],['_trackPageview']];
 	(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
 	g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
