@@ -63,7 +63,7 @@ d3.json("dependency-counts.json", function(error, data) {
 		}
 	}
 	
-	var color = d3.scale.linear().domain([1, max]).range(["#f0f0f0", "#737373"])
+	var color = d3.scale.linear().domain([1, max]).range(["#f0f0f0", "#969696"]);
 	
   var node = svg.selectAll(".node")
       .data(bubble.nodes(transformData(data))
