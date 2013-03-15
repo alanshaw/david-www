@@ -56,7 +56,7 @@ $('#home-page').each ->
 			.data(
 				bubble.nodes(transformData(data))
 					.filter((d) -> !d.children)
-					.filter((d) -> d.value > 1)
+					#.filter((d) -> d.value > 1)
 			)
 			.enter().append('g')
 			.attr('class', 'node')
