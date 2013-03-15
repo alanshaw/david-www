@@ -68,6 +68,7 @@ $('#home-page').each ->
 		node.append('circle')
 			.attr('r', (d) -> d.r)
 			.style('fill', (d) -> color(d.value))
+			.on("click", (d) -> window.location = 'http://npmjs.org/package/' + d.depName)
 		
 		node.append('text')
 			.attr('dy', '.3em')
