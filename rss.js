@@ -34,7 +34,7 @@ function packageToRssItems(pkg) {
 }
 
 // Create the feed XML from the RssItems
-function buildFeedXml(items, limit) {
+function buildFeedXml(items, name, depNames, limit) {
 	
 	limit = limit || 32;
 	
@@ -50,13 +50,21 @@ function buildFeedXml(items, limit) {
 	
 	items = items.slice(0, limit);
 	
-	var xml = '';
+	var xml = '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel>';
+	xml += '<title>Recently updated dependencies for ' + name + '</title>';
+	xml += '<description>Version updates for dependencies ' + depNames + '</description>';
+	xml += '<ttl>1800</ttl>';
 	
 	for(var i = 0, len = items.length; i < len; ++i) {
-		xml += '<item><name>' + items[i].name + '</name><pubdate>' + items[i].pubdate + '</pubdate></item>';
+		xml += '<item>';
+		xml += '<title>' + items[i].name + '</title>';
+		xml += '<description>' + items[i].previous + ' to ' + items[i].current + '</description>';
+		xml += '<link>https://npmjs.org/package/' + items[i].name + '</link>';
+		xml += '<pubdate>' + items[i].pubdate + '</pubdate>';
+		xml += '</item>';
 	}
 	
-	return xml;
+	return xml + '</channel></rss>';
 }
 
 /**
@@ -89,7 +97,15 @@ function getPackage(pkgName, callback) {
 	});
 }
 
-module.exports.getFeed = function(deps, limit, callback) {
+module.exports.getFeed = function(manifest, options, callback) {
+	
+	// Allow callback to be passed as second parameter
+	if(!callback) {
+		callback = options;
+		options = {};
+	} else {
+		options = options || {};
+	}
 	
 	// Assume we're probably going to have to use NPM
 	npm.load({}, function(err) {
@@ -100,7 +116,8 @@ module.exports.getFeed = function(deps, limit, callback) {
 		}
 		
 		var items = [];
-		var depNames = Object.keys(deps);
+		var deps = options.dev ? manifest.devDependencies : manifest.dependencies;
+		var depNames = Object.keys(deps || {});
 		var processedDeps = 0;
 		
 		depNames.forEach(function(depName) {
@@ -117,7 +134,7 @@ module.exports.getFeed = function(deps, limit, callback) {
 				processedDeps++;
 				
 				if(processedDeps == depNames.length) {
-					callback(null, buildFeedXml(items, limit));
+					callback(null, buildFeedXml(items, manifest.name, depNames, options.limit));
 				}
 			});
 		});
