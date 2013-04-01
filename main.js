@@ -150,7 +150,7 @@ function rssFeed(req, res, dev) {
 				return;
 			}
 			
-			res.contentType('application/xml');
+			res.contentType('application/rss+xml');
 			res.send(xml, 200);
 		});
 	});

@@ -1,4 +1,8 @@
-@@include('inc/top.html', {"id": "status-page", "title": "Dependency status for {{user}} / {{manifest.name}} {{manifest.version}}"})
+@@include('inc/top.html', {
+	"id": "status-page",
+	"title": "Dependency status for {{user}} / {{manifest.name}} {{manifest.version}}",
+	"headHtml": "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" href=\"/{{user}}/{{repo}}/rss.xml\" />"
+})
 
 	<div id="repo">
 		<h1>
