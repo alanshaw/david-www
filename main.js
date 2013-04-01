@@ -6,6 +6,7 @@ var statics = require('./statics');
 var brains = require('./brains');
 var errors = require('./errors');
 var graph = require('./graph');
+var feed = require('./feed');
 
 
 var app = express();
@@ -19,6 +20,8 @@ statics.init(app);
 app.get('/:user/:repo/dev-info.json',  devInfo);
 app.get('/:user/:repo/graph.json',     dependencyGraph);
 app.get('/:user/:repo/dev-graph.json', devDependencyGraph);
+app.get('/:user/:repo/rss.xml',        rssFeed);
+app.get('/:user/:repo/dev-rss.xml',    devRssFeed);
 app.get('/:user/:repo/status.png',     statusBadge);
 app.get('/:user/:repo.png',            statusBadge);
 app.get('/:user/:repo',                statusPage);
@@ -134,6 +137,32 @@ function devDependencyGraph(req, res) {
 			res.json(graph);
 		});
 	});
+}
+
+function rssFeed(req, res, dev) {
+	
+	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
+	
+	manifest.getManifest(url, function(err, manifest) {
+		
+		if(errors.happened(err, req, res, 'Failed to get package.json')) {
+			return;
+		}
+		
+		feed.get(manifest, {dev: dev}, function(err, xml) {
+			
+			if(errors.happened(err, req, res, 'Failed to build RSS XML')) {
+				return;
+			}
+			
+			res.contentType('application/rss+xml');
+			res.send(xml, 200);
+		});
+	});
+}
+
+function devRssFeed(req, res) {
+	rssFeed(req, res, true);
 }
 
 function devInfo(req, res) {
