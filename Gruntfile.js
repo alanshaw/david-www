@@ -27,6 +27,9 @@ module.exports = function(grunt) {
 		
 		includereplace: {
 			dist: {
+				options: {
+					globals: {headHtml: ''}
+				},
 				files: {
 					'dist/': 'src/*.html', 
 					'dist/inc/': 'src/inc/*.html'
