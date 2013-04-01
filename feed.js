@@ -59,8 +59,7 @@ function buildFeedXml(items, name, depNames, limit) {
 	
 	for(var i = 0, len = items.length; i < len; ++i) {
 		rssFeed.item({
-			title: items[i].name,
-			description: items[i].previous + ' to ' + items[i].current,
+			title: items[i].name + ' ' + items[i].previous + ' to ' + items[i].current,
 			url: 'https://npmjs.org/package/' + items[i].name,
 			date: items[i].pubdate
 		});
