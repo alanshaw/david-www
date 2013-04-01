@@ -35,9 +35,10 @@ function packageToFeedItems(pkg) {
 }
 
 // Create the feed XML from the FeedItems
-function buildFeedXml(items, name, depNames, limit) {
+function buildFeedXml(items, name, deps, limit) {
 	
 	limit = limit || 32;
+	deps = deps || {};
 	
 	items.sort(function(a, b) {
 		if(a.pubdate < b.pubdate) {
@@ -53,13 +54,13 @@ function buildFeedXml(items, name, depNames, limit) {
 	
 	var rssFeed = new RSS({
 		title: 'Recently updated dependencies for ' + name,
-		description: 'Version updates for ' + depNames.join(', '),
+		description: 'Version updates for ' + Object.keys(deps).join(', '),
 		site_url: 'https://david-dm.org/'
 	});
 	
 	for(var i = 0, len = items.length; i < len; ++i) {
 		rssFeed.item({
-			title: items[i].name + ' ' + items[i].previous + ' to ' + items[i].current,
+			title: items[i].name + ' ' + items[i].previous + ' to ' + items[i].current + ' (' + deps[items[i].name] + ' required)',
 			url: 'https://npmjs.org/package/' + items[i].name,
 			date: items[i].pubdate
 		});
@@ -122,7 +123,7 @@ module.exports.get = function(manifest, options, callback) {
 		var processedDeps = 0;
 		
 		if(!depNames.length) {
-			callback(null, buildFeedXml([], manifest.name, depNames, options.limit));
+			callback(null, buildFeedXml([], manifest.name, deps, options.limit));
 			return;
 		}
 		
@@ -140,7 +141,7 @@ module.exports.get = function(manifest, options, callback) {
 				processedDeps++;
 				
 				if(processedDeps == depNames.length) {
-					callback(null, buildFeedXml(items, manifest.name, depNames, options.limit));
+					callback(null, buildFeedXml(items, manifest.name, deps, options.limit));
 				}
 			});
 		});
