@@ -1,5 +1,6 @@
 var npm = require('npm');
 var moment = require('moment');
+var RSS = require('rss');
 
 function Package(name, versions) {
 	this.name = name; // The name of the package
@@ -11,21 +12,21 @@ Package.TTL = moment.duration({hours: 1});
 
 var packages = {};
 
-function RssItem(name, previous, current, pubdate) {
+function FeedItem(name, previous, current, pubdate) {
 	this.name = name;
 	this.previous = previous;
 	this.current = current;
 	this.pubdate = pubdate;
 }
 
-// Create a bunch of RSS items from the passed package
-function packageToRssItems(pkg) {
+// Create a bunch of Feed items from the passed package
+function packageToFeedItems(pkg) {
 	
 	var previous = null;
 	
 	return Object.keys(pkg.versions).map(function(version) {
 		
-		var item = new RssItem(pkg.name, previous, version, pkg.versions[version]);
+		var item = new FeedItem(pkg.name, previous, version, pkg.versions[version]);
 		
 		previous = version;
 		
@@ -33,15 +34,15 @@ function packageToRssItems(pkg) {
 	});
 }
 
-// Create the feed XML from the RssItems
+// Create the feed XML from the FeedItems
 function buildFeedXml(items, name, depNames, limit) {
 	
 	limit = limit || 32;
 	
 	items.sort(function(a, b) {
-		if(a.expires < b.expires) {
+		if(a.pubdate < b.pubdate) {
 			return 1;
-		} else if(a.expires === b.expires) {
+		} else if(a.pubdate === b.pubdate) {
 			return 0;
 		} else {
 			return -1;
@@ -50,21 +51,22 @@ function buildFeedXml(items, name, depNames, limit) {
 	
 	items = items.slice(0, limit);
 	
-	var xml = '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel>';
-	xml += '<title>Recently updated dependencies for ' + name + '</title>';
-	xml += '<description>Version updates for dependencies ' + depNames + '</description>';
-	xml += '<ttl>1800</ttl>';
+	var rssFeed = new RSS({
+		title: 'Recently updated dependencies for ' + name,
+		description: 'Version updates for ' + depNames.join(', '),
+		site_url: 'https://david-dm.org/'
+	});
 	
 	for(var i = 0, len = items.length; i < len; ++i) {
-		xml += '<item>';
-		xml += '<title>' + items[i].name + '</title>';
-		xml += '<description>' + items[i].previous + ' to ' + items[i].current + '</description>';
-		xml += '<link>https://npmjs.org/package/' + items[i].name + '</link>';
-		xml += '<pubdate>' + items[i].pubdate + '</pubdate>';
-		xml += '</item>';
+		rssFeed.item({
+			title: items[i].name,
+			description: items[i].previous + ' to ' + items[i].current,
+			url: 'https://npmjs.org/package/' + items[i].name,
+			date: items[i].pubdate
+		});
 	}
 	
-	return xml + '</channel></rss>';
+	return rssFeed.xml();
 }
 
 /**
@@ -91,13 +93,13 @@ function getPackage(pkgName, callback) {
 			return;
 		}
 		
-		pkg = packages[pkgName] = new Package(pkgName, data);
+		pkg = packages[pkgName] = new Package(pkgName, data[Object.keys(data)[0]].time);
 		
 		callback(null, pkg);
 	});
 }
 
-module.exports.getFeed = function(manifest, options, callback) {
+module.exports.get = function(manifest, options, callback) {
 	
 	// Allow callback to be passed as second parameter
 	if(!callback) {
@@ -129,7 +131,7 @@ module.exports.getFeed = function(manifest, options, callback) {
 					return;
 				}
 				
-				items = items.concat(packageToRssItems(pkg));
+				items = items.concat(packageToFeedItems(pkg));
 				
 				processedDeps++;
 				
@@ -138,7 +140,5 @@ module.exports.getFeed = function(manifest, options, callback) {
 				}
 			});
 		});
-		
-		
 	});
 };
