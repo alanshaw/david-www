@@ -139,7 +139,7 @@ function devDependencyGraph(req, res) {
 	});
 }
 
-function rssFeed(req, res, dev) {
+function buildRssFeed(req, res, dev) {
 	
 	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
 	
@@ -161,8 +161,12 @@ function rssFeed(req, res, dev) {
 	});
 }
 
+function rssFeed(req, res) {
+	buildRssFeed(req, res, false);
+}
+
 function devRssFeed(req, res) {
-	rssFeed(req, res, true);
+	buildRssFeed(req, res, true);
 }
 
 function devInfo(req, res) {

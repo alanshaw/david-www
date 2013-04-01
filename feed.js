@@ -122,6 +122,11 @@ module.exports.get = function(manifest, options, callback) {
 		var depNames = Object.keys(deps || {});
 		var processedDeps = 0;
 		
+		if(!depNames.length) {
+			callback(null, buildFeedXml([], manifest.name, depNames, options.limit));
+			return;
+		}
+		
 		depNames.forEach(function(depName) {
 			
 			getPackage(depName, function(err, pkg) {
