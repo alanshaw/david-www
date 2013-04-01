@@ -233,4 +233,6 @@ if(!process.argv[2]) {
 
 app.listen(process.argv[2]);
 
+process.title = 'david:' + process.argv[2];
+
 console.log('David listening on port', process.argv[2]);
