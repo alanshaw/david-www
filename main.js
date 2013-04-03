@@ -23,6 +23,7 @@ app.get('/:user/:repo/dev-graph.json', devDependencyGraph);
 app.get('/:user/:repo/rss.xml',        rssFeed);
 app.get('/:user/:repo/dev-rss.xml',    devRssFeed);
 app.get('/:user/:repo/status.png',     statusBadge);
+app.get('/:user/:repo/dev-status.png', devStatusBadge);
 app.get('/:user/:repo.png',            statusBadge);
 app.get('/:user/:repo',                statusPage);
 app.get('/dependency-counts.json',     dependencyCounts);
@@ -75,26 +76,35 @@ function statusPage(req, res) {
 /**
  * Send the status badge for this user and repository
  */
-function statusBadge(req, res) {
-
-	withManifestAndInfo(req, res, function(manifest, info) {
-
+function sendStatusBadge(req, res, dev) {
+	
+	withManifestAndInfo(req, res, {dev: dev}, function(manifest, info) {
+		
 		res.setHeader('Cache-Control', 'no-cache');
-
+		
 		var totalDeps = info.deps.length;
-
+		var path = 'dist/img/' + (dev ? 'dev-' : '');
+		
 		if(totalDeps && info.totals.unpinned.outOfDate) {
-
+		
 			if(info.totals.unpinned.outOfDate / totalDeps > 0.25) {
-				res.sendfile('dist/img/outofdate.png');
+				res.sendfile(path + 'outofdate.png');
 			} else {
-				res.sendfile('dist/img/notsouptodate.png');
+				res.sendfile(path + 'notsouptodate.png');
 			}
-
+			
 		} else {
-			res.sendfile('dist/img/uptodate.png');
+			res.sendfile(path + 'uptodate.png');
 		}
 	});
+}
+
+function statusBadge(req, res) {
+	sendStatusBadge(req, res, false);
+}
+
+function devStatusBadge(req, res) {
+	sendStatusBadge(req, res, true);
 }
 
 function dependencyGraph(req, res) {

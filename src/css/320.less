@@ -188,9 +188,12 @@ ul.stats {
 			}
 		}
 	}
-	#status {
+	#status, #dev-status {
 		padding: 0 0.5em;
 		background-color: transparent;
+	}
+	#dev-status {
+		display: none;
 	}
 	#dep-switch {
 		list-style-type: none;
@@ -276,10 +279,10 @@ ul.stats {
 			}
 		}
 	}
-	.fancybox-opened #badge-embed {
+	.fancybox-opened #badge-embed, .fancybox-opened #dev-badge-embed {
 		display: block;
 	}
-	#badge-embed {
+	#badge-embed, #dev-badge-embed {
 		display: none;
 		width: 30em;
 		

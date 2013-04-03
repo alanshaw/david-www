@@ -81,9 +81,13 @@ $('#home-page').each ->
 
 $('#status-page').each ->
 	
-	$('#status').fancybox()
+	status = $('#status')
+	status.fancybox()
 	
-	$('#badge-embed input').each ->
+	devStatus = $('#dev-status')
+	devStatus.fancybox()
+	
+	$('#badge-embed input, #dev-badge-embed input').each ->
 		clicked = false
 		$(@).click -> 
 			if not clicked 
@@ -358,10 +362,14 @@ $('#status-page').each ->
 		if state.info isnt 'devDependencies'
 			devDepInfoContainer.hide()
 			depInfoContainer.fadeIn()
+			status.show()
+			devStatus.hide()
 			depSwitchers.first().addClass 'selected'
 		else
 			depInfoContainer.hide()
 			devDepInfoContainer.fadeIn()
+			status.hide();
+			devStatus.show();
 			depSwitchers.last().addClass 'selected'
 			
 			if not devDepInfoLoaded
