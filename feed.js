@@ -93,9 +93,34 @@ function getPackage(pkgName, callback) {
 			return;
 		}
 		
-		pkg = packages[pkgName] = new Package(pkgName, data[Object.keys(data)[0]].time);
-		
-		callback(null, pkg);
+		if(Object.keys(data).length) {
+			
+			pkg = packages[pkgName] = new Package(pkgName, data[Object.keys(data)[0]].time);
+			
+			callback(null, pkg);
+			
+		} else {
+			
+			console.warn(pkgName + ' has no time information');
+			
+			// We don't know the date/time any of the versions for this package were published
+			// Get latest and use unix epoch as publish date
+			npm.commands.view([pkgName, 'version'], true, function(err, data) {
+				
+				if(err) {
+					callback(err);
+					return;
+				}
+				
+				var time = {};
+				
+				time[Object.keys(data)[0]] = moment([1970]).toDate();
+				
+				pkg = packages[pkgName] = new Package(pkgName, time);
+				
+				callback(null, pkg);
+			});
+		}
 	});
 }
 
