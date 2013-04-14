@@ -1,12 +1,15 @@
 /**
  * Events:
- * dependenciesChange(differences, manifest, url) - When one or more dependencies for a manifest change
- * retrieve(manifest, url) - The first time a manifest is retrieved
+ * dependenciesChange(differences, manifest, user, repo) - When one or more dependencies for a manifest change
+ * retrieve(manifest, user, repo) - The first time a manifest is retrieved
  */
 
 var events = require('events');
 var request = require('request');
 var moment = require('moment');
+var GitHubApi = require('github');
+
+var github = new GitHubApi({version: '3.0.0'});
 
 var exports = new events.EventEmitter();
 
@@ -74,9 +77,9 @@ function parseManifest(body) {
 	}
 }
 
-exports.getManifest = function(url, callback) {
+exports.getManifest = function(user, repo, callback) {
 	
-	var manifest = manifests[url];
+	var manifest = manifests[user + '/' + repo];
 	
 	if(manifest && manifest.expires > new Date()) {
 		console.log('Using cached manifest', manifest.data.name, manifest.data.version);
@@ -84,56 +87,45 @@ exports.getManifest = function(url, callback) {
 		return;
 	}
 	
-	request(url, function(err, response, body) {
+	github.repos.getContent({user: user, repo: repo, path: 'package.json'}, function(err, resp) {
 		
-		if(!err && response.statusCode == 200) {
-			
-			console.log('Successfully retrieved package.json');
-
-			var data = parseManifest(body);
-
-			if(!data) {
-				callback(new Error('Failed to parse package.json: ' + body));
-			} else {
-				
-				console.log('Got manifest', data.name, data.version);
-				
-				var oldManifest = manifest;
-				var oldDependencies = oldManifest ? oldManifest.data.dependencies : {};
-				
-				manifest = new Manifest(data);
-				
-				manifests[url] = manifest;
-				
-				callback(null, manifest.data);
-				
-				if(!oldManifest) {
-					
-					exports.emit('retrieve', JSON.parse(JSON.stringify(data)), url);
-					
-				} else {
-					
-					var diffs = getDependencyDiffs(oldDependencies, data.dependencies);
-					
-					if(diffs.length) {
-						exports.emit('dependenciesChange', diffs, JSON.parse(JSON.stringify(data)), url);
-					}
-				}
-			}
-			
-		} else if(!err) {
-			
-			callback(new Error(response.statusCode + ' Failed to retrieve manifest from ' + url));
-			
+		if(err) {
+			callback(err);
+			return;
+		}
+		
+		var packageJson = new Buffer(resp.content, resp.encoding).toString();
+		var data = parseManifest(packageJson);
+		
+		if(!data) {
+			callback(new Error('Failed to parse package.json: ' + packageJson));
 		} else {
 			
-			callback(err);
+			console.log('Got manifest', data.name, data.version);
+			
+			var oldManifest = manifest;
+			var oldDependencies = oldManifest ? oldManifest.data.dependencies : {};
+			
+			manifest = new Manifest(data);
+			
+			manifests[user + '/' + repo] = manifest;
+			
+			callback(null, manifest.data);
+			
+			if(!oldManifest) {
+				
+				exports.emit('retrieve', JSON.parse(JSON.stringify(data)), user, repo);
+				
+			} else {
+				
+				var diffs = getDependencyDiffs(oldDependencies, data.dependencies);
+				
+				if(diffs.length) {
+					exports.emit('dependenciesChange', diffs, JSON.parse(JSON.stringify(data)), user, repo);
+				}
+			}
 		}
 	});
-};
-
-exports.getGithubManifestUrl = function(user, repo) {
-	return 'https://raw.github.com/' + user + '/' + repo + '/master/package.json';
 };
 
 /**

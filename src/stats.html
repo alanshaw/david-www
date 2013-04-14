@@ -5,7 +5,7 @@
 		{{#if recentlyRetrievedManifests.length}}
 		<ul class="stats">
 			{{#each recentlyRetrievedManifests}}
-			<li><a href="/{{meta.user}}/{{meta.repo}}">{{meta.user}} / {{meta.repo}}</a></li>
+			<li><a href="/{{user}}/{{repo}}">{{user}} / {{repo}}</a></li>
 			{{/each}}
 		</ul>
 		{{else}}
@@ -32,7 +32,7 @@
 		<ul class="stats">
 			{{#each recentlyUpdatedManifests}}
 			<li>
-				<a href="/{{meta.user}}/{{meta.repo}}">{{meta.user}} / {{meta.repo}}</a>
+				<a href="/{{user}}/{{repo}}">{{user}} / {{repo}}</a>
 				<ul>
 					{{#each diffs}}
 					<li>

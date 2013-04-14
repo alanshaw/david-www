@@ -109,9 +109,7 @@ function devStatusBadge(req, res) {
 
 function dependencyGraph(req, res) {
 	
-	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
-	
-	manifest.getManifest(url, function(err, manifest) {
+	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
 		if(errors.happened(err, req, res, 'Failed to get package.json')) {
 			return;
@@ -130,9 +128,7 @@ function dependencyGraph(req, res) {
 
 function devDependencyGraph(req, res) {
 	
-	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
-	
-	manifest.getManifest(url, function(err, manifest) {
+	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
 		if(errors.happened(err, req, res, 'Failed to get package.json')) {
 			return;
@@ -151,9 +147,7 @@ function devDependencyGraph(req, res) {
 
 function buildRssFeed(req, res, dev) {
 	
-	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
-	
-	manifest.getManifest(url, function(err, manifest) {
+	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 		
 		if(errors.happened(err, req, res, 'Failed to get package.json')) {
 			return;
@@ -197,10 +191,8 @@ function withManifestAndInfo(req, res, options, callback) {
 	} else {
 		options = options || {};
 	}
-	
-	var url = manifest.getGithubManifestUrl(req.params.user, req.params.repo);
 
-	manifest.getManifest(url, function(err, manifest) {
+	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
 		if(errors.happened(err, req, res, 'Failed to get package.json')) {
 			return;

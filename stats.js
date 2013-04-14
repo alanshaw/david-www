@@ -3,20 +3,6 @@ var manifest = require('./manifest');
 
 var exports = {};
 
-/**
- * Metadata for a package url
- * 
- * @param {String} url Manifest URL
- */
-function ManifestMeta(url) {
-	
-	// We only support github URLs...
-	var userRepo = url.replace('https://raw.github.com/', '').replace('/master/package.json', '').split('/');
-	
-	this.user = userRepo[0];
-	this.repo = userRepo[1];
-}
-
 // Recently updated packages //////////////////////////////////////////////////
 
 function UpdatedPackage(name, version, previous) {
@@ -45,28 +31,28 @@ exports.getRecentlyUpdatedPackages = function() {
 
 // Recently retrieved manifests ///////////////////////////////////////////////
 
-function RetrievedManifest(manifest, url) {
+function RetrievedManifest(manifest, user, repo) {
 	this.manifest = manifest;
-	this.url = url;
-	this.meta = new ManifestMeta(url);
+	this.user = user;
+	this.repo = repo;
 }
 
 var recentlyRetrievedManifests = [];
 
-manifest.on('retrieve', function(manifest, url) {
+manifest.on('retrieve', function(manifest, user, repo) {
 	
 	var inList = false;
 	
 	for(var i = 0; i < recentlyRetrievedManifests.length; ++i) {
 		
-		if(recentlyRetrievedManifests[i].url == url) {
+		if(recentlyRetrievedManifests[i].user == user && recentlyRetrievedManifests[i].repo == repo) {
 			recentlyRetrievedManifests.splice(i, 1);
 			inList = true;
 			break;
 		}
 	}
 	
-	recentlyRetrievedManifests.unshift(new RetrievedManifest(manifest, url));
+	recentlyRetrievedManifests.unshift(new RetrievedManifest(manifest, user, repo));
 	
 	if(!inList && recentlyRetrievedManifests.length > 10) {
 		recentlyRetrievedManifests.pop();
@@ -79,18 +65,18 @@ exports.getRecentlyRetrievedManifests = function() {
 
 // Recently updated manifests /////////////////////////////////////////////////
 
-function UpdatedManifest(diffs, manifest, url) {
+function UpdatedManifest(diffs, manifest, user, repo) {
 	this.diffs = diffs;
 	this.manifest = manifest;
-	this.url = url;
-	this.meta = new ManifestMeta(url);
+	this.user = user;
+	this.repo = repo;
 }
 
 var recentlyUpdatedManifests = [];
 
-manifest.on('dependenciesChange', function(diffs, manifest, url) {
+manifest.on('dependenciesChange', function(diffs, manifest, user, repo) {
 	
-	recentlyUpdatedManifests.unshift(new UpdatedManifest(diffs, manifest, url));
+	recentlyUpdatedManifests.unshift(new UpdatedManifest(diffs, manifest, user, repo));
 	
 	if(recentlyUpdatedManifests.length > 10) {
 		recentlyUpdatedManifests.pop();
