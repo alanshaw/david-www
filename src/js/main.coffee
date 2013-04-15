@@ -45,7 +45,7 @@ $('#home-page').each ->
 		for own depName of data
 			max = data[depName] if data[depName] > max
 		
-		color = d3.scale.linear().domain([1, max]).range(['#f0f0f0', '#969696'])
+		color = d3.scale.linear().domain([1, max]).range(['#b8e3f3', '#30aedc'])
 		
 		transformData = (data) ->
 			array = for own depName of data

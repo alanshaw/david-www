@@ -97,22 +97,45 @@ textarea {
 // Palette
 ////////////////////////////////////////////////////////////////////////////////
 
-@grey0: #7E827A;
-@red0: #911;
+@black0: #222;
+@grey0: #7f7f7f;
+@grey1: #f5f5f5;
+@grey2: #ddd;
+@blue0: #419cc2;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Font
 ////////////////////////////////////////////////////////////////////////////////
 
 @font-face {
-	font-family: 'NeutonRegular';
-	src: url('../font/Neuton-Regular-webfont.eot');
-	src: url('../font/Neuton-Regular-webfont.eot?#iefix') format('embedded-opentype'),
-		 url('../font/Neuton-Regular-webfont.woff') format('woff'),
-		 url('../font/Neuton-Regular-webfont.ttf') format('truetype'),
-		 url('../font/Neuton-Regular-webfont.svg#NeutonRegular') format('svg');
-	font-weight: normal;
-	font-style: normal;
+    font-family: 'juraregular';
+    src: url('../font/jura-regular-webfont.eot');
+    src: url('../font/jura-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../font/jura-regular-webfont.woff') format('woff'),
+         url('../font/jura-regular-webfont.ttf') format('truetype'),
+         url('../font/jura-regular-webfont.svg#juraregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'jurabold';
+    src: url('../font/jura-bold-webfont.eot');
+    src: url('../font/jura-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../font/jura-bold-webfont.woff') format('woff'),
+         url('../font/jura-bold-webfont.ttf') format('truetype'),
+         url('../font/jura-bold-webfont.svg#jurabold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'nevisbold';
+    src: url('../font/nevis-webfont.eot');
+    src: url('../font/nevis-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../font/nevis-webfont.woff') format('woff'),
+         url('../font/nevis-webfont.ttf') format('truetype'),
+         url('../font/nevis-webfont.svg#nevisbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -120,36 +143,41 @@ textarea {
 ////////////////////////////////////////////////////////////////////////////////
 
 body {
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: juraregular, sans-serif;
 	font-size: 0.875em;
-	color: #444;
-	background: #fff;
+	color: @grey0;
+	background: @grey1;
 }
 h1 {
-	font-size: 1.571em;
+	font-size: 1.714em;
 }
 h2 {
-	font-size: 1.357em;
+	font-size: 1.571em;
 }
 h3 {
+	font-size: 1.357em;
+}
+h4 {
 	font-size: 1.143em;
 }
 h1, h2, h3, h4 {
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	color: #222;
-	letter-spacing: -1px;
+	font-family: nevisbold, sans-serif;
+	color: @blue0;
+	text-transform: uppercase;
+	text-shadow: #fff 0 1px 1px;
+	font-weight: normal;
 	
 	&:first-child {
 		margin-top: 0;
 	}
 }
 a, a:visited {
-	color: @grey0;
-	font-weight: bold;
+	color: @blue0;
+	font-family: jurabold, sans-serif;
 	text-decoration: none;
 }
 a:hover, a:active{
-	color: @red0;
+	color: @black0;
 	text-decoration: none;
 }
 li {
