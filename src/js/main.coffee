@@ -74,6 +74,21 @@ $('#home-page').each ->
 			.attr('dy', '.3em')
 			.style('text-anchor', 'middle')
 			.text((d) -> d.depName.substring(0, d.r / 3))
+	
+	###
+	# RSS feed
+	###
+	$('#news').rss(
+		'http://davidiswatching.tumblr.com/rss',
+		limit: 1
+		layoutTemplate: '<div>{entries}</div>'
+		entryTemplate: '<div>' + $('#news').html() + '</div>'
+		tokens:
+			datetime: (entry) -> moment(entry.publishedDate).format()
+			formattedDate: (entry) -> moment(entry.publishedDate).format('MMMM Do YYYY, HH:mm')
+	)
+	
+	$('#news').html('')
 
 ########################################################################################################################
 # Status page
