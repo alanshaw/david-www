@@ -22,7 +22,7 @@
 	background: url(../img/bg-david.png) no-repeat center 16em;
 	background-size: 100% auto;
 	margin: 4.571em 1em 0;
-	min-height: 45em;
+	min-height: 60em;
 }
 #ft {
 	background: #fff;
@@ -118,6 +118,49 @@ ul.stats {
 		visibility: hidden;
 	}
 }
+.box {
+	background: @grey2;
+	border-radius: 3px 3px 0 0;
+	box-shadow: 0 0 0.5em @grey2;
+	margin: 3em 0;
+	
+	h2 {
+		font-size: 0.857em;
+		color: @grey0;
+		border: 0;
+		margin: 0;
+		padding: 0.417em 1em;
+	}
+	&:first-child, .border-list {
+		margin-top: 0;
+	}
+}
+.border-list {
+	list-style-type: none;
+	padding: 0;
+	
+	li {
+		background: #fff;
+		border-left: 4px solid @blue0;
+		border-bottom: 1px solid @grey2;
+		padding-left: 1em;
+	}
+	&.uptodate {
+		li {
+			border-left-color: @green0;
+		}
+	}
+	&.notsouptodate {
+		li {
+			border-left-color: @yellow0;
+		}
+	}
+	&.outofdate {
+		li {
+			border-left-color: @red0;
+		}
+	}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Page
@@ -176,6 +219,74 @@ ul.stats {
 				circle {
 					fill: #7f7f7f !important;
 				}
+			}
+		}
+	}
+	#recently-updated-npm {
+		li {
+			padding: 0.45em 0 0.45em 1em;
+			line-height: 1.4;
+		}
+		span {
+			display: block;
+		}
+	}
+	#news {
+		margin-left: 3em;
+		
+		.content {
+			background: #fff;
+			padding: 1em;
+			border-radius: 3px;
+			box-shadow: 0 0 0.5em @grey2;
+			position: relative;
+			
+			h1 {
+				font-size: 0.857em;
+				border-top: 0;
+				border-bottom-color: @grey1;
+				padding: 0;
+				color: @grey0;
+				
+				a, a:visited {
+					font-family: nevisbold, sans-serif;
+				}
+			}
+			p {
+				margin: 0;
+				line-height: 1.4;
+			}
+			a, a:visited {
+				color: @grey0;
+				display: block;
+			}
+			&:hover {
+				box-shadow: 0 0 1em @grey2;
+			}
+			&:after {
+				content: ' ';
+				width: 0;
+				height: 0;
+				border-style: solid;
+				border-width: 20px 20px 0 0;
+				border-color: #ffffff transparent transparent transparent;
+				position: absolute;
+				bottom: -1.4em;
+				right: 1.4em;
+			}
+		}
+		.cite {
+			text-align: right;
+			margin: 0.5em 3.5em 0 0;
+			
+			.author {
+				font-family: jurabold, sans-serif;
+				color: @black0;
+			}
+			time {
+				font-family: nevisbold, sans-serif;
+				font-size: 0.857em;
+				text-transform: uppercase;
 			}
 		}
 	}
