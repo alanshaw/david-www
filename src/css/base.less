@@ -102,6 +102,9 @@ textarea {
 @grey1: #f5f5f5;
 @grey2: #ddd;
 @blue0: #419cc2;
+@green0: #25b584;
+@yellow0: #f99619;
+@red0: #cb110b;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Font
@@ -148,17 +151,21 @@ body {
 	color: @grey0;
 	background: @grey1;
 }
-h1 {
+h1, h2 {
 	font-size: 1.714em;
-}
-h2 {
-	font-size: 1.571em;
+	line-height: 1.666;
+	padding: 0.417em 0;
+	border-bottom: 2px solid @grey2;
+	
+	&:first-child {
+		border-top: 4px solid @grey2;
+	}
 }
 h3 {
-	font-size: 1.357em;
+	font-size: 1.571em;
 }
 h4 {
-	font-size: 1.143em;
+	font-size: 1.357em;
 }
 h1, h2, h3, h4 {
 	font-family: nevisbold, sans-serif;
@@ -180,8 +187,8 @@ a:hover, a:active{
 	color: @black0;
 	text-decoration: none;
 }
-li {
-	margin: 0.25em 0;
+p, li {
+	line-height: 2.286;
 }
 
 

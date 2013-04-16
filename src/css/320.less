@@ -19,7 +19,7 @@
 	}
 }
 #main {
-	background: url(../img/bg-david.png) no-repeat center 11em;
+	background: url(../img/bg-david.png) no-repeat center 16em;
 	background-size: 100% auto;
 	margin: 4.571em 1em 0;
 	min-height: 45em;
@@ -67,23 +67,24 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 .uptodate {
-	color: #34bb0f;
+	color: @green0;
+	
 	i {
-		text-shadow: 0 0 5px #34bb0f;
+		text-shadow: 0 0 5px @green0;
 	}
 }
 .outofdate {
-	color: #ce563f;
+	color: @red0;
 	
 	&.pinned {
-		color: #ded030;
+		color: @yellow0;
 		
 		i {
-			text-shadow: 0 0 5px #ded030;
+			text-shadow: 0 0 5px @yellow0;
 		}
 	}
 	i {
-		text-shadow: 0 0 5px #ce563f;
+		text-shadow: 0 0 5px @red0;
 	}
 }
 ul.stats {
@@ -124,24 +125,40 @@ ul.stats {
 
 #home-page {
 	#examples {
-		padding-left: 1em;
+		list-style-type: none;
+		padding: 0;
 		
 		li {
-			max-width: 20.5em;
+			position: relative;
+			background: #fff;
+			font-size: 1.286em;
+			padding-left: 1em;
+			margin: 0.25em 0;
 		}
 		img {
-			float: right;
+			position: absolute;
+			top: 0.65em;
+			left: 13em;
 		}
 	}
-	.badge-maker{
-		strong{
-			padding-right: 1em;
+	.badge-maker {
+		background: #fff;
+		font-size: 1.286em;
+		padding: 0 1em;
+		
+		strong {
+			font-weight: normal;
+			margin: 0 1em 0 0;
 		}
 		span {
-			color: green
+			color: @green0;
+			
+			&:hover {
+				background: @grey1;
+			}
 		}
 		span.nope {
-			color: #911;
+			color: @red0;
 		}
 	}
 	#dependency-counts-graph {
