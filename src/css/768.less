@@ -2,11 +2,26 @@
 // Structure
 ////////////////////////////////////////////////////////////////////////////////
 
+#hd {
+	span {
+		display: inline;
+		font-size: 1em;
+		font-family: nevisbold, sans-serif;
+		text-transform: uppercase;
+		color: @black0;
+		margin-left: 9em;
+	}
+}
 #ft {
 	margin: 4em 0 0;
 	
 	> div {
 		position: relative;
+		text-align: left;
+	}
+	small {
+		display: inline;
+		margin: 0;
 	}
 	ul {
 		position: absolute;
@@ -28,6 +43,15 @@
 	#main > div {
 		float: left;
 		width: 57%;
+	}
+	#examples {
+		li {
+			font-size: 1.286em;
+		}
+		img {
+			top: 0.65em;
+			left: 13em;
+		}
 	}
 	#stats {
 		float: right;
