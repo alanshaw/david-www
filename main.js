@@ -7,6 +7,7 @@ var brains = require('./brains');
 var errors = require('./errors');
 var graph = require('./graph');
 var feed = require('./feed');
+var newsFeed = require('./news-feed');
 
 
 var app = express();
@@ -17,6 +18,7 @@ app.set('views', __dirname + '/dist');
 
 statics.init(app);
 
+app.get('/news/rss.xml',               newsRssFeed);
 app.get('/:user/:repo/dev-info.json',  devInfo);
 app.get('/:user/:repo/graph.json',     dependencyGraph);
 app.get('/:user/:repo/dev-graph.json', devDependencyGraph);
@@ -54,6 +56,19 @@ function statsPage(req, res) {
 
 function dependencyCounts(req, res) {
 	res.json(stats.getDependencyCounts());
+}
+
+function newsRssFeed(req, res) {
+	
+	newsFeed.get(function(err, xml) {
+		
+		if(errors.happened(err, req, res, 'Failed to get news feed xml')) {
+			return;
+		}
+		
+		res.contentType('application/rss+xml');
+		res.send(xml, 200);
+	});
 }
 
 /**

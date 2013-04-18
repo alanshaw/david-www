@@ -78,17 +78,16 @@ $('#home-page').each ->
 	###
 	# RSS feed
 	###
-	$('#news').rss(
-		'http://davidiswatching.tumblr.com/rss',
-		limit: 1
-		layoutTemplate: '<div>{entries}</div>'
-		entryTemplate: '<div>' + $('#news').html() + '</div>'
-		tokens:
-			datetime: (entry) -> moment(entry.publishedDate).format()
-			formattedDate: (entry) -> moment(entry.publishedDate).format('MMMM Do YYYY, HH:mm')
-	)
-	
-	$('#news').html('')
+	$.getFeed
+		url: '/news/rss.xml'
+		success: (feed) -> 
+			
+			entry = feed.items[0]
+			entry.shortDesc = $('<div/>').html(entry.description).text().substr(0, 200)
+			entry.datetime = moment(entry.updated).format()
+			entry.formattedDate = moment(entry.updated).format('MMMM Do YYYY, HH:mm')
+			
+			$.get('/inc/news.html', (template) -> $('#stats').append(Handlebars.compile(template)(entry)))
 
 ########################################################################################################################
 # Status page
