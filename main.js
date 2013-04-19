@@ -7,6 +7,7 @@ var brains = require('./brains');
 var errors = require('./errors');
 var graph = require('./graph');
 var feed = require('./feed');
+var profile = require('./profile');
 
 
 var app = express();
@@ -26,6 +27,7 @@ app.get('/:user/:repo/status.png',     statusBadge);
 app.get('/:user/:repo/dev-status.png', devStatusBadge);
 app.get('/:user/:repo.png',            statusBadge);
 app.get('/:user/:repo',                statusPage);
+app.get('/:user',                      profilePage);
 app.get('/dependency-counts.json',     dependencyCounts);
 app.get('/stats',                      statsPage);
 app.get('/',                           indexPage);
@@ -70,6 +72,18 @@ function statusPage(req, res) {
 			info: info
 		});
 
+	});
+}
+
+function profilePage(req, res) {
+	
+	profile.get(req.params.user, function(err, data) {
+		
+		if(errors.happened(err, req, res, 'Failed to get profile data')) {
+			return;
+		}
+		
+		res.render('profile', {user: req.params.user, repos: data});
 	});
 }
 
