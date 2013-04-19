@@ -56,9 +56,9 @@
 		{{#if recentlyUpdatedPackages.length}}
 		<div id="recently-updated-npm" class="box">
 			<h2>Recently updated NPM packages</h2>
-			<ul class="border-list notsouptodate">
+			<ul class="border-list">
 				{{#each recentlyUpdatedPackages}}
-				<li><a href="http://npmjs.org/package/{{name}}">{{name}}</a> <span>{{previous}} <i class="icon-double-angle-right"></i> {{version}}</span></li>
+				<li class="pinned"><a href="http://npmjs.org/package/{{name}}">{{name}}</a> <span>{{previous}} <i class="icon-double-angle-right"></i> {{version}}</span></li>
 				{{/each}}
 			</ul>
 		</div>

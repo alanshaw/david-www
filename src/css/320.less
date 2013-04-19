@@ -143,20 +143,48 @@ ul.stats {
 		border-left: 4px solid @blue0;
 		border-bottom: 1px solid @grey2;
 		padding-left: 1em;
-	}
-	&.uptodate {
-		li {
+		
+		&.uptodate {
+			color: inherit;
 			border-left-color: @green0;
+			
+			.uptodate {
+				color: @green0;
+			}
+			.pinned {
+				color: @yellow0;
+			}
+			.outofdate {
+				color: @red0;
+			}
 		}
-	}
-	&.notsouptodate {
-		li {
+		&.pinned {
+			color: inherit;
 			border-left-color: @yellow0;
+			
+			.uptodate {
+				color: @green0;
+			}
+			.pinned {
+				color: @yellow0;
+			}
+			.outofdate {
+				color: @red0;
+			}
 		}
-	}
-	&.outofdate {
-		li {
+		&.outofdate {
+			color: inherit;
 			border-left-color: @red0;
+			
+			.uptodate {
+				color: @green0;
+			}
+			.pinned {
+				color: @yellow0;
+			}
+			.outofdate {
+				color: @red0;
+			}
 		}
 	}
 }
