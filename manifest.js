@@ -8,8 +8,17 @@ var events = require('events');
 var request = require('request');
 var moment = require('moment');
 var GitHubApi = require('github');
+var config = require('config');
 
 var github = new GitHubApi({version: '3.0.0'});
+
+if(config.github) {
+	github.authenticate({
+		type: 'basic',
+		username: config.github.username,
+		password: config.github.password
+	});
+}
 
 var exports = new events.EventEmitter();
 
