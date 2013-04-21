@@ -1,0 +1,9 @@
+@@include('inc/top.html', {"id": "stats-page", "title": "Profile for {{user}}"})
+	
+	<ul>
+		{{#each repos}}
+		<li>{{manifest.name}}</li>
+		{{/each}}
+	</ul>
+
+@@include('inc/bottom.html')
