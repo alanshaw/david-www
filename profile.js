@@ -2,8 +2,17 @@ var GitHubApi = require('github');
 var async = require('async');
 var manifest = require('./manifest');
 var brains = require('./brains');
+var config = require('config');
 
 var github = new GitHubApi({version: '3.0.0'});
+
+if(config.github) {
+	github.authenticate({
+		type: 'basic',
+		username: config.github.username,
+		password: config.github.password
+	});
+}
 
 /**
  * Get repositories for a user
