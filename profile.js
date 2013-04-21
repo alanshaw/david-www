@@ -27,11 +27,6 @@ function getRepos(user, options, callback) {
 	
 	setImmediate(function() {
 		
-		github.authenticate({
-			type: 'oauth',
-			token: '181280fa0d393e8e263a'
-		});
-		
 		github.repos.getFromUser({user: user, page: options.page, per_page: options.pageSize}, function(err, data) {
 			
 			if(err) {
@@ -119,7 +114,7 @@ module.exports.get = function(user, callback) {
 					return;
 				}
 				
-				callback(null, data);
+				callback(null, data.filter(function(d) {return !!d;}));
 			}
 		);
 	});
