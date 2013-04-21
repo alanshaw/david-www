@@ -78,24 +78,37 @@ function statusPage(req, res) {
  */
 function sendStatusBadge(req, res, dev) {
 	
-	withManifestAndInfo(req, res, {dev: dev}, function(manifest, info) {
+	res.setHeader('Cache-Control', 'no-cache');
+	
+	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 		
-		res.setHeader('Cache-Control', 'no-cache');
+		if(err) {
+			res.status(404).sendfile('dist/img/unknown.png');
+			return;
+		}
 		
-		var totalDeps = info.deps.length;
-		var path = 'dist/img/' + (dev ? 'dev-' : '');
-		
-		if(totalDeps && info.totals.unpinned.outOfDate) {
-		
-			if(info.totals.unpinned.outOfDate / totalDeps > 0.25) {
-				res.sendfile(path + 'outofdate.png');
-			} else {
-				res.sendfile(path + 'notsouptodate.png');
+		brains.getInfo(manifest, {dev: dev}, function(err, info) {
+			
+			if(err) {
+				res.status(500).sendfile('dist/img/unknown.png');
+				return;
 			}
 			
-		} else {
-			res.sendfile(path + 'uptodate.png');
-		}
+			var totalDeps = info.deps.length;
+			var path = 'dist/img/' + (dev ? 'dev-' : '');
+			
+			if(totalDeps && info.totals.unpinned.outOfDate) {
+			
+				if(info.totals.unpinned.outOfDate / totalDeps > 0.25) {
+					res.sendfile(path + 'outofdate.png');
+				} else {
+					res.sendfile(path + 'notsouptodate.png');
+				}
+				
+			} else {
+				res.sendfile(path + 'uptodate.png');
+			}
+		});
 	});
 }
 
