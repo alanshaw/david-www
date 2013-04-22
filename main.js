@@ -20,6 +20,8 @@ app.set('views', __dirname + '/dist');
 statics.init(app);
 
 app.get('/news/rss.xml',               newsRssFeed);
+app.get('/dependency-counts.json',     dependencyCounts);
+app.get('/stats',                      statsPage);
 app.get('/:user/:repo/dev-info.json',  devInfo);
 app.get('/:user/:repo/graph.json',     dependencyGraph);
 app.get('/:user/:repo/dev-graph.json', devDependencyGraph);
@@ -30,8 +32,6 @@ app.get('/:user/:repo/dev-status.png', devStatusBadge);
 app.get('/:user/:repo.png',            statusBadge);
 app.get('/:user/:repo',                statusPage);
 app.get('/:user',                      profilePage);
-app.get('/dependency-counts.json',     dependencyCounts);
-app.get('/stats',                      statsPage);
 app.get('/',                           indexPage);
 
 /**
