@@ -39,7 +39,7 @@
 	.switch {
 		display: block;
 		list-stype-type: none;
-		margin: 0;
+		margin: -3.5em 0 0 0;
 		padding: 0;
 		float: right;
 		
@@ -48,11 +48,23 @@
 			margin-left: 1em;
 		}
 		a {
+			font-family: nevisbold, sans-serif;
+			font-size: 0.857em;
+			text-transform: uppercase;
+			color: @grey4;
+			
+			&.selected {
+				color: @grey0;
+				
+				i {
+					color: @blue0;
+				}
+			}
 			&:focus {
 				outline: 0;
 			}
-			&.selected {
-				color: #444;
+			&:hover {
+				color: @black0;
 			}
 		}
 	}

@@ -325,26 +325,34 @@ ul.stats {
 #status-page {
 	#repo {
 		h1 {
-			a:first-child {
-				font-weight: normal;
+			color: @grey0;
+			
+			a {
+				font-family: nevisbold, sans-serif;
+				
+				&:first-child {
+					color: @grey0;
+					
+					&:hover {
+						color: @black0;
+					}
+				}
 			}
 			span {
-				color: #ccc;
-				font-size: 0.636em;
+				font-family: juraregular, sans-serif;
+				font-size: 0.750em;
+			}
+			img {
+				vertical-align: baseline;
 			}
 		}
 		p {
-			color: #ccc;
-			transition: color 0.25s linear;
+			font-size: 1.143em;
 			margin-top: -1em;
-		}
-		&:hover {
-			p {
-				color: #222;
-			}
 		}
 	}
 	#status, #dev-status {
+		float: right;
 		padding: 0 0.5em;
 		background-color: transparent;
 	}
@@ -354,42 +362,42 @@ ul.stats {
 	#dep-switch {
 		list-style-type: none;
 		padding: 0;
-		border-bottom: 1px solid #ccc;
+		border-bottom: 2px solid @grey2;
 		
 		li {
 			display: inline-block;
 			margin: 0 0.25em 0 0;
 			
 			a {
-				background: #f6f6f6;
-				position: relative;
-				bottom: -1px;
+				background: @grey3;
 				display: block;
-				border: 1px solid #ccc;
-				padding: 0.333em 0.5em;
-				border-radius: 0.166em 0.166em 0 0;
-				box-shadow: inset 0 0 1.5em #ccc;
-				font-weight: normal;
+				padding: 0.250em 1.333em;
+				border-radius: 0.250em 0.250em 0 0;
+				box-shadow: 0 0 .5em @grey2;
+				font-family: nevisbold, sans-serif;
+				font-size: 0.857em;
+				text-transform: uppercase;
+				color: @grey4;
 				
 				&.selected {
 					background: #fff;
-					background: -moz-linear-gradient(top,  #f6f6f6 0%, #ffffff 100%);
-					background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f6f6), color-stop(100%,#ffffff));
-					background: -webkit-linear-gradient(top,  #f6f6f6 0%,#ffffff 100%);
-					background: -o-linear-gradient(top,  #f6f6f6 0%,#ffffff 100%);
-					background: -ms-linear-gradient(top,  #f6f6f6 0%,#ffffff 100%);
-					background: linear-gradient(to bottom,  #f6f6f6 0%,#ffffff 100%);
-					border-bottom-color: #fff;
-					box-shadow: none;
-					font-weight: bold;
+					color: @grey0;
+					
+					i {
+						color: @blue0;
+					}
 				}
 				&:focus {
 					outline: none;
+				}
+				&:hover {
+					color: @black0;
 				}
 			}
 		}
 	}
 	.summary {
+		font-size: 1.286em;
 		padding: 0;
 		list-style-type: none;
 		
@@ -414,13 +422,19 @@ ul.stats {
 					padding-top: 1.429em;
 				}
 			}
+			tr:nth-child(even) {
+				box-shadow: 0 0 .5em @grey2;
+			}
 			tr:nth-child(even) td {
-				background: rgba(0, 0, 0, 0.05);
+				background: rgba(255, 255, 255, 0.6);
 			}
 			th {
 				text-align: left;
+				font-weight: normal;
+				color: @blue0;
 			}
 			th, td {
+				font-size: 1.143em;
 				padding: 0.714em;
 			}
 			td {
@@ -432,6 +446,14 @@ ul.stats {
 			}
 			.dep {
 				width: 100%;
+			}
+			a {
+				font-family: juraregular, sans-serif;
+				color: @grey0;
+				
+				&:hover {
+					color: @black0;
+				}
 			}
 		}
 	}
