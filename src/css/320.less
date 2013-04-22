@@ -65,27 +65,6 @@
 // Class
 ////////////////////////////////////////////////////////////////////////////////
 
-.uptodate {
-	color: @green0;
-	
-	i {
-		text-shadow: 0 0 5px @green0;
-	}
-}
-.outofdate {
-	color: @red0;
-	
-	&.pinned {
-		color: @yellow0;
-		
-		i {
-			text-shadow: 0 0 5px @yellow0;
-		}
-	}
-	i {
-		text-shadow: 0 0 5px @red0;
-	}
-}
 ul.stats {
 	li {
 		margin: 0.5em 0;
@@ -145,48 +124,65 @@ ul.stats {
 		padding-left: 1em;
 		
 		&.uptodate {
-			color: inherit;
 			border-left-color: @green0;
-			
-			.uptodate {
-				color: @green0;
-			}
-			.pinned {
-				color: @yellow0;
-			}
-			.outofdate {
-				color: @red0;
-			}
 		}
 		&.pinned {
-			color: inherit;
 			border-left-color: @yellow0;
-			
-			.uptodate {
-				color: @green0;
-			}
-			.pinned {
-				color: @yellow0;
-			}
-			.outofdate {
-				color: @red0;
-			}
 		}
 		&.outofdate {
-			color: inherit;
 			border-left-color: @red0;
-			
-			.uptodate {
-				color: @green0;
-			}
-			.pinned {
-				color: @yellow0;
-			}
-			.outofdate {
-				color: @red0;
-			}
 		}
 	}
+}
+.sqr {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border: 1px solid transparent;
+	border-radius: 2px;
+	vertical-align: text-top;
+}
+.sqr.uptodate, .sqr.uptodate.pinned {
+	background: #aae7c1;
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2FhZTdjMSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyNWI1ODQiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  #aae7c1 0%, #25b584 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#aae7c1), color-stop(100%,#25b584));
+	background: -webkit-linear-gradient(top,  #aae7c1 0%,#25b584 100%);
+	background: -o-linear-gradient(top,  #aae7c1 0%,#25b584 100%);
+	background: -ms-linear-gradient(top,  #aae7c1 0%,#25b584 100%);
+	background: linear-gradient(to bottom,  #aae7c1 0%,#25b584 100%);
+	border-top-color: #96c9ab;
+	border-right-color: #6eb085;
+	border-bottom-color: #479961;
+	border-left-color: #6eb085;
+}
+.sqr.pinned, .sqr.outofdate.pinned {
+	background: #fee01e;
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZlZTAxZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmOTk2MTkiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  #fee01e 0%, #f99619 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fee01e), color-stop(100%,#f99619));
+	background: -webkit-linear-gradient(top,  #fee01e 0%,#f99619 100%);
+	background: -o-linear-gradient(top,  #fee01e 0%,#f99619 100%);
+	background: -ms-linear-gradient(top,  #fee01e 0%,#f99619 100%);
+	background: linear-gradient(to bottom,  #fee01e 0%,#f99619 100%);
+	border-top-color: #feb741;
+	border-right-color: #fd9630;
+	border-bottom-color: #fc771f;
+	border-left-color: #fd9630;
+}
+.sqr.outofdate {
+	background: #eb6640;
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ViNjY0MCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjMjBiMDciIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  #eb6640 0%, #c20b07 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eb6640), color-stop(100%,#c20b07));
+	background: -webkit-linear-gradient(top,  #eb6640 0%,#c20b07 100%);
+	background: -o-linear-gradient(top,  #eb6640 0%,#c20b07 100%);
+	background: -ms-linear-gradient(top,  #eb6640 0%,#c20b07 100%);
+	background: linear-gradient(to bottom,  #eb6640 0%,#c20b07 100%);
+	border-top-color: #c20000;
+	border-right-color: #a70000;
+	border-bottom-color: #8c0000;
+	border-left-color: #a70000;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -326,6 +322,7 @@ ul.stats {
 	#repo {
 		h1 {
 			color: @grey0;
+			overflow: hidden;
 			
 			a {
 				font-family: nevisbold, sans-serif;
@@ -352,7 +349,6 @@ ul.stats {
 		}
 	}
 	#status, #dev-status {
-		float: right;
 		padding: 0 0.5em;
 		background-color: transparent;
 	}
@@ -398,11 +394,12 @@ ul.stats {
 	}
 	.summary {
 		font-size: 1.286em;
-		padding: 0;
+		padding: 0 0.889em;
 		list-style-type: none;
 		
-		i {
-			padding: 0 0.14em 0 0.3em;
+		span {
+			color: @blue0;
+			margin-right: 0.250em;
 		}
 	}
 	.dep-table {
@@ -419,7 +416,10 @@ ul.stats {
 					display: none;
 				}
 				.st-head-row {
-					padding-top: 1.429em;
+					padding-top: 2em;
+				}
+				tr:nth-child(even) {
+					box-shadow: none;
 				}
 			}
 			tr:nth-child(even) {
@@ -435,7 +435,7 @@ ul.stats {
 			}
 			th, td {
 				font-size: 1.143em;
-				padding: 0.714em;
+				padding: 0.750em 1em;
 			}
 			td {
 				min-width: 5em;

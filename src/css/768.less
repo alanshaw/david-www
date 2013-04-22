@@ -59,9 +59,21 @@
 	}
 }
 #status-page {
+	#main {
+		background-position: center 22em;
+		min-height: 66em;
+	}
+	#status, #dev-status {
+		float: right;
+	}
 	.summary {
 		li {
 			display: inline;
+			margin-left: 1.75em;
+			
+			&:first-child {
+				margin-left: 0;
+			}
 		}
 	}
 	.dep-table {
