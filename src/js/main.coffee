@@ -45,7 +45,7 @@ $('#home-page').each ->
 		for own depName of data
 			max = data[depName] if data[depName] > max
 		
-		color = d3.scale.linear().domain([1, max]).range(['#f0f0f0', '#969696'])
+		color = d3.scale.linear().domain([1, max]).range(['#b8e3f3', '#30aedc'])
 		
 		transformData = (data) ->
 			array = for own depName of data
@@ -74,6 +74,20 @@ $('#home-page').each ->
 			.attr('dy', '.3em')
 			.style('text-anchor', 'middle')
 			.text((d) -> d.depName.substring(0, d.r / 3))
+	
+	###
+	# RSS feed
+	###
+	$.getFeed
+		url: '/news/rss.xml'
+		success: (feed) -> 
+			
+			entry = feed.items[0]
+			entry.shortDesc = $('<div/>').html(entry.description).text().substr(0, 200)
+			entry.datetime = moment(entry.updated).format()
+			entry.formattedDate = moment(entry.updated).format('MMMM Do YYYY, HH:mm')
+			
+			$.get('/inc/news.html', (template) -> $('#stats').append(Handlebars.compile(template)(entry)))
 
 ########################################################################################################################
 # Status page

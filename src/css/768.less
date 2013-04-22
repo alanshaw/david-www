@@ -2,27 +2,35 @@
 // Structure
 ////////////////////////////////////////////////////////////////////////////////
 
-#main {
-	background-size: auto auto;
+#hd {
+	span {
+		display: inline;
+		font-size: 1em;
+		font-family: nevisbold, sans-serif;
+		text-transform: uppercase;
+		color: @black0;
+		margin-left: 9em;
+	}
 }
 #ft {
-	margin: 4em 0;
-	padding: 1em;
-	background-position: 1em 1em;
-	min-height: 2.571em;
+	margin: 4em 0 0;
 	
-	small {
-		float: left;
-		margin-left: 5em;
-	}
 	> div {
-		float: right;
+		position: relative;
+		text-align: left;
+	}
+	small {
+		display: inline;
+		margin: 0;
 	}
 	ul {
+		position: absolute;
+		top: 1.85em;
+		right: 0;
 		text-align: right;
 		
 		&.social {
-			margin-top: -5.5em;
+			top: -3.75em;
 		}
 	}
 }
@@ -32,38 +40,40 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #home-page {
-	#main {
-		overflow: hidden;
-	}
 	#main > div {
 		float: left;
-		width: 71%;
-	}
-	#stats {
-		float: left;
-		width: 25%;
-		margin: 1em 0 1em 2%;
-		padding-left: 2%;
-		position: relative;
-		
-		h2 {
-			font-size: 1.143em;
-		}
-		&:before {
-			content: url(../img/bg-stats-shadow.png);
-			position: absolute;
-			top: 0;
-			left: -24px;
-		}
+		width: 57%;
 	}
 	#examples {
-		padding-left: 3em;
+		li {
+			font-size: 1.286em;
+		}
+		img {
+			top: 0.65em;
+			left: 13em;
+		}
+	}
+	#stats {
+		float: right;
+		width: 32%;
 	}
 }
 #status-page {
+	#main {
+		background-position: center 22em;
+		min-height: 66em;
+	}
+	#status, #dev-status {
+		float: right;
+	}
 	.summary {
 		li {
 			display: inline;
+			margin-left: 1.75em;
+			
+			&:first-child {
+				margin-left: 0;
+			}
 		}
 	}
 	.dep-table {
