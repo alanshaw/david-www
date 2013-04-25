@@ -1,6 +1,81 @@
 $ = jQuery
 
 ########################################################################################################################
+# Shared
+########################################################################################################################
+
+###
+# d3 dependency count graph
+###
+
+dependencyCounts = {}
+renderDependencyCountsGraph = null
+
+$('#dependency-counts-graph').each ->
+	
+	diameter = $(@).width()
+	format = d3.format(',d')
+	
+	bubble = d3.layout.pack().sort(null).size([diameter, diameter]).padding(1.5)
+	
+	svg = d3.select(@).append('svg')
+		.attr('width', diameter)
+		.attr('height', diameter)
+		.attr('class', 'bubble');
+	
+	# Get the dependency counts
+	d3.json 'dependency-counts.json', (error, data) ->
+		dependencyCounts = data
+		renderDependencyCountsGraph data
+	
+	# Render the graph
+	renderDependencyCountsGraph = (data) ->
+		
+		# Get the max count
+		max = 1
+		
+		for own depName of data
+			max = data[depName] if data[depName] > max
+		
+		color = d3.scale.linear().domain([1, max]).range(['#b8e3f3', '#30aedc'])
+		
+		transformData = (data) ->
+			array = for own depName of data
+				depName: depName, value: data[depName]
+			children: array
+		
+		nodes = svg.selectAll('.node').data(
+			bubble.nodes(transformData(data)).filter((d) -> !d.children)
+			(d) -> d.depName
+		)
+		
+		nodeEnter = nodes.enter()
+			.append('g')
+			.attr('class', 'node')
+			.attr('transform', -> "translate(#{diameter / 2}, #{diameter / 2})")
+			.on("click", (d) -> window.location = 'http://npmjs.org/package/' + d.depName)
+		
+		nodeEnter.append('title') 
+			.text((d) -> d.depName + ': ' + format(d.value))
+		
+		nodeEnter.append('circle')
+		
+		nodeEnter.append('text')
+			.attr('dy', '.3em')
+			.style('text-anchor', 'middle')
+		
+		nodeUpdate = nodes.transition().attr('transform', (d) -> "translate(#{d.x}, #{d.y})")
+		
+		nodeUpdate.select('circle')
+			.attr('r', (d) -> d.r)
+			.style('fill', (d) -> color(d.value))
+		
+		nodeUpdate.select('text')
+			.text((d) -> d.depName.substring(0, d.r / 3))
+		
+		nodes.exit().transition().remove().select('circle').attr('r', 0)
+
+########################################################################################################################
 # Homepage
 ########################################################################################################################
 
@@ -22,58 +97,6 @@ $('#home-page').each ->
 		if $(@).attr('src') is '/img/outofdate.png' then return # bail, it's the placeholder image load.
 		url.removeClass 'nope'
 		$(@).show()
-	
-	###
-	# d3 dependency count graph
-	###
-	
-	diameter = $('#dependency-counts-graph').width()
-	format = d3.format(',d')
-	
-	bubble = d3.layout.pack().sort(null).size([diameter, diameter]).padding(1.5)
-	
-	svg = d3.select('#dependency-counts-graph').append('svg')
-		.attr('width', diameter)
-		.attr('height', diameter)
-		.attr('class', 'bubble');
-	
-	d3.json 'dependency-counts.json', (error, data) ->
-		
-		# Get the max count
-		max = 1
-		
-		for own depName of data
-			max = data[depName] if data[depName] > max
-		
-		color = d3.scale.linear().domain([1, max]).range(['#b8e3f3', '#30aedc'])
-		
-		transformData = (data) ->
-			array = for own depName of data
-				depName: depName, value: data[depName]
-			children: array
-		
-		node = svg.selectAll('.node')
-			.data(
-				bubble.nodes(transformData(data))
-					.filter((d) -> !d.children)
-					#.filter((d) -> d.value > 1)
-			)
-			.enter().append('g')
-			.attr('class', 'node')
-			.attr('transform', (d) -> "translate(#{d.x}, #{d.y})")
-			.on("click", (d) -> window.location = 'http://npmjs.org/package/' + d.depName)
-		
-		node.append('title') 
-			.text((d) -> d.depName + ': ' + format(d.value))
-		
-		node.append('circle')
-			.attr('r', (d) -> d.r)
-			.style('fill', (d) -> color(d.value))
-		
-		node.append('text')
-			.attr('dy', '.3em')
-			.style('text-anchor', 'middle')
-			.text((d) -> d.depName.substring(0, d.r / 3))
 	
 	###
 	# RSS feed
@@ -406,3 +429,32 @@ $('#status-page').each ->
 	
 	onHashChange()
 	initInfo depInfoContainer
+
+########################################################################################################################
+# Search page
+########################################################################################################################
+
+$('#search-page').each ->
+	
+	searchField = $('form input')
+	
+	searchTimeoutId = null
+	
+	searchField.keyup ->
+		
+		clearTimeout searchTimeoutId
+		
+		searchTimeoutId = setTimeout(
+			->
+				data = {}
+				q = searchField.val()
+				
+				if q
+					for own depName of dependencyCounts
+						if depName.indexOf(q) isnt -1 then data[depName] = dependencyCounts[depName]
+				else
+					data = dependencyCounts
+				
+				renderDependencyCountsGraph data
+			250
+		)

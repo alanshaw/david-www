@@ -22,6 +22,7 @@ statics.init(app);
 app.get('/news/rss.xml',               newsRssFeed);
 app.get('/dependency-counts.json',     dependencyCounts);
 app.get('/stats',                      statsPage);
+app.get('/search',                     searchPage);
 app.get('/:user/:repo/dev-info.json',  devInfo);
 app.get('/:user/:repo/graph.json',     dependencyGraph);
 app.get('/:user/:repo/dev-graph.json', devDependencyGraph);
@@ -100,6 +101,10 @@ function profilePage(req, res) {
 		
 		res.render('profile', {user: req.params.user, repos: data});
 	});
+}
+
+function searchPage(req, res) {
+	res.render('search');
 }
 
 /**
