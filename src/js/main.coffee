@@ -75,6 +75,8 @@ $('#dependency-counts-graph').each ->
 		
 		nodes.exit().transition().remove().select('circle').attr('r', 0)
 
+createLoadingEl = (text = ' Reticulating splines...') -> $ '<div class="loading"><i class="icon-spinner icon-spin icon-2x"></i>' + text + '</div>'
+
 ########################################################################################################################
 # Homepage
 ########################################################################################################################
@@ -316,7 +318,7 @@ $('#status-page').each ->
 		
 		initGraph = ->
 			
-			loading = $ '<div class="loading"><i class="icon-spinner icon-spin icon-2x"></i> Reticulating splines...</div>'
+			loading = createLoadingEl()
 			graphContainer.prepend(loading)
 			
 			d3.json pathname + graphJsonUrl, (err, json) ->
@@ -413,7 +415,7 @@ $('#status-page').each ->
 				
 				devDepInfoLoaded = true
 				
-				loading = $ '<div class="loading"><i class="icon-spinner icon-spin icon-2x"></i> Reticulating splines...</div>'
+				loading = createLoadingEl()
 				
 				devDepInfoContainer.prepend(loading)
 				
@@ -436,25 +438,54 @@ $('#status-page').each ->
 
 $('#search-page').each ->
 	
-	searchField = $('form input')
+	searchForm = $ 'form'
+	
+	searchField = $ 'input', searchForm
 	
 	searchTimeoutId = null
+	
+	search = (q) -> 
+		
+		data = {}
+		
+		searchForm.append(createLoadingEl(' Searching...')) if $('.loading', searchForm).length is 0
+		
+		renderDependencyCountsGraph {}
+		
+		$.getJSON(
+			'/search.json'
+			q: q
+			(results) ->
+				
+				$('.loading', searchForm).remove()
+				
+				if Object.keys(results).length is 0
+					data = dependencyCounts
+				else
+					
+					for own pkgName of results
+						data[pkgName] = results[pkgName].count + 1
+				
+				renderDependencyCountsGraph data
+		)
 	
 	searchField.keyup ->
 		
 		clearTimeout searchTimeoutId
 		
-		searchTimeoutId = setTimeout(
-			->
-				data = {}
-				q = searchField.val()
-				
-				if q
-					for own depName of dependencyCounts
-						if depName.indexOf(q) isnt -1 then data[depName] = dependencyCounts[depName]
-				else
-					data = dependencyCounts
-				
-				renderDependencyCountsGraph data
-			250
-		)
+		q = searchField.val()
+		
+		if q.length is 0
+			
+			renderDependencyCountsGraph(dependencyCounts)
+			
+		else if q.length > 2
+			
+			searchTimeoutId = setTimeout(
+				-> search q
+				1000
+			)
+	
+	if searchField.val()
+		renderDependencyCountsGraph {}
+		search searchField.val() 

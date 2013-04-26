@@ -486,6 +486,8 @@ ul.stats {
 }
 #search-page {
 	form {
+		position: relative;
+		
 		h1 {
 			text-align: center;
 		}
@@ -499,6 +501,16 @@ ul.stats {
 			&:hover, &:focus {
 				box-shadow: 0 0 0.25em @blue0;
 				border-color: @blue0;
+			}
+		}
+		.loading {
+			position: absolute;
+			width: 100%;
+			top: 30em;
+			text-align: center;
+			
+			* {
+				vertical-align: middle;
 			}
 		}
 	}
