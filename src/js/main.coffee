@@ -8,7 +8,6 @@ $ = jQuery
 # d3 dependency count graph
 ###
 
-dependencyCounts = {}
 renderDependencyCountsGraph = null
 
 $('#dependency-counts-graph').each ->
@@ -21,12 +20,7 @@ $('#dependency-counts-graph').each ->
 	svg = d3.select(@).append('svg')
 		.attr('width', diameter)
 		.attr('height', diameter)
-		.attr('class', 'bubble');
-	
-	# Get the dependency counts
-	d3.json 'dependency-counts.json', (error, data) ->
-		dependencyCounts = data
-		renderDependencyCountsGraph data
+		.attr('class', 'bubble')
 	
 	# Render the graph
 	renderDependencyCountsGraph = (data) ->
@@ -82,6 +76,9 @@ createLoadingEl = (text = ' Reticulating splines...') -> $ '<div class="loading"
 ########################################################################################################################
 
 $('#home-page').each ->
+	
+	# Render the dependency counts graph
+	d3.json 'dependency-counts.json', (error, data) -> renderDependencyCountsGraph data
 	
 	url = $ '.badge-maker span'
 	badge = $ '.badge-maker img'
@@ -438,7 +435,11 @@ $('#status-page').each ->
 
 $('#search-page').each ->
 	
+	dependencyCounts = {}
+	
 	searchForm = $ 'form'
+	
+	searchForm.submit (event) -> event.preventDefault()
 	
 	searchField = $ 'input', searchForm
 	
@@ -469,23 +470,34 @@ $('#search-page').each ->
 				renderDependencyCountsGraph data
 		)
 	
+	lastQ = null
+	
 	searchField.keyup ->
-		
-		clearTimeout searchTimeoutId
 		
 		q = searchField.val()
 		
-		if q.length is 0
+		if q isnt lastQ
 			
-			renderDependencyCountsGraph(dependencyCounts)
+			clearTimeout searchTimeoutId
 			
-		else if q.length > 2
+			if q.length is 0
+				
+				renderDependencyCountsGraph(dependencyCounts)
+				
+			else if q.length > 2
+				
+				searchTimeoutId = setTimeout(
+					-> search q
+					1000
+				)
 			
-			searchTimeoutId = setTimeout(
-				-> search q
-				1000
-			)
+			lastQ = q
 	
-	if searchField.val()
-		renderDependencyCountsGraph {}
-		search searchField.val() 
+	# Get the dependency counts
+	d3.json 'dependency-counts.json', (error, data) ->
+		dependencyCounts = data
+		
+		if searchField.val()
+			search searchField.val() 
+		else
+			renderDependencyCountsGraph data
