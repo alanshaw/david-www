@@ -5,7 +5,6 @@
  */
 
 var events = require('events');
-var request = require('request');
 var moment = require('moment');
 var GitHubApi = require('github');
 var config = require('config');

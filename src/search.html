@@ -1,0 +1,13 @@
+@@include('inc/top.html', {"id": "search-page", "title": "Visual popular NPM module search"})
+
+<form action="" method="get">
+	<h1>NPM Search <br/> <input name="q" type="search" value="{{q}}"/></h1>
+</form>
+
+<div id="dependency-counts-graph"></div>
+
+<h1>What is this?</h1>
+
+<p>This page allows you to search for NPM packages using <code>npm search</code>. The results are visualised on a <a href="http://d3js.org/">d3</a> graph. More popular dependencies appear bigger and darker. Popularity ranking is based on the number of projects submitted to <a href="https://david-dm.org/">david-dm.org</a> that are using the dependency.</p>
+
+@@include('inc/bottom.html')

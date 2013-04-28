@@ -9,6 +9,7 @@ var graph = require('./graph');
 var feed = require('./feed');
 var profile = require('./profile');
 var newsFeed = require('./news-feed');
+var search = require('./search');
 
 
 var app = express();
@@ -22,6 +23,8 @@ statics.init(app);
 app.get('/news/rss.xml',               newsRssFeed);
 app.get('/dependency-counts.json',     dependencyCounts);
 app.get('/stats',                      statsPage);
+app.get('/search',                     searchPage);
+app.get('/search.json',                searchQuery);
 app.get('/:user/:repo/dev-info.json',  devInfo);
 app.get('/:user/:repo/graph.json',     dependencyGraph);
 app.get('/:user/:repo/dev-graph.json', devDependencyGraph);
@@ -99,6 +102,22 @@ function profilePage(req, res) {
 		}
 		
 		res.render('profile', {user: req.params.user, repos: data});
+	});
+}
+
+function searchPage(req, res) {
+	res.render('search', {q: req.query.q});
+}
+
+function searchQuery(req, res) {
+	
+	search(req.query.q, function(err, results) {
+		
+		if(errors.happened(err, req, res, 'Failed to get search results')) {
+			return;
+		}
+		
+		res.json(results);
 	});
 }
 
