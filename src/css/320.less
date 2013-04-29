@@ -38,6 +38,10 @@
 		font-size: 1.071em;
 		font-style: italic;
 		color: @grey0;
+		
+		span {
+			color: @grey2;
+		}
 	}
 	ul {
 		list-style-type: none;
@@ -427,23 +431,31 @@ ul.stats {
 					box-shadow: none;
 				}
 			}
-			tr:nth-child(even) {
-				box-shadow: 0 0 .5em @grey2;
-			}
-			tr:nth-child(even) td {
-				background: rgba(255, 255, 255, 0.6);
-			}
-			th {
-				text-align: left;
+			th, th a {
+				font-family: nevisbold, sans-serif;
 				font-weight: normal;
+				text-transform: uppercase;
 				color: @blue0;
 			}
-			th, td {
-				font-size: 1.143em;
-				padding: 0.750em 1em;
+			th {
+				font-size: 0.875em;
+				text-align: left;
+				padding: 1em;
 			}
-			td {
-				min-width: 5em;
+			tbody {
+				
+				td {
+					font-size: 1.143em;
+					padding: 0.750em 1em;
+					min-width: 5em;
+					border-bottom: 1px solid @blue0;
+				}
+				tr:first-child td {
+					border-top: 1px solid @blue0;
+				}
+				tr:nth-child(odd) td {
+					background: rgba(255, 255, 255, 0.6);
+				}
 			}
 			.status {
 				padding-left: 1.75em;

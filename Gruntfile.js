@@ -2,6 +2,8 @@ module.exports = function(grunt) {
 	
 	grunt.initConfig({
 		
+		pkg: grunt.file.readJSON('package.json'),
+		
 		// Copy files that don't need compilation to dist/
 		copy: {
 			dist: {
@@ -28,7 +30,10 @@ module.exports = function(grunt) {
 		includereplace: {
 			dist: {
 				options: {
-					globals: {headHtml: ''}
+					globals: {
+						version: '<%= pkg.version %>',
+						headHtml: ''
+					}
 				},
 				files: {
 					'dist/': 'src/*.html', 
