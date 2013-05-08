@@ -1,6 +1,14 @@
 var npm = require('npm');
 var stats = require('./stats');
 
+function Query(keywords, callback) {
+	this.keywords = keywords;
+	this.callback = callback;
+}
+
+var queryQueue = [];
+var processingQueue = false;
+
 /**
  * @param {Array|String} keywords
  * @param callback
@@ -13,11 +21,28 @@ module.exports = function(keywords, callback) {
 	}
 	
 	if(Object.prototype.toString.call(keywords) == '[object String]') {
-		keywords = [keywords];
+		keywords = keywords.split(/\s+/);
 	} else if(!keywords.length) {
 		callback(null, {});
 		return;
 	}
+	
+	queryQueue.push(new Query(keywords, callback));
+	
+	processQueue();
+};
+
+function processQueue() {
+	
+	if(processingQueue || !queryQueue.length) {
+		return;
+	}
+	
+	processingQueue = true;
+	
+	var query = queryQueue.shift(),
+		keywords = query.keywords,
+		callback = query.callback;
 	
 	npm.load({}, function(err) {
 		
@@ -45,7 +70,13 @@ module.exports = function(keywords, callback) {
 				results[name].count = counts[name] || 0;
 			});
 			
-			callback(null, results);
+			setImmediate(function() {
+				callback(null, results);
+			});
+			
+			processingQueue = false;
+			
+			processQueue();
 		});
 	});
-};
+}
