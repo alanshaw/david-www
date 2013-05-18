@@ -1,10 +1,12 @@
 var npm = require('npm');
 var moment = require('moment');
 var RSS = require('rss');
+var semverext = require('david/semverext');
 
-function Package(name, versions) {
+function Package(name, versions, repo) {
 	this.name = name; // The name of the package
 	this.versions = versions; // Versions and their pubdate as returned by NPM
+	this.repo = repo; // Repository data
 	this.expires = moment().add(Package.TTL); // When the versions information is considered stale
 }
 
@@ -12,11 +14,12 @@ Package.TTL = moment.duration({hours: 1});
 
 var packages = {};
 
-function FeedItem(name, previous, current, pubdate) {
+function FeedItem(name, previous, current, pubdate, repoUrl) {
 	this.name = name;
 	this.previous = previous;
 	this.current = current;
 	this.pubdate = pubdate;
+	this.repoUrl = repoUrl;
 }
 
 // Create a bunch of Feed items from the passed package
@@ -26,7 +29,7 @@ function packageToFeedItems(pkg) {
 	
 	return Object.keys(pkg.versions).map(function(version) {
 		
-		var item = new FeedItem(pkg.name, previous, version, pkg.versions[version]);
+		var item = new FeedItem(pkg.name, previous, version, pkg.versions[version], getRepoUrl(pkg.repo));
 		
 		previous = version;
 		
@@ -34,11 +37,32 @@ function packageToFeedItems(pkg) {
 	});
 }
 
+function getRepoUrl(data) {
+	if(!data) {
+		return data;
+	}
+	
+	var url = Object.prototype.toString.call(data) == '[object String]' ? data : data.url;
+	
+	if(url.indexOf('github.com') != -1) {
+		return url.replace('github.com:', 'github.com/').replace('git:', 'https:').replace('.git', '');
+	}
+	
+	return null;
+}
+
 // Create the feed XML from the FeedItems
 function buildFeedXml(items, name, deps, limit) {
 	
 	limit = limit || 32;
 	deps = deps || {};
+	
+	items = items.reduce(function(items, item) {
+		if(deps[item.name] != 'latest' && deps[item.name] != '*' && semverext.gtr(item.current, deps[item.name])) {
+			items.push(item);
+		}
+		return items;
+	}, []);
 	
 	items.sort(function(a, b) {
 		if(a.pubdate < b.pubdate) {
@@ -53,7 +77,7 @@ function buildFeedXml(items, name, deps, limit) {
 	items = items.slice(0, limit);
 	
 	var rssFeed = new RSS({
-		title: 'Recently updated dependencies for ' + name,
+		title: name + ' out of date dependencies',
 		description: 'Version updates for ' + Object.keys(deps).join(', '),
 		site_url: 'https://david-dm.org/'
 	});
@@ -61,6 +85,7 @@ function buildFeedXml(items, name, deps, limit) {
 	for(var i = 0, len = items.length; i < len; ++i) {
 		rssFeed.item({
 			title: items[i].name + ' ' + items[i].previous + ' to ' + items[i].current + ' (' + deps[items[i].name] + ' required)',
+			description: items[i].repoUrl ? '<a href="' + items[i].repoUrl + '">' + items[i].repoUrl + '</a>' : null,
 			url: 'https://npmjs.org/package/' + items[i].name,
 			date: items[i].pubdate
 		});
@@ -86,16 +111,20 @@ function getPackage(pkgName, callback) {
 		return;
 	}
 	
-	npm.commands.view([pkgName, 'time'], true, function(err, data) {
+	npm.commands.view([pkgName, 'time', 'repository'], true, function(err, data) {
 		
 		if(err) {
 			callback(err);
 			return;
 		}
 		
-		if(Object.keys(data).length) {
+		var keys = Object.keys(data);
+		var time = keys.length ? data[keys[0]].time : null;
+		var repository = keys.length ? data[keys[0]].repository : null;
+		
+		if(time) {
 			
-			pkg = packages[pkgName] = new Package(pkgName, data[Object.keys(data)[0]].time);
+			pkg = packages[pkgName] = new Package(pkgName, time, repository);
 			
 			callback(null, pkg);
 			
@@ -112,11 +141,11 @@ function getPackage(pkgName, callback) {
 					return;
 				}
 				
-				var time = {};
+				time = {};
 				
 				time[Object.keys(data)[0]] = moment([1970]).toDate();
 				
-				pkg = packages[pkgName] = new Package(pkgName, time);
+				pkg = packages[pkgName] = new Package(pkgName, time, repository);
 				
 				callback(null, pkg);
 			});
