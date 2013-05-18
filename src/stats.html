@@ -1,11 +1,13 @@
 @@include('inc/top.html', {"id": "stats-page", "title": "Stats for David"})
 	
-	<div id="recently-watched">
-		<h1>Recently started watching</h1>
+	<h1>Stats</h1>
+	
+	<div id="recently-watched" class="box">
+		<h2>Recently started watching</h2>
 		{{#if recentlyRetrievedManifests.length}}
-		<ul class="stats">
+		<ul class="border-list">
 			{{#each recentlyRetrievedManifests}}
-			<li><a href="/{{user}}/{{repo}}">{{user}} / {{repo}}</a></li>
+			<li>{{user}} - <a href="/{{user}}/{{repo}}">{{repo}}</a></li>
 			{{/each}}
 		</ul>
 		{{else}}
@@ -13,26 +15,24 @@
 		{{/if}}
 	</div>
 	
-	<div id="recently-updated-npm">
-		<h1>Recently updated NPM packages</h1>
-		{{#if recentlyUpdatedPackages.length}}
-		<ul class="stats">
+	{{#if recentlyUpdatedPackages.length}}
+	<div id="recently-updated-npm" class="box">
+		<h2>Recently updated NPM packages</h2>
+		<ul class="border-list">
 			{{#each recentlyUpdatedPackages}}
-			<li><a href="http://npmjs.org/package/{{name}}">{{name}}</a> <span>{{previous}} <i class="icon-arrow-right"></i> {{version}}</span></li>
+			<li class="pinned"><a href="http://npmjs.org/package/{{name}}">{{name}}</a> <span>{{previous}} <i class="icon-double-angle-right"></i> {{version}}</span></li>
 			{{/each}}
 		</ul>
-		{{else}}
-		<p>No recently updated NPM packages</p>
-		{{/if}}
 	</div>
+	{{/if}}
 	
+	{{#if recentlyUpdatedManifests.length}}
 	<div id="recently-updated-proj">
-		<h1>Recently updated projects</h1>
-		{{#if recentlyUpdatedManifests.length}}
-		<ul class="stats">
+		<h2>Recently updated projects</h2>
+		<ul class="border-list">
 			{{#each recentlyUpdatedManifests}}
 			<li>
-				<a href="/{{user}}/{{repo}}">{{user}} / {{repo}}</a>
+				{{user}} - <a href="/{{user}}/{{repo}}">{{repo}}</a>
 				<ul>
 					{{#each diffs}}
 					<li>
@@ -44,9 +44,7 @@
 			</li>
 			{{/each}}
 		</ul>
-		{{else}}
-		<p>No projects were recently updated</p>
-		{{/if}}
 	</div>
+	{{/if}}
 
 @@include('inc/bottom.html')
