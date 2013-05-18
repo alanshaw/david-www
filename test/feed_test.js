@@ -31,7 +31,7 @@ module.exports = {
 							}
 							
 							if(args[1] == 'version') {
-								callback(null, {'0.1.1': {version: '0.1.1'}});
+								callback(null, {'0.2.1': {version: '0.2.1'}});
 								return;
 							}
 						}
