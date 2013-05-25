@@ -17,6 +17,7 @@ var app = express();
 app.engine('html', consolidate.handlebars);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/dist');
+app.use(express.compress());
 
 statics.init(app);
 
