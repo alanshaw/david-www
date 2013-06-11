@@ -38,6 +38,7 @@
     "grunt-contrib-watch": "~0.4.3",
     "grunt-include-replace": "~0.4.0",
     "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-clean": "~0.4.1",
     "request": "~2.21.0",
     "express": "~3.2.0",
     "handlebars": "~1.0.8",

@@ -95,6 +95,10 @@ module.exports = function(grunt) {
 				files: ['src/js/**/*.coffee', 'src/css/**/*.less', 'src/**/*.html', 'src/img/**/*'],
 				tasks: ['copy', 'includereplace', 'coffee', 'less']
 			}
+		},
+		
+		clean: {
+			dist: 'dist/*'
 		}
 	});
 	
@@ -108,6 +112,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-include-replace');
 	grunt.loadNpmTasks('grunt-contrib-nodeunit');
+	grunt.loadNpmTasks('grunt-contrib-clean');
 	
 	grunt.registerTask('default', ['jshint', 'nodeunit', 'copy', 'includereplace', 'coffee', 'less', 'uglify', 'cssmin']);
 };
