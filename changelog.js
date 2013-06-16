@@ -43,7 +43,7 @@ module.exports.getCommits = function (depName, from, to, cb) {
 			
 			github.repos.getCommits({user: user, repo: repo, since: from, until: to}, function (er, commits) {
 				
-			})
+			});
 		});
 	});
 };
