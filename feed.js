@@ -44,7 +44,7 @@ function getRepoUrl(data) {
 	
 	var url = Object.prototype.toString.call(data) == '[object String]' ? data : data.url;
 	
-	if(url.indexOf('github.com') != -1) {
+	if(url && url.indexOf('github.com') != -1) {
 		return url.replace('github.com:', 'github.com/').replace('git:', 'https:').replace('.git', '');
 	}
 	
