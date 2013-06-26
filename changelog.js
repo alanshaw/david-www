@@ -13,11 +13,28 @@ if (config.github) {
 	});
 }
 
-// Get a username and repo name for a repository
+// Get a username and repo name for a github repository
 function getUserRepo (depName, cb) {
 	
-	npm.commands.view([depName, 'repository'], true, function(err, data) {
-		// TODO: get user/repo
+	npm.commands.view([depName, 'repository'], true, function(er, data) {
+		if (er) {
+			return cb(er);
+		}
+		
+		var keys = Object.keys(data);
+		var repo = keys.length ? data[keys[0]].repository : null;
+		
+		if (!repo) {
+			return cb(new Error(depName + ' has no repository information'));
+		}
+		
+		var url = Object.prototype.toString.call(data) == '[object String]' ? repo : repo.url;
+		
+		if (!url || url.indexOf('github.com') == -1) {
+			return cb(new Error('Unsupported repository URL'));
+		} 
+		
+		// TODO: Extract user/repo from url
 	});
 }
 
@@ -41,9 +58,8 @@ module.exports.getCommits = function (depName, from, to, cb) {
 				return cb (er);
 			}
 			
-			github.repos.getCommits({user: user, repo: repo, since: from, until: to}, function (er, commits) {
-				
-			});
+			// TODO: Munge the commits data?
+			github.repos.getCommits({user: user, repo: repo, since: from, until: to}, cb);
 		});
 	});
 };
