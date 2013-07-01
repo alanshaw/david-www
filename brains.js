@@ -116,7 +116,19 @@ module.exports.getInfo = function(manifest, options, callback) {
 					};
 				});
 				
-				callback(null, {deps: depList, totals: totals});
+				// Figure out the overall status for this manifest
+				var status = 'uptodate';
+				
+				if (depList.length && totals.unpinned.outOfDate) {
+				
+					if (totals.unpinned.outOfDate / depList.length > 0.25) {
+						status = 'outofdate';
+					} else {
+						status = 'notsouptodate';
+					}
+				}
+				
+				callback(null, {status: status, deps: depList, totals: totals});
 			});
 		});
 	});

@@ -130,7 +130,7 @@ ul.stats {
 		&.uptodate {
 			border-left-color: @green0;
 		}
-		&.pinned {
+		&.pinned, &.notsouptodate {
 			border-left-color: @yellow0;
 		}
 		&.outofdate {
@@ -525,5 +525,11 @@ ul.stats {
 				vertical-align: middle;
 			}
 		}
+	}
+}
+#profile-page {
+	.border-list li a:last-child {
+		float: right;
+		margin-right: 1em;
 	}
 }

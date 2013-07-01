@@ -143,20 +143,7 @@ function sendStatusBadge(req, res, dev) {
 				return;
 			}
 			
-			var totalDeps = info.deps.length;
-			var path = 'dist/img/' + (dev ? 'dev-' : '');
-			
-			if(totalDeps && info.totals.unpinned.outOfDate) {
-			
-				if(info.totals.unpinned.outOfDate / totalDeps > 0.25) {
-					res.sendfile(path + 'outofdate.png');
-				} else {
-					res.sendfile(path + 'notsouptodate.png');
-				}
-				
-			} else {
-				res.sendfile(path + 'uptodate.png');
-			}
+			res.sendfile('dist/img/' + (dev ? 'dev-' : '') + info.status + '.png');
 		});
 	});
 }
