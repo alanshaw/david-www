@@ -2,6 +2,7 @@ var GitHubApi = require('github');
 var config = require('config');
 var npm = require('npm');
 var semver = require('semver');
+var url = require('url');
 
 var github = new GitHubApi({version: '3.0.0'});
 
@@ -28,23 +29,28 @@ function getUserRepo (depName, cb) {
 			return cb(new Error(depName + ' has no repository information'));
 		}
 		
-		var url = Object.prototype.toString.call(data) == '[object String]' ? repo : repo.url;
+		var repoUrl = Object.prototype.toString.call(data) == '[object String]' ? repo : repo.url;
 		
-		if (!url || url.indexOf('github.com') == -1) {
+		if (!repoUrl || repoUrl.indexOf('github.com') == -1) {
 			return cb(new Error('Unsupported repository URL'));
 		} 
 		
-		// TODO: Extract user/repo from url
+		try {
+			var repoPathname = url.parse(repoUrl).pathname.split('/');
+			cb(null, repoPathname[1], repoPathname[2].replace('.git', ''));
+		} catch (er) {
+			cb(new Error('Failed to parse repository URL'));
+		}
 	});
 }
 
 /**
  * Get commits for a repo between two dates
  * 
- * @param depName
- * @param from
- * @param to
- * @param cb
+ * @param {String} depName Module name
+ * @param {Date} from
+ * @param {Date} to
+ * @param {Function} cb
  */
 module.exports.getCommits = function (depName, from, to, cb) {
 	
@@ -55,7 +61,7 @@ module.exports.getCommits = function (depName, from, to, cb) {
 		
 		getUserRepo(depName, function (er, user, repo) {
 			if (er) {
-				return cb (er);
+				return cb(er);
 			}
 			
 			// TODO: Munge the commits data?
