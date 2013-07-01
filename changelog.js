@@ -38,7 +38,7 @@ function getUserRepo (depName, cb) {
 		try {
 			var repoPathname = url.parse(repoUrl).pathname.split('/');
 			cb(null, repoPathname[1], repoPathname[2].replace('.git', ''));
-		} catch (er) {
+		} catch (e) {
 			cb(new Error('Failed to parse repository URL'));
 		}
 	});
@@ -113,6 +113,33 @@ module.exports.getPublishDate = function (depName, depVersion, cb) {
 			}
 			
 			cb(new Error('Failed to find publish date'));
+		});
+	});
+};
+
+module.exports.getClosedIssues = function (depName, from, to, cb) {
+	
+	npm.load({}, function (er) {
+		if (er) {
+			return cb(er);
+		}
+		
+		getUserRepo(depName, function (er, user, repo) {
+			if (er) {
+				return cb(er);
+			}
+			
+			var opts = {
+				user: user,
+				repo: repo,
+				state: 'closed',
+				sort: 'created',
+				since: from,
+				per_page: 100
+			};
+			
+			// TODO: respect "to" param
+			github.issues.repoIssues(opts, cb);
 		});
 	});
 };
