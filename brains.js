@@ -11,7 +11,7 @@ function isPinned(version) {
 		return false;
 	}
 	
-	var range = semver.validRange(version);
+	var range = semver.validRange(version, true);
 	
 	if(range && range.indexOf('>=') === 0) {
 		return false;
@@ -36,7 +36,7 @@ module.exports.getInfo = function(manifest, options, callback) {
 		options = options || {};
 	}
 	
-	var davidOptions = {dev: options.dev};
+	var davidOptions = {dev: options.dev, loose: true};
 	
 	david.getDependencies(manifest, davidOptions, function(err, deps) {
 		

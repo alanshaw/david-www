@@ -160,7 +160,7 @@ function latestSatisfying(depName, range, callback) {
 		}
 		
 		// Get the most recent version that satisfies the range
-		var version = semver.maxSatisfying(data[Object.keys(data)[0]].versions, range);
+		var version = semver.maxSatisfying(data[Object.keys(data)[0]].versions, range, true);
 		
 		callback(null, version);
 	});
