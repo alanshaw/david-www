@@ -20,7 +20,7 @@ Install david-www:
 
 Run david-www:
 
-	node main 8080
+	node .
 
 
 Example usage

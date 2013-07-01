@@ -290,13 +290,10 @@ app.use(function(req, res, next){
 	res.type('txt').send('Not found');
 });
 
-if(!process.argv[2]) {
-	console.log('No port specified');
-	return;
-}
+var port = process.env.PORT || 1337;
 
-app.listen(process.argv[2]);
+app.listen(port);
 
-process.title = 'david:' + process.argv[2];
+process.title = 'david:' + port;
 
-console.log('David listening on port', process.argv[2]);
+console.log('David listening on port', port);
