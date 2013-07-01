@@ -51,7 +51,7 @@
     "grunt-contrib-cssmin": "~0.6.0",
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-watch": "~0.4.3",
-    "grunt-include-replace": "~0.4.0",
+    "grunt-include-replace": "~1.1.0",
     "grunt-contrib-nodeunit": "~0.2.0",
     "grunt-contrib-clean": "~0.4.1",
     "rewire": "~1.1.0"

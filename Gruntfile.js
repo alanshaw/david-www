@@ -35,10 +35,10 @@ module.exports = function(grunt) {
 						headHtml: ''
 					}
 				},
-				files: {
-					'dist/': 'src/*.html', 
-					'dist/inc/': 'src/inc/*.html'
-				}
+				files: [
+					{src: '*.html', dest: 'dist/', expand: true, cwd: 'src/'},
+					{src: 'inc/*.html', dest: 'dist/', expand: true, cwd: 'src/'}
+				]
 			}
 		},
 		

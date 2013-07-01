@@ -58,7 +58,7 @@ module.exports = {
 			test.ifError(err);
 			
 			// If no time information was present then the feed should have defaulted to the unix epoch as the publish
-			// date for the latest version of the module
+			// date for the latest version of the module (RSS module formats as GMT string for some reason)
 			test.ok(xml.indexOf('<pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate>') != -1);
 			
 			test.done();

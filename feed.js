@@ -143,7 +143,7 @@ function getPackage(pkgName, callback) {
 				
 				time = {};
 				
-				time[Object.keys(data)[0]] = moment([1970]).toDate();
+				time[Object.keys(data)[0]] = moment.utc([1970]).toDate();
 				
 				pkg = packages[pkgName] = new Package(pkgName, time, repository);
 				
