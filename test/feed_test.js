@@ -63,5 +63,50 @@ module.exports = {
 			
 			test.done();
 		});
+	},
+	
+	'Test get feed for package with invalid semver range dependency': function (test) {
+		
+		var pkgName = 'sprintf';
+		
+		// Create a mock NPM
+		var mockNpm = {
+			load: function(opts, callback) {
+				process.nextTick(callback);
+			},
+			commands: {
+				view: function(args, silent, callback) {
+					
+					process.nextTick(function() {
+						
+						if(args[0] == pkgName) {
+							
+							if(args[1] == 'version') {
+								callback(null, {'0.2.1': {version: '0.2.1'}});
+								return;
+							}
+						}
+						
+						callback(new Error('Unexpected arguments to mock NPM view command ' + args));
+					});
+				}
+			}
+		};
+		
+		feed.__set__('npm', mockNpm);
+		
+		var manifest = {
+			name: 'Test',
+			dependencies: {
+				'sprintf': 'GARBAGE-'
+			}
+		};
+		
+		test.expect(1);
+		
+		feed.get(manifest, function(err, xml) {
+			test.ifError(err);
+			test.done();
+		});
 	}
 };
