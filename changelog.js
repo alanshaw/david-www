@@ -109,7 +109,7 @@ module.exports.getPublishDate = function (depName, depVersion, cb) {
 			// Get the first depVersion that satisfies the range
 			for (var i = 0, len = ascPublishDates.length; i < len; ++i) {
 				if (semver.satisfies(versionsByDate[ascPublishDates[i]], depVersion)) {
-					return cb(null, ascPublishDates[i]);
+					return cb(null, moment(ascPublishDates[i]).toDate());
 				}
 			}
 			
@@ -118,6 +118,14 @@ module.exports.getPublishDate = function (depName, depVersion, cb) {
 	});
 };
 
+/**
+ * Get closed issues for a module between two dates
+ * 
+ * @param {String} depName Module name
+ * @param {Date} from
+ * @param {Date} to
+ * @param {Function} cb
+ */
 module.exports.getClosedIssues = function (depName, from, to, cb) {
 	
 	npm.load({}, function (er) {
@@ -145,7 +153,7 @@ module.exports.getClosedIssues = function (depName, from, to, cb) {
 				}
 				
 				issues = issues.filter(function (issue) {
-					return to <= moment(issue.closed_at).toDate()
+					return to > moment(issue.closed_at).toDate();
 				});
 				
 				cb(null, issues);

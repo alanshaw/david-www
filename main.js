@@ -29,6 +29,7 @@ app.get('/stats',                      statsPage);
 app.get('/search',                     searchPage);
 app.get('/search.json',                searchQuery);
 app.get('/package/:pkg/commits.json',  commits);
+app.get('/package/:pkg/issues.json',   issues);
 app.get('/:user/:repo/dev-info.json',  devInfo);
 app.get('/:user/:repo/graph.json',     dependencyGraph);
 app.get('/:user/:repo/dev-graph.json', devDependencyGraph);
@@ -134,13 +135,35 @@ function commits (req, res) {
 			changelog.getPublishDate(req.params.pkg, req.query.to, cb);
 		}
 	], function (er, dates) {
-		if (er) {
-			console.warn(er);
-			return res.status(500).send({err: 'Unable to determine publish date'});
+		if(errors.happened(er, req, res, 'Unable to determine publish date')) {
+			return;
 		}
 		
 		changelog.getCommits(req.params.pkg, dates[0], dates[1], function (er, commits) {
 			res.send(commits);
+		});
+	});
+}
+
+function issues (req, res) {
+	if (req.query.state != 'closed') {
+		return res.status(500).send({err: 'Unsupported issue state'});
+	}
+	
+	async.parallel([
+		function (cb) {
+			changelog.getPublishDate(req.params.pkg, req.query.from, cb);
+		},
+		function (cb) {
+			changelog.getPublishDate(req.params.pkg, req.query.to, cb);
+		}
+	], function (er, dates) {
+		if(errors.happened(er, req, res, 'Unable to determine publish date')) {
+			return;
+		}
+		
+		changelog.getClosedIssues(req.params.pkg, dates[0], dates[1], function (er, issues) {
+			res.send(issues);
 		});
 	});
 }
