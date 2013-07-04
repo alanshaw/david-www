@@ -3,6 +3,7 @@ var config = require('config');
 var npm = require('npm');
 var semver = require('semver');
 var url = require('url');
+var moment = require('moment');
 
 var github = new GitHubApi({version: '3.0.0'});
 
@@ -138,8 +139,17 @@ module.exports.getClosedIssues = function (depName, from, to, cb) {
 				per_page: 100
 			};
 			
-			// TODO: respect "to" param
-			github.issues.repoIssues(opts, cb);
+			github.issues.repoIssues(opts, function (er, issues) {
+				if (er) {
+					return cb(er);
+				}
+				
+				issues = issues.filter(function (issue) {
+					return to <= moment(issue.closed_at).toDate()
+				});
+				
+				cb(null, issues);
+			});
 		});
 	});
 };
