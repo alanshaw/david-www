@@ -114,7 +114,7 @@ manifest.on('dependenciesChange', function(diffs) {
 		}
 		
 		// Dependency removed
-		if(!diff.version) {
+		if(diff.version === null) {
 			dependencyCounts[diff.name]--;
 		}
 	});
