@@ -46,7 +46,7 @@ function getDependencyDiffs(deps1, deps2) {
 	// Check for deletions and changes
 	Object.keys(deps1).forEach(function(key) {
 		
-		if(!deps2[key]) {
+		if(!deps2[key] && deps2[key] !== '') {
 			
 			// Dep has been deleted
 			diffs.push(new PackageDiff(key, null, deps1[key]));

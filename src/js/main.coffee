@@ -39,7 +39,7 @@ $('#dependency-counts-graph').each ->
 			children: array
 		
 		nodes = svg.selectAll('.node').data(
-			bubble.nodes(transformData(data)).filter((d) -> !d.children)
+			bubble.nodes(transformData(data)).filter((d) -> !d.children)#.filter((d) -> d.value > 1)
 			(d) -> d.depName
 		)
 		
