@@ -26,8 +26,12 @@ Example usage
 
 View a web page of all dependencies (and their updates, and their versions) for _public_ GitHub repository "grunt-jsio" owned by "alanshaw":
 
-	curl http://localhost:8080/alanshaw/grunt-jsio
+```sh
+curl http://localhost:1337/alanshaw/grunt-jsio
+```
 
 Get the current build status badge:
 
-	curl http://localhost:8080/alanshaw/grunt-jsio.png
+```sh
+curl http://localhost:1337/alanshaw/grunt-jsio.png
+```
