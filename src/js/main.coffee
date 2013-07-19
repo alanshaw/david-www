@@ -445,7 +445,8 @@ $('#search-page').each ->
 	
 	searchTimeoutId = null
 	
-	search = (q) -> 
+	# Perform a search for keyword q, optionally pushing state onto browser history
+	search = (q, pushState = true) -> 
 		
 		data = {}
 		
@@ -468,6 +469,9 @@ $('#search-page').each ->
 						data[pkgName] = results[pkgName].count + 1
 				
 				renderDependencyCountsGraph data
+				
+				if pushState
+					history.pushState?({q: q}, "Searching for #{q}", $.param.querystring("#{window.location}", {q: q})) 
 		)
 	
 	lastQ = null
@@ -493,11 +497,19 @@ $('#search-page').each ->
 			
 			lastQ = q
 	
+	# Do search on popstate
+	window.addEventListener? 'popstate', (event) ->
+		if event.state
+			searchField.val event.state.q
+			search event.state.q, false
+	
 	# Get the dependency counts
 	d3.json 'dependency-counts.json', (error, data) ->
 		dependencyCounts = data
 		
 		if searchField.val()
-			search searchField.val() 
+			state = q: searchField.val()
+			history.replaceState?(state, "Searching for #{state.q}", $.param.querystring("#{window.location}", state))
+			search searchField.val(), false
 		else
 			renderDependencyCountsGraph data
