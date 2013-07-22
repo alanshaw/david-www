@@ -12,13 +12,17 @@ With [Node.js](http://nodejs.org/) and [Grunt](http://gruntjs.com/) installed al
 
 Install david-www:
 
-	cd /path/to/david-www
-	npm install
-	grunt
+```sh
+cd /path/to/david-www
+npm install
+grunt
+```
 
 Run david-www:
 
-	node .
+```sh
+node .
+```
 
 
 Example usage
