@@ -14,8 +14,9 @@ module.exports = function(grunt) {
 					// Copy the following hidden files
 					{dest: 'dist/.htaccess', src: 'src/.htaccess'},
 					
-					// Copy any JavaScript files (not CoffeeScript src)
-					{dest: 'dist/', src: 'js/**/*.js', expand: true, cwd: 'src/'},
+					// Copy any JavaScript libs
+					{dest: 'dist/', src: 'js/vendor/**/*.js', expand: true, cwd: 'src/'},
+          {dest: 'dist/', src: 'js/plugins.js', expand: true, cwd: 'src/'},
 					
 					// Copy any CSS files (not LESS src)
 					{dest: 'dist/', src: 'css/**/*.css', expand: true, cwd: 'src/'},
@@ -42,15 +43,6 @@ module.exports = function(grunt) {
 			}
 		},
 		
-		// Compile all CoffeScript into main.js
-		coffee: {
-			compile: {
-				files: {
-					'dist/js/main.js': 'src/js/main.coffee'
-				}
-			}
-		},
-		
 		// Compile the mobile first site stylesheet (and the no @media queries version for lt-ie8) 
 		less: {
 			compile: {
@@ -64,7 +56,7 @@ module.exports = function(grunt) {
 		// Minify the site script
 		uglify: {
 			compress: {
-				src: 'dist/js/main.js',
+				src: ['src/js/main.js', 'src/js/homepage.js', 'src/js/status.js', 'src/js/search.js'],
 				dest: 'dist/js/main.js'
 			}
 		},
@@ -104,7 +96,6 @@ module.exports = function(grunt) {
 	
 	// Load the grunt-conrtib plugin so we can compile and compress CoffeeScript and LESS files
 	grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-contrib-coffee');
 	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
@@ -114,5 +105,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-nodeunit');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	
-	grunt.registerTask('default', ['jshint', 'nodeunit', 'copy', 'includereplace', 'coffee', 'less', 'uglify', 'cssmin']);
+	grunt.registerTask('default', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less', 'uglify', 'cssmin']);
 };
