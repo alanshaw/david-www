@@ -14,12 +14,9 @@ $("#dependency-counts-graph").each(function () {
   
   David.renderDependencyCountsGraph = function (data) {
     // Get the max count
-    var max = 1
-    
-    Object.keys(data).forEach(function (depName) {
-      if (data[depName] > max)
-        max = data[depName]
-    })
+    var max = Object.keys(data).reduce(function (max, depName) {
+        return data[depName] > max ? data[depName] : max
+    }, 1)
     
     var color = d3.scale.linear().domain([1, max]).range(["#b8e3f3", "#30aedc"])
     
@@ -33,7 +30,7 @@ $("#dependency-counts-graph").each(function () {
     
     var nodes = svg.selectAll(".node").data(
       bubble.nodes(transformData(data)).filter(function (d) { return !d.children }),
-      function (d) { d.depName }
+      function (d) { return d.depName }
     )
     
     var nodeEnter = nodes.enter()

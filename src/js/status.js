@@ -36,11 +36,7 @@ $("#status-page").each(function () {
     /* d3 graph */
 
     function createNode (dep) {
-      return {
-        name: dep.name,
-        version: dep.version,
-        children: null
-      }
+      return {name: dep.name, version: dep.version, children: null}
     }
 
     /**
@@ -65,7 +61,7 @@ $("#status-page").each(function () {
 
       function transform (dep, parentNode, level, maxLevel) {
         level = level || 0
-        maxLevel = maxLevel || 0
+        maxLevel = maxLevel || 10
         
         $.each(dep.deps, function (depName, depDep) {
           var node = createNode(depDep)
