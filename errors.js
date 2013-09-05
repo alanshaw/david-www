@@ -58,8 +58,3 @@ module.exports.happened = function(err, req, res, msg) {
 
 	return true;
 };
-
-
-
-
-

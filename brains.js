@@ -6,17 +6,17 @@ var david = require('david');
 var semver = require('semver');
 
 function isPinned(version) {
-	
+
 	if(version == '*' || version == 'latest') {
 		return false;
 	}
-	
+
 	var range = semver.validRange(version, true);
-	
+
 	if(range && range.indexOf('>=') === 0) {
 		return false;
 	}
-	
+
 	return true;
 }
 
@@ -27,7 +27,7 @@ function isPinned(version) {
  * @param {Function<Error, Object>} callback Function that receives the results
  */
 module.exports.getInfo = function(manifest, options, callback) {
-	
+
 	// Allow callback to be passed as second parameter
 	if(!callback) {
 		callback = options;
@@ -35,34 +35,34 @@ module.exports.getInfo = function(manifest, options, callback) {
 	} else {
 		options = options || {};
 	}
-	
+
 	var davidOptions = {dev: options.dev, loose: true};
-	
+
 	david.getDependencies(manifest, davidOptions, function(err, deps) {
-		
+
 		if(err) {
 			callback(err);
 			return;
 		}
-		
+
 		// Get ALL updated dependencies including unstable
 		david.getUpdatedDependencies(manifest, davidOptions, function(err, updatedDeps) {
-			
+
 			if(err) {
 				callback(err);
 				return;
 			}
-			
+
 			davidOptions.stable = true;
-			
+
 			// Get STABLE updated dependencies
 			david.getUpdatedDependencies(manifest, davidOptions, function(err, updatedStableDeps) {
-				
+
 				if(err) {
 					callback(err);
 					return;
 				}
-				
+
 				var depNames = Object.keys(deps).sort(),
 					totals = {
 						upToDate: 0,
@@ -76,12 +76,12 @@ module.exports.getInfo = function(manifest, options, callback) {
 							outOfDate: 0
 						}
 					};
-				
+
 				var depList = depNames.map(function(depName) {
-					
+
 					// Lets disprove this
 					var status = 'uptodate';
-					
+
 					// If there is an updated STABLE dependency then this dep is out of date
 					if(updatedStableDeps[depName]) {
 						status = 'outofdate';
@@ -89,9 +89,9 @@ module.exports.getInfo = function(manifest, options, callback) {
 					} else if(updatedDeps[depName] && !updatedDeps[depName].stable) {
 						status = 'outofdate';
 					}
-					
+
 					var pinned = isPinned(deps[depName].required);
-					
+
 					if(status == 'uptodate' && pinned) {
 						totals.upToDate++;
 						totals.pinned.upToDate++;
@@ -105,7 +105,7 @@ module.exports.getInfo = function(manifest, options, callback) {
 						totals.outOfDate++;
 						totals.unpinned.outOfDate++;
 					}
-					
+
 					return {
 						name: depName,
 						required: deps[depName].required,
@@ -115,19 +115,19 @@ module.exports.getInfo = function(manifest, options, callback) {
 						pinned: pinned
 					};
 				});
-				
+
 				// Figure out the overall status for this manifest
 				var status = 'uptodate';
-				
+
 				if (depList.length && totals.unpinned.outOfDate) {
-				
+
 					if (totals.unpinned.outOfDate / depList.length > 0.25) {
 						status = 'outofdate';
 					} else {
 						status = 'notsouptodate';
 					}
 				}
-				
+
 				callback(null, {status: status, deps: depList, totals: totals});
 			});
 		});

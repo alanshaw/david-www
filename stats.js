@@ -14,11 +14,11 @@ function UpdatedPackage(name, version, previous) {
 var recentlyUpdatedPackages = [];
 
 david.on('latestVersionChange', function(name, fromVersion, toVersion) {
-	
+
 	if(fromVersion) {
-		
+
 		recentlyUpdatedPackages.unshift(new UpdatedPackage(name, toVersion, fromVersion));
-		
+
 		if(recentlyUpdatedPackages.length > 10) {
 			recentlyUpdatedPackages.pop();
 		}
@@ -40,20 +40,20 @@ function RetrievedManifest(manifest, user, repo) {
 var recentlyRetrievedManifests = [];
 
 manifest.on('retrieve', function(manifest, user, repo) {
-	
+
 	var inList = false;
-	
+
 	for(var i = 0; i < recentlyRetrievedManifests.length; ++i) {
-		
+
 		if(recentlyRetrievedManifests[i].user == user && recentlyRetrievedManifests[i].repo == repo) {
 			recentlyRetrievedManifests.splice(i, 1);
 			inList = true;
 			break;
 		}
 	}
-	
+
 	recentlyRetrievedManifests.unshift(new RetrievedManifest(manifest, user, repo));
-	
+
 	if(!inList && recentlyRetrievedManifests.length > 10) {
 		recentlyRetrievedManifests.pop();
 	}
@@ -75,9 +75,9 @@ function UpdatedManifest(diffs, manifest, user, repo) {
 var recentlyUpdatedManifests = [];
 
 manifest.on('dependenciesChange', function(diffs, manifest, user, repo) {
-	
+
 	recentlyUpdatedManifests.unshift(new UpdatedManifest(diffs, manifest, user, repo));
-	
+
 	if(recentlyUpdatedManifests.length > 10) {
 		recentlyUpdatedManifests.pop();
 	}
@@ -93,9 +93,9 @@ var dependencyCounts = {};
 
 // When manifest first retrieved, +1 all the dependencies
 manifest.on('retrieve', function(manifest) {
-	
+
 	var depNames = Object.keys(manifest.dependencies || {});
-	
+
 	depNames.forEach(function(depName) {
 		dependencyCounts[depName] = dependencyCounts[depName] || 0;
 		dependencyCounts[depName]++;
@@ -104,15 +104,15 @@ manifest.on('retrieve', function(manifest) {
 
 // If the manifest dependencies change, +1 or -1 if dependencies are added or removed
 manifest.on('dependenciesChange', function(diffs) {
-	
+
 	diffs.forEach(function(diff) {
-		
+
 		// Dependency added
 		if(!diff.previous) {
 			dependencyCounts[diff.name] = dependencyCounts[diff.name] || 0;
 			dependencyCounts[diff.name]++;
 		}
-		
+
 		// Dependency removed
 		if(diff.version === null) {
 			dependencyCounts[diff.name]--;
