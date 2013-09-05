@@ -33,8 +33,8 @@
   "dependencies": {
     "async": "~0.2.7",
     "config": "~0.4.23",
-    "couchwatch": "~0.6.0",
     "consolidate": "~0.9.0",
+    "couchwatch": "~0.6.0",
     "david": "~2.0.0",
     "express": "~3.3.1",
     "github": "~0.1.8",
