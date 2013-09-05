@@ -1,5 +1,5 @@
 @@include('inc/top.html', {"id": "profile-page", "title": "Profile for {{user}}"})
-	
+
 	<h1>
 		<a href="https://github.com/{{user}}">
 			{{#if repos.length}}
@@ -8,7 +8,7 @@
 			{{user}}
 		</a>
 	</h1>
-	
+
 	{{#if repos.length}}
 	<ul class="border-list">
 		{{#each repos}}

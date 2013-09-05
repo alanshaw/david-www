@@ -1,15 +1,15 @@
 @@include('inc/top.html', {"id": "home-page", "title": "David, a dependency management tool for Nodejs projects"})
-	
+
 	<div>
-		
+
 		<h1>
 			You depend on other projects.<br/>
 			You want to stay up to date.<br/>
 			David's got your back.
 		</h1>
-	
+
 		<p>David gets you an overview of your project dependencies, the version you use and the latest available, so you can quickly see what's drifting. Then it's all boiled down into a badge showing the current status, which you can embed on your site.</p>
-	
+
 		<ul id="examples">
 			<li>bower - <a href="/bower/bower">bower<img src="/bower/bower.png"></a></li>
 			<li>mikeal - <a href="/mikeal/request">request<img src="/mikeal/request.png"></a></li>
@@ -17,29 +17,29 @@
 			<li>visionmedia - <a href="/visionmedia/express">express<img src="/visionmedia/express.png"></a></li>
 			<li>alanshaw - <a href="/alanshaw/david">david<img src="/alanshaw/david.png"></a></li>
 		</ul>
-		
+
 		<h2>Giving you badges.</h2>
-		
+
 		<p>Got a <a href="http://nodejs.org/">Node</a> project? Get a badge. David is free for public projects on <a href="http://github.com/">Github</a>.</p>
-		
+
 		<p>Declare your dependencies in a <a href="http://package.json.nodejitsu.com/">package.json</a> file and you're good. David will go work the rest out and you'll get your own project status page, listing your dependencies and their freshness. Click on the examples above for a preview.</p>
-	
+
 		<p>Type your username / repo name in below and get yours...</p>
-	
+
 		<p class="badge-maker"><strong>https://david-dm.org/<span contenteditable class="nope" id="username" title="[Github username] / [repo name]">username/repo</span>.png</strong> <img id="badge" src="/img/outofdate.png"></p>
-		
+
 		<p>David is currently <em>BETA</em>, which means it may be unreliable, unavailable or not working. That said, it's already useful and we're working to make it rock solid. It's all in Github so <a href="https://github.com/alanshaw/david-www">feel free to help</a>.</p>
-		
+
 		<h2>Most used dependencies</h2>
-		
+
 		<p>These are the most used NPM dependencies based on open source GitHub projects that are using them.</p>
-		
+
 		<div id="dependency-counts-graph"></div>
-		
+
 	</div>
-	
+
 	<aside id="stats">
-		
+
 		<div id="recently-watched" class="box">
 			<h2>Recently started watching</h2>
 			{{#if recentlyRetrievedManifests.length}}
@@ -52,7 +52,7 @@
 			<p>No recent projects</p>
 			{{/if}}
 		</div>
-		
+
 		{{#if recentlyUpdatedPackages.length}}
 		<div id="recently-updated-npm" class="box">
 			<h2>Recently updated NPM packages</h2>
@@ -63,7 +63,7 @@
 			</ul>
 		</div>
 		{{/if}}
-		
+
 	</aside>
 
 @@include('inc/bottom.html')
