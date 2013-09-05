@@ -5,6 +5,13 @@
  * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
  * Kroc Camen, and the H5BP dev community and team.
  */
+/*! HTML5 Boilerplate v4.3.0 | MIT License | http://h5bp.com/ */
+
+/*
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
 
 /* ==========================================================================
    Base styles: opinionated defaults
@@ -18,14 +25,14 @@ textarea {
     color: #222;
 }
 
-body {
+html {
     font-size: 1em;
     line-height: 1.4;
 }
 
 /*
  * Remove text-shadow in selection highlight: h5bp.com/i
- * These selection declarations have to be separate.
+ * These selection rule sets have to be separate.
  * Customize the background color to match your design.
  */
 
@@ -53,10 +60,14 @@ hr {
 }
 
 /*
- * Remove the gap between images and the bottom of their containers: h5bp.com/i/440
+ * Remove the gap between images, videos, audio and canvas and the bottom of
+ * their containers: h5bp.com/i/440
  */
 
-img {
+audio,
+canvas,
+img,
+video {
     vertical-align: middle;
 }
 
@@ -79,10 +90,10 @@ textarea {
 }
 
 /* ==========================================================================
-   Chrome Frame prompt
+   Browse Happy prompt
    ========================================================================== */
 
-.chromeframe {
+.browsehappy {
     margin: 0.2em 0;
     background: #ccc;
     color: #000;
@@ -158,7 +169,7 @@ h1, h2 {
 	line-height: 1.666;
 	padding: 0.417em 0;
 	border-bottom: 2px solid @grey2;
-	
+
 	&:first-child {
 		border-top: 4px solid @grey2;
 	}
@@ -175,7 +186,7 @@ h1, h2, h3, h4 {
 	text-transform: uppercase;
 	text-shadow: #fff 0 1px 1px;
 	font-weight: normal;
-	
+
 	&:first-child {
 		margin-top: 0;
 	}
@@ -308,7 +319,7 @@ p, li {
 
 /* ==========================================================================
    EXAMPLE Media Queries for Responsive Design.
-   Theses examples override the primary ('mobile first') styles.
+   These examples override the primary ('mobile first') styles.
    Modify as content requires.
    ========================================================================== */
 
