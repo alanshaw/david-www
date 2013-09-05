@@ -1,7 +1,7 @@
 @@include('inc/top.html', {"id": "stats-page", "title": "Stats for David"})
-	
+
 	<h1>Stats</h1>
-	
+
 	<div id="recently-watched" class="box">
 		<h2>Recently started watching</h2>
 		{{#if recentlyRetrievedManifests.length}}
@@ -14,7 +14,7 @@
 		<p>No recent projects</p>
 		{{/if}}
 	</div>
-	
+
 	{{#if recentlyUpdatedPackages.length}}
 	<div id="recently-updated-npm" class="box">
 		<h2>Recently updated NPM packages</h2>
@@ -25,7 +25,7 @@
 		</ul>
 	</div>
 	{{/if}}
-	
+
 	{{#if recentlyUpdatedManifests.length}}
 	<div id="recently-updated-proj" class="box">
 		<h2>Recently updated projects</h2>
