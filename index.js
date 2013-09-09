@@ -69,13 +69,13 @@ function dependencyCounts(req, res) {
 }
 
 function newsRssFeed(req, res) {
-	
+
 	newsFeed.get(function(err, xml) {
-		
+
 		if(errors.happened(err, req, res, 'Failed to get news feed xml')) {
 			return;
 		}
-		
+
 		res.contentType('application/rss+xml');
 		res.send(xml, 200);
 	});
@@ -99,13 +99,13 @@ function statusPage(req, res) {
 }
 
 function profilePage(req, res) {
-	
+
 	profile.get(req.params.user, function(err, data) {
-		
+
 		if(errors.happened(err, req, res, 'Failed to get profile data')) {
 			return;
 		}
-		
+
 		res.render('profile', {user: req.params.user, repos: data});
 	});
 }
@@ -115,13 +115,13 @@ function searchPage(req, res) {
 }
 
 function searchQuery(req, res) {
-	
+
 	search(req.query.q, function(err, results) {
-		
+
 		if(errors.happened(err, req, res, 'Failed to get search results')) {
 			return;
 		}
-		
+
 		res.json(results);
 	});
 }
@@ -138,7 +138,7 @@ function commits (req, res) {
 		if(errors.happened(er, req, res, 'Unable to determine publish date')) {
 			return;
 		}
-		
+
 		changelog.getCommits(req.params.pkg, dates[0], dates[1], function (er, commits) {
 			res.send(commits);
 		});
@@ -149,7 +149,7 @@ function issues (req, res) {
 	if (req.query.state != 'closed') {
 		return res.status(500).send({err: 'Unsupported issue state'});
 	}
-	
+
 	async.parallel([
 		function (cb) {
 			changelog.getPublishDate(req.params.pkg, req.query.from, cb);
@@ -161,7 +161,7 @@ function issues (req, res) {
 		if(errors.happened(er, req, res, 'Unable to determine publish date')) {
 			return;
 		}
-		
+
 		changelog.getClosedIssues(req.params.pkg, dates[0], dates[1], function (er, issues) {
 			res.send(issues);
 		});
@@ -172,23 +172,23 @@ function issues (req, res) {
  * Send the status badge for this user and repository
  */
 function sendStatusBadge(req, res, dev) {
-	
+
 	res.setHeader('Cache-Control', 'no-cache');
-	
+
 	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
-		
+
 		if(err) {
 			res.status(404).sendfile('dist/img/unknown.png');
 			return;
 		}
-		
+
 		brains.getInfo(manifest, {dev: dev}, function(err, info) {
-			
+
 			if(err) {
 				res.status(500).sendfile('dist/img/unknown.png');
 				return;
 			}
-			
+
 			res.sendfile('dist/img/' + (dev ? 'dev-' : '') + info.status + '.png');
 		});
 	});
@@ -203,57 +203,57 @@ function devStatusBadge(req, res) {
 }
 
 function dependencyGraph(req, res) {
-	
+
 	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
 		if(errors.happened(err, req, res, 'Failed to get package.json')) {
 			return;
 		}
-		
+
 		graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo, manifest.version, manifest.dependencies || {}, function(err, graph) {
-			
+
 			if(errors.happened(err, req, res, 'Failed to get graph data')) {
 				return;
 			}
-			
+
 			res.json(graph);
 		});
 	});
 }
 
 function devDependencyGraph(req, res) {
-	
+
 	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
 		if(errors.happened(err, req, res, 'Failed to get package.json')) {
 			return;
 		}
-		
+
 		graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo + '#dev', manifest.version, manifest.devDependencies || {}, function(err, graph) {
-			
+
 			if(errors.happened(err, req, res, 'Failed to get graph data')) {
 				return;
 			}
-			
+
 			res.json(graph);
 		});
 	});
 }
 
 function buildRssFeed(req, res, dev) {
-	
+
 	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
-		
+
 		if(errors.happened(err, req, res, 'Failed to get package.json')) {
 			return;
 		}
-		
+
 		feed.get(manifest, {dev: dev}, function(err, xml) {
-			
+
 			if(errors.happened(err, req, res, 'Failed to build RSS XML')) {
 				return;
 			}
-			
+
 			res.contentType('application/rss+xml');
 			res.send(xml, 200);
 		});
@@ -278,7 +278,7 @@ function devInfo(req, res) {
  * Common callback boilerplate of getting a manifest and info for the status page and badge
  */
 function withManifestAndInfo(req, res, options, callback) {
-	
+
 	// Allow callback to be passed as third parameter
 	if(!callback) {
 		callback = options;
@@ -306,19 +306,19 @@ function withManifestAndInfo(req, res, options, callback) {
 
 app.use(function(req, res, next){
 	res.status(404);
-	
+
 	// respond with html page
 	if (req.accepts('html')) {
 		res.render('404');
 		return;
 	}
-	
+
 	// respond with json
 	if (req.accepts('json')) {
 		res.send({err: 'Not found'});
 		return;
 	}
-	
+
 	// default to plain-text. send()
 	res.type('txt').send('Not found');
 });

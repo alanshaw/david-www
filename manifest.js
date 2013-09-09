@@ -39,34 +39,34 @@ function PackageDiff(name, version, previous) {
 }
 
 function getDependencyDiffs(deps1, deps2) {
-	
+
 	deps1 = deps1 || {};
 	deps2 = deps2 || {};
-	
+
 	var diffs = [];
-	
+
 	// Check for deletions and changes
 	Object.keys(deps1).forEach(function(key) {
-		
+
 		if(!deps2[key] && deps2[key] !== '') {
-			
+
 			// Dep has been deleted
 			diffs.push(new PackageDiff(key, null, deps1[key]));
-			
+
 		} else if(deps1[key] != deps2[key]) {
-			
+
 			// Dep has been changed
 			diffs.push(new PackageDiff(key, deps2[key], deps1[key]));
 		}
 	});
-	
+
 	// Check for additions
 	Object.keys(deps2).forEach(function(key) {
 		if(!deps1[key]) {
 			diffs.push(new PackageDiff(key, deps2[key], null));
 		}
 	});
-	
+
 	return diffs;
 }
 
@@ -88,49 +88,49 @@ function parseManifest(body) {
 }
 
 exports.getManifest = function(user, repo, callback) {
-	
+
 	var manifest = manifests[user] ? manifests[user][repo] : null;
-	
+
 	if(manifest && manifest.expires > new Date()) {
 		console.log('Using cached manifest', manifest.data.name, manifest.data.version);
 		callback(null, JSON.parse(JSON.stringify(manifest.data)));
 		return;
 	}
-	
+
 	github.repos.getContent({user: user, repo: repo, path: 'package.json'}, function(err, resp) {
-		
+
 		if(err) {
 			callback(err);
 			return;
 		}
-		
+
 		var packageJson = new Buffer(resp.content, resp.encoding).toString();
 		var data = parseManifest(packageJson);
-		
+
 		if(!data) {
 			callback(new Error('Failed to parse package.json: ' + packageJson));
 		} else {
-			
+
 			console.log('Got manifest', data.name, data.version);
-			
+
 			var oldManifest = manifest;
 			var oldDependencies = oldManifest ? oldManifest.data.dependencies : {};
-			
+
 			manifest = new Manifest(data);
-			
+
 			manifests[user] = manifests[user] || {};
 			manifests[user][repo] = manifest;
-			
+
 			callback(null, manifest.data);
-			
+
 			if(!oldManifest) {
-				
+
 				exports.emit('retrieve', JSON.parse(JSON.stringify(data)), user, repo);
-				
+
 			} else {
-				
+
 				var diffs = getDependencyDiffs(oldDependencies, data.dependencies);
-				
+
 				if(diffs.length) {
 					exports.emit('dependenciesChange', diffs, JSON.parse(JSON.stringify(data)), user, repo);
 				}
@@ -141,7 +141,7 @@ exports.getManifest = function(user, repo, callback) {
 
 /**
  * Set the TTL for cached manifests.
- * 
+ *
  * @param {moment.duration} duration Time period the manifests will be cahced for, expressed as a moment.duration.
  */
 exports.setCacheDuration = function(duration) {

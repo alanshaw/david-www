@@ -1,24 +1,24 @@
 // Avoid `console` errors in browsers that lack a console.
 (function() {
-    var method;
-    var noop = function () {};
-    var methods = [
-        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
-        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
-        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
-        'timeStamp', 'trace', 'warn'
-    ];
-    var length = methods.length;
-    var console = (window.console = window.console || {});
+	var method;
+	var noop = function () {};
+	var methods = [
+		'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+		'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+		'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+		'timeStamp', 'trace', 'warn'
+	];
+	var length = methods.length;
+	var console = (window.console = window.console || {});
 
-    while (length--) {
-        method = methods[length];
+	while (length--) {
+		method = methods[length];
 
-        // Only stub undefined methods.
-        if (!console[method]) {
-            console[method] = noop;
-        }
-    }
+		// Only stub undefined methods.
+		if (!console[method]) {
+			console[method] = noop;
+		}
+	}
 }());
 
 // Place any jQuery/helper plugins in here.
@@ -37,48 +37,48 @@
 ;(function($) {
 
   $.fn.stacktable = function(options) {
-    var $tables = this,
-        defaults = {id:'stacktable',hideOriginal:false},
-        settings = $.extend({}, defaults, options),
-        stacktable;
+	var $tables = this,
+		defaults = {id:'stacktable',hideOriginal:false},
+		settings = $.extend({}, defaults, options),
+		stacktable;
 
-    return $tables.each(function() {
-      var $stacktable = $('<table class="'+settings.id+'"><tbody></tbody></table>');
-      if (typeof settings.myClass !== undefined) $stacktable.addClass(settings.myClass);
-      var markup = '';
-      $table = $(this);
-      $topRow = $table.find('tr').first();
-      $table.find('tr').each(function(index,value) {
-        markup += '<tr>';
-        // for the first row, top left table cell is the head of the table
-        if (index===0) {
-          markup += '<tr><th class="st-head-row st-head-row-main" colspan="2">'+$(this).find('th,td').first().html()+'</th></tr>';
-        }
-        // for the other rows, put the left table cell as the head for that row
-        // then iterate through the key/values
-        else {
-          $(this).find('td').each(function(index,value) {
-            if (index===0) {
-              markup += '<tr><th class="st-head-row" colspan="2">'+$(this).html()+'</th></tr>';
-            } else {
-              if ($(this).html() !== ''){
-                markup += '<tr>';
-                if ($topRow.find('td,th').eq(index).html()){
-                  markup += '<td class="st-key">'+$topRow.find('td,th').eq(index).html()+'</td>';
-                } else {
-                  markup += '<td class="st-key"></td>';
-                }
-                markup += '<td class="st-val">'+$(this).html()+'</td>';
-                markup += '</tr>';
-              }
-            }
-          });
-        }
-      });
-      $stacktable.append($(markup));
-      $table.before($stacktable);
-      if (settings.hideOriginal) $table.hide();
-    });
+	return $tables.each(function() {
+	  var $stacktable = $('<table class="'+settings.id+'"><tbody></tbody></table>');
+	  if (typeof settings.myClass !== undefined) $stacktable.addClass(settings.myClass);
+	  var markup = '';
+	  $table = $(this);
+	  $topRow = $table.find('tr').first();
+	  $table.find('tr').each(function(index,value) {
+		markup += '<tr>';
+		// for the first row, top left table cell is the head of the table
+		if (index===0) {
+		  markup += '<tr><th class="st-head-row st-head-row-main" colspan="2">'+$(this).find('th,td').first().html()+'</th></tr>';
+		}
+		// for the other rows, put the left table cell as the head for that row
+		// then iterate through the key/values
+		else {
+		  $(this).find('td').each(function(index,value) {
+			if (index===0) {
+			  markup += '<tr><th class="st-head-row" colspan="2">'+$(this).html()+'</th></tr>';
+			} else {
+			  if ($(this).html() !== ''){
+				markup += '<tr>';
+				if ($topRow.find('td,th').eq(index).html()){
+				  markup += '<td class="st-key">'+$topRow.find('td,th').eq(index).html()+'</td>';
+				} else {
+				  markup += '<td class="st-key"></td>';
+				}
+				markup += '<td class="st-val">'+$(this).html()+'</td>';
+				markup += '</tr>';
+			  }
+			}
+		  });
+		}
+	  });
+	  $stacktable.append($(markup));
+	  $table.before($stacktable);
+	  if (settings.hideOriginal) $table.hide();
+	});
   };
 
 }(jQuery));
@@ -131,7 +131,7 @@ b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});if(f.support.fi
 /*
  * jQuery BBQ: Back Button & Query Library - v1.3pre - 8/26/2010
  * http://benalman.com/projects/jquery-bbq-plugin/
- * 
+ *
  * Copyright (c) 2010 "Cowboy" Ben Alman
  * Dual licensed under the MIT and GPL licenses.
  * http://benalman.com/about/license/
@@ -146,7 +146,7 @@ eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
 /*
  * jQuery hashchange event - v1.3 - 7/21/2010
  * http://benalman.com/projects/jquery-hashchange-plugin/
- * 
+ *
  * Copyright (c) 2010 "Cowboy" Ben Alman
  * Dual licensed under the MIT and GPL licenses.
  * http://benalman.com/about/license/
