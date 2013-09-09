@@ -156,6 +156,6 @@ couchwatch('http://isaacs.iriscouch.com/registry', -1).on('row', function (chang
 		console.log('Expiring cached manifest', info.user, info.project);
 		manifests[info.user][info.project].expires = moment();
 	}
-})
+});
 
 module.exports = exports;
