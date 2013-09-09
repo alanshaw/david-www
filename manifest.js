@@ -8,6 +8,8 @@ var events = require('events');
 var moment = require('moment');
 var GitHubApi = require('github');
 var config = require('config');
+var couchwatch = require('couchwatch');
+var githubUrl = require('github-url');
 
 var github = new GitHubApi({version: '3.0.0'});
 
@@ -87,7 +89,7 @@ function parseManifest(body) {
 
 exports.getManifest = function(user, repo, callback) {
 	
-	var manifest = manifests[user + '/' + repo];
+	var manifest = manifests[user] ? manifests[user][repo] : null;
 	
 	if(manifest && manifest.expires > new Date()) {
 		console.log('Using cached manifest', manifest.data.name, manifest.data.version);
@@ -116,7 +118,8 @@ exports.getManifest = function(user, repo, callback) {
 			
 			manifest = new Manifest(data);
 			
-			manifests[user + '/' + repo] = manifest;
+			manifests[user] = manifests[user] || {};
+			manifests[user][repo] = manifest;
 			
 			callback(null, manifest.data);
 			
@@ -144,5 +147,15 @@ exports.getManifest = function(user, repo, callback) {
 exports.setCacheDuration = function(duration) {
 	Manifest.TTL = duration;
 };
+
+// When a user publishes a project, they likely updated their project dependencies
+couchwatch('http://isaacs.iriscouch.com/registry', -1).on('row', function (change) {
+	var info = githubUrl(change.doc.repository);
+	// Expire the cached manifest for this user/repo
+	if (info && manifests[info.user] && manifests[info.user][info.project]) {
+		console.log('Expiring cached manifest', info.user, info.project);
+		manifests[info.user][info.project].expires = moment();
+	}
+})
 
 module.exports = exports;

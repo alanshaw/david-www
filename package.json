@@ -40,7 +40,9 @@
     "rss": "~0.2.0",
     "github": "~0.1.8",
     "async": "~0.2.7",
-    "config": "~0.4.23"
+    "config": "~0.4.23",
+    "couchwatch": "~0.6.0",
+    "github-url": "~1.0.0"
   },
   "devDependencies": {
     "grunt": "~0.4.0",
