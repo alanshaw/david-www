@@ -14,7 +14,8 @@ module.exports = {
 
 		var mockManifests = {};
 
-		mockManifests[user + '/' + repo] = {
+		mockManifests[user] = {};
+		mockManifests[user][repo] = {
 			data: {
 				name: repo,
 				version: '1.0.0',
@@ -23,7 +24,7 @@ module.exports = {
 			expires: moment().subtract({days: 1})
 		};
 
-		mockManifests[user + '/' + repo].data.dependencies[depName] = depVer;
+		mockManifests[user][repo].data.dependencies[depName] = depVer;
 
 		// Add the expired manifest to the manifest module's internal cache
 		manifest.__set__('manifests', mockManifests);
