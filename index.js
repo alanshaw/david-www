@@ -23,24 +23,27 @@ app.use(express.compress());
 
 statics.init(app);
 
-app.get('/news/rss.xml',               newsRssFeed);
-app.get('/dependency-counts.json',     dependencyCounts);
-app.get('/stats',                      statsPage);
-app.get('/search',                     searchPage);
-app.get('/search.json',                searchQuery);
-app.get('/package/:pkg/commits.json',  commits);
-app.get('/package/:pkg/issues.json',   issues);
-app.get('/:user/:repo/dev-info.json',  devInfo);
-app.get('/:user/:repo/graph.json',     dependencyGraph);
-app.get('/:user/:repo/dev-graph.json', devDependencyGraph);
-app.get('/:user/:repo/rss.xml',        rssFeed);
-app.get('/:user/:repo/dev-rss.xml',    devRssFeed);
-app.get('/:user/:repo/status.png',     statusBadge);
-app.get('/:user/:repo/dev-status.png', devStatusBadge);
-app.get('/:user/:repo.png',            statusBadge);
-app.get('/:user/:repo',                statusPage);
-app.get('/:user',                      profilePage);
-app.get('/',                           indexPage);
+app.get('/news/rss.xml',                  newsRssFeed);
+app.get('/dependency-counts.json',        dependencyCounts);
+app.get('/stats',                         statsPage);
+app.get('/search',                        searchPage);
+app.get('/search.json',                   searchQuery);
+app.get('/package/:pkg/commits.json',     commits);
+app.get('/package/:pkg/issues.json',      issues);
+app.get('/:user/:repo/dev-info.json',     devInfo);
+app.get('/:user/:repo/graph.json',        dependencyGraph);
+app.get('/:user/:repo/dev-graph.json',    devDependencyGraph);
+app.get('/:user/:repo/rss.xml',           rssFeed);
+app.get('/:user/:repo/dev-rss.xml',       devRssFeed);
+app.get('/:user/:repo/status.png',        statusBadge);
+app.get('/:user/:repo/status@2x.png',     retinaStatusBadge);
+app.get('/:user/:repo/dev-status.png',    devStatusBadge);
+app.get('/:user/:repo/dev-status@2x.png', retinaDevStatusBadge);
+app.get('/:user/:repo@2x.png',            retinaStatusBadge);
+app.get('/:user/:repo.png',               statusBadge);
+app.get('/:user/:repo',                   statusPage);
+app.get('/:user',                         profilePage);
+app.get('/',                              indexPage);
 
 /**
  * Do a home page
@@ -171,7 +174,8 @@ function issues (req, res) {
 /**
  * Send the status badge for this user and repository
  */
-function sendStatusBadge(req, res, dev) {
+function sendStatusBadge(req, res, opts) {
+	opts = opts || {};
 
 	res.setHeader('Cache-Control', 'no-cache');
 
@@ -182,24 +186,32 @@ function sendStatusBadge(req, res, dev) {
 			return;
 		}
 
-		brains.getInfo(manifest, {dev: dev}, function(err, info) {
+		brains.getInfo(manifest, {dev: opts.dev}, function(err, info) {
 
 			if(err) {
 				res.status(500).sendfile('dist/img/unknown.png');
 				return;
 			}
 
-			res.sendfile('dist/img/' + (dev ? 'dev-' : '') + info.status + '.png');
+			res.sendfile('dist/img/' + (opts.dev ? 'dev-' : '') + info.status + (opts.retina ? '@2x' : '') + '.png');
 		});
 	});
 }
 
 function statusBadge(req, res) {
-	sendStatusBadge(req, res, false);
+	sendStatusBadge(req, res);
+}
+
+function retinaStatusBadge(req, res) {
+	sendStatusBadge(req, res, {retina: true});
 }
 
 function devStatusBadge(req, res) {
-	sendStatusBadge(req, res, true);
+	sendStatusBadge(req, res, {dev: true});
+}
+
+function retinaDevStatusBadge(req, res) {
+	sendStatusBadge(req, res, {dev: true, retina: true});
 }
 
 function dependencyGraph(req, res) {
