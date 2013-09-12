@@ -84,7 +84,8 @@ ul.stats {
 }
 .logo, .logo:visited {
 	display: inline-block;
-	background: url(../img/logo-david.jpg) no-repeat left center;
+	background: url(../img/logo-david@2x.jpg) no-repeat left center;
+  background-size: 5.188em 3.375em;
 	margin-left: 3.6em;
 	padding-left: 5.733em;
 	font-family: jurabold, sans-serif;
@@ -93,6 +94,9 @@ ul.stats {
 	color: @black0;
 	text-decoration: none;
 	
+	.no-backgroundsize & {
+		background-image: url(../img/logo-david.jpg);
+  }
 	&:hover i:before {
 		visibility: visible;
 	}
