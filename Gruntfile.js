@@ -84,6 +84,7 @@ module.exports = function(grunt) {
 		// Watch JS, LESS & HTML files for changes, copy & compile but not minify for easy debug during dev
 		watch: {
 			project: {
+				options: {atBegin: true},
 				files: ['src/js/**/*.js', 'src/css/**/*.less', 'src/**/*.html', 'src/img/**/*'],
 				tasks: ['copy', 'includereplace', 'less', 'uglify']
 			}
