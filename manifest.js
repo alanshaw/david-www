@@ -13,7 +13,7 @@ var githubUrl = require('github-url');
 
 var github = new GitHubApi({version: '3.0.0'});
 
-if(config.github) {
+if (config.github) {
 	github.authenticate({
 		type: 'basic',
 		username: config.github.username,
@@ -48,12 +48,12 @@ function getDependencyDiffs(deps1, deps2) {
 	// Check for deletions and changes
 	Object.keys(deps1).forEach(function(key) {
 
-		if(!deps2[key] && deps2[key] !== '') {
+		if (!deps2[key] && deps2[key] !== '') {
 
 			// Dep has been deleted
 			diffs.push(new PackageDiff(key, null, deps1[key]));
 
-		} else if(deps1[key] != deps2[key]) {
+		} else if (deps1[key] !== deps2[key]) {
 
 			// Dep has been changed
 			diffs.push(new PackageDiff(key, deps2[key], deps1[key]));
@@ -62,7 +62,7 @@ function getDependencyDiffs(deps1, deps2) {
 
 	// Check for additions
 	Object.keys(deps2).forEach(function(key) {
-		if(!deps1[key]) {
+		if (!deps1[key]) {
 			diffs.push(new PackageDiff(key, deps2[key], null));
 		}
 	});
@@ -91,7 +91,7 @@ exports.getManifest = function(user, repo, callback) {
 
 	var manifest = manifests[user] ? manifests[user][repo] : null;
 
-	if(manifest && manifest.expires > new Date()) {
+	if (manifest && manifest.expires > new Date()) {
 		console.log('Using cached manifest', manifest.data.name, manifest.data.version);
 		callback(null, JSON.parse(JSON.stringify(manifest.data)));
 		return;
@@ -99,7 +99,7 @@ exports.getManifest = function(user, repo, callback) {
 
 	github.repos.getContent({user: user, repo: repo, path: 'package.json'}, function(err, resp) {
 
-		if(err) {
+		if (err) {
 			callback(err);
 			return;
 		}
@@ -107,7 +107,7 @@ exports.getManifest = function(user, repo, callback) {
 		var packageJson = new Buffer(resp.content, resp.encoding).toString();
 		var data = parseManifest(packageJson);
 
-		if(!data) {
+		if (!data) {
 			callback(new Error('Failed to parse package.json: ' + packageJson));
 		} else {
 
@@ -123,7 +123,7 @@ exports.getManifest = function(user, repo, callback) {
 
 			callback(null, manifest.data);
 
-			if(!oldManifest) {
+			if (!oldManifest) {
 
 				exports.emit('retrieve', JSON.parse(JSON.stringify(data)), user, repo);
 
@@ -131,7 +131,7 @@ exports.getManifest = function(user, repo, callback) {
 
 				var diffs = getDependencyDiffs(oldDependencies, data.dependencies);
 
-				if(diffs.length) {
+				if (diffs.length) {
 					exports.emit('dependenciesChange', diffs, JSON.parse(JSON.stringify(data)), user, repo);
 				}
 			}
