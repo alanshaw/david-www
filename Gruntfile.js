@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 					{dest: 'dist/.htaccess', src: 'src/.htaccess'},
 
 					// Copy any JavaScript libs
-					{dest: 'dist/', src: 'js/vendor/jquery-1.8.3.min.js', expand: true, cwd: 'src/'},
+					{dest: 'dist/', src: 'js/vendor/jquery-1.10.2.min.js', expand: true, cwd: 'src/'},
 					{dest: 'dist/', src: 'js/vendor/modernizr-2.6.2.min.js', expand: true, cwd: 'src/'},
 
 					// Copy any CSS files (not LESS src)
