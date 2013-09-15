@@ -15,8 +15,7 @@ module.exports = function(grunt) {
 					{dest: 'dist/.htaccess', src: 'src/.htaccess'},
 
 					// Copy any JavaScript libs
-					{dest: 'dist/', src: 'js/vendor/jquery-1.10.2.min.js', expand: true, cwd: 'src/'},
-					{dest: 'dist/', src: 'js/vendor/modernizr-2.6.2.min.js', expand: true, cwd: 'src/'},
+					{dest: 'dist/', src: 'js/vendor/*.min.js', expand: true, cwd: 'src/'},
 
 					// Copy any CSS files (not LESS src)
 					{dest: 'dist/', src: 'css/**/*.css', expand: true, cwd: 'src/'},
@@ -56,27 +55,29 @@ module.exports = function(grunt) {
 		// Minify the site script
 		uglify: {
 			options: {
-				compress: true,
-				mangle: true,
+				compress: false,
+				mangle: false,
 				preserveComments: false,
+				beautify: true,
 				report: 'min'
 			},
 			compress: {
-				src: ['src/js/vendor/cycle.js',
-					  'src/js/vendor/d3.js',
-					  'src/js/vendor/handlebars.js',
-					  'src/js/vendor/jquery.ba-bbq.js',
-					  'src/js/vendor/jquery.ba-hashchange.js',
-					  'src/js/vendor/jquery.fancybox.js',
-					  'src/js/vendor/jquery.feed.js',
-					  'src/js/vendor/lodash.js',
-					  'src/js/vendor/moment.js',
-					  'src/js/vendor/stackable.js',
-					  'src/js/main.js',
-					  'src/js/plugins.js',
-					  'src/js/homepage.js',
-					  'src/js/status.js',
-					  'src/js/search.js'
+				src: [
+					'src/js/plugins.js',
+					'src/js/vendor/cycle.js',
+					'src/js/vendor/d3.js',
+					'src/js/vendor/handlebars.js',
+					'src/js/vendor/jquery.ba-bbq.js',
+					'src/js/vendor/jquery.ba-hashchange.js',
+					'src/js/vendor/jquery.fancybox.js',
+					'src/js/vendor/jquery.feed.js',
+					'src/js/vendor/lodash.js',
+					'src/js/vendor/moment.js',
+					'src/js/vendor/stackable.js',
+					'src/js/main.js',
+					'src/js/homepage.js',
+					'src/js/status.js',
+					'src/js/search.js'
 				],
 				dest: 'dist/js/pack.js'
 			}
@@ -98,7 +99,7 @@ module.exports = function(grunt) {
 
 		// Lint the server JavaScript
 		jshint: {
-			files: ['*.js', 'src/js/*.js'],
+			files: ['*.js', 'src/js/*.js', '!src/js/plugins.js'],
 			options: {
 				'browser': false,
 				'maxerr': 100,

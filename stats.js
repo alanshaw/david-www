@@ -24,7 +24,7 @@ registry.on('change', function (change) {
 	var pkg = new UpdatedPackage(change.doc.name, versions[versions.length - 1], versions[versions.length - 2]);
 	
 	for (var i = 0; i < recentlyUpdatedPackages.length; i++) {
-		if (recentlyUpdatedPackages[i].name == pkg.name) {
+		if (recentlyUpdatedPackages[i].name === pkg.name) {
 			recentlyUpdatedPackages.splice(i, 1);
 			break;
 		}
