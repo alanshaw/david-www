@@ -14,7 +14,10 @@ function UpdatedPackage(name, version, previous) {
 var recentlyUpdatedPackages = [];
 
 registry.on('change', function (change) {
-	console.log(change);
+	if (!change.doc.versions) {
+		return;
+	}
+
 	var versions = Object.keys(change.doc.versions);
 
 	if (versions.length < 2) {
