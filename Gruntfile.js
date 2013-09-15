@@ -73,7 +73,36 @@ module.exports = function(grunt) {
 
 		// Lint the server JavaScript
 		jshint: {
-			files: '*.js'
+			files: '*.js',
+			options: {
+				'browser': false,
+				'maxerr': 100,
+				'node': true,
+				/*'camelcase': true,*/
+				'curly': true,
+				'eqeqeq': true,
+				'eqnull': true,
+				'forin': true,
+				'immed': true,
+				'indent': 4,
+				/*'latedef': true,*/
+				'laxbreak': true,
+				'laxcomma': true,
+				'lastsemic': true,
+				'loopfunc': true,
+				'noarg': true,
+				'newcap': true,
+				'plusplus': false,
+				'quotmark': 'single',
+				'regexp': true,
+				'shadow': true,
+				'strict': false,
+				'sub': true,
+				'trailing': true,
+				'undef': true,
+				'unused': true,
+				ignores: ['.git', 'node_modules']
+			}
 		},
 
 		// Test the things
