@@ -8,7 +8,7 @@ var events = require('events');
 var moment = require('moment');
 var GitHubApi = require('github');
 var config = require('config');
-var couchwatch = require('couchwatch');
+var registry = require('./registry');
 var githubUrl = require('github-url');
 
 var github = new GitHubApi({version: '3.0.0'});
@@ -149,7 +149,7 @@ exports.setCacheDuration = function(duration) {
 };
 
 // When a user publishes a project, they likely updated their project dependencies
-couchwatch('http://isaacs.iriscouch.com/registry', -1).on('row', function (change) {
+registry.on('change', function (change) {
 	var info = githubUrl(change.doc.repository);
 	// Expire the cached manifest for this user/repo
 	if (info && manifests[info.user] && manifests[info.user][info.project]) {

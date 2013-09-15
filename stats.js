@@ -1,4 +1,4 @@
-var david = require('david');
+var registry = require('./registry');
 var manifest = require('./manifest');
 
 var exports = {};
@@ -13,15 +13,27 @@ function UpdatedPackage(name, version, previous) {
 
 var recentlyUpdatedPackages = [];
 
-david.on('latestVersionChange', function(name, fromVersion, toVersion) {
-
-	if(fromVersion) {
-
-		recentlyUpdatedPackages.unshift(new UpdatedPackage(name, toVersion, fromVersion));
-
-		if(recentlyUpdatedPackages.length > 10) {
-			recentlyUpdatedPackages.pop();
+registry.on('change', function (change) {
+	console.log(change);
+	var versions = Object.keys(change.doc.versions);
+	
+	if (versions.length < 2) {
+		return;
+	}
+	
+	var pkg = new UpdatedPackage(change.doc.name, versions[versions.length - 1], versions[versions.length - 2]);
+	
+	for (var i = 0; i < recentlyUpdatedPackages.length; i++) {
+		if (recentlyUpdatedPackages[i].name == pkg.name) {
+			recentlyUpdatedPackages.splice(i, 1);
+			break;
 		}
+	}
+	
+	recentlyUpdatedPackages.unshift(pkg);
+	
+	if(recentlyUpdatedPackages.length > 10) {
+		recentlyUpdatedPackages.pop();
 	}
 });
 
