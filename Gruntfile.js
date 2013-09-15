@@ -98,7 +98,7 @@ module.exports = function(grunt) {
 
 		// Lint the server JavaScript
 		jshint: {
-			files: ['*.js', 'src/js/*.js', '!src/js/plugins.js'],
+			files: ['*.js', 'src/js/*.js', 'test/*.js'],
 			options: {
 				'browser': false,
 				'maxerr': 100,

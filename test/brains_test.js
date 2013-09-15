@@ -25,7 +25,7 @@ function mockDavid(deps, updatedDeps, updatedStableDeps) {
 		getDependencies: function(manifest, options, callback) {
 
 			// Allow callback to be passed as second parameter
-			if(!callback) {
+			if (!callback) {
 				callback = options;
 				options = {};
 			} else {
@@ -37,7 +37,7 @@ function mockDavid(deps, updatedDeps, updatedStableDeps) {
 		getUpdatedDependencies: function(manifest, options, callback) {
 
 			// Allow callback to be passed as second parameter
-			if(!callback) {
+			if (!callback) {
 				callback = options;
 				options = {};
 			} else {
