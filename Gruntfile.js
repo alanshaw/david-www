@@ -91,6 +91,7 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'dist/css/main.css': 'dist/css/main.css',
+					'dist/css/font-awesome-ie7.css': 'dist/css/font-awesome-ie7.css',
 					'dist/css/ie.css': 'dist/css/ie.css'
 				}
 			}
