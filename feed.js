@@ -23,6 +23,20 @@ function FeedItem(name, previous, current, pubdate, repoUrl) {
 	this.repoUrl = repoUrl;
 }
 
+function getRepoUrl(data) {
+	if (!data) {
+		return data;
+	}
+
+	var url = Object.prototype.toString.call(data) === '[object String]' ? data : data.url;
+
+	if (url && url.indexOf('github.com') !== -1) {
+		return url.replace('github.com:', 'github.com/').replace('git:', 'https:').replace('.git', '');
+	}
+
+	return null;
+}
+
 // Create a bunch of Feed items from the passed package
 function packageToFeedItems(pkg) {
 
@@ -38,20 +52,6 @@ function packageToFeedItems(pkg) {
 	});
 }
 
-function getRepoUrl(data) {
-	if(!data) {
-		return data;
-	}
-
-	var url = Object.prototype.toString.call(data) == '[object String]' ? data : data.url;
-
-	if(url && url.indexOf('github.com') != -1) {
-		return url.replace('github.com:', 'github.com/').replace('git:', 'https:').replace('.git', '');
-	}
-
-	return null;
-}
-
 // Create the feed XML from the FeedItems
 function buildFeedXml(items, name, deps, limit) {
 
@@ -60,16 +60,16 @@ function buildFeedXml(items, name, deps, limit) {
 
 	items = items.reduce(function(items, item) {
 		// Only add item to feed for valid, non-reckless dependency versions
-		if(semver.validRange(deps[item.name], true) && deps[item.name] != 'latest' && deps[item.name] != '*' && semverext.gtr(item.current, deps[item.name], true)) {
+		if (semver.validRange(deps[item.name], true) && deps[item.name] !== 'latest' && deps[item.name] !== '*' && semverext.gtr(item.current, deps[item.name], true)) {
 			items.push(item);
 		}
 		return items;
 	}, []);
 
 	items.sort(function(a, b) {
-		if(a.pubdate < b.pubdate) {
+		if (a.pubdate < b.pubdate) {
 			return 1;
-		} else if(a.pubdate === b.pubdate) {
+		} else if (a.pubdate === b.pubdate) {
 			return 0;
 		} else {
 			return -1;
@@ -84,7 +84,7 @@ function buildFeedXml(items, name, deps, limit) {
 		site_url: 'https://david-dm.org/'
 	});
 
-	for(var i = 0, len = items.length; i < len; ++i) {
+	for (var i = 0, len = items.length; i < len; ++i) {
 		rssFeed.item({
 			title: items[i].name + ' ' + items[i].previous + ' to ' + items[i].current + ' (' + deps[items[i].name] + ' required)',
 			description: items[i].repoUrl ? '<a href="' + items[i].repoUrl + '">' + items[i].repoUrl + '</a>' : null,
@@ -108,14 +108,14 @@ function getPackage(pkgName, callback) {
 
 	var pkg = packages[pkgName];
 
-	if(pkg && pkg.expires > new Date()) {
+	if (pkg && pkg.expires > new Date()) {
 		callback(null, pkg);
 		return;
 	}
 
 	npm.commands.view([pkgName, 'time', 'repository'], true, function(err, data) {
 
-		if(err) {
+		if (err) {
 			callback(err);
 			return;
 		}
@@ -124,7 +124,7 @@ function getPackage(pkgName, callback) {
 		var time = keys.length ? data[keys[0]].time : null;
 		var repository = keys.length ? data[keys[0]].repository : null;
 
-		if(time) {
+		if (time) {
 
 			pkg = packages[pkgName] = new Package(pkgName, time, repository);
 
@@ -138,7 +138,7 @@ function getPackage(pkgName, callback) {
 			// Get latest and use unix epoch as publish date
 			npm.commands.view([pkgName, 'version'], true, function(err, data) {
 
-				if(err) {
+				if (err) {
 					callback(err);
 					return;
 				}
@@ -158,7 +158,7 @@ function getPackage(pkgName, callback) {
 module.exports.get = function(manifest, options, callback) {
 
 	// Allow callback to be passed as second parameter
-	if(!callback) {
+	if (!callback) {
 		callback = options;
 		options = {};
 	} else {
@@ -168,7 +168,7 @@ module.exports.get = function(manifest, options, callback) {
 	// Assume we're probably going to have to use NPM
 	npm.load({}, function(err) {
 
-		if(err) {
+		if (err) {
 			callback(err);
 			return;
 		}
@@ -178,7 +178,7 @@ module.exports.get = function(manifest, options, callback) {
 		var depNames = Object.keys(deps || {});
 		var processedDeps = 0;
 
-		if(!depNames.length) {
+		if (!depNames.length) {
 			callback(null, buildFeedXml([], manifest.name, deps, options.limit));
 			return;
 		}
@@ -187,7 +187,7 @@ module.exports.get = function(manifest, options, callback) {
 
 			getPackage(depName, function(err, pkg) {
 
-				if(err) {
+				if (err) {
 					callback(err);
 					return;
 				}
@@ -196,7 +196,7 @@ module.exports.get = function(manifest, options, callback) {
 
 				processedDeps++;
 
-				if(processedDeps == depNames.length) {
+				if (processedDeps === depNames.length) {
 					callback(null, buildFeedXml(items, manifest.name, deps, options.limit));
 				}
 			});

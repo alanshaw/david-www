@@ -7,13 +7,13 @@ var semver = require('semver');
 
 function isPinned(version) {
 
-	if(version == '*' || version == 'latest') {
+	if (version === '*' || version === 'latest') {
 		return false;
 	}
 
 	var range = semver.validRange(version, true);
 
-	if(range && range.indexOf('>=') === 0) {
+	if (range && range.indexOf('>=') === 0) {
 		return false;
 	}
 
@@ -29,7 +29,7 @@ function isPinned(version) {
 module.exports.getInfo = function(manifest, options, callback) {
 
 	// Allow callback to be passed as second parameter
-	if(!callback) {
+	if (!callback) {
 		callback = options;
 		options = {};
 	} else {
@@ -40,7 +40,7 @@ module.exports.getInfo = function(manifest, options, callback) {
 
 	david.getDependencies(manifest, davidOptions, function(err, deps) {
 
-		if(err) {
+		if (err) {
 			callback(err);
 			return;
 		}
@@ -48,7 +48,7 @@ module.exports.getInfo = function(manifest, options, callback) {
 		// Get ALL updated dependencies including unstable
 		david.getUpdatedDependencies(manifest, davidOptions, function(err, updatedDeps) {
 
-			if(err) {
+			if (err) {
 				callback(err);
 				return;
 			}
@@ -58,7 +58,7 @@ module.exports.getInfo = function(manifest, options, callback) {
 			// Get STABLE updated dependencies
 			david.getUpdatedDependencies(manifest, davidOptions, function(err, updatedStableDeps) {
 
-				if(err) {
+				if (err) {
 					callback(err);
 					return;
 				}
@@ -83,25 +83,25 @@ module.exports.getInfo = function(manifest, options, callback) {
 					var status = 'uptodate';
 
 					// If there is an updated STABLE dependency then this dep is out of date
-					if(updatedStableDeps[depName]) {
+					if (updatedStableDeps[depName]) {
 						status = 'outofdate';
 					// If it is in the UNSTABLE list, and has no stable version then consider out of date
-					} else if(updatedDeps[depName] && !updatedDeps[depName].stable) {
+					} else if (updatedDeps[depName] && !updatedDeps[depName].stable) {
 						status = 'outofdate';
 					}
 
 					var pinned = isPinned(deps[depName].required);
 
-					if(status == 'uptodate' && pinned) {
+					if (status === 'uptodate' && pinned) {
 						totals.upToDate++;
 						totals.pinned.upToDate++;
-					} else if(status == 'uptodate' && !pinned) {
+					} else if (status === 'uptodate' && !pinned) {
 						totals.upToDate++;
 						totals.unpinned.upToDate++;
-					} else if(status == 'outofdate' && pinned) {
+					} else if (status === 'outofdate' && pinned) {
 						totals.outOfDate++;
 						totals.pinned.outOfDate++;
-					} else if(status == 'outofdate' && !pinned) {
+					} else if (status === 'outofdate' && !pinned) {
 						totals.outOfDate++;
 						totals.unpinned.outOfDate++;
 					}

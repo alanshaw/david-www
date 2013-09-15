@@ -73,7 +73,7 @@ module.exports = function(grunt) {
 
 		// Lint the server JavaScript
 		jshint: {
-			files: '*.js',
+			files: ['*.js', 'src/js/*.js'],
 			options: {
 				'browser': false,
 				'maxerr': 100,
@@ -101,7 +101,7 @@ module.exports = function(grunt) {
 				'trailing': true,
 				'undef': true,
 				'unused': true,
-				ignores: ['.git', 'node_modules']
+				ignores: ['.git', 'node_modules', 'src/js/plugins.js']
 			}
 		},
 

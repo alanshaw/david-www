@@ -26,7 +26,7 @@ function deleteExpires(decycledPkg) {
 
 	Object.keys(decycledPkg.deps).forEach(function(depName) {
 		// Delete expires from this dependency if it isn't a decycle reference
-		if(!decycledPkg.deps[depName].$ref) {
+		if (!decycledPkg.deps[depName].$ref) {
 			deleteExpires(decycledPkg.deps[depName]);
 		}
 	});
@@ -51,9 +51,9 @@ function getDependencyGraph(depName, version, callback) {
 
 	var dep = dependencies[depName][version];
 
-	if(dep) {
+	if (dep) {
 
-		if(dep.expires > new Date()) {
+		if (dep.expires > new Date()) {
 			callback(null, dep);
 			return;
 		}
@@ -69,7 +69,7 @@ function getDependencyGraph(depName, version, callback) {
 
 		npm.commands.view([depName + '@' + version, 'dependencies'], function(err, data) {
 
-			if(err) {
+			if (err) {
 				callback(err);
 				return;
 			}
@@ -78,7 +78,7 @@ function getDependencyGraph(depName, version, callback) {
 				depDepNames = depDeps ? Object.keys(depDeps) : [];
 
 			// No dependencies?
-			if(depDepNames.length === 0) {
+			if (depDepNames.length === 0) {
 				callback(null, dep);
 				return;
 			}
@@ -91,7 +91,7 @@ function getDependencyGraph(depName, version, callback) {
 
 				latestSatisfying(depDepName, depDepRange, function(err, depDepVersion) {
 
-					if(err) {
+					if (err) {
 						callback(err);
 						return;
 					}
@@ -99,14 +99,14 @@ function getDependencyGraph(depName, version, callback) {
 					// There should be a version that satisfies!
 					// But...
 					// The range could be a tag, or a git repo
-					if(!depDepVersion) {
+					if (!depDepVersion) {
 
 						// Add a dummy package with the range as it's version
 						dep.deps[depDepName] = new Package(depDepName, depDepRange);
 
 						got++;
 
-						if(got == depDepNames.length) {
+						if (got === depDepNames.length) {
 							dependencies[depName][version] = dep;
 							callback(null, dep);
 						}
@@ -115,7 +115,7 @@ function getDependencyGraph(depName, version, callback) {
 
 						getDependencyGraph(depDepName, depDepVersion, function(err, depDep) {
 
-							if(err) {
+							if (err) {
 								callback(err);
 								return;
 							}
@@ -124,7 +124,7 @@ function getDependencyGraph(depName, version, callback) {
 
 							got++;
 
-							if(got == depDepNames.length) {
+							if (got === depDepNames.length) {
 								dependencies[depName][version] = dep;
 								callback(null, dep);
 							}
@@ -150,12 +150,12 @@ function latestSatisfying(depName, range, callback) {
 
 	npm.commands.view([depName, 'versions'], function(err, data) {
 
-		if(err) {
+		if (err) {
 			callback(err);
 			return;
 		}
 
-		if(range == 'latest') {
+		if (range === 'latest') {
 			range = '';
 		}
 
@@ -184,9 +184,9 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 
 	var project = projects[name][version];
 
-	if(project) {
+	if (project) {
 
-		if(project.expires > new Date()) {
+		if (project.expires > new Date()) {
 			console.log('Using cached project dependency graph', name, version);
 			callback(null, deleteExpires(JSON2.decycle(project)));
 			return;
@@ -201,7 +201,7 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 
 	npm.load({}, function(err) {
 
-		if(err) {
+		if (err) {
 			callback(err);
 			return;
 		}
@@ -215,7 +215,7 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 
 			latestSatisfying(depName, range, function(err, version) {
 
-				if(err) {
+				if (err) {
 					callback(err);
 					return;
 				}
@@ -223,14 +223,14 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 				// There should be a version that satisfies!
 				// But...
 				// The range could be a tag, or a git repo
-				if(!version) {
+				if (!version) {
 
 					// Add a dummy package with the range as it's version
 					project.deps[depName] = new Package(depName, range);
 
 					done++;
 
-					if(done == depNames.length) {
+					if (done === depNames.length) {
 						callback(null, JSON2.decycle(project));
 					}
 
@@ -238,7 +238,7 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 
 					getDependencyGraph(depName, version, function(err, dep) {
 
-						if(err) {
+						if (err) {
 							callback(err);
 							return;
 						}
@@ -247,7 +247,7 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 
 						done++;
 
-						if(done == depNames.length) {
+						if (done === depNames.length) {
 							callback(null, deleteExpires(JSON2.decycle(project)));
 						}
 					});
