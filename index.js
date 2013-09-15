@@ -75,7 +75,7 @@ function newsRssFeed(req, res) {
 
 	newsFeed.get(function(err, xml) {
 
-		if(errors.happened(err, req, res, 'Failed to get news feed xml')) {
+		if (errors.happened(err, req, res, 'Failed to get news feed xml')) {
 			return;
 		}
 
@@ -105,7 +105,7 @@ function profilePage(req, res) {
 
 	profile.get(req.params.user, function(err, data) {
 
-		if(errors.happened(err, req, res, 'Failed to get profile data')) {
+		if (errors.happened(err, req, res, 'Failed to get profile data')) {
 			return;
 		}
 
@@ -121,7 +121,7 @@ function searchQuery(req, res) {
 
 	search(req.query.q, function(err, results) {
 
-		if(errors.happened(err, req, res, 'Failed to get search results')) {
+		if (errors.happened(err, req, res, 'Failed to get search results')) {
 			return;
 		}
 
@@ -138,7 +138,7 @@ function commits (req, res) {
 			changelog.getPublishDate(req.params.pkg, req.query.to, cb);
 		}
 	], function (er, dates) {
-		if(errors.happened(er, req, res, 'Unable to determine publish date')) {
+		if (errors.happened(er, req, res, 'Unable to determine publish date')) {
 			return;
 		}
 
@@ -149,7 +149,7 @@ function commits (req, res) {
 }
 
 function issues (req, res) {
-	if (req.query.state != 'closed') {
+	if (req.query.state !== 'closed') {
 		return res.status(500).send({err: 'Unsupported issue state'});
 	}
 
@@ -161,7 +161,7 @@ function issues (req, res) {
 			changelog.getPublishDate(req.params.pkg, req.query.to, cb);
 		}
 	], function (er, dates) {
-		if(errors.happened(er, req, res, 'Unable to determine publish date')) {
+		if (errors.happened(er, req, res, 'Unable to determine publish date')) {
 			return;
 		}
 
@@ -181,14 +181,14 @@ function sendStatusBadge(req, res, opts) {
 
 	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
-		if(err) {
+		if (err) {
 			res.status(404).sendfile('dist/img/unknown.png');
 			return;
 		}
 
 		brains.getInfo(manifest, {dev: opts.dev}, function(err, info) {
 
-			if(err) {
+			if (err) {
 				res.status(500).sendfile('dist/img/unknown.png');
 				return;
 			}
@@ -218,13 +218,13 @@ function dependencyGraph(req, res) {
 
 	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
-		if(errors.happened(err, req, res, 'Failed to get package.json')) {
+		if (errors.happened(err, req, res, 'Failed to get package.json')) {
 			return;
 		}
 
 		graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo, manifest.version, manifest.dependencies || {}, function(err, graph) {
 
-			if(errors.happened(err, req, res, 'Failed to get graph data')) {
+			if (errors.happened(err, req, res, 'Failed to get graph data')) {
 				return;
 			}
 
@@ -237,13 +237,13 @@ function devDependencyGraph(req, res) {
 
 	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
-		if(errors.happened(err, req, res, 'Failed to get package.json')) {
+		if (errors.happened(err, req, res, 'Failed to get package.json')) {
 			return;
 		}
 
 		graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo + '#dev', manifest.version, manifest.devDependencies || {}, function(err, graph) {
 
-			if(errors.happened(err, req, res, 'Failed to get graph data')) {
+			if (errors.happened(err, req, res, 'Failed to get graph data')) {
 				return;
 			}
 
@@ -256,13 +256,13 @@ function buildRssFeed(req, res, dev) {
 
 	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
-		if(errors.happened(err, req, res, 'Failed to get package.json')) {
+		if (errors.happened(err, req, res, 'Failed to get package.json')) {
 			return;
 		}
 
 		feed.get(manifest, {dev: dev}, function(err, xml) {
 
-			if(errors.happened(err, req, res, 'Failed to build RSS XML')) {
+			if (errors.happened(err, req, res, 'Failed to build RSS XML')) {
 				return;
 			}
 
@@ -292,7 +292,7 @@ function devInfo(req, res) {
 function withManifestAndInfo(req, res, options, callback) {
 
 	// Allow callback to be passed as third parameter
-	if(!callback) {
+	if (!callback) {
 		callback = options;
 		options = {};
 	} else {
@@ -301,13 +301,13 @@ function withManifestAndInfo(req, res, options, callback) {
 
 	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
-		if(errors.happened(err, req, res, 'Failed to get package.json')) {
+		if (errors.happened(err, req, res, 'Failed to get package.json')) {
 			return;
 		}
 
 		brains.getInfo(manifest, options, function(err, info) {
 
-			if(errors.happened(err, req, res, 'Failed to get dependency info')) {
+			if (errors.happened(err, req, res, 'Failed to get dependency info')) {
 				return;
 			}
 
@@ -316,7 +316,7 @@ function withManifestAndInfo(req, res, options, callback) {
 	});
 }
 
-app.use(function(req, res, next){
+app.use(function(req, res) {
 	res.status(404);
 
 	// respond with html page

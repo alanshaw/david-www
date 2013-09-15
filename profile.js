@@ -6,7 +6,7 @@ var config = require('config');
 
 var github = new GitHubApi({version: '3.0.0'});
 
-if(config.github) {
+if (config.github) {
 	github.authenticate({
 		type: 'basic',
 		username: config.github.username,
@@ -27,7 +27,7 @@ if(config.github) {
 function getRepos(user, options, callback) {
 
 	// Allow callback to be passed as second parameter
-	if(!callback) {
+	if (!callback) {
 		callback = options;
 		options = {page: 0, repos: [], pageSize: 100};
 	} else {
@@ -38,16 +38,16 @@ function getRepos(user, options, callback) {
 
 		github.repos.getFromUser({user: user, page: options.page, per_page: options.pageSize}, function(err, data) {
 
-			if(err) {
+			if (err) {
 				callback(err);
 				return;
 			}
 
-			if(data.length) {
+			if (data.length) {
 
 				options.repos = options.repos.concat(data);
 
-				if(data.length == options.pageSize) {
+				if (data.length === options.pageSize) {
 
 					// Maybe another page?
 					options.page++;
@@ -80,14 +80,14 @@ function createGetInfoTask(user, repo) {
 		manifest.getManifest(user, repo.name, function(err, manifest) {
 
 			// This is fine - perhaps the repo doesn't have a package.json
-			if(err) {
+			if (err) {
 				callback();
 				return;
 			}
 
 			brains.getInfo(manifest, function(err, info) {
 
-				if(err) {
+				if (err) {
 					callback(err);
 					return;
 				}
@@ -106,7 +106,7 @@ module.exports.get = function(user, callback) {
 
 	getRepos(user, function(err, repos) {
 
-		if(err) {
+		if (err) {
 			callback(err);
 			return;
 		}
@@ -118,7 +118,7 @@ module.exports.get = function(user, callback) {
 			}),
 			function(err, data) {
 
-				if(err) {
+				if (err) {
 					callback(err);
 					return;
 				}

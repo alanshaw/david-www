@@ -55,9 +55,9 @@ manifest.on('retrieve', function(manifest, user, repo) {
 
 	var inList = false;
 
-	for(var i = 0; i < recentlyRetrievedManifests.length; ++i) {
+	for (var i = 0; i < recentlyRetrievedManifests.length; ++i) {
 
-		if(recentlyRetrievedManifests[i].user == user && recentlyRetrievedManifests[i].repo == repo) {
+		if (recentlyRetrievedManifests[i].user === user && recentlyRetrievedManifests[i].repo === repo) {
 			recentlyRetrievedManifests.splice(i, 1);
 			inList = true;
 			break;
@@ -66,7 +66,7 @@ manifest.on('retrieve', function(manifest, user, repo) {
 
 	recentlyRetrievedManifests.unshift(new RetrievedManifest(manifest, user, repo));
 
-	if(!inList && recentlyRetrievedManifests.length > 10) {
+	if (!inList && recentlyRetrievedManifests.length > 10) {
 		recentlyRetrievedManifests.pop();
 	}
 });
@@ -90,7 +90,7 @@ manifest.on('dependenciesChange', function(diffs, manifest, user, repo) {
 
 	recentlyUpdatedManifests.unshift(new UpdatedManifest(diffs, manifest, user, repo));
 
-	if(recentlyUpdatedManifests.length > 10) {
+	if (recentlyUpdatedManifests.length > 10) {
 		recentlyUpdatedManifests.pop();
 	}
 });
@@ -120,13 +120,13 @@ manifest.on('dependenciesChange', function(diffs) {
 	diffs.forEach(function(diff) {
 
 		// Dependency added
-		if(!diff.previous) {
+		if (!diff.previous) {
 			dependencyCounts[diff.name] = dependencyCounts[diff.name] || 0;
 			dependencyCounts[diff.name]++;
 		}
 
 		// Dependency removed
-		if(diff.version === null) {
+		if (diff.version === null) {
 			dependencyCounts[diff.name]--;
 		}
 	});

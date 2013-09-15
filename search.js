@@ -15,14 +15,14 @@ var processingQueue = false;
  */
 module.exports = function(keywords, callback) {
 
-	if(!keywords) {
+	if (!keywords) {
 		callback(null, {});
 		return;
 	}
 
-	if(Object.prototype.toString.call(keywords) == '[object String]') {
+	if (Object.prototype.toString.call(keywords) === '[object String]') {
 		keywords = keywords.split(/\s+/);
-	} else if(!keywords.length) {
+	} else if (!keywords.length) {
 		callback(null, {});
 		return;
 	}
@@ -34,7 +34,7 @@ module.exports = function(keywords, callback) {
 
 function processQueue() {
 
-	if(processingQueue || !queryQueue.length) {
+	if (processingQueue || !queryQueue.length) {
 		return;
 	}
 
@@ -46,14 +46,14 @@ function processQueue() {
 
 	npm.load({}, function(err) {
 
-		if(err) {
+		if (err) {
 			callback(err);
 			return;
 		}
 
 		npm.commands.search(keywords, true, function(err, data) {
 
-			if(err) {
+			if (err) {
 				callback(err);
 				return;
 			}

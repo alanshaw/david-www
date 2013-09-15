@@ -15,8 +15,8 @@ module.exports = function(grunt) {
 					{dest: 'dist/.htaccess', src: 'src/.htaccess'},
 
 					// Copy any JavaScript libs
-					{dest: 'dist/', src: 'js/vendor/**/*.js', expand: true, cwd: 'src/'},
-					{dest: 'dist/', src: 'js/plugins.js', expand: true, cwd: 'src/'},
+					{dest: 'dist/', src: 'js/vendor/jquery-1.10.2.min.js', expand: true, cwd: 'src/'},
+					{dest: 'dist/', src: 'js/vendor/modernizr-2.6.2.min.js', expand: true, cwd: 'src/'},
 
 					// Copy any CSS files (not LESS src)
 					{dest: 'dist/', src: 'css/**/*.css', expand: true, cwd: 'src/'},
@@ -55,15 +55,40 @@ module.exports = function(grunt) {
 
 		// Minify the site script
 		uglify: {
+			options: {
+				compress: true,
+				mangle: true,
+				preserveComments: false,
+				report: 'min'
+			},
 			compress: {
-				src: ['src/js/main.js', 'src/js/homepage.js', 'src/js/status.js', 'src/js/search.js'],
-				dest: 'dist/js/main.js'
+				src: ['src/js/vendor/cycle.js',
+					  'src/js/vendor/d3.js',
+					  'src/js/vendor/handlebars.js',
+					  'src/js/vendor/jquery.ba-bbq.js',
+					  'src/js/vendor/jquery.ba-hashchange.js',
+					  'src/js/vendor/jquery.fancybox.js',
+					  'src/js/vendor/jquery.feed.js',
+					  'src/js/vendor/lodash.js',
+					  'src/js/vendor/moment.js',
+					  'src/js/vendor/stackable.js',
+					  'src/js/main.js',
+					  'src/js/plugins.js',
+					  'src/js/homepage.js',
+					  'src/js/status.js',
+					  'src/js/search.js'
+				],
+				dest: 'dist/js/pack.js'
 			}
 		},
 
 		// Minify the site CSS
 		cssmin: {
 			compress: {
+				options: {
+					keepSpecialComments: 0,
+					report: 'min'
+				},
 				files: {
 					'dist/css/main.css': 'dist/css/main.css',
 					'dist/css/ie.css': 'dist/css/ie.css'
@@ -73,7 +98,37 @@ module.exports = function(grunt) {
 
 		// Lint the server JavaScript
 		jshint: {
-			files: '*.js'
+			files: ['*.js', 'src/js/*.js'],
+			options: {
+				'browser': false,
+				'maxerr': 100,
+				'node': true,
+				/*'camelcase': true,*/
+				'curly': true,
+				'eqeqeq': true,
+				'eqnull': true,
+				'forin': true,
+				'immed': true,
+				'indent': 4,
+				/*'latedef': true,*/
+				'laxbreak': true,
+				'laxcomma': true,
+				'lastsemic': true,
+				'loopfunc': true,
+				'noarg': true,
+				'newcap': true,
+				'plusplus': false,
+				'quotmark': 'single',
+				'regexp': true,
+				'shadow': true,
+				'smarttabs': true,
+				'strict': false,
+				'sub': true,
+				'trailing': true,
+				'undef': true,
+				'unused': true,
+				ignores: ['.git', 'node_modules']
+			}
 		},
 
 		// Test the things

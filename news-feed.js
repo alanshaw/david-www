@@ -12,19 +12,19 @@ var news;
 
 module.exports.get = function(callback) {
 
-	if(news && news.expires > new Date()) {
+	if (news && news.expires > new Date()) {
 		callback(null, news.xml);
 		return;
 	}
 
 	request('http://davidiswatching.tumblr.com/rss', function(err, res, xml) {
 
-		if(err) {
+		if (err) {
 			callback(err);
 			return;
 		}
 
-		if(res.statusCode != 200) {
+		if (res.statusCode !== 200) {
 			callback(new Error('Unexpected status requesting news feed' + res.statusCode));
 			return;
 		}

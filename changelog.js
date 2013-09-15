@@ -30,9 +30,9 @@ function getUserRepo (depName, cb) {
 			return cb(new Error(depName + ' has no repository information'));
 		}
 
-		var repoUrl = Object.prototype.toString.call(data) == '[object String]' ? repo : repo.url;
+		var repoUrl = Object.prototype.toString.call(data) === '[object String]' ? repo : repo.url;
 
-		if (!repoUrl || repoUrl.indexOf('github.com') == -1) {
+		if (!repoUrl || repoUrl.indexOf('github.com') === -1) {
 			return cb(new Error('Unsupported repository URL'));
 		}
 

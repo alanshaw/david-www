@@ -46,7 +46,9 @@ var util = require('util');
  */
 module.exports.happened = function(err, req, res, msg) {
 
-	if (!err) { return false; }
+	if (!err) {
+		return false;
+	}
 
 	console.log(msg, err);
 
