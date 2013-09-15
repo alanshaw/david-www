@@ -60,5 +60,8 @@
     "grunt-contrib-watch": "~0.5.3",
     "grunt-include-replace": "~1.1.0",
     "rewire": "~1.1.0"
+  },
+  "engines": {
+    "node": ">=0.8.0"
   }
 }
