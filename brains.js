@@ -4,9 +4,16 @@
 
 var david = require('david');
 var semver = require('semver');
+var cache = require('memory-cache');
+var registry = require('./registry');
+var config = require('config');
 
-function isPinned(version) {
+// When a user publishes a package, delete cached david info
+registry.on('change', function (change) {
+	cache.del(change.doc.name);
+});
 
+function isPinned (version) {
 	if (version === '*' || version === 'latest') {
 		return false;
 	}
@@ -20,47 +27,135 @@ function isPinned(version) {
 	return true;
 }
 
+function normaliseDeps (deps) {
+	if (Array.isArray(deps)) {
+		deps = deps.reduce(function (d, depName) {
+			d[depName] = "*"
+			return d
+		}, {})
+	}
+	return deps
+}
+
+function getCachedDependencies (manifest, opts) {
+	var pkgs = {};
+	var deps = normaliseDeps(manifest[opts.dev ? "devDependencies" : "dependencies"] || {});
+	var depNames = Object.keys(deps);
+	
+	if (!depNames.length) {
+		return pkgs;
+	}
+	
+	depNames.forEach(function (depName) {
+		var info = cache.get(depName);
+		
+		if (!info) return;
+		
+		console.log(manifest.name + ": Using cached info for", depName);
+		pkgs[depName] = {required: deps[depName], stable: info.stable, latest: info.latest};
+	});
+	
+	return pkgs;
+}
+
+function getDependencies (manifest, opts, cb) {
+	console.log(manifest.name + ": Getting dependency info");
+	
+	// Get the dependency info we already have cached information for
+	var cachedInfos = getCachedDependencies(manifest, opts);
+	var cachedDepNames = Object.keys(cachedInfos);
+	
+	var manifestDeps = normaliseDeps(manifest[opts.dev ? "devDependencies" : "dependencies"] || {});
+	
+	var uncachedManifestDeps = Object.keys(manifestDeps).filter(function (depName) {
+		return cachedDepNames.indexOf(depName) == -1;
+	}).reduce(function (deps, depName) {
+		deps[depName] = manifestDeps[depName];
+		return deps;
+	}, {});
+	
+	var uncachedManifestDepNames = Object.keys(uncachedManifestDeps);
+	
+	if (!uncachedManifestDepNames.length) return setImmediate(function () {
+		console.log(manifest.name + ": All dep info cached");
+		cb(null, cachedInfos);
+	});
+	
+	console.log(manifest.name + ": Asking David for info on remaining dependencies", uncachedManifestDepNames);
+	
+	var uncachedManifest = {};
+	uncachedManifest[opts.dev ? "devDependencies" : "dependencies"] = uncachedManifestDeps;
+	
+	david.getDependencies(uncachedManifest, opts, function (er, infos) {
+		if (er) return cb(er);
+		
+		// Cache the new info
+		Object.keys(infos).forEach(function (depName) {
+			var info = infos[depName];
+			cache.put(depName, {stable: info.stable, latest: info.latest}, config.brains.cacheTime);
+		});
+		
+		cachedDepNames.forEach(function (depName) {
+			infos[depName] = cachedInfos[depName];
+		});
+		
+		cb(null, infos);
+	});
+}
+
+function getUpdatedDependencies (manifest, opts, cb) {
+	getDependencies(manifest, opts, function (er, infos) {
+		if (er) return cb(er);
+		
+		// Filter out the non-updated dependencies
+		Object.keys(infos).forEach(function (depName) {
+			if (!david.isUpdated(infos[depName], opts)) {
+				delete infos[depName];
+			}
+		})
+		
+		cb(null, infos);
+	});
+}
+
 /**
  * @param {Object} manifest Parsed package.json file contents
- * @param {Object|Function<Error, Object>} [options] Options or callback
- * @param {Boolean} [options.dev] Consider devDependencies
- * @param {Function<Error, Object>} callback Function that receives the results
+ * @param {Object|Function} [opts] Options or cb
+ * @param {Boolean} [opts.dev] Consider devDependencies
+ * @param {Function} cb Function that receives the results
  */
-module.exports.getInfo = function(manifest, options, callback) {
+module.exports.getInfo = function (manifest, opts, cb) {
 
-	// Allow callback to be passed as second parameter
-	if (!callback) {
-		callback = options;
-		options = {};
+	// Allow cb to be passed as second parameter
+	if (!cb) {
+		cb = opts;
+		opts = {};
 	} else {
-		options = options || {};
+		opts = opts || {};
 	}
 
-	var davidOptions = {dev: options.dev, loose: true};
+	var davidOptions = {dev: opts.dev, loose: true};
 
-	david.getDependencies(manifest, davidOptions, function(err, deps) {
+	getDependencies(manifest, davidOptions, function (er, deps) {
 
-		if (err) {
-			callback(err);
-			return;
+		if (er) {
+			return cb(er);
 		}
 
 		// Get ALL updated dependencies including unstable
-		david.getUpdatedDependencies(manifest, davidOptions, function(err, updatedDeps) {
+		getUpdatedDependencies(manifest, davidOptions, function (er, updatedDeps) {
 
-			if (err) {
-				callback(err);
-				return;
+			if (er) {
+				return cb(er);
 			}
 
 			davidOptions.stable = true;
 
 			// Get STABLE updated dependencies
-			david.getUpdatedDependencies(manifest, davidOptions, function(err, updatedStableDeps) {
+			getUpdatedDependencies(manifest, davidOptions, function (er, updatedStableDeps) {
 
-				if (err) {
-					callback(err);
-					return;
+				if (er) {
+					return cb(er);
 				}
 
 				var depNames = Object.keys(deps).sort(),
@@ -77,7 +172,7 @@ module.exports.getInfo = function(manifest, options, callback) {
 						}
 					};
 
-				var depList = depNames.map(function(depName) {
+				var depList = depNames.map(function (depName) {
 
 					// Lets disprove this
 					var status = 'uptodate';
@@ -128,7 +223,7 @@ module.exports.getInfo = function(manifest, options, callback) {
 					}
 				}
 
-				callback(null, {status: status, deps: depList, totals: totals});
+				cb(null, {status: status, deps: depList, totals: totals});
 			});
 		});
 	});
