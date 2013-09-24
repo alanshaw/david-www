@@ -55,7 +55,7 @@ module.exports = function(grunt) {
 		// Minify the site script
 		uglify: {
 			options: {
-				compress: true,
+				/*compress: true,*/
 				mangle: true,
 				preserveComments: false,
 				report: 'min'
