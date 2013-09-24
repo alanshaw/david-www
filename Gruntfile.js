@@ -64,7 +64,7 @@ module.exports = function(grunt) {
 				src: [
 					'src/js/plugins.js',
 					'src/js/vendor/cycle.js',
-					'src/js/vendor/d3.js',
+					'src/js/vendor/d3.v3.js',
 					'src/js/vendor/handlebars.js',
 					'src/js/vendor/jquery.ba-bbq.js',
 					'src/js/vendor/jquery.ba-hashchange.js',
@@ -75,8 +75,8 @@ module.exports = function(grunt) {
 					'src/js/vendor/stackable.js',
 					'src/js/main.js',
 					'src/js/homepage.js',
-					'src/js/status.js',
-					'src/js/search.js'
+					'src/js/search.js',
+					'src/js/status.js'
 				],
 				dest: 'dist/js/pack.js'
 			}
