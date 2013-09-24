@@ -55,9 +55,9 @@ module.exports = function(grunt) {
 		// Minify the site script
 		uglify: {
 			options: {
-				compress: true,
+				/*compress: true,*/
 				mangle: true,
-				preserveComments: true,
+				preserveComments: false,
 				report: 'min'
 			},
 			compress: {
@@ -91,6 +91,7 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'dist/css/main.css': 'dist/css/main.css',
+					'dist/css/font-awesome-ie7.css': 'dist/css/font-awesome-ie7.css',
 					'dist/css/ie.css': 'dist/css/ie.css'
 				}
 			}
@@ -98,7 +99,7 @@ module.exports = function(grunt) {
 
 		// Lint the server JavaScript
 		jshint: {
-			files: ['*.js', 'src/js/*.js', '!src/js/plugins.js'],
+			files: ['*.js', 'src/js/*.js', 'test/*.js'],
 			options: {
 				'browser': false,
 				'maxerr': 100,
@@ -126,8 +127,7 @@ module.exports = function(grunt) {
 				'sub': true,
 				'trailing': true,
 				'undef': true,
-				'unused': true,
-				ignores: ['.git', 'node_modules']
+				'unused': true
 			}
 		},
 

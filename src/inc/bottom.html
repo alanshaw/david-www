@@ -14,19 +14,19 @@
 		</ul>
 		<ul class="social">
 			<li>
-				<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://david-dm.org" data-text="David, a new dependency management tool for #Nodejs projects" data-count="none">Tweet</a>
-				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.async=true;js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+				<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://david-dm.org" data-text="David, a new dependency management tool for #Node.js projects" data-count="none">Tweet</a>
 			</li>
 			<li>
 				<div class="g-plusone" data-size="medium" data-annotation="none" data-href="https://david-dm.org"></div>
 				<script>
-				  window.___gcfg = {lang: 'en-GB'};
+					window.___gcfg = {lang: 'en-GB'};
 
-				  (function() {
-					var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-					po.src = 'https://apis.google.com/js/plusone.js';
-					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-				  })();
+					(function() {
+						var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+						po.src = '//apis.google.com/js/plusone.js';
+						var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+					})();
 				</script>
 			</li>
 		</ul>
@@ -37,10 +37,16 @@
 <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
 <script src="/js/pack.js"></script>
 <script>
-	var _gaq=[['_setAccount','UA-38876227-1'],['_trackPageview']];
-	(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-	g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-	s.parentNode.insertBefore(g,s)}(document,'script'));
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-38876227-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' === document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();
 </script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 *.iml
 .idea
-dist
-node_modules
+/config/runtime.json
+/dist
+/node_modules
