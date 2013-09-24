@@ -22,15 +22,15 @@ module.exports = {
 
 					process.nextTick(function() {
 
-						if(args[0] == pkgName) {
+						if (args[0] === pkgName) {
 
 							// Simulate NPM response for no time information
-							if(args[1] == 'time') {
+							if (args[1] === 'time') {
 								callback(null, {});
 								return;
 							}
 
-							if(args[1] == 'version') {
+							if (args[1] === 'version') {
 								callback(null, {'0.2.1': {version: '0.2.1'}});
 								return;
 							}
@@ -59,7 +59,7 @@ module.exports = {
 
 			// If no time information was present then the feed should have defaulted to the unix epoch as the publish
 			// date for the latest version of the module (RSS module formats as GMT string for some reason)
-			test.ok(xml.indexOf('<pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate>') != -1);
+			test.ok(xml.indexOf('<pubDate>Thu, 01 Jan 1970 00:00:00 GMT</pubDate>') !== -1);
 
 			test.done();
 		});
@@ -79,9 +79,9 @@ module.exports = {
 
 					process.nextTick(function() {
 
-						if(args[0] == pkgName) {
+						if (args[0] === pkgName) {
 
-							if(args[1] == 'version') {
+							if (args[1] === 'version') {
 								callback(null, {'0.2.1': {version: '0.2.1'}});
 								return;
 							}
@@ -104,7 +104,7 @@ module.exports = {
 
 		test.expect(1);
 
-		feed.get(manifest, function(err, xml) {
+		feed.get(manifest, function(err) {
 			test.ifError(err);
 			test.done();
 		});

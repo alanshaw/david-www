@@ -11,7 +11,8 @@ $('#home-page').each(function () {
 		David.renderDependencyCountsGraph(data);
 	});
 
-	var url = $('.badge-maker span'), badge = $('.badge-maker img');
+	var url = $('.badge-maker span')
+		, badge = $('.badge-maker img');
 
 	// Update the image when the user changes the url
 	url.on('input', function () {
