@@ -53,7 +53,6 @@ function getCachedDependencies (manifest, opts) {
 			return;
 		}
 
-		console.log(manifest.name + ': Using cached info for', depName);
 		pkgs[depName] = {required: deps[depName], stable: info.stable, latest: info.latest};
 	});
 
@@ -61,7 +60,6 @@ function getCachedDependencies (manifest, opts) {
 }
 
 function getDependencies (manifest, opts, cb) {
-	console.log(manifest.name + ': Getting dependency info');
 
 	// Get the dependency info we already have cached information for
 	var cachedInfos = getCachedDependencies(manifest, opts);
@@ -80,12 +78,9 @@ function getDependencies (manifest, opts, cb) {
 
 	if (!uncachedManifestDepNames.length) {
 		return setImmediate(function () {
-			console.log(manifest.name + ': All dep info cached');
 			cb(null, cachedInfos);
 		});
 	}
-
-	console.log(manifest.name + ': Asking David for info on remaining dependencies', uncachedManifestDepNames);
 
 	var uncachedManifest = {};
 	uncachedManifest[opts.dev ? 'devDependencies' : 'dependencies'] = uncachedManifestDeps;
