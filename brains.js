@@ -30,16 +30,16 @@ function isPinned (version) {
 function normaliseDeps (deps) {
 	if (Array.isArray(deps)) {
 		deps = deps.reduce(function (d, depName) {
-			d[depName] = "*"
-			return d
-		}, {})
+			d[depName] = '*';
+			return d;
+		}, {});
 	}
-	return deps
+	return deps;
 }
 
 function getCachedDependencies (manifest, opts) {
 	var pkgs = {};
-	var deps = normaliseDeps(manifest[opts.dev ? "devDependencies" : "dependencies"] || {});
+	var deps = normaliseDeps(manifest[opts.dev ? 'devDependencies' : 'dependencies'] || {});
 	var depNames = Object.keys(deps);
 	
 	if (!depNames.length) {
@@ -49,9 +49,11 @@ function getCachedDependencies (manifest, opts) {
 	depNames.forEach(function (depName) {
 		var info = cache.get(depName);
 		
-		if (!info) return;
+		if (!info) {
+			return;
+		}
 		
-		console.log(manifest.name + ": Using cached info for", depName);
+		console.log(manifest.name + ': Using cached info for', depName);
 		pkgs[depName] = {required: deps[depName], stable: info.stable, latest: info.latest};
 	});
 	
@@ -59,16 +61,16 @@ function getCachedDependencies (manifest, opts) {
 }
 
 function getDependencies (manifest, opts, cb) {
-	console.log(manifest.name + ": Getting dependency info");
+	console.log(manifest.name + ': Getting dependency info');
 	
 	// Get the dependency info we already have cached information for
 	var cachedInfos = getCachedDependencies(manifest, opts);
 	var cachedDepNames = Object.keys(cachedInfos);
 	
-	var manifestDeps = normaliseDeps(manifest[opts.dev ? "devDependencies" : "dependencies"] || {});
+	var manifestDeps = normaliseDeps(manifest[opts.dev ? 'devDependencies' : 'dependencies'] || {});
 	
 	var uncachedManifestDeps = Object.keys(manifestDeps).filter(function (depName) {
-		return cachedDepNames.indexOf(depName) == -1;
+		return cachedDepNames.indexOf(depName) === -1;
 	}).reduce(function (deps, depName) {
 		deps[depName] = manifestDeps[depName];
 		return deps;
@@ -76,23 +78,29 @@ function getDependencies (manifest, opts, cb) {
 	
 	var uncachedManifestDepNames = Object.keys(uncachedManifestDeps);
 	
-	if (!uncachedManifestDepNames.length) return setImmediate(function () {
-		console.log(manifest.name + ": All dep info cached");
-		cb(null, cachedInfos);
-	});
+	if (!uncachedManifestDepNames.length) {
+		return setImmediate(function () {
+			console.log(manifest.name + ': All dep info cached');
+			cb(null, cachedInfos);
+		});
+	}
 	
-	console.log(manifest.name + ": Asking David for info on remaining dependencies", uncachedManifestDepNames);
+	console.log(manifest.name + ': Asking David for info on remaining dependencies', uncachedManifestDepNames);
 	
 	var uncachedManifest = {};
-	uncachedManifest[opts.dev ? "devDependencies" : "dependencies"] = uncachedManifestDeps;
+	uncachedManifest[opts.dev ? 'devDependencies' : 'dependencies'] = uncachedManifestDeps;
 	
 	david.getDependencies(uncachedManifest, opts, function (er, infos) {
-		if (er) return cb(er);
+		if (er) {
+			return cb(er);
+		}
 		
 		// Cache the new info
 		Object.keys(infos).forEach(function (depName) {
-			var info = infos[depName];
-			cache.put(depName, {stable: info.stable, latest: info.latest}, config.brains.cacheTime);
+			if (config.brains.cacheTime) {
+				var info = infos[depName];
+				cache.put(depName, {stable: info.stable, latest: info.latest}, config.brains.cacheTime);
+			}
 		});
 		
 		cachedDepNames.forEach(function (depName) {
@@ -105,14 +113,16 @@ function getDependencies (manifest, opts, cb) {
 
 function getUpdatedDependencies (manifest, opts, cb) {
 	getDependencies(manifest, opts, function (er, infos) {
-		if (er) return cb(er);
+		if (er) {
+			return cb(er);
+		}
 		
 		// Filter out the non-updated dependencies
 		Object.keys(infos).forEach(function (depName) {
 			if (!david.isUpdated(infos[depName], opts)) {
 				delete infos[depName];
 			}
-		})
+		});
 		
 		cb(null, infos);
 	});

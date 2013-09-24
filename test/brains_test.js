@@ -1,7 +1,24 @@
 var rewire = require('rewire');
 var brains = rewire('../brains');
+var david = require('david');
 
-var mockManifest = {};
+brains.__set__('config', {brains: {cacheTime: 0}});
+
+// Create a mock manifest from the deps info david should return
+function mockManifest (deps) {
+	var manifest = {name: 'mockery', dependencies: {}};
+	Object.keys(deps).forEach(function (depName) {
+		manifest.dependencies[depName] = deps[depName].required;
+	});
+	return manifest;
+}
+
+function clone (info) {
+	return Object.keys(info).reduce(function (clone, depName) {
+		clone[depName] = info[depName];
+		return clone;
+	}, {});
+}
 
 function mockDavid(deps, updatedDeps, updatedStableDeps) {
 	return {
@@ -15,12 +32,7 @@ function mockDavid(deps, updatedDeps, updatedStableDeps) {
 				options = options || {};
 			}
 
-			if(manifest != mockManifest) {
-				callback(new Error('Mock david unexpected manifest'));
-				return;
-			}
-
-			callback(null, deps);
+			callback(null, clone(deps));
 		},
 		getUpdatedDependencies: function(manifest, options, callback) {
 
@@ -32,13 +44,9 @@ function mockDavid(deps, updatedDeps, updatedStableDeps) {
 				options = options || {};
 			}
 
-			if(manifest != mockManifest) {
-				callback(new Error('Mock david unexpected manifest'));
-				return;
-			}
-
-			callback(null, options.stable ? updatedStableDeps : updatedDeps);
-		}
+			callback(null, clone(options.stable ? updatedStableDeps : updatedDeps));
+		},
+		isUpdated: david.isUpdated
 	};
 }
 
@@ -58,7 +66,7 @@ module.exports = {
 
 		test.expect(19);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -103,7 +111,7 @@ module.exports = {
 
 		test.expect(19);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -150,7 +158,7 @@ module.exports = {
 
 		test.expect(19);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -197,7 +205,7 @@ module.exports = {
 
 		test.expect(19);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -247,7 +255,7 @@ module.exports = {
 
 		test.expect(19);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -301,7 +309,7 @@ module.exports = {
 
 		test.expect(25);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -368,7 +376,7 @@ module.exports = {
 
 		test.expect(25);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -430,7 +438,7 @@ module.exports = {
 
 		test.expect(25);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -494,7 +502,7 @@ module.exports = {
 
 		test.expect(25);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -561,7 +569,7 @@ module.exports = {
 
 		test.expect(25);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -623,7 +631,7 @@ module.exports = {
 
 		test.expect(25);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -687,7 +695,7 @@ module.exports = {
 
 		test.expect(25);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -753,7 +761,7 @@ module.exports = {
 
 		test.expect(25);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -819,7 +827,7 @@ module.exports = {
 
 		test.expect(25);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
@@ -881,7 +889,7 @@ module.exports = {
 
 		test.expect(25);
 
-		brains.getInfo(mockManifest, function(err, info) {
+		brains.getInfo(mockManifest(deps), function(err, info) {
 
 			test.ifError(err);
 
