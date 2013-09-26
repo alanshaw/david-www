@@ -78,7 +78,7 @@ module.exports = function(grunt) {
 					'src/js/search.js',
 					'src/js/status.js'
 				],
-				dest: 'dist/js/pack.js'
+				dest: 'dist/js/pack-<%= pkg.version %>.js'
 			}
 		},
 
@@ -90,9 +90,9 @@ module.exports = function(grunt) {
 					report: 'min'
 				},
 				files: {
-					'dist/css/main.css': 'dist/css/main.css',
+					'dist/css/main-<%= pkg.version %>.css': 'dist/css/main.css',
 					'dist/css/font-awesome-ie7.css': 'dist/css/font-awesome-ie7.css',
-					'dist/css/ie.css': 'dist/css/ie.css'
+					'dist/css/ie-<%= pkg.version %>.css': 'dist/css/ie.css'
 				}
 			}
 		},
