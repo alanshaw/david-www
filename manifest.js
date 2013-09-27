@@ -48,7 +48,7 @@ function getDependencyDiffs(deps1, deps2) {
 	// Check for deletions and changes
 	Object.keys(deps1).forEach(function(key) {
 
-		if (!deps2[key] && deps2[key] !== '') {
+		if (deps2[key] === undefined) {
 
 			// Dep has been deleted
 			diffs.push(new PackageDiff(key, null, deps1[key]));
@@ -62,7 +62,7 @@ function getDependencyDiffs(deps1, deps2) {
 
 	// Check for additions
 	Object.keys(deps2).forEach(function(key) {
-		if (!deps1[key]) {
+		if (deps1[key] === undefined) {
 			diffs.push(new PackageDiff(key, deps2[key], null));
 		}
 	});
