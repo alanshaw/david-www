@@ -37,7 +37,7 @@
     "couchwatch": "~0.6.0",
     "david": "~2.1.3",
     "express": "~3.4.0",
-    "github": "~0.1.10",
+    "github": "~0.1.12",
     "github-url": "~1.0.0",
     "handlebars": "~1.0.12",
     "JSON2": "~0.1.0",
@@ -59,7 +59,7 @@
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-include-replace": "~1.1.1",
-    "rewire": "~1.1.3"
+    "rewire": "~2.0.0"
   },
   "engines": {
     "node": ">=0.8.0"
