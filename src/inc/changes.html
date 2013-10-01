@@ -1,0 +1,15 @@
+<h1>Changelog</h1>
+{{#if closedIssues.length}}
+<h2>Closed Issues</h2>
+<ul>
+{{#each closedIssues}}
+	<li>{{title}}</li>
+{{/each}}
+</ul>
+{{/if}}
+<h2>Commits</h2>
+<ul>
+{{#each commits}}
+	<li>{{commit.message}}</li>
+{{/each}}
+</ul>
