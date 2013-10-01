@@ -46,8 +46,7 @@ module.exports = function(grunt) {
 		less: {
 			compile: {
 				files: {
-					'dist/css/main.css': 'src/css/main.less',
-					'dist/css/ie.css': 'src/css/ie.less'
+					'dist/css/main.css': 'src/css/main.less'
 				}
 			}
 		},
@@ -79,6 +78,10 @@ module.exports = function(grunt) {
 					'src/js/status.js'
 				],
 				dest: 'dist/js/pack-<%= pkg.version %>.js'
+			},
+			compressIE: {
+				src: 'src/js/vendor/respond.js',
+				dest: 'dist/js/vendor/respond.min.js'
 			}
 		},
 
@@ -91,8 +94,7 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'dist/css/main-<%= pkg.version %>.css': 'dist/css/main.css',
-					'dist/css/font-awesome-ie7.css': 'dist/css/font-awesome-ie7.css',
-					'dist/css/ie-<%= pkg.version %>.css': 'dist/css/ie.css'
+					'dist/css/font-awesome-ie7.css': 'dist/css/font-awesome-ie7.css'
 				}
 			}
 		},
