@@ -31,14 +31,14 @@ $('#status-page').each(function () {
 		pathname += '/';
 	}
 
-	function initInfo(container, graphJsonUrl) {
+	function initInfo (container, graphJsonUrl) {
 		graphJsonUrl = graphJsonUrl || 'graph.json';
 
 		$('.dep-table table', container).stacktable();
 
 		/* d3 graph */
 
-		function createNode(dep) {
+		function createNode (dep) {
 			return {
 				name: dep.name,
 				version: dep.version,
@@ -49,13 +49,13 @@ $('#status-page').each(function () {
 		/**
 		 * Transform data from possibly cyclic structure into max 10 levels deep visual structure
 		 */
-		function transformData(rootDep, callback) {
+		function transformData (rootDep, callback) {
 
 			var transformsCount = 0
 				, rootNode = createNode(rootDep);
 
 			// Avoid 'too much recursion' errors
-			function scheduleTransform(dep, node, level, maxLevel) {
+			function scheduleTransform (dep, node, level, maxLevel) {
 				setTimeout(function () {
 					transform(dep, node, level, maxLevel);
 					transformsCount--;
@@ -66,7 +66,7 @@ $('#status-page').each(function () {
 				}, 0);
 			}
 
-			function transform(dep, parentNode, level, maxLevel) {
+			function transform (dep, parentNode, level, maxLevel) {
 				level = level || 0;
 				maxLevel = maxLevel || 10;
 
@@ -117,7 +117,7 @@ $('#status-page').each(function () {
 			.append('svg:g')
 			.attr('transform', 'translate(' + m[3] + ',' + m[0] + ')');
 
-		function update(source) {
+		function update (source) {
 
 			var duration = d3.event && d3.event.altKey ? 5000 : 500;
 
@@ -213,7 +213,7 @@ $('#status-page').each(function () {
 		}
 
 		// Toggle children.
-		function toggle(d) {
+		function toggle (d) {
 			if (d.children) {
 				d._children = d.children;
 				d.children = null;
@@ -230,7 +230,7 @@ $('#status-page').each(function () {
 
 		graphContainer.hide();
 
-		function initGraph() {
+		function initGraph () {
 
 			var loading = David.createLoadingEl();
 			graphContainer.prepend(loading);
@@ -246,7 +246,7 @@ $('#status-page').each(function () {
 					root.x0 = h / 2;
 					root.y0 = 0;
 
-					function toggleAll(d) {
+					function toggleAll (d) {
 						if (d.children) {
 							d.children.forEach(toggleAll);
 							toggle(d);
@@ -269,7 +269,7 @@ $('#status-page').each(function () {
 			$.bbq.pushState(state);
 		});
 
-		function onHashChange() {
+		function onHashChange () {
 			_.merge(state, $.bbq.getState());
 
 			viewSwitchers.removeClass('selected');
@@ -289,6 +289,40 @@ $('#status-page').each(function () {
 				}
 			}
 		}
+
+		/* Init changes links */
+
+		$('.changes', container).click(function (event) {
+			event.preventDefault();
+			var row = $(this).closest('tr'),
+				container = $('<div class="changes-popup"/>').append(David.createLoadingEl());
+			
+			$.fancybox.open(container);
+			
+			var qs = {
+				from: $('.required', row).text(),
+				to: $('.stable', row).text()
+			};
+			
+			$.ajax({
+				url: '/package/' + $('.dep a:first-child', row).text() + '/changes.json',
+				dataType: 'json',
+				data: qs,
+				success: function (data) {
+					data.from = qs.from;
+					data.to = qs.to;
+					
+					$.get('/inc/changes.html', function (template) {
+						container.html(Handlebars.compile(template)(data));
+						$.fancybox.update();
+					});
+				},
+				error: function () {
+					container.html('<h1>Sorry!</h1><p>Failed to get changes</p>');
+					$.fancybox.update();
+				}
+			});
+		});
 
 		$(window).bind('hashchange', onHashChange);
 
@@ -310,7 +344,7 @@ $('#status-page').each(function () {
 	});
 
 	// Hash change for info switch
-	function onHashChange() {
+	function onHashChange () {
 
 		_.merge(state, $.bbq.getState());
 

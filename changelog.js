@@ -4,6 +4,7 @@ var npm = require('npm');
 var semver = require('semver');
 var moment = require('moment');
 var githubUrl = require('github-url');
+var async = require('async');
 
 var github = new GitHubApi({version: '3.0.0'});
 
@@ -16,9 +17,9 @@ if (config.github) {
 }
 
 // Get a username and repo name for a github repository
-function getUserRepo (depName, cb) {
+function getUserRepo (modName, cb) {
 
-	npm.commands.view([depName, 'repository'], true, function(er, data) {
+	npm.commands.view([modName, 'repository'], true, function (er, data) {
 		if (er) {
 			return cb(er);
 		}
@@ -27,7 +28,7 @@ function getUserRepo (depName, cb) {
 		var repo = keys.length ? data[keys[0]].repository : null;
 
 		if (!repo) {
-			return cb(new Error(depName + ' has no repository information'));
+			return cb(new Error(modName + ' has no repository information'));
 		}
 		
 		var info = githubUrl(repo);
@@ -41,117 +42,116 @@ function getUserRepo (depName, cb) {
 }
 
 /**
- * Get commits for a repo between two dates
+ * Get the publish dates for a module at particular versions (or ranges)
  *
- * @param {String} depName Module name
- * @param {Date} from
- * @param {Date} to
- * @param {Function} cb
+ * @param {String} modName Module name
+ * @param {Array} modVers Module versions. If range then publish date for lowest satisfying version is given.
+ * @param {Function} cb Receives an array of dates corresponding to the array of module versions
  */
-module.exports.getCommits = function (depName, from, to, cb) {
+function getPublishDates (modName, modVers, cb) {
+	var tasks = modVers.map(function (ver) {
 
-	npm.load({}, function (er) {
-		if (er) {
-			return cb(er);
-		}
+		return function (cb) {
 
-		getUserRepo(depName, function (er, user, repo) {
-			if (er) {
-				return cb(er);
-			}
-
-			// TODO: Munge the commits data?
-			github.repos.getCommits({user: user, repo: repo, since: from, until: to}, cb);
-		});
-	});
-};
-
-/**
- * Get the publish date for a module at a particular version (or range)
- *
- * @param {String} depName Module name
- * @param {String} depVersion Module version. If range then publish date for lowest satisfying version is given.
- * @param {Function} cb
- */
-module.exports.getPublishDate = function (depName, depVersion, cb) {
-
-	npm.load({}, function (er) {
-		if (er) {
-			return cb(er);
-		}
-
-		npm.commands.view([depName, 'time'], true, function (er, data) {
-			if (er) {
-				return cb(er);
-			}
-
-			var keys = Object.keys(data);
-			var time = keys.length ? data[keys[0]].time : null;
-
-			if (!time) {
-				return cb(new Error(depName + ' has no time information'));
-			}
-
-			var versionsByDate = Object.keys(time).reduce(function (versions, version) {
-				versions[time[version]] = version;
-				return versions;
-			}, {});
-
-			var ascPublishDates = Object.keys(time).map(function (version) {
-				return time[version];
-			}).sort();
-
-			// Get the first depVersion that satisfies the range
-			for (var i = 0, len = ascPublishDates.length; i < len; ++i) {
-				if (semver.satisfies(versionsByDate[ascPublishDates[i]], depVersion)) {
-					return cb(null, moment(ascPublishDates[i]).toDate());
-				}
-			}
-
-			cb(new Error('Failed to find publish date'));
-		});
-	});
-};
-
-/**
- * Get closed issues for a module between two dates
- *
- * @param {String} depName Module name
- * @param {Date} from
- * @param {Date} to
- * @param {Function} cb
- */
-module.exports.getClosedIssues = function (depName, from, to, cb) {
-
-	npm.load({}, function (er) {
-		if (er) {
-			return cb(er);
-		}
-
-		getUserRepo(depName, function (er, user, repo) {
-			if (er) {
-				return cb(er);
-			}
-
-			var opts = {
-				user: user,
-				repo: repo,
-				state: 'closed',
-				sort: 'created',
-				since: from,
-				per_page: 100
-			};
-
-			github.issues.repoIssues(opts, function (er, issues) {
+			npm.commands.view([modName, 'time'], true, function (er, data) {
 				if (er) {
 					return cb(er);
 				}
 
-				issues = issues.filter(function (issue) {
-					return to > moment(issue.closed_at).toDate();
-				});
+				var keys = Object.keys(data);
+				var time = keys.length ? data[keys[0]].time : null;
 
-				cb(null, issues);
+				if (!time) {
+					return cb(new Error(modName + ' has no time information'));
+				}
+
+				// Flip `time` from {[version]: [date]} to {[date]: [version]}
+				var versionsByDate = Object.keys(time).reduce(function (versions, version) {
+					versions[time[version]] = version;
+					return versions;
+				}, {});
+
+				// Create an array of publish dates in ASC order
+				var ascPublishDates = Object.keys(time).map(function (version) {
+					return time[version];
+				}).sort();
+
+				// Get the first version that satisfies the range
+				for (var i = 0, len = ascPublishDates.length; i < len; ++i) {
+					if (semver.satisfies(versionsByDate[ascPublishDates[i]], ver)) {
+						return cb(null, moment(ascPublishDates[i]).toDate());
+					}
+				}
+
+				cb(new Error('Failed to find publish date for ' + modName + '@' + ver));
+			});
+		};
+	});
+
+	async.parallel(tasks, cb);
+}
+
+/**
+ * Get closed issues and commits for a module between two versions
+ *
+ * @param {String} modName Module name
+ * @param {Date} fromVer
+ * @param {Date} toVer
+ * @param {Function} cb
+ */
+module.exports.getChanges = function (modName, fromVer, toVer, cb) {
+	console.log('Getting changes for', modName, 'from', fromVer, 'to', toVer);
+
+	npm.load({}, function (er) {
+		if (er) {
+			return cb(er);
+		}
+
+		getUserRepo(modName, function (er, user, repo) {
+			if (er) {
+				return cb(er);
+			}
+
+			getPublishDates(modName, [fromVer, toVer], function (er, dates) {
+				if (er) {
+					return cb(er);
+				}
+
+				var issuesOpts = {
+					user: user,
+					repo: repo,
+					state: 'closed',
+					sort: 'created',
+					since: dates[0],
+					per_page: 100
+				};
+
+				github.issues.repoIssues(issuesOpts, function (er, issues) {
+					if (er) {
+						return cb(er);
+					}
+
+					issues = issues.filter(function (issue) {
+						return dates[1] > moment(issue.closed_at).toDate();
+					});
+					
+					var commitsOpts = {
+						user: user,
+						repo: repo,
+						since: dates[0],
+						until: dates[1]
+					};
+					
+					github.repos.getCommits(commitsOpts, function (er, commits) {
+						if (er) {
+							return cb(er);
+						}
+						
+						// TODO: Munge the issues data?
+						// TODO: Munge the commits data?
+						cb(null, {closedIssues: issues, commits: commits});
+					});
+				});
 			});
 		});
 	});

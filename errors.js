@@ -36,27 +36,27 @@ var util = require('util');
  * TODO: Pick apart the errors as outlined above and give the user better feedback.
  *
  * Usage:
- * if (errors.happened(err, req, res)) { return }
+ * if (errors.happened(er, req, res)) { return }
  *
- * @param err {Object | String | Error}
+ * @param er {Object | String | Error}
  * @param req
  * @param res
  * @param msg {String} Additional message to display to the user
  * @return {Boolean}
  */
-module.exports.happened = function(err, req, res, msg) {
+module.exports.happened = function(er, req, res, msg) {
 
-	if (!err) {
+	if (!er) {
 		return false;
 	}
 
-	console.log(msg, err);
+	console.log(msg, er);
 
-	if (util.isError(err)) {
-		console.log(err.stack);
+	if (util.isError(er)) {
+		console.log(er.stack);
 	}
 
-	res.status(500).render(500, {err: msg});
+	res.status(500).render(500, {er: msg});
 
 	return true;
 };
