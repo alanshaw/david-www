@@ -2,10 +2,8 @@ var GitHubApi = require('github');
 var config = require('config');
 var npm = require('npm');
 var semver = require('semver');
-var url = require('url');
 var moment = require('moment');
 var githubUrl = require('github-url');
-var async = require('async');
 
 var github = new GitHubApi({version: '3.0.0'});
 
