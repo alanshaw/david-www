@@ -4,6 +4,7 @@ var npm = require('npm');
 var semver = require('semver');
 var moment = require('moment');
 var githubUrl = require('github-url');
+var async = require('async');
 
 var github = new GitHubApi({version: '3.0.0'});
 
@@ -18,7 +19,7 @@ if (config.github) {
 // Get a username and repo name for a github repository
 function getUserRepo (modName, cb) {
 
-	npm.commands.view([modName, 'repository'], true, function(er, data) {
+	npm.commands.view([modName, 'repository'], true, function (er, data) {
 		if (er) {
 			return cb(er);
 		}
@@ -84,7 +85,7 @@ function getPublishDates (modName, modVers, cb) {
 
 				cb(new Error('Failed to find publish date for ' + modName + '@' + ver));
 			});
-		}
+		};
 	});
 
 	async.parallel(tasks, cb);

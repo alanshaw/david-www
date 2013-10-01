@@ -11,7 +11,6 @@ var profile = require('./profile');
 var newsFeed = require('./news-feed');
 var search = require('./search');
 var changelog = require('./changelog');
-var async = require('async');
 
 
 var app = express();
