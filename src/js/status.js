@@ -299,21 +299,27 @@ $('#status-page').each(function () {
 			
 			$.fancybox.open(container);
 			
+			var qs = {
+				from: $('.required', row).text(),
+				to: $('.stable', row).text()
+			};
+			
 			$.ajax({
 				url: '/package/' + $('.dep a:first-child', row).text() + '/changes.json',
 				dataType: 'json',
-				data: {
-					from: $('.required', row).text(),
-					to: $('.stable', row).text()
-				},
+				data: qs,
 				success: function (data) {
+					data.from = qs.from;
+					data.to = qs.to;
+					
 					$.get('/inc/changes.html', function (template) {
 						container.html(Handlebars.compile(template)(data));
-						$.fancybox.reposition();
+						$.fancybox.update();
 					});
 				},
 				error: function () {
 					container.html('<h1>Sorry!</h1><p>Failed to get changes</p>');
+					$.fancybox.update();
 				}
 			});
 		});

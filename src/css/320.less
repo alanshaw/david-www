@@ -405,6 +405,14 @@ ul.stats {
 			}
 		}
 	}
+	.loading {
+		margin: 2em 0;
+		text-align: center;
+		
+		* {
+			vertical-align: middle;
+		}
+	}
 	.summary {
 		font-size: 1.286em;
 		padding: 0 0.889em;
@@ -503,7 +511,39 @@ ul.stats {
 		display: none;
 	}
 	.changes-popup {
-		width: 320px;
+		width: 245px;
+		
+		h1 span {
+			float: right;
+			color: @grey0;
+			font-size: 0.75em;
+		}
+		ul {
+			list-style-type: none;
+			padding: 0;
+		}
+		li {
+			position: relative;
+			padding: 0.5em 0 0.5em 3.5em;
+			min-height: 2.5em;
+			line-height: 1.2;
+			
+			span {
+				color: @grey0;
+				display: block;
+			}
+			&:nth-child(odd) {
+				background: rgba(255, 255, 255, 0.6);
+			}
+		}
+		img {
+			position: absolute;
+			top: 0.5em;
+			left: 0;
+			width: 2.5em;
+			height: 2.5em;
+			border-radius: 3px;
+		}
 	}
 }
 #search-page {
