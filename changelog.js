@@ -4,6 +4,7 @@ var npm = require('npm');
 var semver = require('semver');
 var url = require('url');
 var moment = require('moment');
+var githubUrl = require('github-url');
 
 var github = new GitHubApi({version: '3.0.0'});
 
@@ -29,19 +30,14 @@ function getUserRepo (depName, cb) {
 		if (!repo) {
 			return cb(new Error(depName + ' has no repository information'));
 		}
-
-		var repoUrl = Object.prototype.toString.call(data) === '[object String]' ? repo : repo.url;
-
-		if (!repoUrl || repoUrl.indexOf('github.com') === -1) {
+		
+		var info = githubUrl(repo);
+		
+		if (!info) {
 			return cb(new Error('Unsupported repository URL'));
 		}
-
-		try {
-			var repoPathname = url.parse(repoUrl).pathname.split('/');
-			cb(null, repoPathname[1], repoPathname[2].replace('.git', ''));
-		} catch (e) {
-			cb(new Error('Failed to parse repository URL'));
-		}
+		
+		cb(null, info.user, info.project);
 	});
 }
 
