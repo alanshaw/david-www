@@ -66,20 +66,20 @@ function getPublishDates (modName, modVers, cb) {
 					return cb(new Error(modName + ' has no time information'));
 				}
 
-				// TODO: Check this logic is correct
-
+				// Flip `time` from {[version]: [date]} to {[date]: [version]}
 				var versionsByDate = Object.keys(time).reduce(function (versions, version) {
 					versions[time[version]] = version;
 					return versions;
 				}, {});
 
+				// Create an array of publish dates in ASC order
 				var ascPublishDates = Object.keys(time).map(function (version) {
 					return time[version];
 				}).sort();
 
 				// Get the first version that satisfies the range
 				for (var i = 0, len = ascPublishDates.length; i < len; ++i) {
-					if (semver.satisfies(versionsByDate[ascPublishDates[i]], modVers)) {
+					if (semver.satisfies(versionsByDate[ascPublishDates[i]], ver)) {
 						return cb(null, moment(ascPublishDates[i]).toDate());
 					}
 				}
@@ -101,6 +101,7 @@ function getPublishDates (modName, modVers, cb) {
  * @param {Function} cb
  */
 module.exports.getChanges = function (modName, fromVer, toVer, cb) {
+	console.log('Getting changes for', modName, 'from', fromVer, 'to', toVer);
 
 	npm.load({}, function (er) {
 		if (er) {
