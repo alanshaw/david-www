@@ -192,21 +192,7 @@ module.exports.getInfo = function (manifest, opts, cb) {
 
 					var pinned = isPinned(deps[depName].required);
 
-					if (status === 'uptodate' && pinned) {
-						totals.upToDate++;
-						totals.pinned.upToDate++;
-					} else if (status === 'uptodate' && !pinned) {
-						totals.upToDate++;
-						totals.unpinned.upToDate++;
-					} else if (status === 'outofdate' && pinned) {
-						totals.outOfDate++;
-						totals.pinned.outOfDate++;
-					} else if (status === 'outofdate' && !pinned) {
-						totals.outOfDate++;
-						totals.unpinned.outOfDate++;
-					}
-
-					return {
+					var info = {
 						name: depName,
 						required: deps[depName].required,
 						stable: deps[depName].stable,
@@ -214,6 +200,26 @@ module.exports.getInfo = function (manifest, opts, cb) {
 						status: status,
 						pinned: pinned
 					};
+
+					if (status === 'uptodate' && pinned) {
+						info.upToDate = true;
+						totals.upToDate++;
+						totals.pinned.upToDate++;
+					} else if (status === 'uptodate' && !pinned) {
+						info.upToDate = true;
+						totals.upToDate++;
+						totals.unpinned.upToDate++;
+					} else if (status === 'outofdate' && pinned) {
+						info.outOfDate = true;
+						totals.outOfDate++;
+						totals.pinned.outOfDate++;
+					} else if (status === 'outofdate' && !pinned) {
+						info.outOfDate = true;
+						totals.outOfDate++;
+						totals.unpinned.outOfDate++;
+					}
+					
+					return info;
 				});
 
 				// Figure out the overall status for this manifest
