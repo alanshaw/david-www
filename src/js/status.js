@@ -297,20 +297,27 @@ $('#status-page').each(function () {
 			var row = $(this).closest('tr'),
 				container = $('<div class="changes-popup"/>').append(David.createLoadingEl());
 			
+			var name, from, to;
+			
+			if (row.closest('table').is('.stacktable')) {
+				name = $('a:first-child', row).text();
+				from = $('.st-val', row.next()).text();
+				to = $('.st-val', row.next().next()).text();
+			} else {
+				name = $('.dep a:first-child', row).text();
+				from = $('.required', row).text();
+				to = $('.stable', row).text();
+			}
+			
 			$.fancybox.open(container);
 			
-			var qs = {
-				from: $('.required', row).text(),
-				to: $('.stable', row).text()
-			};
-			
 			$.ajax({
-				url: '/package/' + $('.dep a:first-child', row).text() + '/changes.json',
+				url: '/package/' + name + '/changes.json',
 				dataType: 'json',
-				data: qs,
+				data: {from: from, to: to},
 				success: function (data) {
-					data.from = qs.from;
-					data.to = qs.to;
+					data.from = from;
+					data.to = to;
 					
 					$.get('/inc/changes.html', function (template) {
 						container.html(Handlebars.compile(template)(data));
