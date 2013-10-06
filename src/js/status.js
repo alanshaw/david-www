@@ -325,7 +325,7 @@ $('#status-page').each(function () {
 					});
 				},
 				error: function () {
-					container.html('<h1>Sorry!</h1><p>Failed to get changes</p>');
+					container.html('<h1>Sorry!</h1><p>Failed to find changes between these versions. This may be because the project has a non GitHub repository or an invalid repo URL.</p>');
 					$.fancybox.update();
 				}
 			});
