@@ -5,6 +5,7 @@ var semver = require('semver');
 var moment = require('moment');
 var githubUrl = require('github-url');
 var async = require('async');
+var extract = require('extract');
 
 var github = new GitHubApi({version: '3.0.0'});
 
@@ -134,21 +135,38 @@ module.exports.getChanges = function (modName, fromVer, toVer, cb) {
 					issues = issues.filter(function (issue) {
 						return dates[1] > moment(issue.closed_at).toDate();
 					});
-					
+
 					var commitsOpts = {
 						user: user,
 						repo: repo,
 						since: dates[0],
 						until: dates[1]
 					};
-					
+
 					github.repos.getCommits(commitsOpts, function (er, commits) {
 						if (er) {
 							return cb(er);
 						}
-						
-						// TODO: Munge the issues data?
-						// TODO: Munge the commits data?
+
+						//console.log(issues, commits);
+
+						issues = extract(issues, [
+							'number',
+							'title',
+							'closed_at',
+							'html_url',
+							['user', ['html_url', 'avatar_url', 'login']]
+						]);
+
+						commits = extract(commits, [
+							'html_url',
+							['author', ['login', 'html_url', 'avatar_url']],
+							['commit', [
+								'message',
+								['committer', ['date']]
+							]]
+						]);
+
 						cb(null, {closedIssues: issues, commits: commits});
 					});
 				});

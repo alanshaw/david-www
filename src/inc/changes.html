@@ -5,7 +5,7 @@
 {{#each closedIssues}}
 	<li>
 		<a href="{{user.html_url}}" title="{{user.login}}"><img src="{{user.avatar_url}}" alt="Avatar for {{user.login}}"/></a>
-		<a href="{{html_url}}"><span>#{{number}}</span> {{title}}</a>
+		<a href="{{html_url}}" title="Closed on {{closed_at}}"><span>#{{number}}</span> {{title}}</a>
 	</li>
 {{/each}}
 </ul>
@@ -15,7 +15,7 @@
 {{#each commits}}
 	<li>
 		<a href="{{author.html_url}}" title="{{author.login}}"><img src="{{author.avatar_url}}" alt="Avatar for {{author.login}}"/></a>
-		<a href="{{html_url}}">{{commit.message}}</a>
+		<a href="{{html_url}}" title="Committed on {{commit.committer.date}}">{{commit.message}}</a>
 	</li>
 {{/each}}
 </ul>
