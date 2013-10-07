@@ -218,7 +218,7 @@ module.exports.getInfo = function (manifest, opts, cb) {
 						totals.outOfDate++;
 						totals.unpinned.outOfDate++;
 					}
-					
+
 					return info;
 				});
 
