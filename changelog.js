@@ -150,22 +150,26 @@ module.exports.getChanges = function (modName, fromVer, toVer, cb) {
 
 						//console.log(issues, commits);
 
-						issues = extract(issues, [
-							'number',
-							'title',
-							'closed_at',
-							'html_url',
-							['user', ['html_url', 'avatar_url', 'login']]
-						]);
+						issues = issues.map(function (issue) {
+							return extract(issue, [
+								'number',
+								'title',
+								'closed_at',
+								'html_url',
+								['user', ['html_url', 'avatar_url', 'login']]
+							]);
+						});
 
-						commits = extract(commits, [
-							'html_url',
-							['author', ['login', 'html_url', 'avatar_url']],
-							['commit', [
-								'message',
-								['committer', ['date']]
-							]]
-						]);
+						commits = commits.map(function (commit) {
+							return extract(commit, [
+								'html_url',
+								['author', ['login', 'html_url', 'avatar_url']],
+								['commit', [
+									'message',
+									['committer', ['date']]
+								]]
+							]);
+						});
 
 						cb(null, {closedIssues: issues, commits: commits});
 					});
