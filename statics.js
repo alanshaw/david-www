@@ -10,18 +10,9 @@ module.exports.init = function(app) {
 
 	app.use(express.favicon(__dirname + '/dist/favicon.ico'));
 
-	var appleTouchIcons = [
-		'/apple-touch-icon-57x57-precomposed.png',
-		'/apple-touch-icon-72x72-precomposed.png',
-		'/apple-touch-icon-114x114-precomposed.png',
-		'/apple-touch-icon-144x144-precomposed.png',
-		'/apple-touch-icon-precomposed.png',
-		'/apple-touch-icon.png'
-	];
+	var appleTouchIcon = '/apple-touch-icon-precomposed.png';
 
-	appleTouchIcons.forEach(function(filename) {
-		app.get(filename, function(req, res) {
-			res.sendfile(__dirname + '/dist' + req.url, {maxAge: 86400000});
-		});
+	app.get(appleTouchIcon, function(req, res) {
+		res.sendfile(__dirname + '/dist' + req.url, {maxAge: 86400000});
 	});
 };
