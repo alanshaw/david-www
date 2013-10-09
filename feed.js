@@ -147,7 +147,7 @@ function getPackage(pkgName, callback) {
 
 				// `npm view 0 version` returns {} - ensure some data was returned
 				if (!keys.length) {
-					callback(new Error("Failed to get package for " + pkgName));
+					callback(new Error('Failed to get package for ' + pkgName));
 					return;
 				}
 
