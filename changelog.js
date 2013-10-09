@@ -31,13 +31,13 @@ function getUserRepo (modName, cb) {
 		if (!repo) {
 			return cb(new Error(modName + ' has no repository information'));
 		}
-		
+
 		var info = githubUrl(repo);
-		
+
 		if (!info) {
 			return cb(new Error('Unsupported repository URL'));
 		}
-		
+
 		cb(null, info.user, info.project);
 	});
 }
