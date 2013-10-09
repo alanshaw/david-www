@@ -155,12 +155,20 @@ function latestSatisfying(depName, range, callback) {
 			return;
 		}
 
+		var keys = Object.keys(data);
+
+		// `npm view 0 versions` returns {} - ensure some data was returned
+		if (!keys.length) {
+			callback();
+			return;
+		}
+
 		if (range === 'latest') {
 			range = '';
 		}
 
 		// Get the most recent version that satisfies the range
-		var version = semver.maxSatisfying(data[Object.keys(data)[0]].versions, range, true);
+		var version = semver.maxSatisfying(data[keys[0]].versions, range, true);
 
 		callback(null, version);
 	});

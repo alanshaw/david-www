@@ -143,9 +143,17 @@ function getPackage(pkgName, callback) {
 					return;
 				}
 
+				var keys = Object.keys(data);
+
+				// `npm view 0 version` returns {} - ensure some data was returned
+				if (!keys.length) {
+					callback(new Error("Failed to get package for " + pkgName));
+					return;
+				}
+
 				time = {};
 
-				time[Object.keys(data)[0]] = moment.utc([1970]).toDate();
+				time[keys[0]] = moment.utc([1970]).toDate();
 
 				pkg = packages[pkgName] = new Package(pkgName, time, repository);
 
@@ -188,11 +196,10 @@ module.exports.get = function(manifest, options, callback) {
 			getPackage(depName, function(err, pkg) {
 
 				if (err) {
-					callback(err);
-					return;
+					console.error(err);
+				} else {
+					items = items.concat(packageToFeedItems(pkg));
 				}
-
-				items = items.concat(packageToFeedItems(pkg));
 
 				processedDeps++;
 
