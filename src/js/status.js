@@ -296,9 +296,9 @@ $('#status-page').each(function () {
 			event.preventDefault();
 			var row = $(this).closest('tr'),
 				container = $('<div class="changes-popup"/>').append(David.createLoadingEl());
-			
+
 			var name, from, to;
-			
+
 			if (row.closest('table').is('.stacktable')) {
 				name = $('a:first-child', row).text();
 				from = $('.st-val', row.next()).text();
@@ -308,9 +308,9 @@ $('#status-page').each(function () {
 				from = $('.required', row).text();
 				to = $('.stable', row).text();
 			}
-			
+
 			$.fancybox.open(container);
-			
+
 			$.ajax({
 				url: '/package/' + name + '/changes.json',
 				dataType: 'json',
@@ -318,7 +318,7 @@ $('#status-page').each(function () {
 				success: function (data) {
 					data.from = from;
 					data.to = to;
-					
+
 					$.get('/inc/changes.html', function (template) {
 						container.html(Handlebars.compile(template)(data));
 						$.fancybox.update();

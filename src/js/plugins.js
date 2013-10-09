@@ -45,7 +45,7 @@ $.browser = {
 			div.innerHTML = '<!--[if gt IE '+(++v)+']><i></i><![endif]-->',
 			div.getElementsByTagName('i')[0]
 		);
-		/*jshint -W116*/
+		/*jshint +W116*/
 
 		// each time it's evaluated, v gets incremented and
 		//   tossed into the DOM as a conditional comment
@@ -103,3 +103,4 @@ window.___gcfg = {lang: 'en-GB'};
 		fjs.parentNode.insertBefore(js, fjs);
 	}
 }(document, 'script', 'twitter-wjs');
+/* jshint +W062, +W030 */
