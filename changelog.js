@@ -158,6 +158,13 @@ module.exports.getChanges = function (modName, fromVer, toVer, cb) {
 								'html_url',
 								['user', ['html_url', 'avatar_url', 'login']]
 							]);
+						}).sort(function (a, b) {
+							if (a.closed_at > b.closed_at) {
+								return -1;
+							} else if (a.closed_at < b.closed_at) {
+								return 1;
+							}
+							return 0;
 						});
 
 						commits = commits.map(function (commit) {
