@@ -46,7 +46,7 @@ module.exports = function(grunt) {
 		less: {
 			compile: {
 				files: {
-					'dist/css/main.css': 'src/css/main.less'
+					'dist/css/main-<%= pkg.version %>.css': 'src/css/main.less'
 				}
 			}
 		},
@@ -93,7 +93,7 @@ module.exports = function(grunt) {
 					report: 'min'
 				},
 				files: {
-					'dist/css/main-<%= pkg.version %>.css': 'dist/css/main.css',
+					'dist/css/main-<%= pkg.version %>.css': 'dist/css/main-<%= pkg.version %>.css',
 					'dist/css/font-awesome-ie7.css': 'dist/css/font-awesome-ie7.css'
 				}
 			}
