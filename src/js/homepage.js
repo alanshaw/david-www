@@ -1,5 +1,13 @@
-/* jshint jquery:true, browser:true */
-/*global d3, David, Handlebars, moment*/
+/* jshint browser:true */
+
+var $ = require('jquery-browserify');
+var d3 = require('d3');
+var Handlebars = require('handlebars');
+var moment = require('moment');
+var fs = require('fs');
+var david = require('./david');
+
+require('./vendor/jquery.feed');
 
 $('#home-page').each(function () {
 
@@ -8,7 +16,7 @@ $('#home-page').each(function () {
 		if (er) {
 			return console.error('Failed to get dependency counts', er);
 		}
-		David.renderDependencyCountsGraph(data);
+		david.renderDependencyCountsGraph(data);
 	});
 
 	var url = $('.badge-maker span')
@@ -44,9 +52,8 @@ $('#home-page').each(function () {
 			entry.datetime = moment(entry.updated).format();
 			entry.formattedDate = moment(entry.updated).format('MMMM Do YYYY, HH:mm');
 
-			$.get('/inc/news.html', function (tpl) {
-				$('#stats').append(Handlebars.compile(tpl)(entry));
-			});
+			var tpl = fs.readFileSync(__dirname + '/../../dist/inc/news.html');
+			$('#stats').append(Handlebars.compile(tpl)(entry));
 		}
 	});
 });

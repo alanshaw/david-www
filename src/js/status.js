@@ -1,5 +1,16 @@
-/* jshint jquery:true, browser:true */
-/*global _, d3, David, Handlebars*/
+/* jshint browser:true */
+
+var $ = require('jquery-browserify');
+var d3 = require('d3');
+var merge = require('merge');
+var Handlebars = require('handlebars');
+var fs = require('fs');
+var david = require('./david');
+
+require('./vendor/stackable');
+require('./vendor/jquery.fancybox');
+require('./vendor/jquery.ba-bbq');
+require('./vendor/jquery.ba-hashchange');
 
 $('#status-page').each(function () {
 	var status = $('#status');
@@ -232,7 +243,7 @@ $('#status-page').each(function () {
 
 		function initGraph () {
 
-			var loading = David.createLoadingEl();
+			var loading = david.createLoadingEl();
 			graphContainer.prepend(loading);
 
 			d3.json(pathname + graphJsonUrl, function (er, json) {
@@ -265,12 +276,12 @@ $('#status-page').each(function () {
 
 		viewSwitchers.click(function (event) {
 			event.preventDefault();
-			_.merge(state, $.deparam.fragment($(this).attr('href')));
+			merge(state, $.deparam.fragment($(this).attr('href')));
 			$.bbq.pushState(state);
 		});
 
 		function onHashChange () {
-			_.merge(state, $.bbq.getState());
+			merge(state, $.bbq.getState());
 
 			viewSwitchers.removeClass('selected');
 
@@ -295,7 +306,7 @@ $('#status-page').each(function () {
 		$('.changes', container).click(function (event) {
 			event.preventDefault();
 			var row = $(this).closest('tr'),
-				container = $('<div class="changes-popup"/>').append(David.createLoadingEl());
+				container = $('<div class="changes-popup"/>').append(david.createLoadingEl());
 
 			var name, from, to;
 
@@ -319,13 +330,12 @@ $('#status-page').each(function () {
 					data.from = from;
 					data.to = to;
 
-					$.get('/inc/changes.html', function (template) {
-						container.html(Handlebars.compile(template)(data));
-						$.fancybox.update();
-					});
+					var tpl = fs.readFileSync(__dirname + '/../../dist/inc/changes.html');
+					container.html(Handlebars.compile(tpl)(data));
+					$.fancybox.update();
 				},
 				error: function () {
-					container.html('<h1>Sorry!</h1><p>Failed to find changes between these versions. This may be because the project has a non GitHub repository or an invalid repo URL.</p>');
+					container.html(fs.readFileSync(__dirname + '/../../dist/inc/changelog-er.html'));
 					$.fancybox.update();
 				}
 			});
@@ -346,14 +356,14 @@ $('#status-page').each(function () {
 
 	depSwitchers.click(function (event) {
 		event.preventDefault();
-		_.merge(state, $.deparam.fragment($(this).attr('href')));
+		merge(state, $.deparam.fragment($(this).attr('href')));
 		$.bbq.pushState(state);
 	});
 
 	// Hash change for info switch
 	function onHashChange () {
 
-		_.merge(state, $.bbq.getState());
+		merge(state, $.bbq.getState());
 
 		depSwitchers.removeClass('selected');
 
@@ -374,16 +384,15 @@ $('#status-page').each(function () {
 
 				devDepInfoLoaded = true;
 
-				var loading = David.createLoadingEl();
+				var loading = david.createLoadingEl();
 
 				devDepInfoContainer.prepend(loading);
 
 				$.getJSON(pathname + 'dev-info.json', function (data) {
-					$.get('/inc/info.html', function (template) {
-						loading.remove();
-						devDepInfoContainer.html(Handlebars.compile(template)({ info: data }));
-						initInfo(devDepInfoContainer, 'dev-graph.json');
-					});
+					var tpl = fs.readFileSync(__dirname + '/../../dist/inc/info.html');
+					loading.remove();
+					devDepInfoContainer.html(Handlebars.compile(tpl)({ info: data }));
+					initInfo(devDepInfoContainer, 'dev-graph.json');
 				});
 			}
 		}

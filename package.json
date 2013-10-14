@@ -50,7 +50,11 @@
     "npm": "~1.3.11",
     "request": "~2.27.0",
     "rss": "~0.2.1",
-    "semver": "~2.1.0"
+    "semver": "~2.1.0",
+    "cycle": "~1.0.2",
+    "d3": "~3.3.7",
+    "merge": "~1.1.2",
+    "jquery-browserify": "~1.8.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -63,7 +67,11 @@
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-include-replace": "~1.1.1",
-    "rewire": "~2.0.0"
+    "rewire": "~2.0.0",
+    "browserify": "~2.33.1",
+    "grunt-browserify": "~1.2.8",
+    "brfs": "0.0.8",
+    "uglifyify": "~1.0.1"
   },
   "engines": {
     "node": ">=0.8.0"

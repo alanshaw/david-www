@@ -1,5 +1,8 @@
-/* jshint jquery:true, browser:true */
-/*global d3, David*/
+/* jshint browser:true */
+
+var $ = require('jquery-browserify');
+var d3 = require('d3');
+var david = require('./david');
 
 $('#search-page').each(function () {
 
@@ -18,10 +21,10 @@ $('#search-page').each(function () {
 		var data = {};
 
 		if (!$('.loading', searchForm).length) {
-			searchForm.append(David.createLoadingEl(' Searching...'));
+			searchForm.append(david.createLoadingEl(' Searching...'));
 		}
 
-		David.renderDependencyCountsGraph({});
+		david.renderDependencyCountsGraph({});
 
 		$.getJSON('/search.json', { q: q }, function (results) {
 			$('.loading', searchForm).remove();
@@ -34,7 +37,7 @@ $('#search-page').each(function () {
 				});
 			}
 
-			David.renderDependencyCountsGraph(data);
+			david.renderDependencyCountsGraph(data);
 
 			if (pushState && history.pushState) {
 				history.pushState({ q: q }, 'Searching for ' + q, $.param.querystring(window.location + '', { q: q }));
@@ -52,7 +55,7 @@ $('#search-page').each(function () {
 			clearTimeout(searchTimeoutId);
 
 			if (!q.length) {
-				David.renderDependencyCountsGraph(dependencyCounts);
+				david.renderDependencyCountsGraph(dependencyCounts);
 			} else if (q.length > 2) {
 				searchTimeoutId = setTimeout(function () {
 					search(q);
@@ -87,7 +90,7 @@ $('#search-page').each(function () {
 			search(searchField.val(), false);
 
 		} else {
-			David.renderDependencyCountsGraph(data);
+			david.renderDependencyCountsGraph(data);
 		}
 	});
 });

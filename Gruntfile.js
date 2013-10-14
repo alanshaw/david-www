@@ -51,6 +51,13 @@ module.exports = function(grunt) {
 			}
 		},
 
+		browserify: {
+			dist: {
+				files: {'dist/js/bundle-<%= pkg.version %>.js': 'src/js/main.js'},
+				options: {transform: ['brfs']}
+			}
+		},
+
 		// Minify the site script
 		uglify: {
 			options: {
@@ -60,28 +67,8 @@ module.exports = function(grunt) {
 				report: 'min'
 			},
 			compress: {
-				src: [
-					'src/js/plugins.js',
-					'src/js/vendor/cycle.js',
-					'src/js/vendor/d3.v3.js',
-					'src/js/vendor/handlebars.js',
-					'src/js/vendor/jquery.ba-bbq.js',
-					'src/js/vendor/jquery.ba-hashchange.js',
-					'src/js/vendor/jquery.fancybox.js',
-					'src/js/vendor/jquery.feed.js',
-					'src/js/vendor/lodash.js',
-					'src/js/vendor/moment.js',
-					'src/js/vendor/stackable.js',
-					'src/js/main.js',
-					'src/js/homepage.js',
-					'src/js/search.js',
-					'src/js/status.js'
-				],
-				dest: 'dist/js/pack-<%= pkg.version %>.js'
-			},
-			compressIE: {
-				src: 'src/js/vendor/respond.js',
-				dest: 'dist/js/vendor/respond.min.js'
+				src: 'dist/js/bundle-<%= pkg.version %>.js',
+				dest: 'dist/js/bundle-<%= pkg.version %>.js'
 			}
 		},
 
@@ -143,7 +130,7 @@ module.exports = function(grunt) {
 			project: {
 				options: {atBegin: true},
 				files: ['src/js/**/*.js', 'src/css/**/*.less', 'src/**/*.html', 'src/img/**/*'],
-				tasks: ['copy', 'includereplace', 'less', 'uglify']
+				tasks: ['copy', 'includereplace', 'less', 'browserify']
 			}
 		},
 
@@ -153,15 +140,16 @@ module.exports = function(grunt) {
 	});
 
 	// Load the grunt-conrtib plugin so we can compile and compress CoffeeScript and LESS files
+	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-less');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-include-replace');
 	grunt.loadNpmTasks('grunt-contrib-nodeunit');
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
 
-	grunt.registerTask('default', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less', 'uglify', 'cssmin']);
+	grunt.registerTask('default', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less', 'browserify', 'uglify', 'cssmin']);
 };
