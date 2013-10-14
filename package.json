@@ -56,7 +56,6 @@
   },
   "devDependencies": {
     "brfs": "0.0.8",
-    "browserify": "~2.33.1",
     "grunt": "~0.4.1",
     "grunt-browserify": "~1.2.8",
     "grunt-contrib-clean": "~0.5.0",
