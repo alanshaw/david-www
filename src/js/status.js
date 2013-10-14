@@ -1,10 +1,10 @@
-/* jshint browser:true */
+/* jshint browser:true, jquery: true */
 
-var $ = require('jquery-browserify');
 var d3 = require('d3');
 var merge = require('merge');
 var Handlebars = require('handlebars');
 var fs = require('fs');
+var cycle = require('cycle');
 var david = require('./david');
 
 require('./vendor/stackable');
@@ -252,7 +252,7 @@ $('#status-page').each(function () {
 					return loading.empty().text('Error occurred retrieving graph data');
 				}
 
-				transformData(JSON.retrocycle(json), function (node) {
+				transformData(cycle.retrocycle(json), function (node) {
 					root = node;
 					root.x0 = h / 2;
 					root.y0 = 0;

@@ -1,6 +1,4 @@
-/* jshint browser:true */
-
-var $ = require('jquery-browserify');
+/* jshint browser:true, jquery: true */
 
 // Avoid `console` errors in browsers that lack a console.
 (function() {

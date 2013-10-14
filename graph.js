@@ -1,7 +1,7 @@
 var npm = require('npm');
 var moment = require('moment');
 var semver = require('semver');
-var JSON2 = require('JSON2');
+var cycle = require('cycle');
 
 function Package(name, version) {
 	this.name = name;
@@ -196,7 +196,7 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 
 		if (project.expires > new Date()) {
 			console.log('Using cached project dependency graph', name, version);
-			callback(null, deleteExpires(JSON2.decycle(project)));
+			callback(null, deleteExpires(cycle.decycle(project)));
 			return;
 		}
 
@@ -239,7 +239,7 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 					done++;
 
 					if (done === depNames.length) {
-						callback(null, JSON2.decycle(project));
+						callback(null, cycle.decycle(project));
 					}
 
 				} else {
@@ -256,7 +256,7 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 						done++;
 
 						if (done === depNames.length) {
-							callback(null, deleteExpires(JSON2.decycle(project)));
+							callback(null, deleteExpires(cycle.decycle(project)));
 						}
 					});
 				}

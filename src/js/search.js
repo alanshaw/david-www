@@ -1,6 +1,5 @@
-/* jshint browser:true */
+/* jshint browser:true, jquery: true */
 
-var $ = require('jquery-browserify');
 var d3 = require('d3');
 var david = require('./david');
 

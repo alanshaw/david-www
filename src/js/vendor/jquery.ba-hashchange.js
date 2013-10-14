@@ -387,4 +387,4 @@
     return self;
   })();
   
-})(jQuery,this);
+})(jQuery,window);
