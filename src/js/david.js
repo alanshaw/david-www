@@ -1,6 +1,8 @@
 /* jshint browser:true, jquery: true */
 
 var d3 = require('d3');
+var fs = require('fs');
+var Handlebars = require('handlebars');
 
 var david = {};
 
@@ -88,7 +90,8 @@ $('#dependency-counts-graph').each(function () {
 });
 
 david.createLoadingEl = function (text) {
-	return $('<div class="loading"><i class="icon-spinner icon-spin icon-2x"></i>' + (text || ' Reticulating splines...') + '</div>');
+	var tpl = fs.readFileSync(__dirname + '/../../dist/inc/loading.html');
+	return $(Handlebars.compile(tpl)({text: (text || 'Reticulating splines...')}));
 };
 
 module.exports = david;
