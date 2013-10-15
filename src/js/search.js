@@ -8,7 +8,7 @@ $('#search-page').each(function () {
 	var dependencyCounts = {}
 		, searchForm = $('form');
 
-	searchForm.submit(function (event) {
+	searchForm.submit(function(event) {
 		event.preventDefault();
 	});
 
@@ -25,13 +25,13 @@ $('#search-page').each(function () {
 
 		david.renderDependencyCountsGraph({});
 
-		$.getJSON('/search.json', { q: q }, function (results) {
+		$.getJSON('/search.json', { q: q }, function(results) {
 			$('.loading', searchForm).remove();
 
 			if (!Object.keys(results).length) {
 				data = dependencyCounts;
 			} else {
-				Object.keys(results).forEach(function (pkgName) {
+				Object.keys(results).forEach(function(pkgName) {
 					data[pkgName] = results[pkgName].count + 1;
 				});
 			}
@@ -67,7 +67,7 @@ $('#search-page').each(function () {
 
 	// Do search on popstate
 	if (window.addEventListener) {
-		window.addEventListener('popstate', function (event) {
+		window.addEventListener('popstate', function(event) {
 			if (event.state) {
 				searchField.val(event.state.q);
 				search(event.state.q, false);
@@ -76,7 +76,7 @@ $('#search-page').each(function () {
 	}
 
 	// Get the dependency counts
-	d3.json('dependency-counts.json', function (error, data) {
+	d3.json('dependency-counts.json', function(error, data) {
 		dependencyCounts = data;
 
 		if (searchField.val()) {

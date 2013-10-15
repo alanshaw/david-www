@@ -81,7 +81,7 @@ $('#status-page').each(function () {
 				level = level || 0;
 				maxLevel = maxLevel || 10;
 
-				$.each(dep.deps, function (depName, depDep) {
+				$.each(dep.deps, function(depName, depDep) {
 					var node = createNode(depDep);
 
 					if (level < maxLevel) {
@@ -97,7 +97,7 @@ $('#status-page').each(function () {
 				});
 
 				if (parentNode.children) {
-					parentNode.children = parentNode.children.sort(function (a, b) {
+					parentNode.children = parentNode.children.sort(function(a, b) {
 						if (a.name < b.name) {
 							return -1;
 						}
@@ -120,7 +120,7 @@ $('#status-page').each(function () {
 			, i = 0
 			, root = null
 			, tree = d3.layout.tree().size([h, w])
-			, diagonal = d3.svg.diagonal().projection(function (d) { return [d.y, d.x] });
+			, diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x] });
 
 		var vis = d3.select($('.dep-graph', container)[0]).append('svg:svg')
 			.attr('width', w + m[1] + m[3])
@@ -136,41 +136,41 @@ $('#status-page').each(function () {
 			var nodes = tree.nodes(root).reverse();
 
 			// Normalize for fixed-depth.
-			nodes.forEach(function (d) {
+			nodes.forEach(function(d) {
 				d.y = d.depth * 180;
 			});
 
 			// Update the nodes...
-			var node = vis.selectAll('g.node').data(nodes, function (d) {
+			var node = vis.selectAll('g.node').data(nodes, function(d) {
 					return d.id ? d.id : d.id = ++i;
 				});
 
 			// Enter any new nodes at the parent's previous position.
 			var nodeEnter = node.enter().append('svg:g').attr('class', 'node').attr('transform', function () {
 					return 'translate(' + source.y0 + ',' + source.x0 + ')';
-				}).on('click', function (d) {
+				}).on('click', function(d) {
 					toggle(d);
 					update(d);
 				});
 
-			nodeEnter.append('svg:circle').attr('r', 0.000001).style('fill', function (d) {
+			nodeEnter.append('svg:circle').attr('r', 0.000001).style('fill', function(d) {
 				return d._children ? '#ccc' : '#fff';
 			});
 
-			nodeEnter.append('svg:text').attr('x', function (d) {
+			nodeEnter.append('svg:text').attr('x', function(d) {
 				return d.children || d._children ? -10 : 10;
-			}).attr('dy', '.25em').attr('text-anchor', function (d) {
+			}).attr('dy', '.25em').attr('text-anchor', function(d) {
 				return d.children || d._children ? 'end' : 'start';
-			}).text(function (d) {
+			}).text(function(d) {
 				return d.name + ' ' + d.version;
 			}).style('fill-opacity', 0.000001);
 
 			// Transition nodes to their new position.
-			var nodeUpdate = node.transition().duration(duration).attr('transform', function (d) {
+			var nodeUpdate = node.transition().duration(duration).attr('transform', function(d) {
 					return 'translate(' + d.y + ',' + d.x + ')';
 				});
 
-			nodeUpdate.select('circle').attr('r', 4.5).style('fill', function (d) {
+			nodeUpdate.select('circle').attr('r', 4.5).style('fill', function(d) {
 				return d._children ? '#ccc' : '#fff';
 			});
 
@@ -185,7 +185,7 @@ $('#status-page').each(function () {
 			nodeExit.select('text').style('fill-opacity', 0.000001);
 
 			// Update the links...
-			var link = vis.selectAll('path.link').data(tree.links(nodes), function (d) {
+			var link = vis.selectAll('path.link').data(tree.links(nodes), function(d) {
 					return d.target.id;
 				});
 
@@ -217,7 +217,7 @@ $('#status-page').each(function () {
 			}).remove();
 
 			// Stash the old positions for transition.
-			nodes.forEach(function (d) {
+			nodes.forEach(function(d) {
 				d.x0 = d.x;
 				d.y0 = d.y;
 			});
@@ -246,13 +246,13 @@ $('#status-page').each(function () {
 			var loading = david.createLoadingEl();
 			graphContainer.prepend(loading);
 
-			d3.json(pathname + graphJsonUrl, function (er, json) {
+			d3.json(pathname + graphJsonUrl, function(er, json) {
 
 				if (er) {
 					return loading.empty().text('Error occurred retrieving graph data');
 				}
 
-				transformData(cycle.retrocycle(json), function (node) {
+				transformData(cycle.retrocycle(json), function(node) {
 					root = node;
 					root.x0 = h / 2;
 					root.y0 = 0;
@@ -274,7 +274,7 @@ $('#status-page').each(function () {
 
 		var viewSwitchers = $('.switch a', container);
 
-		viewSwitchers.click(function (event) {
+		viewSwitchers.click(function(event) {
 			event.preventDefault();
 			merge(state, $.deparam.fragment($(this).attr('href')));
 			$.bbq.pushState(state);
@@ -303,7 +303,7 @@ $('#status-page').each(function () {
 
 		/* Init changes links */
 
-		$('.changes', container).click(function (event) {
+		$('.changes', container).click(function(event) {
 			event.preventDefault();
 			var row = $(this).closest('tr'),
 				container = $('<div class="changes-popup"/>').append(david.createLoadingEl());
@@ -326,7 +326,7 @@ $('#status-page').each(function () {
 				url: '/package/' + name + '/changes.json',
 				dataType: 'json',
 				data: {from: from, to: to},
-				success: function (data) {
+				success: function(data) {
 					data.from = from;
 					data.to = to;
 
@@ -354,7 +354,7 @@ $('#status-page').each(function () {
 
 	var depSwitchers = $('#dep-switch a');
 
-	depSwitchers.click(function (event) {
+	depSwitchers.click(function(event) {
 		event.preventDefault();
 		merge(state, $.deparam.fragment($(this).attr('href')));
 		$.bbq.pushState(state);
@@ -388,7 +388,7 @@ $('#status-page').each(function () {
 
 				devDepInfoContainer.prepend(loading);
 
-				$.getJSON(pathname + 'dev-info.json', function (data) {
+				$.getJSON(pathname + 'dev-info.json', function(data) {
 					var tpl = fs.readFileSync(__dirname + '/../../dist/inc/info.html');
 					loading.remove();
 					devDepInfoContainer.html(Handlebars.compile(tpl)({ info: data }));
