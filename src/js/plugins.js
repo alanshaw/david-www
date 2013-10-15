@@ -1,7 +1,7 @@
 /* jshint browser:true, jquery: true */
 
 // Avoid `console` errors in browsers that lack a console.
-(function() {
+(function () {
 	var method;
 	var noop = function () {};
 	var methods = [
@@ -28,7 +28,7 @@
 // BBQ checks this deprecated jQuery feature
 $.browser = {
 	// Check for IE thanks to https://gist.github.com/527683
-	msie: (function (d) {
+	msie: (function(d) {
 
 		var undef, v = 3, div = d.createElement('div');
 
@@ -70,7 +70,7 @@ var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-38876227-1']);
 _gaq.push(['_trackPageview']);
 
-(function() {
+(function () {
 	var ga = document.createElement('script');
 	ga.type = 'text/javascript';
 	ga.async = true;
@@ -82,7 +82,7 @@ _gaq.push(['_trackPageview']);
 // Google+
 window.___gcfg = {lang: 'en-GB'};
 
-(function() {
+(function () {
 	var po = document.createElement('script');
 	po.type = 'text/javascript';
 	po.async = true;

@@ -13,7 +13,7 @@ function UpdatedPackage(name, version, previous) {
 
 var recentlyUpdatedPackages = [];
 
-registry.on('change', function (change) {
+registry.on('change', function(change) {
 	if (!change.doc.versions) {
 		return;
 	}
@@ -40,7 +40,7 @@ registry.on('change', function (change) {
 	}
 });
 
-exports.getRecentlyUpdatedPackages = function() {
+exports.getRecentlyUpdatedPackages = function () {
 	return recentlyUpdatedPackages.slice();
 };
 
@@ -74,7 +74,7 @@ manifest.on('retrieve', function(manifest, user, repo) {
 	}
 });
 
-exports.getRecentlyRetrievedManifests = function() {
+exports.getRecentlyRetrievedManifests = function () {
 	return recentlyRetrievedManifests.slice();
 };
 
@@ -98,7 +98,7 @@ manifest.on('dependenciesChange', function(diffs, manifest, user, repo) {
 	}
 });
 
-exports.getRecentlyUpdatedManifests = function() {
+exports.getRecentlyUpdatedManifests = function () {
 	return recentlyUpdatedManifests.slice();
 };
 
@@ -135,7 +135,7 @@ manifest.on('dependenciesChange', function(diffs) {
 	});
 });
 
-exports.getDependencyCounts = function() {
+exports.getDependencyCounts = function () {
 	return JSON.parse(JSON.stringify(dependencyCounts));
 };
 

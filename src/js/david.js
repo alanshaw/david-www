@@ -21,9 +21,9 @@ $('#dependency-counts-graph').each(function () {
 		.attr('height', diameter)
 		.attr('class', 'bubble');
 
-	david.renderDependencyCountsGraph = function (data) {
+	david.renderDependencyCountsGraph = function(data) {
 		// Get the max count
-		var max = Object.keys(data).reduce(function (max, depName) {
+		var max = Object.keys(data).reduce(function(max, depName) {
 				return data[depName] > max ? data[depName] : max;
 			}, 1);
 
@@ -37,7 +37,7 @@ $('#dependency-counts-graph').each(function () {
 
 		function transformData(data) {
 			return {
-				children: Object.keys(data).map(function (depName) {
+				children: Object.keys(data).map(function(depName) {
 					return {
 						depName: depName,
 						value: data[depName]
@@ -46,9 +46,9 @@ $('#dependency-counts-graph').each(function () {
 			};
 		}
 
-		var nodes = svg.selectAll('.node').data(bubble.nodes(transformData(data)).filter(function (d) {
+		var nodes = svg.selectAll('.node').data(bubble.nodes(transformData(data)).filter(function(d) {
 				return !d.children;
-			}), function (d) {
+			}), function(d) {
 				return d.depName;
 			});
 
@@ -57,11 +57,11 @@ $('#dependency-counts-graph').each(function () {
 			.attr('class', 'node')
 			.attr('transform', function () {
 				return 'translate(' + diameter / 2 + ',' + diameter / 2 + ')';
-			}).on('click', function (d) {
+			}).on('click', function(d) {
 				window.location = 'http://npmjs.org/package/' + d.depName;
 			});
 
-		nodeEnter.append('title').text(function (d) {
+		nodeEnter.append('title').text(function(d) {
 			return d.depName + ': ' + format(d.value);
 		});
 
@@ -71,17 +71,17 @@ $('#dependency-counts-graph').each(function () {
 			.attr('dy', '.3em')
 			.style('text-anchor', 'middle');
 
-		var nodeUpdate = nodes.transition().attr('transform', function (d) {
+		var nodeUpdate = nodes.transition().attr('transform', function(d) {
 				return 'translate(' + d.x + ',' + d.y + ')';
 			});
 
-		nodeUpdate.select('circle').attr('r', function (d) {
+		nodeUpdate.select('circle').attr('r', function(d) {
 			return d.r;
-		}).style('fill', function (d) {
+		}).style('fill', function(d) {
 			return color(d.value);
 		});
 
-		nodeUpdate.select('text').text(function (d) {
+		nodeUpdate.select('text').text(function(d) {
 			return d.depName.substring(0, d.r / 3);
 		});
 
@@ -89,7 +89,7 @@ $('#dependency-counts-graph').each(function () {
 	};
 });
 
-david.createLoadingEl = function (text) {
+david.createLoadingEl = function(text) {
 	var tpl = fs.readFileSync(__dirname + '/../../dist/inc/loading.html');
 	return $(Handlebars.compile(tpl)({text: (text || 'Reticulating splines...')}));
 };

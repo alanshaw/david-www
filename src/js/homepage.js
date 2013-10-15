@@ -11,7 +11,7 @@ require('./vendor/jquery.feed');
 $('#home-page').each(function () {
 
 	// Render the dependency counts graph
-	d3.json('dependency-counts.json', function (er, data) {
+	d3.json('dependency-counts.json', function(er, data) {
 		if (er) {
 			return console.error('Failed to get dependency counts', er);
 		}
@@ -44,7 +44,7 @@ $('#home-page').each(function () {
 	/* RSS feed */
 	$.getFeed({
 		url: '/news/rss.xml',
-		success: function (feed) {
+		success: function(feed) {
 			var entry = feed.items[0];
 
 			entry.shortDesc = $('<div/>').html(entry.description).text().substr(0, 200);
