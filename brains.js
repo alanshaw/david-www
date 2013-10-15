@@ -9,7 +9,7 @@ var registry = require('./registry');
 var config = require('config');
 
 // When a user publishes a package, delete cached david info
-registry.on('change', function (change) {
+registry.on('change', function(change) {
 	cache.del(change.doc.name);
 });
 
@@ -29,7 +29,7 @@ function isPinned (version) {
 
 function normaliseDeps (deps) {
 	if (Array.isArray(deps)) {
-		deps = deps.reduce(function (d, depName) {
+		deps = deps.reduce(function(d, depName) {
 			d[depName] = '*';
 			return d;
 		}, {});
@@ -46,7 +46,7 @@ function getCachedDependencies (manifest, opts) {
 		return pkgs;
 	}
 
-	depNames.forEach(function (depName) {
+	depNames.forEach(function(depName) {
 		var info = cache.get(depName);
 
 		if (!info) {
@@ -67,9 +67,9 @@ function getDependencies (manifest, opts, cb) {
 
 	var manifestDeps = normaliseDeps(manifest[opts.dev ? 'devDependencies' : 'dependencies'] || {});
 
-	var uncachedManifestDeps = Object.keys(manifestDeps).filter(function (depName) {
+	var uncachedManifestDeps = Object.keys(manifestDeps).filter(function(depName) {
 		return cachedDepNames.indexOf(depName) === -1;
-	}).reduce(function (deps, depName) {
+	}).reduce(function(deps, depName) {
 		deps[depName] = manifestDeps[depName];
 		return deps;
 	}, {});
@@ -85,20 +85,20 @@ function getDependencies (manifest, opts, cb) {
 	var uncachedManifest = {};
 	uncachedManifest[opts.dev ? 'devDependencies' : 'dependencies'] = uncachedManifestDeps;
 
-	david.getDependencies(uncachedManifest, opts, function (er, infos) {
+	david.getDependencies(uncachedManifest, opts, function(er, infos) {
 		if (er) {
 			return cb(er);
 		}
 
 		// Cache the new info
-		Object.keys(infos).forEach(function (depName) {
+		Object.keys(infos).forEach(function(depName) {
 			if (config.brains.cacheTime) {
 				var info = infos[depName];
 				cache.put(depName, {stable: info.stable, latest: info.latest}, config.brains.cacheTime);
 			}
 		});
 
-		cachedDepNames.forEach(function (depName) {
+		cachedDepNames.forEach(function(depName) {
 			infos[depName] = cachedInfos[depName];
 		});
 
@@ -107,13 +107,13 @@ function getDependencies (manifest, opts, cb) {
 }
 
 function getUpdatedDependencies (manifest, opts, cb) {
-	getDependencies(manifest, opts, function (er, infos) {
+	getDependencies(manifest, opts, function(er, infos) {
 		if (er) {
 			return cb(er);
 		}
 
 		// Filter out the non-updated dependencies
-		Object.keys(infos).forEach(function (depName) {
+		Object.keys(infos).forEach(function(depName) {
 			if (!david.isUpdated(infos[depName], opts)) {
 				delete infos[depName];
 			}
@@ -129,7 +129,7 @@ function getUpdatedDependencies (manifest, opts, cb) {
  * @param {Boolean} [opts.dev] Consider devDependencies
  * @param {Function} cb Function that receives the results
  */
-module.exports.getInfo = function (manifest, opts, cb) {
+module.exports.getInfo = function(manifest, opts, cb) {
 
 	// Allow cb to be passed as second parameter
 	if (!cb) {
@@ -141,14 +141,14 @@ module.exports.getInfo = function (manifest, opts, cb) {
 
 	var davidOptions = {dev: opts.dev, loose: true};
 
-	getDependencies(manifest, davidOptions, function (er, deps) {
+	getDependencies(manifest, davidOptions, function(er, deps) {
 
 		if (er) {
 			return cb(er);
 		}
 
 		// Get ALL updated dependencies including unstable
-		getUpdatedDependencies(manifest, davidOptions, function (er, updatedDeps) {
+		getUpdatedDependencies(manifest, davidOptions, function(er, updatedDeps) {
 
 			if (er) {
 				return cb(er);
@@ -157,7 +157,7 @@ module.exports.getInfo = function (manifest, opts, cb) {
 			davidOptions.stable = true;
 
 			// Get STABLE updated dependencies
-			getUpdatedDependencies(manifest, davidOptions, function (er, updatedStableDeps) {
+			getUpdatedDependencies(manifest, davidOptions, function(er, updatedStableDeps) {
 
 				if (er) {
 					return cb(er);
@@ -177,7 +177,7 @@ module.exports.getInfo = function (manifest, opts, cb) {
 						}
 					};
 
-				var depList = depNames.map(function (depName) {
+				var depList = depNames.map(function(depName) {
 
 					// Lets disprove this
 					var status = 'uptodate';

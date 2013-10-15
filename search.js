@@ -70,7 +70,7 @@ function processQueue() {
 				results[name].count = counts[name] || 0;
 			});
 
-			setImmediate(function() {
+			setImmediate(function () {
 				callback(null, results);
 			});
 

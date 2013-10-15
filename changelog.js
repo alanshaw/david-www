@@ -20,7 +20,7 @@ if (config.github) {
 // Get a username and repo name for a github repository
 function getUserRepo (modName, cb) {
 
-	npm.commands.view([modName, 'repository'], true, function (er, data) {
+	npm.commands.view([modName, 'repository'], true, function(er, data) {
 		if (er) {
 			return cb(er);
 		}
@@ -50,11 +50,11 @@ function getUserRepo (modName, cb) {
  * @param {Function} cb Receives an array of dates corresponding to the array of module versions
  */
 function getPublishDates (modName, modVers, cb) {
-	var tasks = modVers.map(function (ver) {
+	var tasks = modVers.map(function(ver) {
 
-		return function (cb) {
+		return function(cb) {
 
-			npm.commands.view([modName, 'time'], true, function (er, data) {
+			npm.commands.view([modName, 'time'], true, function(er, data) {
 				if (er) {
 					return cb(er);
 				}
@@ -67,13 +67,13 @@ function getPublishDates (modName, modVers, cb) {
 				}
 
 				// Flip `time` from {[version]: [date]} to {[date]: [version]}
-				var versionsByDate = Object.keys(time).reduce(function (versions, version) {
+				var versionsByDate = Object.keys(time).reduce(function(versions, version) {
 					versions[time[version]] = version;
 					return versions;
 				}, {});
 
 				// Create an array of publish dates in ASC order
-				var ascPublishDates = Object.keys(time).map(function (version) {
+				var ascPublishDates = Object.keys(time).map(function(version) {
 					return time[version];
 				}).sort();
 
@@ -100,20 +100,20 @@ function getPublishDates (modName, modVers, cb) {
  * @param {Date} toVer
  * @param {Function} cb
  */
-module.exports.getChanges = function (modName, fromVer, toVer, cb) {
+module.exports.getChanges = function(modName, fromVer, toVer, cb) {
 	console.log('Getting changes for', modName, 'from', fromVer, 'to', toVer);
 
-	npm.load({}, function (er) {
+	npm.load({}, function(er) {
 		if (er) {
 			return cb(er);
 		}
 
-		getUserRepo(modName, function (er, user, repo) {
+		getUserRepo(modName, function(er, user, repo) {
 			if (er) {
 				return cb(er);
 			}
 
-			getPublishDates(modName, [fromVer, toVer], function (er, dates) {
+			getPublishDates(modName, [fromVer, toVer], function(er, dates) {
 				if (er) {
 					return cb(er);
 				}
@@ -127,12 +127,12 @@ module.exports.getChanges = function (modName, fromVer, toVer, cb) {
 					per_page: 100
 				};
 
-				github.issues.repoIssues(issuesOpts, function (er, issues) {
+				github.issues.repoIssues(issuesOpts, function(er, issues) {
 					if (er) {
 						return cb(er);
 					}
 
-					issues = issues.filter(function (issue) {
+					issues = issues.filter(function(issue) {
 						return dates[1] > moment(issue.closed_at).toDate();
 					});
 
@@ -143,14 +143,14 @@ module.exports.getChanges = function (modName, fromVer, toVer, cb) {
 						until: dates[1]
 					};
 
-					github.repos.getCommits(commitsOpts, function (er, commits) {
+					github.repos.getCommits(commitsOpts, function(er, commits) {
 						if (er) {
 							return cb(er);
 						}
 
 						//console.log(issues, commits);
 
-						issues = issues.map(function (issue) {
+						issues = issues.map(function(issue) {
 							return extract(issue, [
 								'number',
 								'title',
@@ -158,7 +158,7 @@ module.exports.getChanges = function (modName, fromVer, toVer, cb) {
 								'html_url',
 								['user', ['html_url', 'avatar_url', 'login']]
 							]);
-						}).sort(function (a, b) {
+						}).sort(function(a, b) {
 							if (a.closed_at > b.closed_at) {
 								return -1;
 							} else if (a.closed_at < b.closed_at) {
@@ -167,7 +167,7 @@ module.exports.getChanges = function (modName, fromVer, toVer, cb) {
 							return 0;
 						});
 
-						commits = commits.map(function (commit) {
+						commits = commits.map(function(commit) {
 							return extract(commit, [
 								'html_url',
 								['author', ['login', 'html_url', 'avatar_url']],

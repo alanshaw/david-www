@@ -65,7 +65,7 @@ function getDependencyGraph(depName, version, callback) {
 		dep = dependencies[depName][version] = new Package(depName, version);
 	}
 
-	process.nextTick(function() {
+	process.nextTick(function () {
 
 		npm.commands.view([depName + '@' + version, 'dependencies'], function(err, data) {
 

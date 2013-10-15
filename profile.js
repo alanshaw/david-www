@@ -34,7 +34,7 @@ function getRepos(user, options, callback) {
 		options = options || {page: 0, repos: [], pageSize: 100};
 	}
 
-	setImmediate(function() {
+	setImmediate(function () {
 
 		github.repos.getFromUser({user: user, page: options.page, per_page: options.pageSize}, function(err, data) {
 

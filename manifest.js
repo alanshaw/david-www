@@ -149,7 +149,7 @@ exports.setCacheDuration = function(duration) {
 };
 
 // When a user publishes a project, they likely updated their project dependencies
-registry.on('change', function (change) {
+registry.on('change', function(change) {
 	var info = githubUrl(change.doc.repository);
 	// Expire the cached manifest for this user/repo
 	if (info && manifests[info.user] && manifests[info.user][info.project]) {
