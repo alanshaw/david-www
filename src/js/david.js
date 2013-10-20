@@ -1,4 +1,4 @@
-/* jshint browser:true, jquery: true */
+/* jshint browser:true, jquery:true */
 
 var d3 = require('d3');
 var fs = require('fs');
@@ -22,6 +22,10 @@ $('#dependency-counts-graph').each(function () {
 		.attr('class', 'bubble');
 
 	david.renderDependencyCountsGraph = function(data) {
+		if (!Object.keys(data).length) {
+			return;
+		}
+
 		// Get the max count
 		var max = Object.keys(data).reduce(function(max, depName) {
 				return data[depName] > max ? data[depName] : max;

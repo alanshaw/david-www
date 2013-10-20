@@ -1,4 +1,4 @@
-/* jshint browser:true, jquery: true */
+/* jshint browser:true, jquery:true */
 
 var d3 = require('d3');
 var merge = require('merge');
