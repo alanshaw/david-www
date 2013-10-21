@@ -11,9 +11,6 @@ module.exports = function(grunt) {
 					// Copy all (non hidden) files (not directories) from src
 					{dest: 'dist/', src: '*', filter: 'isFile', expand: true, cwd: 'src/'},
 
-					// Copy the following hidden files
-					{dest: 'dist/.htaccess', src: 'src/.htaccess'},
-
 					// Copy any JavaScript libs
 					{dest: 'dist/', src: 'js/vendor/*.min.js', expand: true, cwd: 'src/'},
 
