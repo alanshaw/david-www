@@ -11,9 +11,6 @@ module.exports = function(grunt) {
 					// Copy all (non hidden) files (not directories) from src
 					{dest: 'dist/', src: '*', filter: 'isFile', expand: true, cwd: 'src/'},
 
-					// Copy the following hidden files
-					{dest: 'dist/.htaccess', src: 'src/.htaccess'},
-
 					// Copy any JavaScript libs
 					{dest: 'dist/', src: 'js/vendor/*.min.js', expand: true, cwd: 'src/'},
 
@@ -152,4 +149,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-include-replace');
 
 	grunt.registerTask('default', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less', 'browserify', 'uglify', 'cssmin']);
+	grunt.registerTask('no-min', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less', 'browserify']);
 };
