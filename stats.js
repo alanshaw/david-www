@@ -35,7 +35,7 @@ registry.on('change', function(change) {
 
 	recentlyUpdatedPackages.unshift(pkg);
 
-	if(recentlyUpdatedPackages.length > 10) {
+	if (recentlyUpdatedPackages.length > 10) {
 		recentlyUpdatedPackages.pop();
 	}
 });
