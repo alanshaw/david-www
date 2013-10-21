@@ -152,4 +152,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-include-replace');
 
 	grunt.registerTask('default', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less', 'browserify', 'uglify', 'cssmin']);
+	grunt.registerTask('no-min', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less', 'browserify']);
 };
