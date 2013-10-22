@@ -2,13 +2,14 @@ var express = require('express');
 
 var oneDay = 86400000;  // milliseconds: 60 * 60 * 24 * 1000
 var oneWeek = oneDay * 7;
+var oneMonth = oneWeek * 30;
 
 module.exports.init = function(app) {
 
-	app.use('/css', express.static(__dirname + '/dist/css', { maxAge: oneWeek }));
-	app.use('/font', express.static(__dirname + '/dist/font', { maxAge: oneWeek }));
-	app.use('/img', express.static(__dirname + '/dist/img', { maxAge: oneWeek }));
-	app.use('/js', express.static(__dirname + '/dist/js', { maxAge: oneWeek }));
+	app.use('/css', express.static(__dirname + '/dist/css', { maxAge: oneMonth }));
+	app.use('/font', express.static(__dirname + '/dist/font', { maxAge: oneMonth }));
+	app.use('/img', express.static(__dirname + '/dist/img', { maxAge: oneMonth }));
+	app.use('/js', express.static(__dirname + '/dist/js', { maxAge: oneMonth }));
 
 	app.use(express.favicon(__dirname + '/dist/favicon.ico', { maxAge: oneWeek }));
 
