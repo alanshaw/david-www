@@ -118,6 +118,7 @@ textarea {
 @green0: #25b584;
 @yellow0: #f99619;
 @red0: #cb110b;
+@white: #fff;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Font
@@ -162,7 +163,7 @@ body {
 	font-family: juraregular, sans-serif;
 	font-size: 0.875em;
 	color: @grey0;
-	background: @grey1;
+	background-color: @grey1;
 }
 h1, h2 {
 	font-size: 1.714em;
@@ -182,10 +183,10 @@ h4 {
 }
 h1, h2, h3, h4 {
 	font-family: nevisbold, sans-serif;
+	font-weight: normal;
 	color: @blue0;
 	text-transform: uppercase;
-	text-shadow: #fff 0 1px 1px;
-	font-weight: normal;
+	text-shadow: @white 0 1px 1px;
 
 	&:first-child {
 		margin-top: 0;
@@ -203,16 +204,6 @@ a:hover, a:active{
 p, li {
 	line-height: 2.286;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
