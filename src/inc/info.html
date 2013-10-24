@@ -1,7 +1,7 @@
 {{#if info.deps.length}}
 <ul class="switch">
-	<li><a href="#view=list" title="Show dependencies in a list" class="selected"><i class="icon-list"></i> List</a></li>
-	<li><a href="#view=tree" title="Show dependencies in a tree"><i class="icon-sitemap"></i> Tree</a></li>
+	<li><a href="#view=list" title="Show dependencies in a list" class="selected"><i class="fa fa-list"></i> List</a></li>
+	<li><a href="#view=tree" title="Show dependencies in a tree"><i class="fa fa-sitemap"></i> Tree</a></li>
 </ul>
 @@include('summary.html')
 <div class="dep-table">
@@ -20,7 +20,7 @@
 		<tr>
 			<td class="dep">
 				<a href="http://npmjs.org/package/{{name}}">{{name}}</a>
-				{{#if outOfDate}}<a class="changes" href="#" title="View closed issues and commits"><i class="icon-exclamation-sign"></i></a>{{/if}}
+				{{#if outOfDate}}<a class="changes" href="#" title="View closed issues and commits"><i class="fa fa-exclamation-circle"></i></a>{{/if}}
 			</td>
 			<td class="required">{{required}}</td>
 			<td class="stable">{{stable}}</td>

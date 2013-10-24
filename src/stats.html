@@ -20,7 +20,7 @@
 		<h2>Recently updated NPM packages</h2>
 		<ul class="border-list">
 			{{#each recentlyUpdatedPackages}}
-			<li class="pinned"><a href="http://npmjs.org/package/{{name}}">{{name}}</a> <span>{{previous}} <i class="icon-double-angle-right"></i> {{version}}</span></li>
+			<li class="pinned"><a href="http://npmjs.org/package/{{name}}">{{name}}</a> <span>{{previous}} <i class="fa fa-angle-double-right"></i> {{version}}</span></li>
 			{{/each}}
 		</ul>
 	</div>
@@ -37,7 +37,7 @@
 					{{#each diffs}}
 					<li>
 						<a href="http://npmjs.org/package/{{name}}">{{name}}</a>
-						<span>{{#if previous}}{{previous}}{{else}}Nothing{{/if}} <i class="icon-arrow-right"></i> {{#if version}}{{version}}{{else}}Nothing{{/if}}</span>
+						<span>{{#if previous}}{{previous}}{{else}}Nothing{{/if}} <i class="fa fa-arrow-right"></i> {{#if version}}{{version}}{{else}}Nothing{{/if}}</span>
 					</li>
 					{{/each}}
 				</ul>
