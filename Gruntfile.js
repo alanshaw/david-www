@@ -77,8 +77,7 @@ module.exports = function(grunt) {
 					report: 'min'
 				},
 				files: {
-					'dist/css/main-<%= pkg.version %>.css': 'dist/css/main-<%= pkg.version %>.css',
-					'dist/css/font-awesome-ie7.css': 'dist/css/font-awesome-ie7.css'
+					'dist/css/main-<%= pkg.version %>.css': 'dist/css/main-<%= pkg.version %>.css'
 				}
 			}
 		},
