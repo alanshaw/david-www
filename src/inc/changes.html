@@ -16,9 +16,15 @@
 <ul>
 {{#each commits}}
 	<li>
+		{{#if author.login}}
 		<a href="{{author.html_url}}" title="{{author.login}}"><img src="{{author.avatar_url}}" alt="Avatar for {{author.login}}"/></a>
 		<a href="{{html_url}}" title="Committed on {{commit.committer.date}}" class="title">{{commit.message}}</a>
-		<a href="{{user.html_url}}" class="login">{{author.login}}</a>
+		<a href="{{author.html_url}}" class="login">{{author.login}}</a>
+		{{else}}
+		<img src="http://www.gravatar.com/avatar/?d=mm" alt="Avatar for {{commit.author.name}}"/>
+		<a href="{{html_url}}" title="Committed on {{commit.committer.date}}" class="title">{{commit.message}}</a>
+		{{commit.author.name}}
+		{{/if}}
 		<time datetime="{{commit.committer.date}}">committed on {{commit.committer.date}}</time>
 	</li>
 {{/each}}

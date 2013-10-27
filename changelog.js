@@ -173,7 +173,8 @@ module.exports.getChanges = function(modName, fromVer, toVer, cb) {
 								['author', ['login', 'html_url', 'avatar_url']],
 								['commit', [
 									'message',
-									['committer', ['date']]
+									['committer', ['date']],
+									['author', ['name']]
 								]]
 							]);
 						});
