@@ -2,7 +2,6 @@ var npm = require('npm');
 var moment = require('moment');
 var RSS = require('rss');
 var semver = require('semver');
-var semverext = require('david/lib/semverext');
 
 function Package(name, versions, repo) {
 	this.name = name; // The name of the package
@@ -60,7 +59,7 @@ function buildFeedXml(items, name, deps, limit) {
 
 	items = items.reduce(function(items, item) {
 		// Only add item to feed for valid, non-reckless dependency versions
-		if (semver.validRange(deps[item.name], true) && deps[item.name] !== 'latest' && deps[item.name] !== '*' && semverext.gtr(item.current, deps[item.name], true)) {
+		if (semver.validRange(deps[item.name], true) && deps[item.name] !== 'latest' && deps[item.name] !== '*' && semver.gtr(item.current, deps[item.name], true)) {
 			items.push(item);
 		}
 		return items;
