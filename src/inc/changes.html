@@ -4,9 +4,9 @@
 <ul class="issues">
 {{#each closedIssues}}
 	<li>
-		<a href="{{user.html_url}}" title="{{user.login}}"><img src="{{user.avatar_url}}" alt="Avatar for {{user.login}}"/></a>
-		<a href="{{html_url}}" title="Closed on {{closed_at}}" class="title"><span>#{{number}}</span> {{title}}</a>
-		<a href="{{user.html_url}}" class="login">{{user.login}}</a>
+		<a href="{{user.html_url}}" title="{{user.login}}" target="_blank"><img src="{{user.avatar_url}}" alt="Avatar for {{user.login}}"/></a>
+		<a href="{{html_url}}" title="Closed on {{closed_at}}" class="title" target="_blank"><span>#{{number}}</span> {{title}}</a>
+		<a href="{{user.html_url}}" class="login" target="_blank">{{user.login}}</a>
 		<time datetime="{{closed_at}}">closed on {{closed_at}}</time>
 	</li>
 {{/each}}
@@ -17,12 +17,12 @@
 {{#each commits}}
 	<li>
 		{{#if author.login}}
-		<a href="{{author.html_url}}" title="{{author.login}}"><img src="{{author.avatar_url}}" alt="Avatar for {{author.login}}"/></a>
-		<a href="{{html_url}}" title="Committed on {{commit.committer.date}}" class="title">{{commit.message}}</a>
-		<a href="{{author.html_url}}" class="login">{{author.login}}</a>
+		<a href="{{author.html_url}}" title="{{author.login}}" target="_blank"><img src="{{author.avatar_url}}" alt="Avatar for {{author.login}}"/></a>
+		<a href="{{html_url}}" title="Committed on {{commit.committer.date}}" class="title" target="_blank">{{commit.message}}</a>
+		<a href="{{author.html_url}}" class="login" target="_blank">{{author.login}}</a>
 		{{else}}
 		<img src="http://www.gravatar.com/avatar/?d=mm" alt="Avatar for {{commit.author.name}}"/>
-		<a href="{{html_url}}" title="Committed on {{commit.committer.date}}" class="title">{{commit.message}}</a>
+		<a href="{{html_url}}" title="Committed on {{commit.committer.date}}" class="title" target="_blank">{{commit.message}}</a>
 		{{commit.author.name}}
 		{{/if}}
 		<time datetime="{{commit.committer.date}}">committed on {{commit.committer.date}}</time>
