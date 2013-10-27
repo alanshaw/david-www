@@ -74,6 +74,7 @@ module.exports = function(grunt) {
 			compress: {
 				options: {
 					keepSpecialComments: 0,
+					removeEmpty: 1,
 					report: 'min'
 				},
 				files: {
