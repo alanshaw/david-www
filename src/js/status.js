@@ -100,11 +100,9 @@ $('#status-page').each(function () {
 					parentNode.children = parentNode.children.sort(function(a, b) {
 						if (a.name < b.name) {
 							return -1;
-						}
-						else if (a.name > b.name) {
+						} else if (a.name > b.name) {
 							return 1;
-						}
-						else {
+						} else {
 							return 0;
 						}
 					});
