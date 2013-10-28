@@ -10,6 +10,7 @@ var GitHubApi = require('github');
 var config = require('config');
 var registry = require('./registry');
 var githubUrl = require('github-url');
+var depDiff = require('dep-diff');
 
 var github = new GitHubApi({version: '3.0.0'});
 
@@ -31,44 +32,6 @@ function Manifest(data) {
 Manifest.TTL = moment.duration({hours: 1});
 
 var manifests = {};
-
-function PackageDiff(name, version, previous) {
-	this.name = name;
-	this.version = version;
-	this.previous = previous;
-}
-
-function getDependencyDiffs(deps1, deps2) {
-
-	deps1 = deps1 || {};
-	deps2 = deps2 || {};
-
-	var diffs = [];
-
-	// Check for deletions and changes
-	Object.keys(deps1).forEach(function(key) {
-
-		if (deps2[key] === undefined) {
-
-			// Dep has been deleted
-			diffs.push(new PackageDiff(key, null, deps1[key]));
-
-		} else if (deps1[key] !== deps2[key]) {
-
-			// Dep has been changed
-			diffs.push(new PackageDiff(key, deps2[key], deps1[key]));
-		}
-	});
-
-	// Check for additions
-	Object.keys(deps2).forEach(function(key) {
-		if (deps1[key] === undefined) {
-			diffs.push(new PackageDiff(key, deps2[key], null));
-		}
-	});
-
-	return diffs;
-}
 
 /**
  * Prevent JSON.parse errors from going postal and killing us all.
@@ -129,7 +92,7 @@ exports.getManifest = function(user, repo, callback) {
 
 			} else {
 
-				var diffs = getDependencyDiffs(oldDependencies, data.dependencies);
+				var diffs = depDiff(oldDependencies, data.dependencies);
 
 				if (diffs.length) {
 					exports.emit('dependenciesChange', diffs, JSON.parse(JSON.stringify(data)), user, repo);
