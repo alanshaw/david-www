@@ -7,7 +7,7 @@ var oneMonth = oneWeek * 30;
 module.exports.init = function(app) {
 
 	app.use('/css', express.static(__dirname + '/dist/css', { maxAge: oneMonth }));
-	app.use('/font', express.static(__dirname + '/dist/font', { maxAge: oneMonth }));
+	app.use('/fonts', express.static(__dirname + '/dist/fonts', { maxAge: oneMonth }));
 	app.use('/img', express.static(__dirname + '/dist/img', { maxAge: oneMonth }));
 	app.use('/js', express.static(__dirname + '/dist/js', { maxAge: oneMonth }));
 
