@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 
 					// Copy other resources
 					{dest: 'dist/', src: 'img/**', expand: true, cwd: 'src/'},
-					{dest: 'dist/', src: 'font/**', expand: true, cwd: 'src/'}
+					{dest: 'dist/', src: 'fonts/**', expand: true, cwd: 'src/'}
 				]
 			}
 		},
