@@ -88,7 +88,6 @@ module.exports = function(grunt) {
 			files: ['*.js', 'src/js/*.js', 'test/*.js'],
 			options: {
 				'browser': false,
-				'maxerr': 100,
 				'node': true,
 				/*'camelcase': true,*/
 				'curly': true,
@@ -98,15 +97,12 @@ module.exports = function(grunt) {
 				'immed': true,
 				'indent': 4,
 				/*'latedef': true,*/
-				'laxbreak': true,
 				'laxcomma': true,
-				'lastsemic': true,
 				'loopfunc': true,
 				'noarg': true,
 				'newcap': true,
 				'plusplus': false,
 				'quotmark': 'single',
-				'regexp': true,
 				'shadow': true,
 				'smarttabs': true,
 				'strict': false,
