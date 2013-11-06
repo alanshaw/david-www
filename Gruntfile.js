@@ -9,17 +9,14 @@ module.exports = function(grunt) {
 			dist: {
 				files: [
 					// Copy all (non hidden) files (not directories) from src
-					{dest: 'dist/', src: '*', filter: 'isFile', expand: true, cwd: 'src/'},
+					{dest: 'dist/', src: ['*', '!LICENSE.md'], filter: 'isFile', expand: true, cwd: 'src/'},
 
 					// Copy any JavaScript libs
 					{dest: 'dist/', src: 'js/vendor/*.min.js', expand: true, cwd: 'src/'},
 
-					// Copy any CSS files (not LESS src)
-					{dest: 'dist/', src: 'css/**/*.css', expand: true, cwd: 'src/'},
-
 					// Copy other resources
-					{dest: 'dist/', src: 'img/**', expand: true, cwd: 'src/'},
-					{dest: 'dist/', src: 'fonts/**', expand: true, cwd: 'src/'}
+					{dest: 'dist/', src: 'fonts/**', expand: true, cwd: 'src/'},
+					{dest: 'dist/', src: 'img/**', expand: true, cwd: 'src/'}
 				]
 			}
 		},
