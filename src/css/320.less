@@ -55,10 +55,12 @@ footer {
 			&:first-child {
 				margin: 0;
 			}
+			a, a:visited {
+				color: @grey0;
+			}
 			a {
 				font-family: nevisbold, sans-serif;
 				font-size: 0.857em;
-				color: @grey0;
 				text-transform: uppercase;
 			}
 		}
@@ -83,6 +85,9 @@ ul.stats {
 	}
 }
 .logo, .logo:visited {
+	color: @black0;
+}
+.logo {
 	display: inline-block;
 	/* TODO: Change it to this when it's fixed in less and IE8 support isn't no more
 	background: url(../img/logo-david@2x.jpg) no-repeat left center/5.188em 3.375em;
@@ -92,7 +97,6 @@ ul.stats {
 	margin-left: 3.6em;
 	padding-left: 5.733em;
 	font: 1.071em/3.610em jurabold, sans-serif;
-	color: @black0;
 	text-decoration: none;
 
 	.no-backgroundsize & {
@@ -298,7 +302,7 @@ ul.stats {
 				padding: 0;
 				color: @grey0;
 
-				a, a:visited {
+				a {
 					font-family: nevisbold, sans-serif;
 				}
 			}
@@ -308,6 +312,8 @@ ul.stats {
 			}
 			a, a:visited {
 				color: @grey0;
+			}
+			a {
 				display: block;
 			}
 			&:hover {
