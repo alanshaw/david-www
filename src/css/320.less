@@ -518,17 +518,14 @@ ul.stats {
 			}
 		}
 	}
-	.fancybox-opened #badge-embed, .fancybox-opened #dev-badge-embed {
+	.fancybox-opened .badge-embed, .fancybox-opened .badge-embed {
 		display: block;
 	}
-	#badge-embed, #dev-badge-embed {
+	.badge-embed {
 		display: none;
 		width: 30em;
 
-		> a {
-			display: block;
-		}
-		label {
+		.theme > a, label {
 			display: block;
 			margin-top: 1em;
 		}

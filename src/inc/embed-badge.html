@@ -1,0 +1,22 @@
+<div id="badge-embed" class="badge-embed">
+	<h1>Embed badge</h1>
+	<label for="badge-theme">Theme</label>
+	<select id="badge-theme">
+		<option value="default">Default</option>
+		<option value="shields">shields.io</option>
+	</select>
+	<div class="theme theme-default">
+		<a href="/{{user}}/{{repo}}.png"><img src="/{{user}}/{{repo}}.png" alt="Dependency status"></a>
+		<label for="badge-markdown-default">Markdown</label>
+		<input id="badge-markdown-default" type="text" value="[![Dependency Status](https://david-dm.org/{{user}}/{{repo}}.png)](https://david-dm.org/{{user}}/{{repo}})">
+		<label for="badge-html-default">HTML</label>
+		<input id="badge-html-default" type="text" value="&lt;a href=&quot;https://david-dm.org/{{user}}/{{repo}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;https://david-dm.org/{{user}}/{{repo}}.png&quot;/&gt;&lt;/a&gt;">
+	</div>
+	<div class="theme theme-shields">
+		<a href="/{{user}}/{{repo}}.png?theme=shields.io"><img src="/{{user}}/{{repo}}.png?theme=shields.io" alt="Dependency status"></a>
+		<label for="badge-markdown-shields">Markdown</label>
+		<input id="badge-markdown-shields" type="text" value="[![Dependency Status](https://david-dm.org/{{user}}/{{repo}}.png?theme=shields.io)](https://david-dm.org/{{user}}/{{repo}})">
+		<label for="badge-html-shields">HTML</label>
+		<input id="badge-html-shields" type="text" value="&lt;a href=&quot;https://david-dm.org/{{user}}/{{repo}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;https://david-dm.org/{{user}}/{{repo}}.png?theme=shields.io&quot;/&gt;&lt;/a&gt;">
+	</div>
+</div>

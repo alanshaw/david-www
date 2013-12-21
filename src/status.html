@@ -15,22 +15,8 @@
 		{{#if manifest.description}}
 		<p>{{manifest.description}}</p>
 		{{/if}}
-		<div id="badge-embed">
-			<h1>Embed badge</h1>
-			<a href="/{{user}}/{{repo}}.png"><img src="/{{user}}/{{repo}}.png" alt="Dependency status"></a>
-			<label for="badge-markdown">Markdown</label>
-			<input id="badge-markdown" type="text" value="[![Dependency Status](https://david-dm.org/{{user}}/{{repo}}.png)](https://david-dm.org/{{user}}/{{repo}})">
-			<label for="badge-html">HTML</label>
-			<input id="badge-html" type="text" value="&lt;a href=&quot;https://david-dm.org/{{user}}/{{repo}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;https://david-dm.org/{{user}}/{{repo}}.png&quot;/&gt;&lt;/a&gt;">
-		</div>
-		<div id="dev-badge-embed">
-			<h1>Embed badge</h1>
-			<a href="/{{user}}/{{repo}}/dev-status.png"><img src="/{{user}}/{{repo}}/dev-status.png" alt="Dependency status"></a>
-			<label for="dev-badge-markdown">Markdown</label>
-			<input id="dev-badge-markdown" type="text" value="[![devDependency Status](https://david-dm.org/{{user}}/{{repo}}/dev-status.png)](https://david-dm.org/{{user}}/{{repo}}#info=devDependencies)">
-			<label for="dev-badge-html">HTML</label>
-			<input id="dev-badge-html" type="text" value="&lt;a href=&quot;https://david-dm.org/{{user}}/{{repo}}#info=devDependencies&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;https://david-dm.org/{{user}}/{{repo}}/dev-status.png&quot;/&gt;&lt;/a&gt;">
-		</div>
+		@@include('inc/embed-badge.html')
+		@@include('inc/embed-badge-dev.html')
 	</div>
 	<ul id="dep-switch">
 		<li><a href="#info=dependencies" title="Show dependencies" class="selected"><i class="fa fa-cogs"></i> dependencies</a></li>

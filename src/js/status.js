@@ -19,7 +19,7 @@ $('#status-page').each(function () {
 	var devStatus = $('#dev-status');
 	devStatus.fancybox();
 
-	$('#badge-embed input, #dev-badge-embed input').each(function () {
+	$('.badge-embed input').each(function () {
 		var clicked = false
 			, embedCode = $(this);
 		embedCode.click(function () {
@@ -30,10 +30,18 @@ $('#status-page').each(function () {
 		});
 	});
 
+	$('.badge-embed select').change(function () {
+		var container = $(this).closest('.badge-embed');
+		$('.theme', container).hide();
+		$('.theme-' + $(this).val(), container).show();
+	});
+
+	$('.badge-embed .theme').not('.theme-default').hide();
+
 	var state = {
-			info: $.bbq.getState('info', true) || 'dependencies',
-			view: $.bbq.getState('view', true) || 'table'
-		};
+		info: $.bbq.getState('info', true) || 'dependencies',
+		view: $.bbq.getState('view', true) || 'table'
+	};
 
 	// Normalized pathname for use with XHR requests
 	var pathname = window.location.pathname;
