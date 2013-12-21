@@ -1,5 +1,6 @@
 var express = require('express');
 var consolidate = require('consolidate');
+var fs = require('fs');
 var stats = require('./stats');
 var manifest = require('./manifest');
 var statics = require('./statics');
@@ -137,6 +138,10 @@ function changes (req, res) {
 	});
 }
 
+function badgePath (theme, dev, status, retina) {
+	return 'dist/img/status/' + (theme ? theme + '/' : '') + (dev ? 'dev-' : '') + status + (retina ? '@2x' : '') + '.png';
+}
+
 /**
  * Send the status badge for this user and repository
  */
@@ -146,20 +151,29 @@ function sendStatusBadge(req, res, opts) {
 	res.setHeader('Cache-Control', 'no-cache');
 
 	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
-
 		if (err) {
-			res.status(404).sendfile('dist/img/unknown.png');
-			return;
+			return res.status(404).sendfile('dist/img/status/unknown.png');
 		}
 
 		brains.getInfo(manifest, {dev: opts.dev}, function(err, info) {
-
 			if (err) {
-				res.status(500).sendfile('dist/img/unknown.png');
-				return;
+				return res.status(500).sendfile('dist/img/status/unknown.png');
 			}
 
-			res.sendfile('dist/img/' + (opts.dev ? 'dev-' : '') + info.status + (opts.retina ? '@2x' : '') + '.png');
+			if (req.query.theme) {
+				var theme = req.query.theme.replace(/[^A-Za-z.-]/g, '');
+
+				// Ensure theme directory exists
+				fs.exists('dist/img/status/' + theme, function (exists) {
+					if (!exists) {
+						return res.sendfile(badgePath('', opts.dev, info.status, opts.retina));
+					}
+
+					res.sendfile(badgePath(theme, opts.dev, info.status, opts.retina));
+				});
+			} else {
+				res.sendfile(badgePath('', opts.dev, info.status, opts.retina));
+			}
 		});
 	});
 }
