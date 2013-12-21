@@ -9,17 +9,14 @@ module.exports = function(grunt) {
 			dist: {
 				files: [
 					// Copy all (non hidden) files (not directories) from src
-					{dest: 'dist/', src: '*', filter: 'isFile', expand: true, cwd: 'src/'},
+					{dest: 'dist/', src: ['*', '!LICENSE.md'], filter: 'isFile', expand: true, cwd: 'src/'},
 
 					// Copy any JavaScript libs
 					{dest: 'dist/', src: 'js/vendor/*.min.js', expand: true, cwd: 'src/'},
 
-					// Copy any CSS files (not LESS src)
-					{dest: 'dist/', src: 'css/**/*.css', expand: true, cwd: 'src/'},
-
 					// Copy other resources
-					{dest: 'dist/', src: 'img/**', expand: true, cwd: 'src/'},
-					{dest: 'dist/', src: 'fonts/**', expand: true, cwd: 'src/'}
+					{dest: 'dist/', src: 'fonts/**', expand: true, cwd: 'src/'},
+					{dest: 'dist/', src: 'img/**', expand: true, cwd: 'src/'}
 				]
 			}
 		},
@@ -88,7 +85,6 @@ module.exports = function(grunt) {
 			files: ['*.js', 'src/js/*.js', 'test/*.js'],
 			options: {
 				'browser': false,
-				'maxerr': 100,
 				'node': true,
 				/*'camelcase': true,*/
 				'curly': true,
@@ -98,15 +94,12 @@ module.exports = function(grunt) {
 				'immed': true,
 				'indent': 4,
 				/*'latedef': true,*/
-				'laxbreak': true,
 				'laxcomma': true,
-				'lastsemic': true,
 				'loopfunc': true,
 				'noarg': true,
 				'newcap': true,
 				'plusplus': false,
 				'quotmark': 'single',
-				'regexp': true,
 				'shadow': true,
 				'smarttabs': true,
 				'strict': false,

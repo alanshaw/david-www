@@ -3,7 +3,7 @@
 	<h1>
 		<a href="https://github.com/{{user}}">
 			{{#if repos.length}}
-			<img src="{{repos.[0].repo.owner.avatar_url}}" alt="Avatar for {{user}}"/>
+			<img src="{{repos.[0].repo.owner.avatar_url}}" alt="Avatar for {{user}}">
 			{{/if}}
 			{{user}}
 		</a>
@@ -14,7 +14,7 @@
 		{{#each repos}}
 		<li class="{{info.status}}">
 			<a href="/{{../user}}/{{repo.name}}">{{manifest.name}}</a>
-			<a href="/{{../user}}/{{repo.name}}"><img src="/{{../user}}/{{repo.name}}.png" alt="Dependency status" /></a>
+			<a href="/{{../user}}/{{repo.name}}"><img src="/{{../user}}/{{repo.name}}.png" alt="Dependency status"></a>
 		</li>
 		{{/each}}
 	</ul>

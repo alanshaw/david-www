@@ -118,7 +118,7 @@ $('#status-page').each(function () {
 			, i = 0
 			, root = null
 			, tree = d3.layout.tree().size([h, w])
-			, diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x] });
+			, diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
 
 		var vis = d3.select($('.dep-graph', container)[0]).append('svg:svg')
 			.attr('width', w + m[1] + m[3])
