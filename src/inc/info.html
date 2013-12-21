@@ -16,20 +16,20 @@
 		</tr>
 		</thead>
 		<tbody>
-		{{#info.deps}}
-		<tr>
-			<td class="dep">
-				<a href="@@npmsite/package/{{name}}">{{name}}</a>
-				{{#if outOfDate}}<a class="changes" href="#" title="View closed issues and commits"><i class="fa fa-exclamation-circle"></i></a>{{/if}}
-			</td>
-			<td class="required">{{required}}</td>
-			<td class="stable">{{stable}}</td>
-			<td class="latest">{{latest}}</td>
-			<td class="status">
-				<span class="sqr {{status}} {{#if pinned}}pinned{{else}}unpinned{{/if}}" title="{{#if pinned}}pinned {{/if}}{{status}}"></span>
-			</td>
-		</tr>
-		{{/info.deps}}
+			{{#info.deps}}
+			<tr>
+				<td class="dep">
+					<a href="@@npmsite/package/{{name}}">{{name}}</a>
+					{{#if outOfDate}}<a class="changes" href="#" title="View closed issues and commits"><i class="fa fa-exclamation-circle"></i></a>{{/if}}
+				</td>
+				<td class="required">{{required}}</td>
+				<td class="stable">{{stable}}</td>
+				<td class="latest">{{latest}}</td>
+				<td class="status">
+					<span class="sqr {{status}} {{#if pinned}}pinned{{else}}unpinned{{/if}}" title="{{#if pinned}}pinned {{/if}}{{status}}"></span>
+				</td>
+			</tr>
+			{{/info.deps}}
 		</tbody>
 	</table>
 </div>
