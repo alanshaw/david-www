@@ -34,7 +34,7 @@ $('#home-page').each(function () {
 
 	// Green text if it is... wait a minute should this be tied to repo health not.
 	badge.load(function () {
-		if (badge.attr('src') === '/img/outofdate.png') {
+		if (badge.attr('src') === '/img/status/outofdate.png') {
 			return;
 		}
 		url.removeClass('nope');
