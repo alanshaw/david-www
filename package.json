@@ -3,6 +3,7 @@
   "version": "2.10.0",
   "description": "Watching your Node.js dependencies.",
   "main": "index.js",
+  "homepage": "https://github.com/alanshaw/david-www",
   "repository": {
     "type": "git",
     "url": "git://github.com/alanshaw/david-www.git"
@@ -24,14 +25,13 @@
   "scripts": {
     "test": "grunt"
   },
-  "readmeFilename": "README.md",
   "dependencies": {
     "async": "~0.2.9",
     "config": "~0.4.33",
     "consolidate": "~0.9.1",
     "couchwatch": "~0.6.0",
     "cycle": "~1.0.2",
-    "d3": "~3.3.9",
+    "d3": "~3.3.10",
     "david": "~2.4.0",
     "dep-diff": "~1.0.1",
     "express": "~3.4.4",
@@ -42,20 +42,20 @@
     "memory-cache": "~0.0.5",
     "merge": "~1.1.2",
     "moment": "~2.4.0",
-    "npm": "~1.3.14",
+    "npm": "~1.3.15",
     "request": "~2.27.0",
     "rss": "~0.2.1",
     "semver": "~2.2.1"
   },
   "devDependencies": {
     "brfs": "0.0.8",
-    "grunt": "~0.4.1",
+    "grunt": "~0.4.2",
     "grunt-browserify": "~1.2.11",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-cssmin": "~0.7.0",
-    "grunt-contrib-jshint": "~0.7.1",
-    "grunt-contrib-less": "~0.8.1",
+    "grunt-contrib-jshint": "~0.7.2",
+    "grunt-contrib-less": "~0.8.2",
     "grunt-contrib-nodeunit": "~0.2.2",
     "grunt-contrib-uglify": "~0.2.7",
     "grunt-contrib-watch": "~0.5.3",
@@ -64,5 +64,8 @@
   },
   "engines": {
     "node": ">=0.8.0"
+  },
+  "directories": {
+    "test": "test"
   }
 }
