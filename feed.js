@@ -125,6 +125,14 @@ function getPackage(pkgName, callback) {
 
 		if (time) {
 
+			// Filter the time info by valid semver versions (npm now includes "created" and "modified" fields)
+			time = Object.keys(time).filter(function (ver) {
+				return semver.valid(ver, true);
+			}).reduce(function (cleanTime, ver) {
+				cleanTime[ver] = time[ver];
+				return cleanTime;
+			}, {});
+
 			pkg = packages[pkgName] = new Package(pkgName, time, repository);
 
 			callback(null, pkg);
