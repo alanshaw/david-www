@@ -82,7 +82,7 @@ function getPublishDates (modName, modVers, cb) {
 
 				// Get the first version that satisfies the range
 				for (var i = 0, len = ascPublishDates.length; i < len; ++i) {
-					if (semver.satisfies(versionsByDate[ascPublishDates[i]], ver)) {
+					if (semver.satisfies(versionsByDate[ascPublishDates[i]], ver, true)) {
 						return cb(null, moment(ascPublishDates[i]).toDate());
 					}
 				}
