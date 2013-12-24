@@ -66,8 +66,11 @@ function getPublishDates (modName, modVers, cb) {
 					return cb(new Error(modName + ' has no time information'));
 				}
 
+				// Filter the time info by valid semver versions (npm now includes "created" and "modified" fields)
 				// Flip `time` from {[version]: [date]} to {[date]: [version]}
-				var versionsByDate = Object.keys(time).reduce(function(versions, version) {
+				var versionsByDate = Object.keys(time).filter(function (ver) {
+					return semver.valid(ver, true);
+				}).reduce(function(versions, version) {
 					versions[time[version]] = version;
 					return versions;
 				}, {});
