@@ -141,6 +141,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-include-replace');
 
-	grunt.registerTask('default', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less', 'browserify', 'uglify', 'cssmin']);
-	grunt.registerTask('no-min', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less', 'browserify']);
+	grunt.registerTask('base', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less', 'browserify']);
+	grunt.registerTask('min', ['uglify', 'cssmin']);
+	grunt.registerTask('default', ['base', 'min']);
 };
