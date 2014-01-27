@@ -115,7 +115,7 @@ module.exports = function(grunt) {
 			all: ['test/**/*_test.js']
 		},
 
-		// Watch JS, LESS & HTML files for changes, copy & compile but not minify for easy debug during dev
+		// Watch JS, LESS, HTML and image files for changes, copy & compile but not minify for easy debug during dev
 		watch: {
 			project: {
 				options: {atBegin: true},
