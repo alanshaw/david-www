@@ -60,7 +60,9 @@
     "grunt-contrib-uglify": "~0.3.2",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-include-replace": "~1.2.0",
-    "rewire": "~2.0.0"
+    "load-grunt-tasks": "~0.3.0",
+    "rewire": "~2.0.0",
+    "time-grunt": "~0.2.8"
   },
   "engines": {
     "node": ">=0.8.0"
