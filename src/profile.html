@@ -1,7 +1,7 @@
 @@include('inc/top.html', {"id": "profile-page", "title": "Profile for {{user}}"})
 
 	<h1>
-		<a href="https://github.com/{{user}}">
+		<a href="@@githubsite/{{user}}">
 			{{#if repos.length}}
 			<img src="{{repos.[0].repo.owner.avatar_url}}" alt="Avatar for {{user}}">
 			{{/if}}

@@ -12,7 +12,13 @@ var registry = require('./registry');
 var githubUrl = require('github-url');
 var depDiff = require('dep-diff');
 
-var github = new GitHubApi({version: '3.0.0'});
+var github = new GitHubApi({
+	protocol: config.github.protocol,
+	host: config.github.host,
+	version: config.github.api.version,
+	pathPrefix: config.github.api.pathPrefix,
+	timeout: 5000
+});
 
 if (config.github) {
 	github.authenticate({
@@ -113,7 +119,7 @@ exports.setCacheDuration = function(duration) {
 
 // When a user publishes a project, they likely updated their project dependencies
 registry.on('change', function(change) {
-	var info = githubUrl(change.doc.repository);
+	var info = githubUrl(change.doc.repository, config.github.host);
 	// Expire the cached manifest for this user/repo
 	if (info && manifests[info.user] && manifests[info.user][info.project]) {
 		console.log('Expiring cached manifest', info.user, info.project);

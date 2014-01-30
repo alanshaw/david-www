@@ -1,8 +1,9 @@
 var couchwatch = require('couchwatch');
 var events = require('events');
+var config = require('config');
 
 var registry = new events.EventEmitter();
-var watcher = couchwatch('http://isaacs.iriscouch.com/registry', -1);
+var watcher = couchwatch(config.npm.options.registry);
 
 watcher.on('row', function (change) {
 	registry.emit('change', change);

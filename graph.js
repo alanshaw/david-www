@@ -2,6 +2,7 @@ var npm = require('npm');
 var moment = require('moment');
 var semver = require('semver');
 var cycle = require('cycle');
+var config = require('config');
 
 function Package(name, version) {
 	this.name = name;
@@ -207,7 +208,7 @@ module.exports.getProjectDependencyGraph = function(name, version, deps, callbac
 		project = projects[name][version] = new Package(name, version);
 	}
 
-	npm.load({}, function(err) {
+	npm.load(config.npm.options, function(err) {
 
 		if (err) {
 			callback(err);
