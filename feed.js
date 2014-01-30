@@ -2,6 +2,7 @@ var npm = require('npm');
 var moment = require('moment');
 var RSS = require('rss');
 var semver = require('semver');
+var config = require('config');
 
 function Package(name, versions, repo) {
 	this.name = name; // The name of the package
@@ -181,7 +182,7 @@ module.exports.get = function(manifest, options, callback) {
 	}
 
 	// Assume we're probably going to have to use NPM
-	npm.load({}, function(err) {
+	npm.load(config.npm.options, function(err) {
 
 		if (err) {
 			callback(err);

@@ -2,6 +2,8 @@ module.exports = function(grunt) {
 
 	grunt.initConfig({
 
+		conf: require('config'),
+
 		pkg: grunt.file.readJSON('package.json'),
 
 		// Copy files that don't need compilation to dist/
@@ -26,7 +28,10 @@ module.exports = function(grunt) {
 				options: {
 					globals: {
 						version: '<%= pkg.version %>',
-						headHtml: ''
+						headHtml: '',
+						hostname: '<%= conf.site.hostname %>',
+						npmsite: '<%= conf.npm.hostname %>',
+						githubsite: '<%= conf.github.protocol %>://<%= conf.github.host %>'
 					}
 				},
 				files: [

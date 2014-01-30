@@ -1,5 +1,6 @@
 var npm = require('npm');
 var stats = require('./stats');
+var config = require('config');
 
 function Query(keywords, callback) {
 	this.keywords = keywords;
@@ -44,7 +45,7 @@ function processQueue() {
 		keywords = query.keywords,
 		callback = query.callback;
 
-	npm.load({}, function(err) {
+	npm.load(config.npm.options, function(err) {
 
 		if (err) {
 			callback(err);

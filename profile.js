@@ -4,7 +4,13 @@ var manifest = require('./manifest');
 var brains = require('./brains');
 var config = require('config');
 
-var github = new GitHubApi({version: '3.0.0'});
+var github = new GitHubApi({
+	protocol: config.github.protocol,
+	host: config.github.host,
+	version: config.github.api.version,
+	pathPrefix: config.github.api.pathPrefix,
+	timeout: 5000
+});
 
 if (config.github) {
 	github.authenticate({

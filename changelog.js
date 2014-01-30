@@ -7,7 +7,13 @@ var githubUrl = require('github-url');
 var async = require('async');
 var extract = require('extract');
 
-var github = new GitHubApi({version: '3.0.0'});
+var github = new GitHubApi({
+	protocol: config.github.protocol,
+	host: config.github.host,
+	version: config.github.api.version,
+	pathPrefix: config.github.api.pathPrefix,
+	timeout: 5000
+});
 
 if (config.github) {
 	github.authenticate({
@@ -106,7 +112,7 @@ function getPublishDates (modName, modVers, cb) {
 module.exports.getChanges = function(modName, fromVer, toVer, cb) {
 	console.log('Getting changes for', modName, 'from', fromVer, 'to', toVer);
 
-	npm.load({}, function(er) {
+	npm.load(config.npm.options, function(er) {
 		if (er) {
 			return cb(er);
 		}
