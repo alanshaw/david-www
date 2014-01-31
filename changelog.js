@@ -38,7 +38,7 @@ function getUserRepo (modName, cb) {
 			return cb(new Error(modName + ' has no repository information'));
 		}
 
-		var info = githubUrl(repo);
+		var info = githubUrl(repo, config.github.host);
 
 		if (!info) {
 			return cb(new Error('Unsupported repository URL'));
