@@ -36,7 +36,8 @@ module.exports = function(grunt) {
 				},
 				files: [
 					{src: '*.html', dest: 'dist/', expand: true, cwd: 'src/'},
-					{src: 'inc/*.html', dest: 'dist/', expand: true, cwd: 'src/'}
+					{src: 'inc/*.html', dest: 'dist/', expand: true, cwd: 'src/'},
+					{src: 'dist/js/bundle-*.js', dest: '.', expand: true}
 				]
 			}
 		},
@@ -125,7 +126,7 @@ module.exports = function(grunt) {
 			project: {
 				options: {atBegin: true},
 				files: ['src/js/**/*.js', 'src/css/**/*.less', 'src/**/*.html', 'src/img/**/*'],
-				tasks: ['copy', 'includereplace', 'less', 'browserify']
+				tasks: ['copy', 'less', 'browserify', 'includereplace']
 			}
 		},
 
@@ -146,7 +147,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-include-replace');
 
-	grunt.registerTask('base', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less', 'browserify']);
+	grunt.registerTask('base', ['jshint', 'nodeunit', 'copy', 'less', 'browserify', 'includereplace']);
 	grunt.registerTask('min', ['uglify', 'cssmin']);
 	grunt.registerTask('default', ['base', 'min']);
 };

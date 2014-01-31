@@ -88,7 +88,7 @@ function buildFeedXml(items, name, deps, limit) {
 		rssFeed.item({
 			title: items[i].name + ' ' + items[i].previous + ' to ' + items[i].current + ' (' + deps[items[i].name] + ' required)',
 			description: items[i].repoUrl ? '<a href="' + items[i].repoUrl + '">' + items[i].repoUrl + '</a>' : null,
-			url: 'https://npmjs.org/package/' + items[i].name,
+			url: '@@npmsite/package/' + items[i].name,
 			date: items[i].pubdate
 		});
 	}

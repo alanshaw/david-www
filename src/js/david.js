@@ -62,7 +62,7 @@ $('#dependency-counts-graph').each(function () {
 			.attr('transform', function () {
 				return 'translate(' + diameter / 2 + ',' + diameter / 2 + ')';
 			}).on('click', function(d) {
-				window.location = 'http://npmjs.org/package/' + d.depName;
+				window.location = '@@npmsite/package/' + d.depName;
 			});
 
 		nodeEnter.append('title').text(function(d) {
