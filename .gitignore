@@ -2,4 +2,5 @@
 .idea
 config/runtime.json
 dist
+tmp
 node_modules
