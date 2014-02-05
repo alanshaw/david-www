@@ -36,8 +36,7 @@ module.exports = function(grunt) {
 				},
 				files: [
 					{src: '*.html', dest: 'dist/', expand: true, cwd: 'src/'},
-					{src: 'inc/*.html', dest: 'dist/', expand: true, cwd: 'src/'},
-					{src: 'js/**/*', dest: 'tmp/', expand: true, cwd: 'src/'}
+					{src: 'inc/*.html', dest: 'dist/', expand: true, cwd: 'src/'}
 				]
 			}
 		},
@@ -53,7 +52,7 @@ module.exports = function(grunt) {
 
 		browserify: {
 			dist: {
-				files: {'dist/js/bundle-<%= pkg.version %>.js': 'tmp/js/main.js'},
+				files: {'dist/js/bundle-<%= pkg.version %>.js': 'src/js/main.js'},
 				options: {transform: ['brfs']}
 			}
 		},
