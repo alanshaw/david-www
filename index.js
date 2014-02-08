@@ -39,7 +39,7 @@ app.get('/:user/:repo/status@2x.png',     retinaStatusBadge);
 app.get('/:user/:repo/status.svg',        svgStatusBadge);
 app.get('/:user/:repo/dev-status.png',    devStatusBadge);
 app.get('/:user/:repo/dev-status@2x.png', retinaDevStatusBadge);
-app.get('/:user/:repo/dev-status.svg',    svgStatusBadge);
+app.get('/:user/:repo/dev-status.svg',    svgDevStatusBadge);
 app.get('/:user/:repo@2x.png',            retinaStatusBadge);
 app.get('/:user/:repo.svg',               svgStatusBadge);
 app.get('/:user/:repo.png',               statusBadge);
@@ -142,7 +142,7 @@ function changes (req, res) {
 }
 
 function badgePath (theme, dev, status, retina, extension) {
-	return 'dist/img/status/' + (theme ? theme + '/' : '') + (dev ? 'dev-' : '') + status + (retina ? '@2x' : '') + '.' + (theme === "shield.io" && extension === "svg" ? 'svg' : 'png');
+	return 'dist/img/status/' + (theme ? theme + '/' : '') + (dev ? 'dev-' : '') + status + (retina ? '@2x' : '') + '.' + (theme === 'shield.io' && extension === 'svg' ? 'svg' : 'png');
 }
 
 /**
@@ -175,7 +175,7 @@ function sendStatusBadge(req, res, opts) {
 					res.sendfile(badgePath(theme, opts.dev, info.status, opts.retina, options.extension));
 				});
 			} else {
-				res.sendfile(badgePath('', opts.dev, info.status, opts.retina, optios.extension));
+				res.sendfile(badgePath('', opts.dev, info.status, opts.retina, options.extension));
 			}
 		});
 	});
