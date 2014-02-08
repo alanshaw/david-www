@@ -36,9 +36,12 @@ app.get('/:user/:repo/rss.xml',           rssFeed);
 app.get('/:user/:repo/dev-rss.xml',       devRssFeed);
 app.get('/:user/:repo/status.png',        statusBadge);
 app.get('/:user/:repo/status@2x.png',     retinaStatusBadge);
+app.get('/:user/:repo/status.svg',        svgStatusBadge);
 app.get('/:user/:repo/dev-status.png',    devStatusBadge);
 app.get('/:user/:repo/dev-status@2x.png', retinaDevStatusBadge);
+app.get('/:user/:repo/dev-status.svg',    svgStatusBadge);
 app.get('/:user/:repo@2x.png',            retinaStatusBadge);
+app.get('/:user/:repo.svg',               svgStatusBadge);
 app.get('/:user/:repo.png',               statusBadge);
 app.get('/:user/:repo',                   statusPage);
 app.get('/:user',                         profilePage);
@@ -138,8 +141,8 @@ function changes (req, res) {
 	});
 }
 
-function badgePath (theme, dev, status, retina) {
-	return 'dist/img/status/' + (theme ? theme + '/' : '') + (dev ? 'dev-' : '') + status + (retina ? '@2x' : '') + '.png';
+function badgePath (theme, dev, status, retina, extension) {
+	return 'dist/img/status/' + (theme ? theme + '/' : '') + (dev ? 'dev-' : '') + status + (retina ? '@2x' : '') + '.' + (theme === "shield.io" && extension === "svg" ? 'svg' : 'png');
 }
 
 /**
@@ -166,13 +169,13 @@ function sendStatusBadge(req, res, opts) {
 				// Ensure theme directory exists
 				fs.exists('dist/img/status/' + theme, function (exists) {
 					if (!exists) {
-						return res.sendfile(badgePath('', opts.dev, info.status, opts.retina));
+						return res.sendfile(badgePath('', opts.dev, info.status, opts.retina, opts.extension));
 					}
 
-					res.sendfile(badgePath(theme, opts.dev, info.status, opts.retina));
+					res.sendfile(badgePath(theme, opts.dev, info.status, opts.retina, options.extension));
 				});
 			} else {
-				res.sendfile(badgePath('', opts.dev, info.status, opts.retina));
+				res.sendfile(badgePath('', opts.dev, info.status, opts.retina, optios.extension));
 			}
 		});
 	});
@@ -182,12 +185,20 @@ function statusBadge(req, res) {
 	sendStatusBadge(req, res);
 }
 
+function svgStatusBadge(req, res) {
+	sendStatusBadge(req, res, {extension: 'svg'});
+}
+
 function retinaStatusBadge(req, res) {
 	sendStatusBadge(req, res, {retina: true});
 }
 
 function devStatusBadge(req, res) {
 	sendStatusBadge(req, res, {dev: true});
+}
+
+function svgDevStatusBadge(req, res) {
+	sendStatusBadge(req, res, {dev: true, extension: 'svg'});
 }
 
 function retinaDevStatusBadge(req, res) {

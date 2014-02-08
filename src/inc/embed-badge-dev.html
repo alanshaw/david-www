@@ -4,6 +4,7 @@
 	<select id="badge-theme">
 		<option value="default">Default</option>
 		<option value="shields">shields.io</option>
+		<option value="shields">shields.io (SVG)</option>
 	</select>
 	<div class="theme theme-default">
 		<a href="/{{user}}/{{repo}}/dev-status.png"><img src="/{{user}}/{{repo}}/dev-status.png" alt="Dependency status"></a>
@@ -18,5 +19,12 @@
 		<input id="dev-badge-markdown-shields" type="text" value="[![devDependency Status](@@hostname/{{user}}/{{repo}}/dev-status.png?theme=shields.io)](@@hostname/{{user}}/{{repo}}#info=devDependencies)">
 		<label for="dev-badge-html-shields">HTML</label>
 		<input id="dev-badge-html-shields" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}#info=devDependencies&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}/dev-status.png?theme=shields.io&quot;/&gt;&lt;/a&gt;">
+	</div>
+	<div class="theme theme-shields-svg">
+		<a href="/{{user}}/{{repo}}/dev-status.svg?theme=shields.io"><img src="/{{user}}/{{repo}}/dev-status.svg?theme=shields.io" alt="Dependency status"></a>
+		<label for="dev-badge-markdown-shields">Markdown</label>
+		<input id="dev-badge-markdown-shields" type="text" value="[![devDependency Status](@@hostname/{{user}}/{{repo}}/dev-status.svg?theme=shields.io)](@@hostname/{{user}}/{{repo}}#info=devDependencies)">
+		<label for="dev-badge-html-shields">HTML</label>
+		<input id="dev-badge-html-shields" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}#info=devDependencies&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}/dev-status.svg?theme=shields.io&quot;/&gt;&lt;/a&gt;">
 	</div>
 </div>
