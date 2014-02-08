@@ -172,10 +172,10 @@ function sendStatusBadge(req, res, opts) {
 						return res.sendfile(badgePath('', opts.dev, info.status, opts.retina, opts.extension));
 					}
 
-					res.sendfile(badgePath(theme, opts.dev, info.status, opts.retina, options.extension));
+					res.sendfile(badgePath(theme, opts.dev, info.status, opts.retina, opts.extension));
 				});
 			} else {
-				res.sendfile(badgePath('', opts.dev, info.status, opts.retina, options.extension));
+				res.sendfile(badgePath('', opts.dev, info.status, opts.retina, opts.extension));
 			}
 		});
 	});
