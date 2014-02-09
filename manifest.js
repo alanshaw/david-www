@@ -20,7 +20,7 @@ var github = new GitHubApi({
 	timeout: 5000
 });
 
-if (config.github) {
+if (config.github && config.github.username) {
 	github.authenticate({
 		type: 'basic',
 		username: config.github.username,
