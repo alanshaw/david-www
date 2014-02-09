@@ -1,8 +1,8 @@
 [![David](https://raw.github.com/alanshaw/david-www/master/david.png)](https://david-dm.org/)
 
-[![Build Status](https://travis-ci.org/alanshaw/david-www.png?branch=master)](https://travis-ci.org/alanshaw/david-www)
-[![Dependency Status](https://david-dm.org/alanshaw/david-www.png)](https://david-dm.org/alanshaw/david-www)
-[![devDependency Status](https://david-dm.org/alanshaw/david-www/dev-status.png)](https://david-dm.org/alanshaw/david-www#info=devDependencies)
+[![Build Status](https://img.shields.io/travis/alanshaw/david-www/master.svg)](https://travis-ci.org/alanshaw/david-www)
+[![Dependency Status](https://david-dm.org/alanshaw/david-www.svg?theme=shields.io)](https://david-dm.org/alanshaw/david-www)
+[![devDependency Status](https://david-dm.org/alanshaw/david-www/dev-status.svg?theme=shields.io)](https://david-dm.org/alanshaw/david-www#info=devDependencies)
 
 ___
 
