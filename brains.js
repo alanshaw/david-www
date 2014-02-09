@@ -139,7 +139,11 @@ module.exports.getInfo = function(manifest, opts, cb) {
 		opts = opts || {};
 	}
 
-	var davidOptions = {dev: opts.dev, loose: true};
+	if (config.npm && config.npm.options) {
+		opts.npm = config.npm.options;
+	}
+
+	var davidOptions = {dev: opts.dev, loose: true, npm: opts.npm};
 
 	getDependencies(manifest, davidOptions, function(er, deps) {
 
