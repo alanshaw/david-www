@@ -142,13 +142,13 @@ function changes (req, res) {
 }
 
 function badgePath (theme, dev, status, retina, extension) {
-	return 'dist/img/status/' + (theme ? theme + '/' : '') + (dev ? 'dev-' : '') + status + (retina ? '@2x' : '') + '.' + (theme === 'shield.io' && extension === 'svg' ? 'svg' : 'png');
+	return 'dist/img/status/' + (theme ? theme + '/' : '') + (dev ? 'dev-' : '') + status + (retina ? '@2x' : '') + '.' + (theme === 'shields.io' && extension === 'svg' ? 'svg' : 'png');
 }
 
 /**
  * Send the status badge for this user and repository
  */
-function sendStatusBadge(req, res, opts) {
+function sendStatusBadge (req, res, opts) {
 	opts = opts || {};
 
 	res.setHeader('Cache-Control', 'no-cache');
