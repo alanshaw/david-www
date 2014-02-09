@@ -7,7 +7,7 @@
 			"version": "3.0.0"
 		},
 		"protocol": "https",
-		"host": "github.com"
+		"host": "api.github.com"
 	},
 	"npm": {
 		"hostname": "http://npmjs.org",

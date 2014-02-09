@@ -81,14 +81,14 @@ function buildFeedXml(items, name, deps, limit) {
 	var rssFeed = new RSS({
 		title: name + ' out of date dependencies',
 		description: 'Version updates for ' + Object.keys(deps).join(', '),
-		site_url: 'https://david-dm.org/'
+		site_url: config.site.hostname
 	});
 
 	for (var i = 0, len = items.length; i < len; ++i) {
 		rssFeed.item({
 			title: items[i].name + ' ' + items[i].previous + ' to ' + items[i].current + ' (' + deps[items[i].name] + ' required)',
 			description: items[i].repoUrl ? '<a href="' + items[i].repoUrl + '">' + items[i].repoUrl + '</a>' : null,
-			url: 'https://npmjs.org/package/' + items[i].name,
+			url: config.npm.hostname + '/package/' + items[i].name,
 			date: items[i].pubdate
 		});
 	}

@@ -4,6 +4,8 @@ var d3 = require('d3');
 var fs = require('fs');
 var Handlebars = require('handlebars');
 
+var npmsite = fs.readFileSync(__dirname + '/../../dist/inc/config-npmsite.html');
+
 var david = {};
 
 /* d3 dependency count graph */
@@ -62,7 +64,7 @@ $('#dependency-counts-graph').each(function () {
 			.attr('transform', function () {
 				return 'translate(' + diameter / 2 + ',' + diameter / 2 + ')';
 			}).on('click', function(d) {
-				window.location = 'http://npmjs.org/package/' + d.depName;
+				window.location = npmsite + '/package/' + d.depName;
 			});
 
 		nodeEnter.append('title').text(function(d) {
