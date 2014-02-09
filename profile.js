@@ -5,8 +5,8 @@ var brains = require('./brains');
 var config = require('config');
 
 var github = new GitHubApi({
-	protocol: config.github.protocol,
-	host: config.github.host,
+	protocol: config.github.api.protocol,
+	host: config.github.api.host,
 	version: config.github.api.version,
 	pathPrefix: config.github.api.pathPrefix,
 	timeout: 5000

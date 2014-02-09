@@ -8,8 +8,8 @@ var async = require('async');
 var extract = require('extract');
 
 var github = new GitHubApi({
-	protocol: config.github.protocol,
-	host: config.github.host,
+	protocol: config.github.api.protocol,
+	host: config.github.api.host,
 	version: config.github.api.version,
 	pathPrefix: config.github.api.pathPrefix,
 	timeout: 5000

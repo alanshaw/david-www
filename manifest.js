@@ -13,8 +13,8 @@ var githubUrl = require('github-url');
 var depDiff = require('dep-diff');
 
 var github = new GitHubApi({
-	protocol: config.github.protocol,
-	host: config.github.host,
+	protocol: config.github.api.protocol,
+	host: config.github.api.host,
 	version: config.github.api.version,
 	pathPrefix: config.github.api.pathPrefix,
 	timeout: 5000
