@@ -75,9 +75,9 @@ module.exports = function(grunt) {
 		cssmin: {
 			compress: {
 				options: {
+					compatibility: 'ie8',
 					keepSpecialComments: 0,
-					report: 'min',
-					selectorsMergeMode: 'ie8'
+					report: 'min'
 				},
 				files: {
 					'dist/css/main-<%= pkg.version %>.css': 'dist/css/main-<%= pkg.version %>.css'
