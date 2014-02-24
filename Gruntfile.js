@@ -41,11 +41,20 @@ module.exports = function(grunt) {
 			}
 		},
 
-		// Compile the mobile first site stylesheet (and the no @media queries version for lt-ie8)
 		less: {
 			compile: {
 				files: {
 					'dist/css/main-<%= pkg.version %>.css': 'src/css/main.less'
+				}
+			},
+			minify: {
+				options: {
+					cleancss: true,
+					ieCompat: true,
+					report: 'min'
+				},
+				files: {
+					'dist/css/main-<%= pkg.version %>.css': 'dist/css/main-<%= pkg.version %>.css'
 				}
 			}
 		},
@@ -68,20 +77,6 @@ module.exports = function(grunt) {
 			compress: {
 				src: 'dist/js/bundle-<%= pkg.version %>.js',
 				dest: 'dist/js/bundle-<%= pkg.version %>.js'
-			}
-		},
-
-		// Minify the site CSS
-		cssmin: {
-			compress: {
-				options: {
-					compatibility: 'ie8',
-					keepSpecialComments: 0,
-					report: 'min'
-				},
-				files: {
-					'dist/css/main-<%= pkg.version %>.css': 'dist/css/main-<%= pkg.version %>.css'
-				}
 			}
 		},
 
@@ -125,7 +120,7 @@ module.exports = function(grunt) {
 			project: {
 				options: {atBegin: true},
 				files: ['src/js/**/*.js', 'src/css/**/*.less', 'src/**/*.html', 'src/img/**/*'],
-				tasks: ['copy', 'includereplace', 'less', 'browserify']
+				tasks: ['copy', 'includereplace', 'less:compile', 'browserify']
 			}
 		},
 
@@ -138,7 +133,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-contrib-nodeunit');
@@ -146,7 +140,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-include-replace');
 
-	grunt.registerTask('base', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less', 'browserify']);
-	grunt.registerTask('min', ['uglify', 'cssmin']);
+	grunt.registerTask('base', ['jshint', 'nodeunit', 'copy', 'includereplace', 'less:compile', 'browserify']);
+	grunt.registerTask('min', ['less:minify', 'uglify']);
 	grunt.registerTask('default', ['base', 'min']);
 };
