@@ -51,10 +51,10 @@ app.get('/',                              indexPage);
  * Do a home page
  */
 function indexPage(req, res) {
-	res.render('index', {
-		recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
-		recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages()
-	});
+  res.render('index', {
+    recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
+    recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages()
+  });
 }
 
 /**
@@ -62,28 +62,28 @@ function indexPage(req, res) {
  */
 function statsPage(req, res) {
 
-	res.render('stats', {
-		recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages(),
-		recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
-		recentlyUpdatedManifests: stats.getRecentlyUpdatedManifests()
-	});
+  res.render('stats', {
+    recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages(),
+    recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
+    recentlyUpdatedManifests: stats.getRecentlyUpdatedManifests()
+  });
 }
 
 function dependencyCounts(req, res) {
-	res.json(stats.getDependencyCounts());
+  res.json(stats.getDependencyCounts());
 }
 
 function newsRssFeed(req, res) {
 
-	newsFeed.get(function(err, xml) {
+  newsFeed.get(function(err, xml) {
 
-		if (errors.happened(err, req, res, 'Failed to get news feed xml')) {
-			return;
-		}
+    if (errors.happened(err, req, res, 'Failed to get news feed xml')) {
+      return;
+    }
 
-		res.contentType('application/rss+xml');
-		res.send(xml, 200);
-	});
+    res.contentType('application/rss+xml');
+    res.send(xml, 200);
+  });
 }
 
 /**
@@ -91,190 +91,190 @@ function newsRssFeed(req, res) {
  */
 function statusPage(req, res) {
 
-	withManifestAndInfo(req, res, function(manifest, info) {
+  withManifestAndInfo(req, res, function(manifest, info) {
 
-		res.render('status', {
-			user: req.params.user,
-			repo: req.params.repo,
-			manifest: manifest,
-			info: info
-		});
+    res.render('status', {
+      user: req.params.user,
+      repo: req.params.repo,
+      manifest: manifest,
+      info: info
+    });
 
-	});
+  });
 }
 
 function profilePage(req, res) {
 
-	profile.get(req.params.user, function(err, data) {
+  profile.get(req.params.user, function(err, data) {
 
-		if (errors.happened(err, req, res, 'Failed to get profile data')) {
-			return;
-		}
+    if (errors.happened(err, req, res, 'Failed to get profile data')) {
+      return;
+    }
 
-		res.render('profile', {user: req.params.user, repos: data});
-	});
+    res.render('profile', {user: req.params.user, repos: data});
+  });
 }
 
 function searchPage(req, res) {
-	res.render('search', {q: req.query.q});
+  res.render('search', {q: req.query.q});
 }
 
 function searchQuery(req, res) {
 
-	search(req.query.q, function(err, results) {
+  search(req.query.q, function(err, results) {
 
-		if (errors.happened(err, req, res, 'Failed to get search results')) {
-			return;
-		}
+    if (errors.happened(err, req, res, 'Failed to get search results')) {
+      return;
+    }
 
-		res.json(results);
-	});
+    res.json(results);
+  });
 }
 
 function changes (req, res) {
-	changelog.getChanges(req.params.pkg, req.query.from, req.query.to, function(er, changes) {
-		if (er) {
-			console.warn(er);
-			return res.status(500).send({er: 'Failed to get changes'});
-		}
-		res.send(changes);
-	});
+  changelog.getChanges(req.params.pkg, req.query.from, req.query.to, function(er, changes) {
+    if (er) {
+      console.warn(er);
+      return res.status(500).send({er: 'Failed to get changes'});
+    }
+    res.send(changes);
+  });
 }
 
 function badgePath (theme, dev, status, retina, extension) {
-	return 'dist/img/status/' + (theme ? theme + '/' : '') + (dev ? 'dev-' : '') + status + (retina ? '@2x' : '') + '.' + (theme === 'shields.io' && extension === 'svg' ? 'svg' : 'png');
+  return 'dist/img/status/' + (theme ? theme + '/' : '') + (dev ? 'dev-' : '') + status + (retina ? '@2x' : '') + '.' + (theme === 'shields.io' && extension === 'svg' ? 'svg' : 'png');
 }
 
 /**
  * Send the status badge for this user and repository
  */
 function sendStatusBadge (req, res, opts) {
-	opts = opts || {};
+  opts = opts || {};
 
-	res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Cache-Control', 'no-cache');
 
-	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
-		if (err) {
-			return res.status(404).sendfile('dist/img/status/unknown.png');
-		}
+  manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
+    if (err) {
+      return res.status(404).sendfile('dist/img/status/unknown.png');
+    }
 
-		brains.getInfo(manifest, {dev: opts.dev}, function(err, info) {
-			if (err) {
-				return res.status(500).sendfile('dist/img/status/unknown.png');
-			}
+    brains.getInfo(manifest, {dev: opts.dev}, function(err, info) {
+      if (err) {
+        return res.status(500).sendfile('dist/img/status/unknown.png');
+      }
 
-			if (req.query.theme) {
-				var theme = req.query.theme.replace(/[^A-Za-z.-]/g, '');
+      if (req.query.theme) {
+        var theme = req.query.theme.replace(/[^A-Za-z.-]/g, '');
 
-				// Ensure theme directory exists
-				fs.exists('dist/img/status/' + theme, function (exists) {
-					if (!exists) {
-						return res.sendfile(badgePath('', opts.dev, info.status, opts.retina, opts.extension));
-					}
+        // Ensure theme directory exists
+        fs.exists('dist/img/status/' + theme, function (exists) {
+          if (!exists) {
+            return res.sendfile(badgePath('', opts.dev, info.status, opts.retina, opts.extension));
+          }
 
-					res.sendfile(badgePath(theme, opts.dev, info.status, opts.retina, opts.extension));
-				});
-			} else {
-				res.sendfile(badgePath('', opts.dev, info.status, opts.retina, opts.extension));
-			}
-		});
-	});
+          res.sendfile(badgePath(theme, opts.dev, info.status, opts.retina, opts.extension));
+        });
+      } else {
+        res.sendfile(badgePath('', opts.dev, info.status, opts.retina, opts.extension));
+      }
+    });
+  });
 }
 
 function statusBadge(req, res) {
-	sendStatusBadge(req, res);
+  sendStatusBadge(req, res);
 }
 
 function svgStatusBadge(req, res) {
-	sendStatusBadge(req, res, {extension: 'svg'});
+  sendStatusBadge(req, res, {extension: 'svg'});
 }
 
 function retinaStatusBadge(req, res) {
-	sendStatusBadge(req, res, {retina: true});
+  sendStatusBadge(req, res, {retina: true});
 }
 
 function devStatusBadge(req, res) {
-	sendStatusBadge(req, res, {dev: true});
+  sendStatusBadge(req, res, {dev: true});
 }
 
 function svgDevStatusBadge(req, res) {
-	sendStatusBadge(req, res, {dev: true, extension: 'svg'});
+  sendStatusBadge(req, res, {dev: true, extension: 'svg'});
 }
 
 function retinaDevStatusBadge(req, res) {
-	sendStatusBadge(req, res, {dev: true, retina: true});
+  sendStatusBadge(req, res, {dev: true, retina: true});
 }
 
 function dependencyGraph(req, res) {
 
-	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
+  manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
-		if (errors.happened(err, req, res, 'Failed to get package.json')) {
-			return;
-		}
+    if (errors.happened(err, req, res, 'Failed to get package.json')) {
+      return;
+    }
 
-		graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo, manifest.version, manifest.dependencies || {}, function(err, graph) {
+    graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo, manifest.version, manifest.dependencies || {}, function(err, graph) {
 
-			if (errors.happened(err, req, res, 'Failed to get graph data')) {
-				return;
-			}
+      if (errors.happened(err, req, res, 'Failed to get graph data')) {
+        return;
+      }
 
-			res.json(graph);
-		});
-	});
+      res.json(graph);
+    });
+  });
 }
 
 function devDependencyGraph(req, res) {
 
-	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
+  manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
-		if (errors.happened(err, req, res, 'Failed to get package.json')) {
-			return;
-		}
+    if (errors.happened(err, req, res, 'Failed to get package.json')) {
+      return;
+    }
 
-		graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo + '#dev', manifest.version, manifest.devDependencies || {}, function(err, graph) {
+    graph.getProjectDependencyGraph(req.params.user + '/' + req.params.repo + '#dev', manifest.version, manifest.devDependencies || {}, function(err, graph) {
 
-			if (errors.happened(err, req, res, 'Failed to get graph data')) {
-				return;
-			}
+      if (errors.happened(err, req, res, 'Failed to get graph data')) {
+        return;
+      }
 
-			res.json(graph);
-		});
-	});
+      res.json(graph);
+    });
+  });
 }
 
 function buildRssFeed(req, res, dev) {
 
-	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
+  manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
-		if (errors.happened(err, req, res, 'Failed to get package.json')) {
-			return;
-		}
+    if (errors.happened(err, req, res, 'Failed to get package.json')) {
+      return;
+    }
 
-		feed.get(manifest, {dev: dev}, function(err, xml) {
+    feed.get(manifest, {dev: dev}, function(err, xml) {
 
-			if (errors.happened(err, req, res, 'Failed to build RSS XML')) {
-				return;
-			}
+      if (errors.happened(err, req, res, 'Failed to build RSS XML')) {
+        return;
+      }
 
-			res.contentType('application/rss+xml');
-			res.send(xml, 200);
-		});
-	});
+      res.contentType('application/rss+xml');
+      res.send(xml, 200);
+    });
+  });
 }
 
 function rssFeed(req, res) {
-	buildRssFeed(req, res, false);
+  buildRssFeed(req, res, false);
 }
 
 function devRssFeed(req, res) {
-	buildRssFeed(req, res, true);
+  buildRssFeed(req, res, true);
 }
 
 function devInfo(req, res) {
-	withManifestAndInfo(req, res, {dev: true}, function(manifest, info) {
-		res.json(info);
-	});
+  withManifestAndInfo(req, res, {dev: true}, function(manifest, info) {
+    res.json(info);
+  });
 }
 
 /**
@@ -282,48 +282,48 @@ function devInfo(req, res) {
  */
 function withManifestAndInfo(req, res, options, callback) {
 
-	// Allow callback to be passed as third parameter
-	if (!callback) {
-		callback = options;
-		options = {};
-	} else {
-		options = options || {};
-	}
+  // Allow callback to be passed as third parameter
+  if (!callback) {
+    callback = options;
+    options = {};
+  } else {
+    options = options || {};
+  }
 
-	manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
+  manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
 
-		if (errors.happened(err, req, res, 'Failed to get package.json')) {
-			return;
-		}
+    if (errors.happened(err, req, res, 'Failed to get package.json')) {
+      return;
+    }
 
-		brains.getInfo(manifest, options, function(err, info) {
+    brains.getInfo(manifest, options, function(err, info) {
 
-			if (errors.happened(err, req, res, 'Failed to get dependency info')) {
-				return;
-			}
+      if (errors.happened(err, req, res, 'Failed to get dependency info')) {
+        return;
+      }
 
-			callback(manifest, info);
-		});
-	});
+      callback(manifest, info);
+    });
+  });
 }
 
 app.use(function(req, res) {
-	res.status(404);
+  res.status(404);
 
-	// respond with html page
-	if (req.accepts('html')) {
-		res.render('404');
-		return;
-	}
+  // respond with html page
+  if (req.accepts('html')) {
+    res.render('404');
+    return;
+  }
 
-	// respond with json
-	if (req.accepts('json')) {
-		res.send({err: 'Not found'});
-		return;
-	}
+  // respond with json
+  if (req.accepts('json')) {
+    res.send({err: 'Not found'});
+    return;
+  }
 
-	// default to plain-text. send()
-	res.type('txt').send('Not found');
+  // default to plain-text. send()
+  res.type('txt').send('Not found');
 });
 
 var port = process.env.PORT || 1337;

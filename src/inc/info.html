@@ -1,37 +1,37 @@
 {{#if info.deps.length}}
 <ul class="switch">
-	<li><a href="#view=list" title="Show dependencies in a list" class="selected"><i class="fa fa-list"></i> List</a></li>
-	<li><a href="#view=tree" title="Show dependencies in a tree"><i class="fa fa-sitemap"></i> Tree</a></li>
+  <li><a href="#view=list" title="Show dependencies in a list" class="selected"><i class="fa fa-list"></i> List</a></li>
+  <li><a href="#view=tree" title="Show dependencies in a tree"><i class="fa fa-sitemap"></i> Tree</a></li>
 </ul>
 @@include('summary.html')
 <div class="dep-table">
-	<table>
-		<thead>
-		<tr>
-			<th>Dependency</th>
-			<th>Required</th>
-			<th>Stable</th>
-			<th>Latest</th>
-			<th>Status</th>
-		</tr>
-		</thead>
-		<tbody>
-			{{#info.deps}}
-			<tr>
-				<td class="dep">
-					<a href="@@npmsite/package/{{name}}">{{name}}</a>
-					{{#if outOfDate}}<a class="changes" href="#" title="View closed issues and commits"><i class="fa fa-exclamation-circle"></i></a>{{/if}}
-				</td>
-				<td class="required">{{required}}</td>
-				<td class="stable">{{stable}}</td>
-				<td class="latest">{{latest}}</td>
-				<td class="status">
-					<span class="sqr {{status}} {{#if pinned}}pinned{{else}}unpinned{{/if}}" title="{{#if pinned}}pinned {{/if}}{{status}}"></span>
-				</td>
-			</tr>
-			{{/info.deps}}
-		</tbody>
-	</table>
+  <table>
+    <thead>
+    <tr>
+      <th>Dependency</th>
+      <th>Required</th>
+      <th>Stable</th>
+      <th>Latest</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+      {{#info.deps}}
+      <tr>
+        <td class="dep">
+          <a href="@@npmsite/package/{{name}}">{{name}}</a>
+          {{#if outOfDate}}<a class="changes" href="#" title="View closed issues and commits"><i class="fa fa-exclamation-circle"></i></a>{{/if}}
+        </td>
+        <td class="required">{{required}}</td>
+        <td class="stable">{{stable}}</td>
+        <td class="latest">{{latest}}</td>
+        <td class="status">
+          <span class="sqr {{status}} {{#if pinned}}pinned{{else}}unpinned{{/if}}" title="{{#if pinned}}pinned {{/if}}{{status}}"></span>
+        </td>
+      </tr>
+      {{/info.deps}}
+    </tbody>
+  </table>
 </div>
 <div class="dep-graph"></div>
 @@include('summary.html')

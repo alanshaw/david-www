@@ -10,117 +10,117 @@ var config = require('config');
 
 // When a user publishes a package, delete cached david info
 registry.on('change', function(change) {
-	cache.del(change.doc.name);
+  cache.del(change.doc.name);
 });
 
 function isPinned (version) {
-	if (version === '*' || version === 'latest') {
-		return false;
-	}
+  if (version === '*' || version === 'latest') {
+    return false;
+  }
 
-	var range = semver.validRange(version, true);
+  var range = semver.validRange(version, true);
 
-	if (range && range.indexOf('>=') === 0) {
-		return false;
-	}
+  if (range && range.indexOf('>=') === 0) {
+    return false;
+  }
 
-	return true;
+  return true;
 }
 
 function normaliseDeps (deps) {
-	if (Array.isArray(deps)) {
-		deps = deps.reduce(function(d, depName) {
-			d[depName] = '*';
-			return d;
-		}, {});
-	}
-	return deps;
+  if (Array.isArray(deps)) {
+    deps = deps.reduce(function(d, depName) {
+      d[depName] = '*';
+      return d;
+    }, {});
+  }
+  return deps;
 }
 
 function getCachedDependencies (manifest, opts) {
-	var pkgs = {};
-	var deps = normaliseDeps(manifest[opts.dev ? 'devDependencies' : 'dependencies'] || {});
-	var depNames = Object.keys(deps);
+  var pkgs = {};
+  var deps = normaliseDeps(manifest[opts.dev ? 'devDependencies' : 'dependencies'] || {});
+  var depNames = Object.keys(deps);
 
-	if (!depNames.length) {
-		return pkgs;
-	}
+  if (!depNames.length) {
+    return pkgs;
+  }
 
-	depNames.forEach(function(depName) {
-		var info = cache.get(depName);
+  depNames.forEach(function(depName) {
+    var info = cache.get(depName);
 
-		if (!info) {
-			return;
-		}
+    if (!info) {
+      return;
+    }
 
-		pkgs[depName] = {required: deps[depName], stable: info.stable, latest: info.latest};
-	});
+    pkgs[depName] = {required: deps[depName], stable: info.stable, latest: info.latest};
+  });
 
-	return pkgs;
+  return pkgs;
 }
 
 function getDependencies (manifest, opts, cb) {
 
-	// Get the dependency info we already have cached information for
-	var cachedInfos = getCachedDependencies(manifest, opts);
-	var cachedDepNames = Object.keys(cachedInfos);
+  // Get the dependency info we already have cached information for
+  var cachedInfos = getCachedDependencies(manifest, opts);
+  var cachedDepNames = Object.keys(cachedInfos);
 
-	var manifestDeps = normaliseDeps(manifest[opts.dev ? 'devDependencies' : 'dependencies'] || {});
+  var manifestDeps = normaliseDeps(manifest[opts.dev ? 'devDependencies' : 'dependencies'] || {});
 
-	var uncachedManifestDeps = Object.keys(manifestDeps).filter(function(depName) {
-		return cachedDepNames.indexOf(depName) === -1;
-	}).reduce(function(deps, depName) {
-		deps[depName] = manifestDeps[depName];
-		return deps;
-	}, {});
+  var uncachedManifestDeps = Object.keys(manifestDeps).filter(function(depName) {
+    return cachedDepNames.indexOf(depName) === -1;
+  }).reduce(function(deps, depName) {
+    deps[depName] = manifestDeps[depName];
+    return deps;
+  }, {});
 
-	var uncachedManifestDepNames = Object.keys(uncachedManifestDeps);
+  var uncachedManifestDepNames = Object.keys(uncachedManifestDeps);
 
-	if (!uncachedManifestDepNames.length) {
-		return setImmediate(function () {
-			cb(null, cachedInfos);
-		});
-	}
+  if (!uncachedManifestDepNames.length) {
+    return setImmediate(function () {
+      cb(null, cachedInfos);
+    });
+  }
 
-	var uncachedManifest = {};
-	uncachedManifest[opts.dev ? 'devDependencies' : 'dependencies'] = uncachedManifestDeps;
+  var uncachedManifest = {};
+  uncachedManifest[opts.dev ? 'devDependencies' : 'dependencies'] = uncachedManifestDeps;
 
-	david.getDependencies(uncachedManifest, opts, function(er, infos) {
-		if (er) {
-			return cb(er);
-		}
+  david.getDependencies(uncachedManifest, opts, function(er, infos) {
+    if (er) {
+      return cb(er);
+    }
 
-		// Cache the new info
-		Object.keys(infos).forEach(function(depName) {
-			if (config.brains.cacheTime) {
-				var info = infos[depName];
-				cache.put(depName, {stable: info.stable, latest: info.latest}, config.brains.cacheTime);
-			}
-		});
+    // Cache the new info
+    Object.keys(infos).forEach(function(depName) {
+      if (config.brains.cacheTime) {
+        var info = infos[depName];
+        cache.put(depName, {stable: info.stable, latest: info.latest}, config.brains.cacheTime);
+      }
+    });
 
-		cachedDepNames.forEach(function(depName) {
-			infos[depName] = cachedInfos[depName];
-		});
+    cachedDepNames.forEach(function(depName) {
+      infos[depName] = cachedInfos[depName];
+    });
 
-		cb(null, infos);
-	});
+    cb(null, infos);
+  });
 }
 
 function getUpdatedDependencies (manifest, opts, cb) {
-	getDependencies(manifest, opts, function(er, infos) {
-		if (er) {
-			return cb(er);
-		}
+  getDependencies(manifest, opts, function(er, infos) {
+    if (er) {
+      return cb(er);
+    }
 
-		// Filter out the non-updated dependencies
-		Object.keys(infos).forEach(function(depName) {
-			if (!david.isUpdated(infos[depName], opts)) {
-				delete infos[depName];
-			}
-		});
+    // Filter out the non-updated dependencies
+    Object.keys(infos).forEach(function(depName) {
+      if (!david.isUpdated(infos[depName], opts)) {
+        delete infos[depName];
+      }
+    });
 
-		cb(null, infos);
-	});
+    cb(null, infos);
+  });
 }
 
 /**
@@ -131,115 +131,115 @@ function getUpdatedDependencies (manifest, opts, cb) {
  */
 module.exports.getInfo = function(manifest, opts, cb) {
 
-	// Allow cb to be passed as second parameter
-	if (!cb) {
-		cb = opts;
-		opts = {};
-	} else {
-		opts = opts || {};
-	}
+  // Allow cb to be passed as second parameter
+  if (!cb) {
+    cb = opts;
+    opts = {};
+  } else {
+    opts = opts || {};
+  }
 
-	if (config.npm && config.npm.options) {
-		opts.npm = config.npm.options;
-	}
+  if (config.npm && config.npm.options) {
+    opts.npm = config.npm.options;
+  }
 
-	var davidOptions = {dev: opts.dev, loose: true, npm: opts.npm};
+  var davidOptions = {dev: opts.dev, loose: true, npm: opts.npm};
 
-	getDependencies(manifest, davidOptions, function(er, deps) {
+  getDependencies(manifest, davidOptions, function(er, deps) {
 
-		if (er) {
-			return cb(er);
-		}
+    if (er) {
+      return cb(er);
+    }
 
-		// Get ALL updated dependencies including unstable
-		getUpdatedDependencies(manifest, davidOptions, function(er, updatedDeps) {
+    // Get ALL updated dependencies including unstable
+    getUpdatedDependencies(manifest, davidOptions, function(er, updatedDeps) {
 
-			if (er) {
-				return cb(er);
-			}
+      if (er) {
+        return cb(er);
+      }
 
-			davidOptions.stable = true;
+      davidOptions.stable = true;
 
-			// Get STABLE updated dependencies
-			getUpdatedDependencies(manifest, davidOptions, function(er, updatedStableDeps) {
+      // Get STABLE updated dependencies
+      getUpdatedDependencies(manifest, davidOptions, function(er, updatedStableDeps) {
 
-				if (er) {
-					return cb(er);
-				}
+        if (er) {
+          return cb(er);
+        }
 
-				var depNames = Object.keys(deps).sort(),
-					totals = {
-						upToDate: 0,
-						outOfDate: 0,
-						pinned: {
-							upToDate: 0,
-							outOfDate: 0
-						},
-						unpinned: {
-							upToDate: 0,
-							outOfDate: 0
-						}
-					};
+        var depNames = Object.keys(deps).sort(),
+          totals = {
+            upToDate: 0,
+            outOfDate: 0,
+            pinned: {
+              upToDate: 0,
+              outOfDate: 0
+            },
+            unpinned: {
+              upToDate: 0,
+              outOfDate: 0
+            }
+          };
 
-				var depList = depNames.map(function(depName) {
+        var depList = depNames.map(function(depName) {
 
-					// Lets disprove this
-					var status = 'uptodate';
+          // Lets disprove this
+          var status = 'uptodate';
 
-					// If there is an updated STABLE dependency then this dep is out of date
-					if (updatedStableDeps[depName]) {
-						status = 'outofdate';
-					// If it is in the UNSTABLE list, and has no stable version then consider out of date
-					} else if (updatedDeps[depName] && !updatedDeps[depName].stable) {
-						status = 'outofdate';
-					}
+          // If there is an updated STABLE dependency then this dep is out of date
+          if (updatedStableDeps[depName]) {
+            status = 'outofdate';
+          // If it is in the UNSTABLE list, and has no stable version then consider out of date
+          } else if (updatedDeps[depName] && !updatedDeps[depName].stable) {
+            status = 'outofdate';
+          }
 
-					var pinned = isPinned(deps[depName].required);
+          var pinned = isPinned(deps[depName].required);
 
-					var info = {
-						name: depName,
-						required: deps[depName].required,
-						stable: deps[depName].stable,
-						latest: deps[depName].latest,
-						status: status,
-						pinned: pinned
-					};
+          var info = {
+            name: depName,
+            required: deps[depName].required,
+            stable: deps[depName].stable,
+            latest: deps[depName].latest,
+            status: status,
+            pinned: pinned
+          };
 
-					if (status === 'uptodate' && pinned) {
-						info.upToDate = true;
-						totals.upToDate++;
-						totals.pinned.upToDate++;
-					} else if (status === 'uptodate' && !pinned) {
-						info.upToDate = true;
-						totals.upToDate++;
-						totals.unpinned.upToDate++;
-					} else if (status === 'outofdate' && pinned) {
-						info.outOfDate = true;
-						totals.outOfDate++;
-						totals.pinned.outOfDate++;
-					} else if (status === 'outofdate' && !pinned) {
-						info.outOfDate = true;
-						totals.outOfDate++;
-						totals.unpinned.outOfDate++;
-					}
+          if (status === 'uptodate' && pinned) {
+            info.upToDate = true;
+            totals.upToDate++;
+            totals.pinned.upToDate++;
+          } else if (status === 'uptodate' && !pinned) {
+            info.upToDate = true;
+            totals.upToDate++;
+            totals.unpinned.upToDate++;
+          } else if (status === 'outofdate' && pinned) {
+            info.outOfDate = true;
+            totals.outOfDate++;
+            totals.pinned.outOfDate++;
+          } else if (status === 'outofdate' && !pinned) {
+            info.outOfDate = true;
+            totals.outOfDate++;
+            totals.unpinned.outOfDate++;
+          }
 
-					return info;
-				});
+          return info;
+        });
 
-				// Figure out the overall status for this manifest
-				var status = 'uptodate';
+        // Figure out the overall status for this manifest
+        var status = 'uptodate';
 
-				if (depList.length && totals.unpinned.outOfDate) {
+        if (depList.length && totals.unpinned.outOfDate) {
 
-					if (totals.unpinned.outOfDate / depList.length > 0.25) {
-						status = 'outofdate';
-					} else {
-						status = 'notsouptodate';
-					}
-				}
+          if (totals.unpinned.outOfDate / depList.length > 0.25) {
+            status = 'outofdate';
+          } else {
+            status = 'notsouptodate';
+          }
+        }
 
-				cb(null, {status: status, deps: depList, totals: totals});
-			});
-		});
-	});
+        cb(null, {status: status, deps: depList, totals: totals});
+      });
+    });
+  });
 };

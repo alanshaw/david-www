@@ -3,35 +3,35 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 header {
-	span {
-		display: inline;
-		font-size: 1em;
-		font-family: nevisbold, sans-serif;
-		text-transform: uppercase;
-		color: @black0;
-		margin-left: 9em;
-	}
+  span {
+    display: inline;
+    font-size: 1em;
+    font-family: nevisbold, sans-serif;
+    text-transform: uppercase;
+    color: @black0;
+    margin-left: 9em;
+  }
 }
 footer {
-	margin: 4em 0 0;
+  margin: 4em 0 0;
 
-	> div {
-		position: relative;
-		text-align: left;
-	}
-	small {
-		display: inline;
-	}
-	ul {
-		position: absolute;
-		top: 1.85em;
-		right: 0;
-		text-align: right;
+  > div {
+    position: relative;
+    text-align: left;
+  }
+  small {
+    display: inline;
+  }
+  ul {
+    position: absolute;
+    top: 1.85em;
+    right: 0;
+    text-align: right;
 
-		&.social {
-			top: -3.75em;
-		}
-	}
+    &.social {
+      top: -3.75em;
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -39,65 +39,65 @@ footer {
 ////////////////////////////////////////////////////////////////////////////////
 
 #home-page {
-	#main > div {
-		float: left;
-		width: 57%;
-	}
-	#examples {
-		li {
-			font-size: 1.286em;
-		}
-		img {
-			top: 0.65em;
-			left: 13em;
-		}
-	}
-	#dependency-counts-graph {
-		margin: 0 -15%;
-	}
-	#stats {
-		float: right;
-		width: 32%;
-	}
+  #main > div {
+    float: left;
+    width: 57%;
+  }
+  #examples {
+    li {
+      font-size: 1.286em;
+    }
+    img {
+      top: 0.65em;
+      left: 13em;
+    }
+  }
+  #dependency-counts-graph {
+    margin: 0 -15%;
+  }
+  #stats {
+    float: right;
+    width: 32%;
+  }
 }
 #status-page {
-	#main {
-		background-position: center 22em;
-		min-height: 66em;
-	}
-	#status, #dev-status {
-		float: right;
-	}
-	.summary {
-		li {
-			display: inline;
-			margin-left: 1.75em;
+  #main {
+    background-position: center 22em;
+    min-height: 66em;
+  }
+  #status, #dev-status {
+    float: right;
+  }
+  .summary {
+    li {
+      display: inline;
+      margin-left: 1.75em;
 
-			&:first-child {
-				margin-left: 0;
-			}
-		}
-	}
-	.dep-table {
-		table {
-			.js & {
-				display: table;
-			}
-			&.stacktable {
-				display: none;
-			}
-			tbody {
-				-webkit-box-shadow: 0 0 0.5em @grey2;
-				-moz-box-shadow: 0 0 0.5em @grey2;
-				box-shadow: 0 0 0.5em @grey2;
-			}
-		}
-	}
-	.changes-popup {
-		width: 693px;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+  .dep-table {
+    table {
+      .js & {
+        display: table;
+      }
+      &.stacktable {
+        display: none;
+      }
+      tbody {
+        -webkit-box-shadow: 0 0 0.5em @grey2;
+        -moz-box-shadow: 0 0 0.5em @grey2;
+        box-shadow: 0 0 0.5em @grey2;
+      }
+    }
+  }
+  .changes-popup {
+    width: 693px;
 
-		h1 span {
-			float: right;
-		}
-	}
+    h1 span {
+      float: right;
+    }
+  }
 }
