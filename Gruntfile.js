@@ -92,7 +92,7 @@ module.exports = function(grunt) {
         'eqnull': true,
         'forin': true,
         'immed': true,
-        'indent': 4,
+        'indent': 2,
         /*'latedef': true,*/
         'laxcomma': true,
         'loopfunc': true,
@@ -101,7 +101,6 @@ module.exports = function(grunt) {
         'plusplus': false,
         'quotmark': 'single',
         'shadow': true,
-        'smarttabs': true,
         'strict': false,
         'sub': true,
         'trailing': true,
