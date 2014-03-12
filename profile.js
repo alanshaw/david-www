@@ -5,19 +5,19 @@ var brains = require('./brains');
 var config = require('config');
 
 var github = new GitHubApi({
-	protocol: config.github.api.protocol,
-	host: config.github.api.host,
-	version: config.github.api.version,
-	pathPrefix: config.github.api.pathPrefix,
-	timeout: 5000
+  protocol: config.github.api.protocol,
+  host: config.github.api.host,
+  version: config.github.api.version,
+  pathPrefix: config.github.api.pathPrefix,
+  timeout: 5000
 });
 
 if (config.github.username) {
-	github.authenticate({
-		type: 'basic',
-		username: config.github.username,
-		password: config.github.password
-	});
+  github.authenticate({
+    type: 'basic',
+    username: config.github.username,
+    password: config.github.password
+  });
 }
 
 /**
@@ -32,45 +32,45 @@ if (config.github.username) {
  */
 function getRepos(user, options, callback) {
 
-	// Allow callback to be passed as second parameter
-	if (!callback) {
-		callback = options;
-		options = {page: 0, repos: [], pageSize: 100};
-	} else {
-		options = options || {page: 0, repos: [], pageSize: 100};
-	}
+  // Allow callback to be passed as second parameter
+  if (!callback) {
+    callback = options;
+    options = {page: 0, repos: [], pageSize: 100};
+  } else {
+    options = options || {page: 0, repos: [], pageSize: 100};
+  }
 
-	setImmediate(function () {
+  setImmediate(function () {
 
-		github.repos.getFromUser({user: user, page: options.page, per_page: options.pageSize}, function(err, data) {
+    github.repos.getFromUser({user: user, page: options.page, per_page: options.pageSize}, function(err, data) {
 
-			if (err) {
-				callback(err);
-				return;
-			}
+      if (err) {
+        callback(err);
+        return;
+      }
 
-			if (data.length) {
+      if (data.length) {
 
-				options.repos = options.repos.concat(data);
+        options.repos = options.repos.concat(data);
 
-				if (data.length === options.pageSize) {
+        if (data.length === options.pageSize) {
 
-					// Maybe another page?
-					options.page++;
+          // Maybe another page?
+          options.page++;
 
-					getRepos(user, options, callback);
+          getRepos(user, options, callback);
 
-				} else {
+        } else {
 
-					callback(null, options.repos);
-				}
+          callback(null, options.repos);
+        }
 
-			} else {
-				// All done!
-				callback(null, options.repos);
-			}
-		});
-	});
+      } else {
+        // All done!
+        callback(null, options.repos);
+      }
+    });
+  });
 }
 
 /**
@@ -81,27 +81,27 @@ function getRepos(user, options, callback) {
  * @returns {Function}
  */
 function createGetInfoTask(user, repo) {
-	return function(callback) {
+  return function(callback) {
 
-		manifest.getManifest(user, repo.name, function(err, manifest) {
+    manifest.getManifest(user, repo.name, function(err, manifest) {
 
-			// This is fine - perhaps the repo doesn't have a package.json
-			if (err) {
-				callback();
-				return;
-			}
+      // This is fine - perhaps the repo doesn't have a package.json
+      if (err) {
+        callback();
+        return;
+      }
 
-			brains.getInfo(manifest, function(err, info) {
+      brains.getInfo(manifest, function(err, info) {
 
-				if (err) {
-					callback(err);
-					return;
-				}
+        if (err) {
+          callback(err);
+          return;
+        }
 
-				callback(null, {repo: repo, manifest: manifest, info: info});
-			});
-		});
-	};
+        callback(null, {repo: repo, manifest: manifest, info: info});
+      });
+    });
+  };
 }
 
 /**
@@ -110,27 +110,27 @@ function createGetInfoTask(user, repo) {
  */
 module.exports.get = function(user, callback) {
 
-	getRepos(user, function(err, repos) {
+  getRepos(user, function(err, repos) {
 
-		if (err) {
-			callback(err);
-			return;
-		}
+    if (err) {
+      callback(err);
+      return;
+    }
 
-		// Get repository status information
-		async.parallel(
-			repos.map(function(repo) {
-				return createGetInfoTask(user, repo);
-			}),
-			function(err, data) {
+    // Get repository status information
+    async.parallel(
+      repos.map(function(repo) {
+        return createGetInfoTask(user, repo);
+      }),
+      function(err, data) {
 
-				if (err) {
-					callback(err);
-					return;
-				}
+        if (err) {
+          callback(err);
+          return;
+        }
 
-				callback(null, data.filter(function(d) {return !!d;}));
-			}
-		);
-	});
+        callback(null, data.filter(function(d) {return !!d;}));
+      }
+    );
+  });
 };

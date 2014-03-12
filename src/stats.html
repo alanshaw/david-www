@@ -1,50 +1,50 @@
 @@include('inc/top.html', {"id": "stats-page", "title": "Stats for David"})
 
-	<h1>Stats</h1>
+  <h1>Stats</h1>
 
-	<div id="recently-watched" class="box">
-		<h2>Recently started watching</h2>
-		{{#if recentlyRetrievedManifests.length}}
-		<ul class="border-list">
-			{{#each recentlyRetrievedManifests}}
-			<li>{{user}} - <a href="/{{user}}/{{repo}}">{{repo}}</a></li>
-			{{/each}}
-		</ul>
-		{{else}}
-		<p>No recent projects</p>
-		{{/if}}
-	</div>
+  <div id="recently-watched" class="box">
+    <h2>Recently started watching</h2>
+    {{#if recentlyRetrievedManifests.length}}
+    <ul class="border-list">
+      {{#each recentlyRetrievedManifests}}
+      <li>{{user}} - <a href="/{{user}}/{{repo}}">{{repo}}</a></li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p>No recent projects</p>
+    {{/if}}
+  </div>
 
-	{{#if recentlyUpdatedPackages.length}}
-	<div id="recently-updated-npm" class="box">
-		<h2>Recently updated NPM packages</h2>
-		<ul class="border-list">
-			{{#each recentlyUpdatedPackages}}
-			<li class="pinned"><a href="@@npmsite/package/{{name}}">{{name}}</a> <span>{{previous}} <i class="fa fa-angle-double-right"></i> {{version}}</span></li>
-			{{/each}}
-		</ul>
-	</div>
-	{{/if}}
+  {{#if recentlyUpdatedPackages.length}}
+  <div id="recently-updated-npm" class="box">
+    <h2>Recently updated NPM packages</h2>
+    <ul class="border-list">
+      {{#each recentlyUpdatedPackages}}
+      <li class="pinned"><a href="@@npmsite/package/{{name}}">{{name}}</a> <span>{{previous}} <i class="fa fa-angle-double-right"></i> {{version}}</span></li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
 
-	{{#if recentlyUpdatedManifests.length}}
-	<div id="recently-updated-proj" class="box">
-		<h2>Recently updated projects</h2>
-		<ul class="border-list">
-			{{#each recentlyUpdatedManifests}}
-			<li>
-				{{user}} - <a href="/{{user}}/{{repo}}">{{repo}}</a>
-				<ul>
-					{{#each diffs}}
-					<li>
-						<a href="@@npmsite/package/{{name}}">{{name}}</a>
-						<span>{{#if previous}}{{previous}}{{else}}Nothing{{/if}} <i class="fa fa-arrow-right"></i> {{#if version}}{{version}}{{else}}Nothing{{/if}}</span>
-					</li>
-					{{/each}}
-				</ul>
-			</li>
-			{{/each}}
-		</ul>
-	</div>
-	{{/if}}
+  {{#if recentlyUpdatedManifests.length}}
+  <div id="recently-updated-proj" class="box">
+    <h2>Recently updated projects</h2>
+    <ul class="border-list">
+      {{#each recentlyUpdatedManifests}}
+      <li>
+        {{user}} - <a href="/{{user}}/{{repo}}">{{repo}}</a>
+        <ul>
+          {{#each diffs}}
+          <li>
+            <a href="@@npmsite/package/{{name}}">{{name}}</a>
+            <span>{{#if previous}}{{previous}}{{else}}Nothing{{/if}} <i class="fa fa-arrow-right"></i> {{#if version}}{{version}}{{else}}Nothing{{/if}}</span>
+          </li>
+          {{/each}}
+        </ul>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
 
 @@include('inc/bottom.html')

@@ -1,25 +1,25 @@
 @@include('inc/top.html', {"id": "profile-page", "title": "Profile for {{user}}"})
 
-	<h1>
-		<a href="@@githubsite/{{user}}">
-			{{#if repos.length}}
-			<img src="{{repos.[0].repo.owner.avatar_url}}" alt="Avatar for {{user}}">
-			{{/if}}
-			{{user}}
-		</a>
-	</h1>
+  <h1>
+    <a href="@@githubsite/{{user}}">
+      {{#if repos.length}}
+      <img src="{{repos.[0].repo.owner.avatar_url}}" alt="Avatar for {{user}}">
+      {{/if}}
+      {{user}}
+    </a>
+  </h1>
 
-	{{#if repos.length}}
-	<ul class="border-list">
-		{{#each repos}}
-		<li class="{{info.status}}">
-			<a href="/{{../user}}/{{repo.name}}">{{manifest.name}}</a>
-			<a href="/{{../user}}/{{repo.name}}"><img src="/{{../user}}/{{repo.name}}.png" alt="Dependency status"></a>
-		</li>
-		{{/each}}
-	</ul>
-	{{else}}
-	<p>No repositories</p>
-	{{/if}}
+  {{#if repos.length}}
+  <ul class="border-list">
+    {{#each repos}}
+    <li class="{{info.status}}">
+      <a href="/{{../user}}/{{repo.name}}">{{manifest.name}}</a>
+      <a href="/{{../user}}/{{repo.name}}"><img src="/{{../user}}/{{repo.name}}.png" alt="Dependency status"></a>
+    </li>
+    {{/each}}
+  </ul>
+  {{else}}
+  <p>No repositories</p>
+  {{/if}}
 
 @@include('inc/bottom.html')

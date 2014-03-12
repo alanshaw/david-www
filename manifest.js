@@ -13,26 +13,26 @@ var githubUrl = require('github-url');
 var depDiff = require('dep-diff');
 
 var github = new GitHubApi({
-	protocol: config.github.api.protocol,
-	host: config.github.api.host,
-	version: config.github.api.version,
-	pathPrefix: config.github.api.pathPrefix,
-	timeout: 5000
+  protocol: config.github.api.protocol,
+  host: config.github.api.host,
+  version: config.github.api.version,
+  pathPrefix: config.github.api.pathPrefix,
+  timeout: 5000
 });
 
 if (config.github.username) {
-	github.authenticate({
-		type: 'basic',
-		username: config.github.username,
-		password: config.github.password
-	});
+  github.authenticate({
+    type: 'basic',
+    username: config.github.username,
+    password: config.github.password
+  });
 }
 
 var exports = new events.EventEmitter();
 
 function Manifest(data) {
-	this.data = data;
-	this.expires = moment().add(Manifest.TTL);
+  this.data = data;
+  this.expires = moment().add(Manifest.TTL);
 }
 
 Manifest.TTL = moment.duration({hours: 1});
@@ -48,64 +48,64 @@ var manifests = {};
  * @return {*}
  */
 function parseManifest(body) {
-	try {
-		// JSON.parse will barf with a SyntaxError if the body is ill.
-		return JSON.parse(body);
-	} catch (error) {
-		return null;
-	}
+  try {
+    // JSON.parse will barf with a SyntaxError if the body is ill.
+    return JSON.parse(body);
+  } catch (error) {
+    return null;
+  }
 }
 
 exports.getManifest = function(user, repo, callback) {
 
-	var manifest = manifests[user] ? manifests[user][repo] : null;
+  var manifest = manifests[user] ? manifests[user][repo] : null;
 
-	if (manifest && manifest.expires > new Date()) {
-		console.log('Using cached manifest', manifest.data.name, manifest.data.version);
-		callback(null, JSON.parse(JSON.stringify(manifest.data)));
-		return;
-	}
+  if (manifest && manifest.expires > new Date()) {
+    console.log('Using cached manifest', manifest.data.name, manifest.data.version);
+    callback(null, JSON.parse(JSON.stringify(manifest.data)));
+    return;
+  }
 
-	github.repos.getContent({user: user, repo: repo, path: 'package.json'}, function(err, resp) {
+  github.repos.getContent({user: user, repo: repo, path: 'package.json'}, function(err, resp) {
 
-		if (err) {
-			callback(err);
-			return;
-		}
+    if (err) {
+      callback(err);
+      return;
+    }
 
-		var packageJson = new Buffer(resp.content, resp.encoding).toString();
-		var data = parseManifest(packageJson);
+    var packageJson = new Buffer(resp.content, resp.encoding).toString();
+    var data = parseManifest(packageJson);
 
-		if (!data) {
-			callback(new Error('Failed to parse package.json: ' + packageJson));
-		} else {
+    if (!data) {
+      callback(new Error('Failed to parse package.json: ' + packageJson));
+    } else {
 
-			console.log('Got manifest', data.name, data.version);
+      console.log('Got manifest', data.name, data.version);
 
-			var oldManifest = manifest;
-			var oldDependencies = oldManifest ? oldManifest.data.dependencies : {};
+      var oldManifest = manifest;
+      var oldDependencies = oldManifest ? oldManifest.data.dependencies : {};
 
-			manifest = new Manifest(data);
+      manifest = new Manifest(data);
 
-			manifests[user] = manifests[user] || {};
-			manifests[user][repo] = manifest;
+      manifests[user] = manifests[user] || {};
+      manifests[user][repo] = manifest;
 
-			callback(null, manifest.data);
+      callback(null, manifest.data);
 
-			if (!oldManifest) {
+      if (!oldManifest) {
 
-				exports.emit('retrieve', JSON.parse(JSON.stringify(data)), user, repo);
+        exports.emit('retrieve', JSON.parse(JSON.stringify(data)), user, repo);
 
-			} else {
+      } else {
 
-				var diffs = depDiff(oldDependencies, data.dependencies);
+        var diffs = depDiff(oldDependencies, data.dependencies);
 
-				if (diffs.length) {
-					exports.emit('dependenciesChange', diffs, JSON.parse(JSON.stringify(data)), user, repo);
-				}
-			}
-		}
-	});
+        if (diffs.length) {
+          exports.emit('dependenciesChange', diffs, JSON.parse(JSON.stringify(data)), user, repo);
+        }
+      }
+    }
+  });
 };
 
 /**
@@ -114,17 +114,17 @@ exports.getManifest = function(user, repo, callback) {
  * @param {moment.duration} duration Time period the manifests will be cahced for, expressed as a moment.duration.
  */
 exports.setCacheDuration = function(duration) {
-	Manifest.TTL = duration;
+  Manifest.TTL = duration;
 };
 
 // When a user publishes a project, they likely updated their project dependencies
 registry.on('change', function(change) {
-	var info = githubUrl(change.doc.repository, config.github.host);
-	// Expire the cached manifest for this user/repo
-	if (info && manifests[info.user] && manifests[info.user][info.project]) {
-		console.log('Expiring cached manifest', info.user, info.project);
-		manifests[info.user][info.project].expires = moment();
-	}
+  var info = githubUrl(change.doc.repository, config.github.host);
+  // Expire the cached manifest for this user/repo
+  if (info && manifests[info.user] && manifests[info.user][info.project]) {
+    console.log('Expiring cached manifest', info.user, info.project);
+    manifests[info.user][info.project].expires = moment();
+  }
 });
 
 module.exports = exports;

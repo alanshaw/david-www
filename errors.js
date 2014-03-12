@@ -46,17 +46,17 @@ var util = require('util');
  */
 module.exports.happened = function(er, req, res, msg) {
 
-	if (!er) {
-		return false;
-	}
+  if (!er) {
+    return false;
+  }
 
-	console.log(msg, er);
+  console.log(msg, er);
 
-	if (util.isError(er)) {
-		console.log(er.stack);
-	}
+  if (util.isError(er)) {
+    console.log(er.stack);
+  }
 
-	res.status(500).render(500, {er: msg});
+  res.status(500).render(500, {er: msg});
 
-	return true;
+  return true;
 };
