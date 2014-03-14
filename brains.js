@@ -33,6 +33,12 @@ function normaliseDeps (deps) {
       d[depName] = '*';
       return d;
     }, {});
+  } else if (Object.prototype.toString.call(deps) == "[object String]") {
+    var depName = deps;
+    deps = {};
+    deps[depName] = "*";
+  } else if (!(deps instanceof Object)) {
+    deps = {};
   }
   return deps;
 }
