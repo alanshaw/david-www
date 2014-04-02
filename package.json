@@ -27,7 +27,7 @@
     "test": "grunt"
   },
   "dependencies": {
-    "async": "~0.2.10",
+    "async": "^0.6.2",
     "config": "~0.4.35",
     "consolidate": "~0.10.0",
     "couchwatch": "~0.6.0",
@@ -35,7 +35,7 @@
     "d3": "~3.4.3",
     "david": "~3.1.0",
     "dep-diff": "~1.0.1",
-    "express": "~3.4.8",
+    "express": "^3.5.1",
     "extract": "~1.0.0",
     "github": "~0.1.14",
     "github-url": "~1.1.0",
@@ -49,13 +49,13 @@
     "semver": "~2.2.1"
   },
   "devDependencies": {
-    "brfs": "~0.2.2",
+    "brfs": "^1.0.0",
     "grunt": "~0.4.4",
-    "grunt-browserify": "~1.3.2",
+    "grunt-browserify": "^2.0.1",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-jshint": "~0.9.2",
-    "grunt-contrib-less": "~0.10.0",
+    "grunt-contrib-less": "^0.11.0",
     "grunt-contrib-nodeunit": "~0.3.3",
     "grunt-contrib-uglify": "~0.4.0",
     "grunt-contrib-watch": "~0.6.0",
