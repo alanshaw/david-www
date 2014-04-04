@@ -1,30 +1,22 @@
 <div id="dev-badge-embed" class="badge-embed">
   <h1>Embed badge</h1>
-  <label for="badge-theme">Theme</label>
+  <label for="badge-theme">Type</label>
   <select id="badge-theme">
-    <option value="default">Default</option>
-    <option value="shields">shields.io</option>
-    <option value="shields-svg">shields.io (SVG)</option>
+    <option value="svg">SVG</option>
+    <option value="png">PNG</option>
   </select>
-  <div class="theme theme-default">
+  <div class="theme theme-svg">
+    <a href="/{{user}}/{{repo}}/dev-status.svg"><img src="/{{user}}/{{repo}}/dev-status.svg" alt="Dependency status"></a>
+    <label for="dev-badge-markdown-svg">Markdown</label>
+    <input id="dev-badge-markdown-svg" type="text" value="[![devDependency Status](@@hostname/{{user}}/{{repo}}/dev-status.svg)](@@hostname/{{user}}/{{repo}}#info=devDependencies)">
+    <label for="dev-badge-html-svg">HTML</label>
+    <input id="dev-badge-html-svg" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}#info=devDependencies&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}/dev-status.svg&quot;/&gt;&lt;/a&gt;">
+  </div>
+  <div class="theme theme-png">
     <a href="/{{user}}/{{repo}}/dev-status.png"><img src="/{{user}}/{{repo}}/dev-status.png" alt="Dependency status"></a>
-    <label for="dev-badge-markdown-default">Markdown</label>
-    <input id="dev-badge-markdown-default" type="text" value="[![devDependency Status](@@hostname/{{user}}/{{repo}}/dev-status.png)](@@hostname/{{user}}/{{repo}}#info=devDependencies)">
-    <label for="dev-badge-html-default">HTML</label>
-    <input id="dev-badge-html-default" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}#info=devDependencies&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}/dev-status.png&quot;/&gt;&lt;/a&gt;">
-  </div>
-  <div class="theme theme-shields">
-    <a href="/{{user}}/{{repo}}/dev-status.png?theme=shields.io"><img src="/{{user}}/{{repo}}/dev-status.png?theme=shields.io" alt="Dependency status"></a>
-    <label for="dev-badge-markdown-shields">Markdown</label>
-    <input id="dev-badge-markdown-shields" type="text" value="[![devDependency Status](@@hostname/{{user}}/{{repo}}/dev-status.png?theme=shields.io)](@@hostname/{{user}}/{{repo}}#info=devDependencies)">
-    <label for="dev-badge-html-shields">HTML</label>
-    <input id="dev-badge-html-shields" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}#info=devDependencies&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}/dev-status.png?theme=shields.io&quot;/&gt;&lt;/a&gt;">
-  </div>
-  <div class="theme theme-shields-svg">
-    <a href="/{{user}}/{{repo}}/dev-status.svg?theme=shields.io"><img src="/{{user}}/{{repo}}/dev-status.svg?theme=shields.io" alt="Dependency status"></a>
-    <label for="dev-badge-markdown-shields">Markdown</label>
-    <input id="dev-badge-markdown-shields" type="text" value="[![devDependency Status](@@hostname/{{user}}/{{repo}}/dev-status.svg?theme=shields.io)](@@hostname/{{user}}/{{repo}}#info=devDependencies)">
-    <label for="dev-badge-html-shields">HTML</label>
-    <input id="dev-badge-html-shields" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}#info=devDependencies&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}/dev-status.svg?theme=shields.io&quot;/&gt;&lt;/a&gt;">
+    <label for="dev-badge-markdown-png">Markdown</label>
+    <input id="dev-badge-markdown-png" type="text" value="[![devDependency Status](@@hostname/{{user}}/{{repo}}/dev-status.png)](@@hostname/{{user}}/{{repo}}#info=devDependencies)">
+    <label for="dev-badge-html-png">HTML</label>
+    <input id="dev-badge-html-png" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}#info=devDependencies&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}/dev-status.png&quot;/&gt;&lt;/a&gt;">
   </div>
 </div>
