@@ -36,7 +36,7 @@ $('#status-page').each(function () {
     $('.theme-' + $(this).val(), container).show();
   });
 
-  $('.badge-embed .theme').not('.theme-default').hide();
+  $('.badge-embed .theme').not('.theme-svg').hide();
 
   var state = {
     info: $.bbq.getState('info', true) || 'dependencies',

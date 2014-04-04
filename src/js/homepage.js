@@ -23,7 +23,7 @@ $('#home-page').each(function () {
 
   // Update the image when the user changes the url
   url.on('input', function () {
-    badge.attr('src', url.text() + '.png');
+    badge.attr('src', url.text() + '.svg');
   });
 
   // Red text if the url isn't good for it.
@@ -34,7 +34,7 @@ $('#home-page').each(function () {
 
   // Green text if it is... wait a minute should this be tied to repo health not.
   badge.load(function () {
-    if (badge.attr('src') === '/img/status/outofdate.png') {
+    if (badge.attr('src') === '/img/status/outofdate.svg') {
       return;
     }
     url.removeClass('nope');

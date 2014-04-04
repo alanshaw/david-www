@@ -1,6 +1,5 @@
 var express = require('express');
 var consolidate = require('consolidate');
-var fs = require('fs');
 var stats = require('./stats');
 var manifest = require('./manifest');
 var statics = require('./statics');
@@ -141,8 +140,8 @@ function changes (req, res) {
   });
 }
 
-function badgePath (theme, dev, status, retina, extension) {
-  return 'dist/img/status/' + (theme ? theme + '/' : '') + (dev ? 'dev-' : '') + status + (retina ? '@2x' : '') + '.' + (theme === 'shields.io' && extension === 'svg' ? 'svg' : 'png');
+function badgePath (dev, status, retina, extension) {
+  return 'dist/img/status/' + (dev ? 'dev-' : '') + status + (retina ? '@2x' : '') + '.' + (extension === 'png' ? 'png' : 'svg');
 }
 
 /**
@@ -155,34 +154,21 @@ function sendStatusBadge (req, res, opts) {
 
   manifest.getManifest(req.params.user, req.params.repo, function(err, manifest) {
     if (err) {
-      return res.status(404).sendfile('dist/img/status/unknown.png');
+      return res.status(404).sendfile('dist/img/status/unknown.' + (opts.extension === 'png' ? 'png' : 'svg'));
     }
 
     brains.getInfo(manifest, {dev: opts.dev}, function(err, info) {
       if (err) {
-        return res.status(500).sendfile('dist/img/status/unknown.png');
+        return res.status(500).sendfile('dist/img/status/unknown.' + (opts.extension === 'png' ? 'png' : 'svg'));
       }
 
-      if (req.query.theme) {
-        var theme = req.query.theme.replace(/[^A-Za-z.-]/g, '');
-
-        // Ensure theme directory exists
-        fs.exists('dist/img/status/' + theme, function (exists) {
-          if (!exists) {
-            return res.sendfile(badgePath('', opts.dev, info.status, opts.retina, opts.extension));
-          }
-
-          res.sendfile(badgePath(theme, opts.dev, info.status, opts.retina, opts.extension));
-        });
-      } else {
-        res.sendfile(badgePath('', opts.dev, info.status, opts.retina, opts.extension));
-      }
+      res.sendfile(badgePath(opts.dev, info.status, opts.retina, opts.extension));
     });
   });
 }
 
 function statusBadge(req, res) {
-  sendStatusBadge(req, res);
+  sendStatusBadge(req, res, {extension: 'png'});
 }
 
 function svgStatusBadge(req, res) {
@@ -190,11 +176,11 @@ function svgStatusBadge(req, res) {
 }
 
 function retinaStatusBadge(req, res) {
-  sendStatusBadge(req, res, {retina: true});
+  sendStatusBadge(req, res, {retina: true, extension: 'png'});
 }
 
 function devStatusBadge(req, res) {
-  sendStatusBadge(req, res, {dev: true});
+  sendStatusBadge(req, res, {dev: true, extension: 'png'});
 }
 
 function svgDevStatusBadge(req, res) {
@@ -202,7 +188,7 @@ function svgDevStatusBadge(req, res) {
 }
 
 function retinaDevStatusBadge(req, res) {
-  sendStatusBadge(req, res, {dev: true, retina: true});
+  sendStatusBadge(req, res, {dev: true, retina: true, extension: 'png'});
 }
 
 function dependencyGraph(req, res) {
