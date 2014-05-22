@@ -47,7 +47,7 @@ $("#home-page").each(function () {
       entry.datetime = moment(entry.updated).format()
       entry.formattedDate = moment(entry.updated).format("MMMM Do YYYY, HH:mm")
 
-      var tpl = fs.readFileSync(__dirname + "/../../dist/inc/news.html")
+      var tpl = fs.readFileSync(__dirname + "/../../dist/inc/news.html", {encoding: "utf8"})
       $("#stats").append(Handlebars.compile(tpl)(entry))
     }
   })

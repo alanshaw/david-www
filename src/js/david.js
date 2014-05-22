@@ -4,7 +4,7 @@ var d3 = require("d3")
   , fs = require("fs")
   , Handlebars = require("handlebars")
 
-var npmsite = fs.readFileSync(__dirname + "/../../dist/inc/config-npmsite.html")
+var npmsite = fs.readFileSync(__dirname + "/../../dist/inc/config-npmsite.html", {encoding: "utf8"})
 
 var david = {}
 
@@ -87,7 +87,7 @@ $("#dependency-counts-graph").each(function () {
   }
 })
 
-var loadingTpl = fs.readFileSync(__dirname + "/../../dist/inc/loading.html")
+var loadingTpl = fs.readFileSync(__dirname + "/../../dist/inc/loading.html", {encoding: "utf8"})
 
 david.createLoadingEl = function (text) {
   return $(Handlebars.compile(loadingTpl)({text: (text || "Reticulating splines...")}))

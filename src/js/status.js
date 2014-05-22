@@ -329,12 +329,12 @@ $("#status-page").each(function () {
           data.from = from
           data.to = to
 
-          var tpl = fs.readFileSync(__dirname + "/../../dist/inc/changes.html")
+          var tpl = fs.readFileSync(__dirname + "/../../dist/inc/changes.html", {encoding: "utf8"})
           container.html(Handlebars.compile(tpl)(data))
           $.fancybox.update()
         },
         error: function () {
-          container.html(fs.readFileSync(__dirname + "/../../dist/inc/changelog-er.html"))
+          container.html(fs.readFileSync(__dirname + "/../../dist/inc/changelog-er.html", {encoding: "utf8"}))
           $.fancybox.update()
         }
       })
@@ -386,7 +386,7 @@ $("#status-page").each(function () {
         devDepInfoContainer.prepend(loading)
 
         $.getJSON(pathname + "dev-info.json", function (data) {
-          var tpl = fs.readFileSync(__dirname + "/../../dist/inc/info.html")
+          var tpl = fs.readFileSync(__dirname + "/../../dist/inc/info.html", {encoding: "utf8"})
           loading.remove()
           devDepInfoContainer.html(Handlebars.compile(tpl)({ info: data }))
           initInfo(devDepInfoContainer, "dev-graph.json")
