@@ -1,17 +1,17 @@
-var npm = require('npm');
-var moment = require('moment');
-var semver = require('semver');
-var cycle = require('cycle');
-var config = require('config');
+var npm = require("npm")
+  , moment = require("moment")
+  , semver = require("semver")
+  , cycle = require("cycle")
+  , config = require("config")
 
-function Package(name, version) {
-  this.name = name;
-  this.version = version;
-  this.deps = {};
-  this.expires = moment().add(Package.TTL);
+function Package (name, version) {
+  this.name = name
+  this.version = version
+  this.deps = {}
+  this.expires = moment().add(Package.TTL)
 }
 
-Package.TTL = moment.duration({days: 1});
+Package.TTL = moment.duration({days: 1})
 
 /**
  * Recursively removes the expires property from a decycled Package.
@@ -21,21 +21,21 @@ Package.TTL = moment.duration({days: 1});
  * @param {Object} decycledPkg A decycled Package
  * @return {Object} decycledPkg
  */
-function deleteExpires(decycledPkg) {
+function deleteExpires (decycledPkg) {
 
-  delete decycledPkg.expires;
+  delete decycledPkg.expires
 
-  Object.keys(decycledPkg.deps).forEach(function(depName) {
+  Object.keys(decycledPkg.deps).forEach(function (depName) {
     // Delete expires from this dependency if it isn't a decycle reference
     if (!decycledPkg.deps[depName].$ref) {
-      deleteExpires(decycledPkg.deps[depName]);
+      deleteExpires(decycledPkg.deps[depName])
     }
-  });
+  })
 
-  return decycledPkg;
+  return decycledPkg
 }
 
-var dependencies = {};
+var dependencies = {}
 
 /**
  * Get the dependency graph for a given NPM dependency name and version.
@@ -44,98 +44,82 @@ var dependencies = {};
  *
  * @param depName Package name
  * @param version
- * @param callback
+ * @param cb
  */
-function getDependencyGraph(depName, version, callback) {
+function getDependencyGraph (depName, version, cb) {
+  dependencies[depName] = dependencies[depName] || {}
 
-  dependencies[depName] = dependencies[depName] || {};
-
-  var dep = dependencies[depName][version];
+  var dep = dependencies[depName][version]
 
   if (dep) {
 
     if (dep.expires > new Date()) {
-      callback(null, dep);
-      return;
+      return cb(null, dep)
     }
 
-    dep.deps = {};
-    dep.expires = moment().add(Package.TTL);
+    dep.deps = {}
+    dep.expires = moment().add(Package.TTL)
 
   } else {
-    dep = dependencies[depName][version] = new Package(depName, version);
+    dep = dependencies[depName][version] = new Package(depName, version)
   }
 
   process.nextTick(function () {
 
-    npm.commands.view([depName + '@' + version, 'dependencies'], function(err, data) {
-
-      if (err) {
-        callback(err);
-        return;
-      }
+    npm.commands.view([depName + "@" + version, "dependencies"], function (er, data) {
+      if (er) return cb(er)
 
       var depDeps = data[version] ? data[version].dependencies ? data[version].dependencies : {} : {},
-        depDepNames = depDeps ? Object.keys(depDeps) : [];
+        depDepNames = depDeps ? Object.keys(depDeps) : []
 
       // No dependencies?
-      if (depDepNames.length === 0) {
-        callback(null, dep);
-        return;
+      if (!depDepNames.length) {
+        return cb(null, dep)
       }
 
-      var got = 0;
+      var got = 0
 
-      depDepNames.forEach(function(depDepName) {
+      depDepNames.forEach(function (depDepName) {
+        var depDepRange = depDeps[depDepName]
 
-        var depDepRange = depDeps[depDepName];
-
-        latestSatisfying(depDepName, depDepRange, function(err, depDepVersion) {
-
-          if (err) {
-            callback(err);
-            return;
-          }
+        latestSatisfying(depDepName, depDepRange, function (er, depDepVersion) {
+          if (er) return cb(er)
 
           // There should be a version that satisfies!
           // But...
           // The range could be a tag, or a git repo
           if (!depDepVersion) {
 
-            // Add a dummy package with the range as it's version
-            dep.deps[depDepName] = new Package(depDepName, depDepRange);
+            // Add a dummy package with the range as it"s version
+            dep.deps[depDepName] = new Package(depDepName, depDepRange)
 
-            got++;
+            got++
 
             if (got === depDepNames.length) {
-              dependencies[depName][version] = dep;
-              callback(null, dep);
+              dependencies[depName][version] = dep
+              cb(null, dep)
             }
 
           } else {
 
-            getDependencyGraph(depDepName, depDepVersion, function(err, depDep) {
+            getDependencyGraph(depDepName, depDepVersion, function (er, depDep) {
+              if (er) return cb(er)
 
-              if (err) {
-                callback(err);
-                return;
-              }
+              dep.deps[depDepName] = depDep
 
-              dep.deps[depDepName] = depDep;
-
-              got++;
+              got++
 
               if (got === depDepNames.length) {
-                dependencies[depName][version] = dep;
-                callback(null, dep);
+                dependencies[depName][version] = dep
+                cb(null, dep)
               }
-            });
+            })
           }
 
-        }); // npm
-      });
-    });
-  });
+        }) // npm
+      })
+    })
+  })
 }
 
 /**
@@ -145,38 +129,32 @@ function getDependencyGraph(depName, version, callback) {
  *
  * @param depName
  * @param range
- * @param callback
+ * @param cb
  */
-function latestSatisfying(depName, range, callback) {
+function latestSatisfying (depName, range, cb) {
+  npm.commands.view([depName, "versions"], function (er, data) {
+    if (er) return cb(er)
 
-  npm.commands.view([depName, 'versions'], function(err, data) {
-
-    if (err) {
-      callback(err);
-      return;
-    }
-
-    var keys = Object.keys(data);
+    var keys = Object.keys(data)
 
     // `npm view 0 versions` returns {} - ensure some data was returned
     if (!keys.length) {
-      callback();
-      return;
+      return cb()
     }
 
-    if (range === 'latest') {
-      range = '';
+    if (range === "latest") {
+      range = ""
     }
 
     // Get the most recent version that satisfies the range
-    var version = semver.maxSatisfying(data[keys[0]].versions, range, true);
+    var version = semver.maxSatisfying(data[keys[0]].versions, range, true)
 
-    callback(null, version);
-  });
+    cb(null, version)
+  })
 }
 
 // Cache of projects we have cached dependencies for
-var projects = {};
+var projects = {}
 
 /**
  * Get dependency graph for a non-NPM project
@@ -184,95 +162,78 @@ var projects = {};
  * @param name
  * @param version
  * @param deps
- * @param {Function<Error, Object>} callback Second parameter is decycled dependency graph
+ * @param {Function} cb Second parameter is decycled dependency graph
  * @see https://github.com/douglascrockford/JSON-js/blob/master/cycle.js
  */
-module.exports.getProjectDependencyGraph = function(name, version, deps, callback) {
+module.exports.getProjectDependencyGraph = function (name, version, deps, cb) {
+  projects[name] = projects[name] || {}
 
-  projects[name] = projects[name] || {};
-
-  var project = projects[name][version];
+  var project = projects[name][version]
 
   if (project) {
 
     if (project.expires > new Date()) {
-      console.log('Using cached project dependency graph', name, version);
-      callback(null, deleteExpires(cycle.decycle(project)));
-      return;
+      console.log("Using cached project dependency graph", name, version)
+      return cb(null, deleteExpires(cycle.decycle(project)))
     }
 
-    project.deps = {};
-    project.expires = moment().add(Package.TTL);
+    project.deps = {}
+    project.expires = moment().add(Package.TTL)
 
   } else {
-    project = projects[name][version] = new Package(name, version);
+    project = projects[name][version] = new Package(name, version)
   }
 
-  npm.load(config.npm.options, function(err) {
+  npm.load(config.npm.options, function (er) {
+    if (er) return cb(er)
 
-    if (err) {
-      callback(err);
-      return;
-    }
+    var depNames = Object.keys(deps)
+      , done = 0
 
-    var depNames = Object.keys(deps),
-      done = 0;
+    depNames.forEach(function (depName) {
+      var range = deps[depName]
 
-    depNames.forEach(function(depName) {
-
-      var range = deps[depName];
-
-      latestSatisfying(depName, range, function(err, version) {
-
-        if (err) {
-          callback(err);
-          return;
-        }
+      latestSatisfying(depName, range, function (er, version) {
+        if (er) return cb(er)
 
         // There should be a version that satisfies!
         // But...
         // The range could be a tag, or a git repo
         if (!version) {
 
-          // Add a dummy package with the range as it's version
-          project.deps[depName] = new Package(depName, range);
+          // Add a dummy package with the range as it"s version
+          project.deps[depName] = new Package(depName, range)
 
-          done++;
+          done++
 
           if (done === depNames.length) {
-            callback(null, cycle.decycle(project));
+            cb(null, cycle.decycle(project))
           }
 
         } else {
 
-          getDependencyGraph(depName, version, function(err, dep) {
+          getDependencyGraph(depName, version, function (er, dep) {
+            if (er) return cb(er)
 
-            if (err) {
-              callback(err);
-              return;
-            }
+            project.deps[depName] = dep
 
-            project.deps[depName] = dep;
-
-            done++;
+            done++
 
             if (done === depNames.length) {
-              callback(null, deleteExpires(cycle.decycle(project)));
+              cb(null, deleteExpires(cycle.decycle(project)))
             }
-          });
+          })
         }
-      });
-    });
-
-
-  });
-};
+      })
+    })
+  })
+}
 
 /**
  * Set the TTL for cached packages.
  *
  * @param {moment.duration} duration Time period the packages will be cacched for, expressed as a moment.duration.
  */
-module.exports.setCacheDuration = function(duration) {
-  Package.TTL = duration;
-};
+module.exports.setCacheDuration = function (duration) {
+  Package.TTL = duration
+}

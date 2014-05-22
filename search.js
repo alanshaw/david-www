@@ -1,83 +1,69 @@
-var npm = require('npm');
-var stats = require('./stats');
-var config = require('config');
+var npm = require("npm")
+  , stats = require("./stats")
+  , config = require("config")
 
-function Query(keywords, callback) {
-  this.keywords = keywords;
-  this.callback = callback;
+function Query (keywords, callback) {
+  this.keywords = keywords
+  this.callback = callback
 }
 
-var queryQueue = [];
-var processingQueue = false;
+var queryQueue = []
+var processingQueue = false
 
 /**
  * @param {Array|String} keywords
- * @param callback
+ * @param cb
  */
-module.exports = function(keywords, callback) {
+module.exports = function (keywords, cb) {
+  if (!keywords) return cb(null, {})
 
-  if (!keywords) {
-    callback(null, {});
-    return;
-  }
-
-  if (Object.prototype.toString.call(keywords) === '[object String]') {
-    keywords = keywords.split(/\s+/);
+  if (Object.prototype.toString.call(keywords) === "[object String]") {
+    keywords = keywords.split(/\s+/)
   } else if (!keywords.length) {
-    callback(null, {});
-    return;
+    return cb(null, {})
   }
 
-  queryQueue.push(new Query(keywords, callback));
+  queryQueue.push(new Query(keywords, cb))
 
-  processQueue();
-};
+  processQueue()
+}
 
-function processQueue() {
-
+function processQueue () {
   if (processingQueue || !queryQueue.length) {
-    return;
+    return
   }
 
-  processingQueue = true;
+  processingQueue = true
 
-  var query = queryQueue.shift(),
-    keywords = query.keywords,
-    callback = query.callback;
+  var query = queryQueue.shift()
+    , keywords = query.keywords
+    , cb = query.callback
 
-  npm.load(config.npm.options, function(err) {
+  npm.load(config.npm.options, function (er) {
+    if (er) return cb(er)
 
-    if (err) {
-      callback(err);
-      return;
-    }
+    npm.commands.search(keywords, true, function (er, data) {
+      if (er) return cb(er)
 
-    npm.commands.search(keywords, true, function(err, data) {
+      var counts = stats.getDependencyCounts()
+      var results = {}
 
-      if (err) {
-        callback(err);
-        return;
-      }
-
-      var counts = stats.getDependencyCounts();
-      var results = {};
-
-      Object.keys(data).forEach(function(name) {
-        results[name] = {};
-        results[name].latest = data[name].version;
-        results[name].description = data[name].description;
-        results[name].maintainers = data[name].maintainers;
-        results[name].time = data[name].time;
-        results[name].count = counts[name] || 0;
-      });
+      Object.keys(data).forEach(function (name) {
+        results[name] = {}
+        results[name].latest = data[name].version
+        results[name].description = data[name].description
+        results[name].maintainers = data[name].maintainers
+        results[name].time = data[name].time
+        results[name].count = counts[name] || 0
+      })
 
       setImmediate(function () {
-        callback(null, results);
-      });
+        cb(null, results)
+      })
 
-      processingQueue = false;
+      processingQueue = false
 
-      processQueue();
-    });
-  });
+      processQueue()
+    })
+  })
 }

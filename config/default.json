@@ -14,7 +14,7 @@
 	"npm": {
 		"hostname": "http://npmjs.org",
 		"options": {
-			"registry": "http://176.9.4.195/registry"
+			"registry": "http://isaacs.iriscouch.com/registry"
 		}
 	},
 	"site": {

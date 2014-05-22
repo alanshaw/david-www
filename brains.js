@@ -2,131 +2,121 @@
  * Information about what the website considers to be an out of date or up to date dependency
  */
 
-var david = require('david');
-var semver = require('semver');
-var cache = require('memory-cache');
-var registry = require('./registry');
-var config = require('config');
+var david = require("david")
+  , semver = require("semver")
+  , cache = require("memory-cache")
+  , registry = require("./registry")
+  , config = require("config")
 
 // When a user publishes a package, delete cached david info
-registry.on('change', function(change) {
-  cache.del(change.doc.name);
-});
+registry.on("change", function(change) {
+  cache.del(change.doc.name)
+})
 
 function isPinned (version) {
-  if (version === '*' || version === 'latest') {
-    return false;
+  if (version == "*" || version == "latest") {
+    return false
   }
 
-  var range = semver.validRange(version, true);
+  var range = semver.validRange(version, true)
 
-  if (range && range.indexOf('>=') === 0) {
-    return false;
+  if (range && range.indexOf(">=") == 0) {
+    return false
   }
 
-  return true;
+  return true
 }
 
 function normaliseDeps (deps) {
   if (Array.isArray(deps)) {
-    deps = deps.reduce(function(d, depName) {
-      d[depName] = '*';
-      return d;
-    }, {});
-  } else if (Object.prototype.toString.call(deps) === '[object String]') {
-    var depName = deps;
-    deps = {};
-    deps[depName] = '*';
+    deps = deps.reduce(function (d, depName) {
+      d[depName] = "*"
+      return d
+    }, {})
+  } else if (Object.prototype.toString.call(deps) === "[object String]") {
+    var depName = deps
+    deps = {}
+    deps[depName] = "*"
   } else if (!(deps instanceof Object)) {
-    deps = {};
+    deps = {}
   }
-  return deps;
+  return deps
 }
 
 function getCachedDependencies (manifest, opts) {
-  var pkgs = {};
-  var deps = normaliseDeps(manifest[opts.dev ? 'devDependencies' : 'dependencies'] || {});
-  var depNames = Object.keys(deps);
+  var pkgs = {}
+    , deps = normaliseDeps(manifest[opts.dev ? "devDependencies" : "dependencies"] || {})
+    , depNames = Object.keys(deps)
 
-  if (!depNames.length) {
-    return pkgs;
-  }
+  if (!depNames.length) return pkgs
 
-  depNames.forEach(function(depName) {
-    var info = cache.get(depName);
+  depNames.forEach(function (depName) {
+    var info = cache.get(depName)
 
-    if (!info) {
-      return;
-    }
+    if (!info) return;
 
-    pkgs[depName] = {required: deps[depName], stable: info.stable, latest: info.latest};
-  });
+    pkgs[depName] = {required: deps[depName], stable: info.stable, latest: info.latest}
+  })
 
-  return pkgs;
+  return pkgs
 }
 
 function getDependencies (manifest, opts, cb) {
-
   // Get the dependency info we already have cached information for
-  var cachedInfos = getCachedDependencies(manifest, opts);
-  var cachedDepNames = Object.keys(cachedInfos);
+  var cachedInfos = getCachedDependencies(manifest, opts)
+    , cachedDepNames = Object.keys(cachedInfos)
+    , manifestDeps = normaliseDeps(manifest[opts.dev ? "devDependencies" : "dependencies"] || {})
 
-  var manifestDeps = normaliseDeps(manifest[opts.dev ? 'devDependencies' : 'dependencies'] || {});
+  var uncachedManifestDeps = Object.keys(manifestDeps).filter(function (depName) {
+    return cachedDepNames.indexOf(depName) == -1
+  }).reduce(function (deps, depName) {
+    deps[depName] = manifestDeps[depName]
+    return deps
+  }, {})
 
-  var uncachedManifestDeps = Object.keys(manifestDeps).filter(function(depName) {
-    return cachedDepNames.indexOf(depName) === -1;
-  }).reduce(function(deps, depName) {
-    deps[depName] = manifestDeps[depName];
-    return deps;
-  }, {});
-
-  var uncachedManifestDepNames = Object.keys(uncachedManifestDeps);
+  var uncachedManifestDepNames = Object.keys(uncachedManifestDeps)
 
   if (!uncachedManifestDepNames.length) {
     return setImmediate(function () {
-      cb(null, cachedInfos);
-    });
+      cb(null, cachedInfos)
+    })
   }
 
-  var uncachedManifest = {};
-  uncachedManifest[opts.dev ? 'devDependencies' : 'dependencies'] = uncachedManifestDeps;
+  var uncachedManifest = {}
+  uncachedManifest[opts.dev ? "devDependencies" : "dependencies"] = uncachedManifestDeps
 
-  david.getDependencies(uncachedManifest, opts, function(er, infos) {
-    if (er) {
-      return cb(er);
-    }
+  david.getDependencies(uncachedManifest, opts, function (er, infos) {
+    if (er) return cb(er)
 
     // Cache the new info
-    Object.keys(infos).forEach(function(depName) {
+    Object.keys(infos).forEach(function (depName) {
       if (config.brains.cacheTime) {
-        var info = infos[depName];
-        cache.put(depName, {stable: info.stable, latest: info.latest}, config.brains.cacheTime);
+        var info = infos[depName]
+        cache.put(depName, {stable: info.stable, latest: info.latest}, config.brains.cacheTime)
       }
-    });
+    })
 
-    cachedDepNames.forEach(function(depName) {
-      infos[depName] = cachedInfos[depName];
-    });
+    cachedDepNames.forEach(function (depName) {
+      infos[depName] = cachedInfos[depName]
+    })
 
-    cb(null, infos);
-  });
+    cb(null, infos)
+  })
 }
 
 function getUpdatedDependencies (manifest, opts, cb) {
-  getDependencies(manifest, opts, function(er, infos) {
-    if (er) {
-      return cb(er);
-    }
+  getDependencies(manifest, opts, function (er, infos) {
+    if (er) return cb(er)
 
     // Filter out the non-updated dependencies
-    Object.keys(infos).forEach(function(depName) {
+    Object.keys(infos).forEach(function (depName) {
       if (!david.isUpdated(infos[depName], opts)) {
-        delete infos[depName];
+        delete infos[depName]
       }
-    });
+    })
 
-    cb(null, infos);
-  });
+    cb(null, infos)
+  })
 }
 
 /**
@@ -135,46 +125,36 @@ function getUpdatedDependencies (manifest, opts, cb) {
  * @param {Boolean} [opts.dev] Consider devDependencies
  * @param {Function} cb Function that receives the results
  */
-module.exports.getInfo = function(manifest, opts, cb) {
-
+module.exports.getInfo = function (manifest, opts, cb) {
   // Allow cb to be passed as second parameter
   if (!cb) {
-    cb = opts;
-    opts = {};
+    cb = opts
+    opts = {}
   } else {
-    opts = opts || {};
+    opts = opts || {}
   }
 
   if (config.npm && config.npm.options) {
-    opts.npm = config.npm.options;
+    opts.npm = config.npm.options
   }
 
-  var davidOptions = {dev: opts.dev, loose: true, npm: opts.npm};
+  var davidOptions = {dev: opts.dev, loose: true, npm: opts.npm}
 
-  getDependencies(manifest, davidOptions, function(er, deps) {
-
-    if (er) {
-      return cb(er);
-    }
+  getDependencies(manifest, davidOptions, function (er, deps) {
+    if (er) return cb(er)
 
     // Get ALL updated dependencies including unstable
-    getUpdatedDependencies(manifest, davidOptions, function(er, updatedDeps) {
+    getUpdatedDependencies(manifest, davidOptions, function (er, updatedDeps) {
+      if (er) return cb(er)
 
-      if (er) {
-        return cb(er);
-      }
-
-      davidOptions.stable = true;
+      davidOptions.stable = true
 
       // Get STABLE updated dependencies
-      getUpdatedDependencies(manifest, davidOptions, function(er, updatedStableDeps) {
+      getUpdatedDependencies(manifest, davidOptions, function (er, updatedStableDeps) {
+        if (er) return cb(er)
 
-        if (er) {
-          return cb(er);
-        }
-
-        var depNames = Object.keys(deps).sort(),
-          totals = {
+        var depNames = Object.keys(deps).sort()
+          , totals = {
             upToDate: 0,
             outOfDate: 0,
             pinned: {
@@ -185,22 +165,21 @@ module.exports.getInfo = function(manifest, opts, cb) {
               upToDate: 0,
               outOfDate: 0
             }
-          };
+          }
 
-        var depList = depNames.map(function(depName) {
-
+        var depList = depNames.map(function (depName) {
           // Lets disprove this
-          var status = 'uptodate';
+          var status = "uptodate"
 
           // If there is an updated STABLE dependency then this dep is out of date
           if (updatedStableDeps[depName]) {
-            status = 'outofdate';
+            status = "outofdate"
           // If it is in the UNSTABLE list, and has no stable version then consider out of date
           } else if (updatedDeps[depName] && !updatedDeps[depName].stable) {
-            status = 'outofdate';
+            status = "outofdate"
           }
 
-          var pinned = isPinned(deps[depName].required);
+          var pinned = isPinned(deps[depName].required)
 
           var info = {
             name: depName,
@@ -209,43 +188,43 @@ module.exports.getInfo = function(manifest, opts, cb) {
             latest: deps[depName].latest,
             status: status,
             pinned: pinned
-          };
-
-          if (status === 'uptodate' && pinned) {
-            info.upToDate = true;
-            totals.upToDate++;
-            totals.pinned.upToDate++;
-          } else if (status === 'uptodate' && !pinned) {
-            info.upToDate = true;
-            totals.upToDate++;
-            totals.unpinned.upToDate++;
-          } else if (status === 'outofdate' && pinned) {
-            info.outOfDate = true;
-            totals.outOfDate++;
-            totals.pinned.outOfDate++;
-          } else if (status === 'outofdate' && !pinned) {
-            info.outOfDate = true;
-            totals.outOfDate++;
-            totals.unpinned.outOfDate++;
           }
 
-          return info;
-        });
+          if (status === "uptodate" && pinned) {
+            info.upToDate = true
+            totals.upToDate++
+            totals.pinned.upToDate++
+          } else if (status === "uptodate" && !pinned) {
+            info.upToDate = true
+            totals.upToDate++
+            totals.unpinned.upToDate++
+          } else if (status === "outofdate" && pinned) {
+            info.outOfDate = true
+            totals.outOfDate++
+            totals.pinned.outOfDate++
+          } else if (status === "outofdate" && !pinned) {
+            info.outOfDate = true
+            totals.outOfDate++
+            totals.unpinned.outOfDate++
+          }
+
+          return info
+        })
 
         // Figure out the overall status for this manifest
-        var status = 'uptodate';
+        var status = "uptodate"
 
         if (depList.length && totals.unpinned.outOfDate) {
 
           if (totals.unpinned.outOfDate / depList.length > 0.25) {
-            status = 'outofdate';
+            status = "outofdate"
           } else {
-            status = 'notsouptodate';
+            status = "notsouptodate"
           }
         }
 
-        cb(null, {status: status, deps: depList, totals: totals});
-      });
-    });
-  });
-};
+        cb(null, {status: status, deps: depList, totals: totals})
+      })
+    })
+  })
+}

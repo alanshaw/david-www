@@ -27,7 +27,7 @@
  *
  */
 
-var util = require('util');
+var util = require("util")
 
 /**
  * Default error handler, for when you don't know better.
@@ -44,19 +44,16 @@ var util = require('util');
  * @param msg {String} Additional message to display to the user
  * @return {Boolean}
  */
-module.exports.happened = function(er, req, res, msg) {
+module.exports.happened = function (er, req, res, msg) {
+  if (!er) return false
 
-  if (!er) {
-    return false;
-  }
-
-  console.log(msg, er);
+  console.log(msg, er)
 
   if (util.isError(er)) {
-    console.log(er.stack);
+    console.log(er.stack)
   }
 
-  res.status(500).render(500, {er: msg});
+  res.status(500).render(500, {er: msg})
 
-  return true;
-};
+  return true
+}
