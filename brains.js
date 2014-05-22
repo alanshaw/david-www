@@ -20,7 +20,7 @@ function isPinned (version) {
 
   var range = semver.validRange(version, true)
 
-  if (range && range.indexOf(">=") == 0) {
+  if (range && range.indexOf(">=") === 0) {
     return false
   }
 

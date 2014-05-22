@@ -1,8 +1,8 @@
-var npm = require('npm')
-  , moment = require('moment')
-  , RSS = require('rss')
-  , semver = require('semver')
-  , config = require('config')
+var npm = require("npm")
+  , moment = require("moment")
+  , RSS = require("rss")
+  , semver = require("semver")
+  , config = require("config")
 
 function Package (name, versions, repo) {
   this.name = name // The name of the package
@@ -26,10 +26,10 @@ function FeedItem (name, previous, current, pubdate, repoUrl) {
 function getRepoUrl (data) {
   if (!data) return data
 
-  var url = Object.prototype.toString.call(data) == '[object String]' ? data : data.url
+  var url = Object.prototype.toString.call(data) == "[object String]" ? data : data.url
 
-  if (url && url.indexOf('github.com') != -1) {
-    return url.replace('github.com:', 'github.com/').replace('git:', 'https:').replace('.git', '')
+  if (url && url.indexOf("github.com") != -1) {
+    return url.replace("github.com:", "github.com/").replace("git:", "https:").replace(".git", "")
   }
 
   return null
@@ -53,7 +53,7 @@ function buildFeedXml (items, name, deps, limit) {
 
   items = items.reduce(function (items, item) {
     // Only add item to feed for valid, non-reckless dependency versions
-    if (semver.validRange(deps[item.name], true) && deps[item.name] != 'latest' && deps[item.name] != '*' && semver.gtr(item.current, deps[item.name], true)) {
+    if (semver.validRange(deps[item.name], true) && deps[item.name] != "latest" && deps[item.name] != "*" && semver.gtr(item.current, deps[item.name], true)) {
       items.push(item)
     }
     return items
@@ -71,16 +71,16 @@ function buildFeedXml (items, name, deps, limit) {
   items = items.slice(0, limit)
 
   var rssFeed = new RSS({
-    title: name + ' out of date dependencies',
-    description: 'Version updates for ' + Object.keys(deps).join(', '),
+    title: name + " out of date dependencies",
+    description: "Version updates for " + Object.keys(deps).join(", "),
     site_url: config.site.hostname
   })
 
   for (var i = 0, len = items.length; i < len; ++i) {
     rssFeed.item({
-      title: items[i].name + ' ' + items[i].previous + ' to ' + items[i].current + ' (' + deps[items[i].name] + ' required)',
-      description: items[i].repoUrl ? '<a href="' + items[i].repoUrl + '">' + items[i].repoUrl + '</a>' : null,
-      url: config.npm.hostname + '/package/' + items[i].name,
+      title: items[i].name + " " + items[i].previous + " to " + items[i].current + " (" + deps[items[i].name] + " required)",
+      description: items[i].repoUrl ? "<a href=\"" + items[i].repoUrl + "\">" + items[i].repoUrl + "</a>" : null,
+      url: config.npm.hostname + "/package/" + items[i].name,
       date: items[i].pubdate
     })
   }
@@ -103,7 +103,7 @@ function getPackage (pkgName, cb) {
     return cb(null, pkg)
   }
 
-  npm.commands.view([pkgName, 'time', 'repository'], true, function (er, data) {
+  npm.commands.view([pkgName, "time", "repository"], true, function (er, data) {
     if (er) return cb(er)
 
     var keys = Object.keys(data)
@@ -124,18 +124,18 @@ function getPackage (pkgName, cb) {
       return cb(null, pkg)
     }
 
-    console.warn(pkgName + ' has no time information')
+    console.warn(pkgName + " has no time information")
 
-    // We don't know the date/time any of the versions for this package were published
+    // We don"t know the date/time any of the versions for this package were published
     // Get latest and use unix epoch as publish date
-    npm.commands.view([pkgName, 'version'], true, function (er, data) {
+    npm.commands.view([pkgName, "version"], true, function (er, data) {
       if (er) return cb(er)
 
       var keys = Object.keys(data)
 
       // `npm view 0 version` returns {} - ensure some data was returned
       if (!keys.length) {
-        return cb(new Error('Failed to get package for ' + pkgName))
+        return cb(new Error("Failed to get package for " + pkgName))
       }
 
       time = {}
@@ -158,7 +158,7 @@ module.exports.get = function (manifest, opts, cb) {
     opts = opts || {}
   }
 
-  // Assume we're probably going to have to use NPM
+  // Assume we"re probably going to have to use NPM
   npm.load(config.npm.options, function (er) {
     if (er) return cb(er)
 

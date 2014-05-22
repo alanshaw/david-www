@@ -306,7 +306,7 @@ $("#status-page").each(function () {
       e.preventDefault()
 
       var row = $(this).closest("tr")
-        , container = $('<div class="changes-popup"/>').append(david.createLoadingEl())
+        , container = $("<div class=\"changes-popup\"/>").append(david.createLoadingEl())
         , name, from, to
 
       if (row.closest("table").is(".stacktable")) {
