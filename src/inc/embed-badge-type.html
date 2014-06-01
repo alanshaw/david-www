@@ -1,0 +1,22 @@
+<div id="@@type-badge-embed" class="badge-embed">
+  <h1>Embed badge</h1>
+  <label for="badge-theme">Type</label>
+  <select id="badge-theme">
+    <option value="svg">SVG</option>
+    <option value="png">PNG</option>
+  </select>
+  <div class="theme theme-svg">
+    <a href="/{{user}}/{{repo}}/@@type-status.svg"><img src="/{{user}}/{{repo}}/@@type-status.svg" alt="@@typeDependency status"></a>
+    <label for="@@type-badge-markdown-svg">Markdown</label>
+    <input id="@@type-badge-markdown-svg" type="text" value="[![@@typeDependency Status](@@hostname/{{user}}/{{repo}}/@@type-status.svg)](@@hostname/{{user}}/{{repo}}#info=@@typeDependencies)">
+    <label for="@@type-badge-html-svg">HTML</label>
+    <input id="@@type-badge-html-svg" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}#info=@@typeDependencies&quot; title=&quot;@@typeDependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}/@@type-status.svg&quot;/&gt;&lt;/a&gt;">
+  </div>
+  <div class="theme theme-png">
+    <a href="/{{user}}/{{repo}}/@@type-status.png"><img src="/{{user}}/{{repo}}/@@type-status.png" alt="@@typeDependency status"></a>
+    <label for="@@type-badge-markdown-png">Markdown</label>
+    <input id="@@type-badge-markdown-png" type="text" value="[![devDependency Status](@@hostname/{{user}}/{{repo}}/@@type-status.png)](@@hostname/{{user}}/{{repo}}#info=@@typeDependencies)">
+    <label for="@@type-badge-html-png">HTML</label>
+    <input id="@@type-badge-html-png" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}#info=@@typeDependencies&quot; title=&quot;@@typeDependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}/@@type-status.png&quot;/&gt;&lt;/a&gt;">
+  </div>
+</div>

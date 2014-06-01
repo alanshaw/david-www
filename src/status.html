@@ -9,22 +9,48 @@
       <a href="@@githubsite/{{user}}">{{user}}</a> -
       <a href="@@githubsite/{{user}}/{{repo}}">{{manifest.name}}</a>
       <span>{{manifest.version}}</span>
-      <a id="status" href="#badge-embed" title="Get badge embed code"><img src="/{{user}}/{{repo}}.svg" alt="Dependency status"></a>
-      <a id="dev-status" href="#dev-badge-embed" title="Get dev badge embed code"><img src="/{{user}}/{{repo}}/dev-status.svg" alt="devDependency status"></a>
+      <a id="status" class="badge" href="#badge-embed" title="Get badge embed code"><img src="/{{user}}/{{repo}}.svg" alt="Dependency status"></a>
+      <a id="dev-status" class="badge" href="#dev-badge-embed" title="Get dev badge embed code"><img src="/{{user}}/{{repo}}/dev-status.svg" alt="devDependency status"></a>
+      <a id="peer-status" class="badge" href="#peer-badge-embed" title="Get peer badge embed code"><img src="/{{user}}/{{repo}}/peer-status.svg" alt="peerDependency status"></a>
+      <a id="optional-status" class="badge" href="#optional-badge-embed" title="Get optional badge embed code"><img src="/{{user}}/{{repo}}/optional-status.svg" alt="optionalDependency status"></a>
     </h1>
     {{#if manifest.description}}
     <p>{{manifest.description}}</p>
     {{/if}}
     @@include('inc/embed-badge.html')
-    @@include('inc/embed-badge-dev.html')
+    {{#if manifest.devDependencies}}
+    @@include('inc/embed-badge-type.html', {"type": "dev"})
+    {{/if}}
+    {{#if manifest.peerDependencies}}
+    @@include('inc/embed-badge-type.html', {"type": "peer"})
+    {{/if}}
+    {{#if manifest.optionalDependencies}}
+    @@include('inc/embed-badge-type.html', {"type": "optional"})
+    {{/if}}
   </div>
   <ul id="dep-switch">
     <li><a href="#info=dependencies" title="Show dependencies" class="selected"><i class="fa fa-cogs"></i> dependencies</a></li>
-    <li><a href="#info=devDependencies" title="Show devDependencies"><i class="fa fa-wrench"></i> devDependencies</a></li>
+    {{#if manifest.devDependencies}}
+    <li><a href="#info=devDependencies" title="Show devDependencies"><i class="fa fa-code"></i> devDependencies</a></li>
+    {{/if}}
+    {{#if manifest.peerDependencies}}
+    <li><a href="#info=peerDependencies" title="Show peerDependencies"><i class="fa fa-cubes"></i> peerDependencies</a></li>
+    {{/if}}
+    {{#if manifest.optionalDependencies}}
+    <li><a href="#info=optionalDependencies" title="Show optionalDependencies"><i class="fa fa-question"></i> optionalDependencies</a></li>
+    {{/if}}
   </ul>
-  <div id="dep-info">
+  <div id="dep-info" class="dep-info">
     @@include('inc/info.html')
   </div>
-  <div id="dev-dep-info"></div>
+  {{#if manifest.devDependencies}}
+  <div id="dev-dep-info" class="dep-info"></div>
+  {{/if}}
+  {{#if manifest.peerDependencies}}
+  <div id="peer-dep-info" class="dep-info"></div>
+  {{/if}}
+  {{#if manifest.optionalDependencies}}
+  <div id="optional-dep-info" class="dep-info"></div>
+  {{/if}}
 
 @@include('inc/bottom.html')

@@ -389,12 +389,13 @@ ul.stats {
       margin-top: -1em;
     }
   }
-  #status, #dev-status {
+  #status {
+    display: inline;
+  }
+  .badge {
+    display: none;
     padding: 0 0.5em;
     background-color: transparent;
-  }
-  #dev-status {
-    display: none;
   }
   #dep-switch {
     list-style-type: none;
@@ -455,6 +456,12 @@ ul.stats {
       color: @blue0;
       margin-right: 0.250em;
     }
+  }
+  #dep-info {
+    display: block;
+  }
+  .dep-info {
+    display: none;
   }
   .dep-table {
     table {

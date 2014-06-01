@@ -15,11 +15,6 @@ require("../vendor/jquery.ba-bbq.js")
 require("../vendor/jquery.ba-hashchange.js")
 
 $("#status-page").each(function () {
-  var status = $("#status")
-  status.fancybox()
-
-  var devStatus = $("#dev-status")
-  devStatus.fancybox()
 
   $(".badge-embed input").each(function () {
     var clicked = false
@@ -156,13 +151,12 @@ $("#status-page").each(function () {
     onHashChange()
   }
 
-  var devDepInfoLoaded = false
-    , depInfoContainer = $("#dep-info")
-    , devDepInfoContainer = $("#dev-dep-info")
+  var badges = $(".badge")
+    , depInfoLoaded = {}
+    , depInfos = $(".dep-info")
+    , depSwitchers = $("#dep-switch a")
 
-  devDepInfoContainer.hide()
-
-  var depSwitchers = $("#dep-switch a")
+  badges.fancybox()
 
   depSwitchers.click(function (e) {
     e.preventDefault()
@@ -173,41 +167,46 @@ $("#status-page").each(function () {
   // Hash change for info switch
   function onHashChange () {
     merge(state, $.bbq.getState())
-
     depSwitchers.removeClass("selected")
 
-    if (state.info != "devDependencies") {
-      devDepInfoContainer.hide()
-      depInfoContainer.fadeIn()
-      status.show()
-      devStatus.hide()
-      depSwitchers.first().addClass("selected")
-    } else {
-      depInfoContainer.hide()
-      devDepInfoContainer.fadeIn()
-      status.hide()
-      devStatus.show()
-      depSwitchers.last().addClass("selected")
+    var badge, depInfo
 
-      if (!devDepInfoLoaded) {
-        devDepInfoLoaded = true
+    if (!state.info || state.info == "dependencies") {
+      badge = badges.first()
+      depInfo = depInfos.first()
+      depSwitchers.filter("[href='#info=dependencies']").addClass("selected")
+    } else {
+      var type = state.info.replace("Dependencies", "")
+
+      badge = $("#" + type + "-status")
+      depInfo = $("#" + type + "-dep-info")
+      depSwitchers.filter("[href='#info=" + type + "Dependencies']").addClass("selected")
+
+      if (!depInfoLoaded[type]) {
+        depInfoLoaded[type] = true
 
         var loading = david.createLoadingEl()
 
-        devDepInfoContainer.prepend(loading)
+        depInfo.prepend(loading)
 
-        $.getJSON(pathname + "dev-info.json", function (data) {
+        $.getJSON(pathname + type + "-info.json", function (data) {
           var tpl = fs.readFileSync(__dirname + "/../../../dist/inc/info.html", {encoding: "utf8"})
           loading.remove()
-          devDepInfoContainer.html(Handlebars.compile(tpl)({ info: data }))
-          initInfo(devDepInfoContainer, "dev-graph.json")
+          depInfo.html(Handlebars.compile(tpl)({ info: data }))
+          initInfo(depInfo, type + "-graph.json")
         })
       }
     }
+
+    depInfos.not(depInfo).hide()
+    depInfo.fadeIn()
+
+    badges.not(badge).hide()
+    badge.show()
   }
 
   $(window).bind("hashchange", onHashChange)
 
   onHashChange()
-  initInfo(depInfoContainer)
+  initInfo(depInfos.first())
 })
