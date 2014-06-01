@@ -1,4 +1,4 @@
 require("./plugins")
 require("./homepage")
-require("./status")
+require("./status/index")
 require("./search")

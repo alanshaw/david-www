@@ -1,4 +1,5 @@
 var express = require("express")
+var compress = require("compression")
 var consolidate = require("consolidate")
 var stats = require("./stats")
 var manifest = require("./manifest")
@@ -17,7 +18,7 @@ var app = express()
 app.engine("html", consolidate.handlebars)
 app.set("view engine", "html")
 app.set("views", __dirname + "/dist")
-app.use(express.compress())
+app.use(compress())
 
 statics.init(app)
 

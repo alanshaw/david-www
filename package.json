@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "async": "^0.9.0",
+    "compression": "^1.0.3",
     "config": "^0.4.35",
     "consolidate": "^0.10.0",
     "couchwatch": "^0.6.0",
@@ -46,7 +47,8 @@
     "npm": "^1.4.5",
     "request": "^2.34.0",
     "rss": "^0.3.2",
-    "semver": "^2.2.1"
+    "semver": "^2.2.1",
+    "serve-favicon": "^2.0.0"
   },
   "devDependencies": {
     "brfs": "^1.0.0",
