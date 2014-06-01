@@ -1,6 +1,9 @@
 /**
  * Events:
  * dependenciesChange(differences, manifest, user, repo) - When one or more dependencies for a manifest change
+ * devDependenciesChange(differences, manifest, user, repo) - When one or more devDependencies for a manifest change
+ * peerDependenciesChange(differences, manifest, user, repo) - When one or more peerDependencies for a manifest change
+ * optionalDependenciesChange(differences, manifest, user, repo) - When one or more optionalDependencies for a manifest change
  * retrieve(manifest, user, repo) - The first time a manifest is retrieved
  */
 
@@ -77,7 +80,6 @@ exports.getManifest = function (user, repo, cb) {
     console.log("Got manifest", data.name, data.version)
 
     var oldManifest = manifest
-    var oldDependencies = oldManifest ? oldManifest.data.dependencies : {}
 
     manifest = new Manifest(data)
 
@@ -87,12 +89,36 @@ exports.getManifest = function (user, repo, cb) {
     cb(null, manifest.data)
 
     if (!oldManifest) {
-      exports.emit("retrieve", JSON.parse(JSON.stringify(data)), user, repo)
+      exports.emit("retrieve", manifest.data, user, repo)
     } else {
+
+      var oldDependencies = oldManifest ? oldManifest.data.dependencies : {}
+        , oldDevDependencies = oldManifest ? oldManifest.data.devDependencies : {}
+        , oldPeerDependencies = oldManifest ? oldManifest.data.peerDependencies : {}
+        , oldOptionalDependencies = oldManifest ? oldManifest.data.optionalDependencies : {}
+
       var diffs = depDiff(oldDependencies, data.dependencies)
 
       if (diffs.length) {
-        exports.emit("dependenciesChange", diffs, JSON.parse(JSON.stringify(data)), user, repo)
+        exports.emit("dependenciesChange", diffs, manifest.data, user, repo)
+      }
+
+      diffs = depDiff(oldDevDependencies, data.devDependencies)
+
+      if (diffs.length) {
+        exports.emit("devDependenciesChange", diffs, manifest.data, user, repo)
+      }
+
+      diffs = depDiff(oldPeerDependencies, data.peerDependencies)
+
+      if (diffs.length) {
+        exports.emit("peerDependenciesChange", diffs, manifest.data, user, repo)
+      }
+
+      diffs = depDiff(oldOptionalDependencies, data.optionalDependencies)
+
+      if (diffs.length) {
+        exports.emit("optionalDependenciesChange", diffs, manifest.data, user, repo)
       }
     }
   })

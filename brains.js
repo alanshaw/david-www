@@ -9,7 +9,7 @@ var david = require("david")
   , config = require("config")
 
 // When a user publishes a package, delete cached david info
-registry.on("change", function(change) {
+registry.on("change", function (change) {
   cache.del(change.doc.name)
 })
 
@@ -45,7 +45,7 @@ function normaliseDeps (deps) {
 
 function getCachedDependencies (manifest, opts) {
   var pkgs = {}
-    , deps = normaliseDeps(manifest[opts.dev ? "devDependencies" : "dependencies"] || {})
+    , deps = getDepList(manifest, opts)
     , depNames = Object.keys(deps)
 
   if (!depNames.length) return pkgs
@@ -61,11 +61,27 @@ function getCachedDependencies (manifest, opts) {
   return pkgs
 }
 
+function getDepList (manifest, opts) {
+  var deps = null
+
+  if (opts.dev) {
+    deps = manifest.devDependencies
+  } else if (opts.peer) {
+    deps = manifest.peerDependencies
+  } else if (opts.optional) {
+    deps = manifest.optionalDependencies
+  } else {
+    deps = manifest.dependencies
+  }
+
+  return normaliseDeps(deps || {})
+}
+
 function getDependencies (manifest, opts, cb) {
   // Get the dependency info we already have cached information for
   var cachedInfos = getCachedDependencies(manifest, opts)
     , cachedDepNames = Object.keys(cachedInfos)
-    , manifestDeps = normaliseDeps(manifest[opts.dev ? "devDependencies" : "dependencies"] || {})
+    , manifestDeps = getDepList(manifest, opts)
 
   var uncachedManifestDeps = Object.keys(manifestDeps).filter(function (depName) {
     return cachedDepNames.indexOf(depName) == -1
@@ -83,7 +99,16 @@ function getDependencies (manifest, opts, cb) {
   }
 
   var uncachedManifest = {}
-  uncachedManifest[opts.dev ? "devDependencies" : "dependencies"] = uncachedManifestDeps
+
+  if (opts.dev) {
+    uncachedManifest.devDependencies = uncachedManifestDeps
+  } else if (opts.peer) {
+    uncachedManifest.peerDependencies = uncachedManifestDeps
+  } else if (opts.optional) {
+    uncachedManifest.optionalDependencies = uncachedManifestDeps
+  } else {
+    uncachedManifest.dependencies = uncachedManifestDeps
+  }
 
   david.getDependencies(uncachedManifest, opts, function (er, infos) {
     if (er) return cb(er)
