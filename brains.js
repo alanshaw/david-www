@@ -148,6 +148,8 @@ function getUpdatedDependencies (manifest, opts, cb) {
  * @param {Object} manifest Parsed package.json file contents
  * @param {Object|Function} [opts] Options or cb
  * @param {Boolean} [opts.dev] Consider devDependencies
+ * @param {Boolean} [opts.peer] Consider peerDependencies
+ * @param {Boolean} [opts.optional] Consider optionalDependencies
  * @param {Function} cb Function that receives the results
  */
 module.exports.getInfo = function (manifest, opts, cb) {
@@ -163,7 +165,7 @@ module.exports.getInfo = function (manifest, opts, cb) {
     opts.npm = config.npm.options
   }
 
-  var davidOptions = {dev: opts.dev, loose: true, npm: opts.npm}
+  var davidOptions = {dev: opts.dev, peer: opts.peer, optional: opts.optional, loose: true, npm: opts.npm}
 
   getDependencies(manifest, davidOptions, function (er, deps) {
     if (er) return cb(er)
