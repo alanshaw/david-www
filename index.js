@@ -236,11 +236,18 @@ function sendDependencyGraph (req, res, opts) {
     }
 
     var depsType = getDepsType(opts)
+      , deps
+
+    if (depsType) {
+      deps = manifest[depsType + "Dependencies"] || {}
+    } else {
+      deps = manifest.dependencies || {}
+    }
 
     graph.getProjectDependencyGraph(
       req.params.user + "/" + req.params.repo + (depsType ? "#" + depsType : ""),
       manifest.version,
-      manifest.dependencies || {},
+      deps,
       function (er, graph) {
         if (errors.happened(er, req, res, "Failed to get graph data")) {
           return
