@@ -1,7 +1,7 @@
 /* jshint browser:true, jquery:true */
 
 var d3 = require("d3")
-  , david = require("./david")
+var david = require("./david")
 
 $("#search-page").each(function () {
 

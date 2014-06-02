@@ -1,8 +1,8 @@
 /* jshint browser:true, jquery:true */
 
 var d3 = require("d3")
-  , fs = require("fs")
-  , Handlebars = require("handlebars")
+var fs = require("fs")
+var Handlebars = require("handlebars")
 
 var npmsite = fs.readFileSync(__dirname + "/../../dist/inc/config-npmsite.html", {encoding: "utf8"})
 

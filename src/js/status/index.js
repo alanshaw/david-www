@@ -1,13 +1,13 @@
 /* jshint browser:true, jquery:true */
 
 var d3 = require("d3")
-  , merge = require("merge")
-  , Handlebars = require("handlebars")
-  , fs = require("fs")
-  , cycle = require("cycle")
-  , david = require("../david")
-  , transformData = require("./transform-data")
-  , graph = require("./graph")
+var merge = require("merge")
+var Handlebars = require("handlebars")
+var fs = require("fs")
+var cycle = require("cycle")
+var david = require("../david")
+var transformData = require("./transform-data")
+var graph = require("./graph")
 
 require("../vendor/stackable")
 require("../vendor/jquery.fancybox.js")

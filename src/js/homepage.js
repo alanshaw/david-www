@@ -1,10 +1,10 @@
 /* jshint browser:true, jquery:true */
 
 var d3 = require("d3")
-  , Handlebars = require("handlebars")
-  , moment = require("moment")
-  , fs = require("fs")
-  , david = require("./david")
+var Handlebars = require("handlebars")
+var moment = require("moment")
+var fs = require("fs")
+var david = require("./david")
 
 require("./vendor/jquery.feed")
 
