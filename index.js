@@ -22,33 +22,39 @@ app.use(compress())
 
 statics.init(app)
 
-app.get("/news/rss.xml",                    newsRssFeed)
-app.get("/dependency-counts.json",          dependencyCounts)
-app.get("/stats",                           statsPage)
-app.get("/search",                          searchPage)
-app.get("/search.json",                     searchQuery)
-app.get("/package/:pkg/changes.json",       changes)
-app.get("/:user/:repo/dev-info.json",       devInfo)
-app.get("/:user/:repo/peer-info.json",      peerInfo)
-app.get("/:user/:repo/optional-info.json",  optionalInfo)
-app.get("/:user/:repo/graph.json",          dependencyGraph)
-app.get("/:user/:repo/dev-graph.json",      devDependencyGraph)
-app.get("/:user/:repo/peer-graph.json",     peerDependencyGraph)
-app.get("/:user/:repo/optional-graph.json", optionalDependencyGraph)
-app.get("/:user/:repo/rss.xml",             rssFeed)
-app.get("/:user/:repo/dev-rss.xml",         devRssFeed)
-app.get("/:user/:repo/status.png",          statusBadge)
-app.get("/:user/:repo/status@2x.png",       retinaStatusBadge)
-app.get("/:user/:repo/status.svg",          svgStatusBadge)
-app.get("/:user/:repo/dev-status.png",      devStatusBadge)
-app.get("/:user/:repo/dev-status@2x.png",   retinaDevStatusBadge)
-app.get("/:user/:repo/dev-status.svg",      svgDevStatusBadge)
-app.get("/:user/:repo@2x.png",              retinaStatusBadge)
-app.get("/:user/:repo.svg",                 svgStatusBadge)
-app.get("/:user/:repo.png",                 statusBadge)
-app.get("/:user/:repo",                     statusPage)
-app.get("/:user",                           profilePage)
-app.get("/",                                indexPage)
+app.get("/news/rss.xml",                       newsRssFeed)
+app.get("/dependency-counts.json",             dependencyCounts)
+app.get("/stats",                              statsPage)
+app.get("/search",                             searchPage)
+app.get("/search.json",                        searchQuery)
+app.get("/package/:pkg/changes.json",          changes)
+app.get("/:user/:repo/dev-info.json",          devInfo)
+app.get("/:user/:repo/peer-info.json",         peerInfo)
+app.get("/:user/:repo/optional-info.json",     optionalInfo)
+app.get("/:user/:repo/graph.json",             dependencyGraph)
+app.get("/:user/:repo/dev-graph.json",         devDependencyGraph)
+app.get("/:user/:repo/peer-graph.json",        peerDependencyGraph)
+app.get("/:user/:repo/optional-graph.json",    optionalDependencyGraph)
+app.get("/:user/:repo/rss.xml",                rssFeed)
+app.get("/:user/:repo/dev-rss.xml",            devRssFeed)
+app.get("/:user/:repo/status.png",             statusBadge)
+app.get("/:user/:repo/status@2x.png",          retinaStatusBadge)
+app.get("/:user/:repo/status.svg",             svgStatusBadge)
+app.get("/:user/:repo/dev-status.png",         devStatusBadge)
+app.get("/:user/:repo/dev-status@2x.png",      retinaDevStatusBadge)
+app.get("/:user/:repo/dev-status.svg",         svgDevStatusBadge)
+app.get("/:user/:repo/peer-status.png",        peerStatusBadge)
+app.get("/:user/:repo/peer-status@2x.png",     retinaPeerStatusBadge)
+app.get("/:user/:repo/peer-status.svg",        svgPeerStatusBadge)
+app.get("/:user/:repo/optional-status.png",    optionalStatusBadge)
+app.get("/:user/:repo/optional-status@2x.png", retinaOptionalStatusBadge)
+app.get("/:user/:repo/optional-status.svg",    svgOptionalStatusBadge)
+app.get("/:user/:repo@2x.png",                 retinaStatusBadge)
+app.get("/:user/:repo.svg",                    svgStatusBadge)
+app.get("/:user/:repo.png",                    statusBadge)
+app.get("/:user/:repo",                        statusPage)
+app.get("/:user",                              profilePage)
+app.get("/",                                   indexPage)
 
 /**
  * Do a home page
@@ -134,8 +140,22 @@ function changes (req, res) {
   })
 }
 
-function badgePath (dev, status, retina, extension) {
-  return "dist/img/status/" + (dev ? "dev-" : "") + status + (retina ? "@2x" : "") + "." + (extension === "png" ? "png" : "svg")
+function getDepsType (opts) {
+  var type = ""
+
+  if (opts.dev) {
+    type = "dev"
+  } else if (opts.peer) {
+    type = "peer"
+  } else if (opts.optional) {
+    type = "optional"
+  }
+
+  return type
+}
+
+function badgePath (depsType, status, retina, extension) {
+  return "dist/img/status/" + (depsType ? depsType + "-" : "") + status + (retina ? "@2x" : "") + "." + (extension === "png" ? "png" : "svg")
 }
 
 /**
@@ -151,12 +171,12 @@ function sendStatusBadge (req, res, opts) {
       return res.status(404).sendfile("dist/img/status/unknown." + (opts.extension === "png" ? "png" : "svg"))
     }
 
-    brains.getInfo(manifest, {dev: opts.dev}, function (err, info) {
+    brains.getInfo(manifest, opts, function (err, info) {
       if (err) {
         return res.status(500).sendfile("dist/img/status/unknown." + (opts.extension === "png" ? "png" : "svg"))
       }
 
-      res.sendfile(badgePath(opts.dev, info.status, opts.retina, opts.extension))
+      res.sendfile(badgePath(getDepsType(opts), info.status, opts.retina, opts.extension))
     })
   })
 }
@@ -185,72 +205,66 @@ function retinaDevStatusBadge (req, res) {
   sendStatusBadge(req, res, {dev: true, retina: true, extension: "png"})
 }
 
-function dependencyGraph (req, res) {
+function peerStatusBadge (req, res) {
+  sendStatusBadge(req, res, {peer: true, extension: "png"})
+}
+
+function svgPeerStatusBadge (req, res) {
+  sendStatusBadge(req, res, {peer: true, extension: "svg"})
+}
+
+function retinaPeerStatusBadge (req, res) {
+  sendStatusBadge(req, res, {peer: true, retina: true, extension: "png"})
+}
+
+function optionalStatusBadge (req, res) {
+  sendStatusBadge(req, res, {optional: true, extension: "png"})
+}
+
+function svgOptionalStatusBadge (req, res) {
+  sendStatusBadge(req, res, {optional: true, extension: "svg"})
+}
+
+function retinaOptionalStatusBadge (req, res) {
+  sendStatusBadge(req, res, {optional: true, retina: true, extension: "png"})
+}
+
+function sendDependencyGraph (req, res, opts) {
   manifest.getManifest(req.params.user, req.params.repo, function (er, manifest) {
     if (errors.happened(er, req, res, "Failed to get package.json")) {
       return
     }
 
-    graph.getProjectDependencyGraph(req.params.user + "/" + req.params.repo, manifest.version, manifest.dependencies || {}, function (er, graph) {
+    var depsType = getDepsType(opts)
 
-      if (errors.happened(er, req, res, "Failed to get graph data")) {
-        return
-      }
+    graph.getProjectDependencyGraph(
+      req.params.user + "/" + req.params.repo + (depsType ? "#" + depsType : ""),
+      manifest.version,
+      manifest.dependencies || {},
+      function (er, graph) {
+        if (errors.happened(er, req, res, "Failed to get graph data")) {
+          return
+        }
 
-      res.json(graph)
-    })
+        res.json(graph)
+      })
   })
+}
+
+function dependencyGraph (req, res) {
+  sendDependencyGraph(req, res, {})
 }
 
 function devDependencyGraph (req, res) {
-  manifest.getManifest(req.params.user, req.params.repo, function (er, manifest) {
-    if (errors.happened(er, req, res, "Failed to get package.json")) {
-      return
-    }
-
-    graph.getProjectDependencyGraph(req.params.user + "/" + req.params.repo + "#dev", manifest.version, manifest.devDependencies || {}, function (er, graph) {
-
-      if (errors.happened(er, req, res, "Failed to get graph data")) {
-        return
-      }
-
-      res.json(graph)
-    })
-  })
+  sendDependencyGraph(req, res, {dev: true})
 }
 
 function peerDependencyGraph (req, res) {
-  manifest.getManifest(req.params.user, req.params.repo, function (er, manifest) {
-    if (errors.happened(er, req, res, "Failed to get package.json")) {
-      return
-    }
-
-    graph.getProjectDependencyGraph(req.params.user + "/" + req.params.repo + "#peer", manifest.version, manifest.peerDependencies || {}, function (er, graph) {
-
-      if (errors.happened(er, req, res, "Failed to get graph data")) {
-        return
-      }
-
-      res.json(graph)
-    })
-  })
+  sendDependencyGraph(req, res, {peer: true})
 }
 
 function optionalDependencyGraph (req, res) {
-  manifest.getManifest(req.params.user, req.params.repo, function (er, manifest) {
-    if (errors.happened(er, req, res, "Failed to get package.json")) {
-      return
-    }
-
-    graph.getProjectDependencyGraph(req.params.user + "/" + req.params.repo + "#optional", manifest.version, manifest.optionalDependencies || {}, function (er, graph) {
-
-      if (errors.happened(er, req, res, "Failed to get graph data")) {
-        return
-      }
-
-      res.json(graph)
-    })
-  })
+  sendDependencyGraph(req, res, {optional: true})
 }
 
 function buildRssFeed (req, res, dev) {
