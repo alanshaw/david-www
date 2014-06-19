@@ -29,6 +29,7 @@ app.get("/search",                             searchPage)
 app.get("/search.json",                        searchQuery)
 app.get("/package/:pkg/changes.json",          changes)
 app.get("/:user/:repo/dev-info.json",          devInfo)
+app.get("/:user/:repo/info.json",              info)
 app.get("/:user/:repo/peer-info.json",         peerInfo)
 app.get("/:user/:repo/optional-info.json",     optionalInfo)
 app.get("/:user/:repo/graph.json",             dependencyGraph)
@@ -297,6 +298,12 @@ function rssFeed (req, res) {
 
 function devRssFeed (req, res) {
   buildRssFeed(req, res, true)
+}
+
+function info (req, res) {
+  withManifestAndInfo(req, res, function (manifest, info) {
+    res.json(info)
+  })
 }
 
 function devInfo (req, res) {
