@@ -3,7 +3,7 @@ var couchwatch = require("couchwatch")
   , config = require("config")
 
 var registry = new events.EventEmitter()
-  , watcher = couchwatch(config.npm.options.registry, -1)
+  , watcher = couchwatch(config.npm.feed, -1)
 
 watcher.on("row", function (change) {
   registry.emit("change", change)

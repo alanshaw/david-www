@@ -14,8 +14,9 @@
 	"npm": {
 		"hostname": "http://npmjs.org",
 		"options": {
-			"registry": "http://isaacs.iriscouch.com/registry"
-		}
+			"registry": "http://registry.npmjs.org"
+		},
+		"feed": "http://176.9.4.195/registry"
 	},
 	"site": {
 		"hostname": "https://david-dm.org"
