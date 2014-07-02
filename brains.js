@@ -239,7 +239,7 @@ module.exports.getInfo = function (manifest, opts, cb) {
         })
 
         // Figure out the overall status for this manifest
-        var status = "uptodate"
+        var status = depList.length ? "uptodate" : "none";
 
         if (depList.length && totals.unpinned.outOfDate) {
 
