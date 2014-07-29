@@ -16,7 +16,7 @@
 		"options": {
 			"registry": "http://registry.npmjs.org"
 		},
-		"feed": "http://176.9.4.195/registry"
+		"feed": "https://skimdb.npmjs.com/registry"
 	},
 	"site": {
 		"hostname": "https://david-dm.org"
