@@ -83,7 +83,7 @@ function getDependencyGraph (depName, version, cb) {
         var depDepRange = depDeps[depDepName]
 
         latestSatisfying(depDepName, depDepRange, function (er, depDepVersion) {
-          if (er) return cb(er)
+          if (er && er.code != "E404") return cb(er)
 
           // There should be a version that satisfies!
           // But...
@@ -194,14 +194,14 @@ module.exports.getProjectDependencyGraph = function (name, version, deps, cb) {
       var range = deps[depName]
 
       latestSatisfying(depName, range, function (er, version) {
-        if (er) return cb(er)
+        if (er && er.code != "E404") return cb(er)
 
         // There should be a version that satisfies!
         // But...
         // The range could be a tag, or a git repo
         if (!version) {
 
-          // Add a dummy package with the range as it"s version
+          // Add a dummy package with the range as it's version
           project.deps[depName] = new Package(depName, range)
 
           done++
