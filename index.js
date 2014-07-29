@@ -155,8 +155,12 @@ function getDepsType (opts) {
   return type
 }
 
-function badgePath (depsType, status, retina, extension) {
-  return "dist/img/status/" + (depsType ? depsType + "-" : "") + status + (retina ? "@2x" : "") + "." + (extension === "png" ? "png" : "svg")
+function badgePath (depsType, status, retina, style, extension) {
+  depsType = depsType ? depsType + "-" : ""
+  retina = retina ? "@2x" : ""
+  extension = extension == "png" ? "png" : "svg"
+  style = extension == "svg" && style == "flat" ? "-flat" : ""
+  return "dist/img/status/" + depsType + status + retina + style + "." + extension
 }
 
 /**
@@ -169,15 +173,15 @@ function sendStatusBadge (req, res, opts) {
 
   manifest.getManifest(req.params.user, req.params.repo, function (err, manifest) {
     if (err) {
-      return res.status(404).sendfile("dist/img/status/unknown." + (opts.extension === "png" ? "png" : "svg"))
+      return res.status(404).sendfile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
     }
 
     brains.getInfo(manifest, opts, function (err, info) {
       if (err) {
-        return res.status(500).sendfile("dist/img/status/unknown." + (opts.extension === "png" ? "png" : "svg"))
+        return res.status(500).sendfile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
       }
 
-      res.sendfile(badgePath(getDepsType(opts), info.status, opts.retina, opts.extension))
+      res.sendfile(badgePath(getDepsType(opts), info.status, opts.retina, req.query.style, opts.extension))
     })
   })
 }
