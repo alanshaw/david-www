@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Page Not Found :(</title>
+        <title>Access Denied :(</title>
         <style>
             ::-moz-selection {
                 background: #b3d4fc;
@@ -141,14 +141,11 @@
     </head>
     <body>
         <div class="container">
-            <h1>Not found <span>:(</span></h1>
-            <p>Sorry, but the page you were trying to view does not exist.</p>
-            <p>It looks like this was the result of either:</p>
-            <ul>
-                <li>a mistyped address</li>
-                <li>an out-of-date link</li>
-                <li>requesting a private repo without proper credentials (<a href="https://developer.github.com/v3/#authentication">learn more</a>)</li>
-            </ul>
+            <h1>Access Denied <span>:(</span></h1>
+            <p>Either your authentication attempt failed, or you need to authenticate.</p>
+            <p>To use David with private repos,
+                <a href="https://github.com/login/oauth/authorize?client_id={{oauthClient}}&state={{csrfToken}}&scope=repo,user:email">sign in with GitHub</a>.
+            </p>
             <script>
                 var GOOG_FIXURL_LANG = (navigator.language || '').slice(0,2),GOOG_FIXURL_SITE = location.host;
             </script>

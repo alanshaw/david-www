@@ -1,27 +1,11 @@
-var GitHubApi = require("github")
-  , config = require("config")
+var config = require("config")
   , npm = require("npm")
   , semver = require("semver")
   , moment = require("moment")
   , githubUrl = require("github-url")
   , async = require("async")
   , extract = require("extract")
-
-var github = new GitHubApi({
-  protocol: config.github.api.protocol,
-  host: config.github.api.host,
-  version: config.github.api.version,
-  pathPrefix: config.github.api.pathPrefix,
-  timeout: 5000
-})
-
-if (config.github.username) {
-  github.authenticate({
-    type: "basic",
-    username: config.github.username,
-    password: config.github.password
-  });
-}
+  , github = require("./github")
 
 // Get a username and repo name for a github repository
 function getUserRepo (modName, cb) {
@@ -102,6 +86,8 @@ function getPublishDates (modName, modVers, cb) {
 module.exports.getChanges = function (modName, fromVer, toVer, cb) {
   console.log("Getting changes for", modName, "from", fromVer, "to", toVer)
 
+  var gh = github.getInstance()
+
   npm.load(config.npm.options, function (er) {
     if (er) return cb(er)
 
@@ -120,7 +106,7 @@ module.exports.getChanges = function (modName, fromVer, toVer, cb) {
           per_page: 100
         }
 
-        github.issues.repoIssues(issuesOpts, function (er, issues) {
+        gh.issues.repoIssues(issuesOpts, function (er, issues) {
           if (er) return cb(er)
 
           issues = issues.filter(function (issue) {
@@ -134,7 +120,7 @@ module.exports.getChanges = function (modName, fromVer, toVer, cb) {
             until: dates[1]
           }
 
-          github.repos.getCommits(commitsOpts, function (er, commits) {
+          gh.repos.getCommits(commitsOpts, function (er, commits) {
             if (er) return cb(er)
 
             //console.log(issues, commits)

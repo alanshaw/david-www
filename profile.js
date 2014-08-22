@@ -1,36 +1,21 @@
-var GitHubApi = require("github")
 var async = require("async")
-var manifest = require("./manifest")
-var brains = require("./brains")
-var config = require("config")
-
-var github = new GitHubApi({
-  protocol: config.github.api.protocol,
-  host: config.github.api.host,
-  version: config.github.api.version,
-  pathPrefix: config.github.api.pathPrefix,
-  timeout: 5000
-})
-
-if (config.github.username) {
-  github.authenticate({
-    type: "basic",
-    username: config.github.username,
-    password: config.github.password
-  })
-}
+  , config = require("config")
+  , manifest = require("./manifest")
+  , brains = require("./brains")
+  , github = require("./github")
 
 /**
  * Get repositories for a user
  *
  * @param {String} user Username
+ * @param {String} authToken OAuth access token or null
  * @param {Object|Function} [options] Options or callback function
  * @param {Number} [options.page] Page of repos to start from
  * @param {Array} [options.repos] Repositories retrieved so far
  * @param {Number} [options.pageSize] Page size, max 100
  * @param {Function} cb Callback function
  */
-function getRepos (user, options, cb) {
+function getRepos (user, authToken, options, cb) {
   // Allow callback to be passed as second parameter
   if (!cb) {
     cb = options
@@ -40,7 +25,10 @@ function getRepos (user, options, cb) {
   }
 
   setImmediate(function () {
-    github.repos.getFromUser({user: user, page: options.page, per_page: options.pageSize}, function (er, data) {
+    var gh = github.getInstance(authToken)
+      , repoMethod = authToken ? "getAll" : "getFromUser"
+
+    gh.repos[repoMethod]({type: "all", user: user, page: options.page, per_page: options.pageSize}, function (er, data) {
       if (er) return cb(er)
 
       if (data.length) {
@@ -50,7 +38,7 @@ function getRepos (user, options, cb) {
           // Maybe another page?
           options.page++
 
-          getRepos(user, options, cb)
+          getRepos(user, authToken, options, cb)
 
         } else {
           cb(null, options.repos)
@@ -69,11 +57,12 @@ function getRepos (user, options, cb) {
  *
  * @param {String} user Username
  * @param {Object} repo Repository data as returned by GitHub API
+ * @param {String} authToken OAuth access token or null
  * @returns {Function}
  */
-function createGetInfoTask (user, repo) {
+function createGetInfoTask (user, repo, authToken) {
   return function (cb) {
-    manifest.getManifest(user, repo.name, function (er, manifest) {
+    manifest.getManifest(user, repo.name, authToken, function (er, manifest) {
       // This is fine - perhaps the repo doesn"t have a package.json
       if (er) return cb()
 
@@ -87,16 +76,17 @@ function createGetInfoTask (user, repo) {
 
 /**
  * @param {String} user Username
+ * @param {String} authToken OAuth access token or null
  * @param {Function} cb Passed array of objects with properties repo, info, manifest.
  */
-module.exports.get = function (user, cb) {
-  getRepos(user, function (er, repos) {
+module.exports.get = function (user, authToken, cb) {
+  getRepos(user, authToken, function (er, repos) {
     if (er) return cb(er)
 
     // Get repository status information
     async.parallel(
       repos.map(function (repo) {
-        return createGetInfoTask(user, repo)
+        return createGetInfoTask(user, repo, authToken)
       }),
       function (er, data) {
         if (er) return cb(er)

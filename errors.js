@@ -11,9 +11,10 @@
  * - No such repository:
  *   - Check for / separator in request path:
  *     - You haven't typed username/repo correctly
- *     - You are trying to access a page, like /stats, that doesn't exist.
+ *     - You are trying to access a page, like /foo/bar/baz, that doesn't exist.
  * - No package.json in repository: "Error: 404 Failed to retrieve manifest"
- * - Private repository: TODO: Do we get a 403 we can use?
+ * - Private repository: "Error: 404 Failed to retrieve manifest"
+ *   - 403 suppressed by GitHub, see https://developer.github.com/v3/#authentication
  * - Invalid package.json: TODO
  *
  * Server

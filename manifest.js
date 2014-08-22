@@ -9,27 +9,11 @@
 
 var events = require("events")
   , moment = require("moment")
-  , GitHubApi = require("github")
   , config = require("config")
   , registry = require("./registry")
+  , github = require("./github")
   , githubUrl = require("github-url")
   , depDiff = require("dep-diff")
-
-var github = new GitHubApi({
-  protocol: config.github.api.protocol,
-  host: config.github.api.host,
-  version: config.github.api.version,
-  pathPrefix: config.github.api.pathPrefix,
-  timeout: 5000
-})
-
-if (config.github.username) {
-  github.authenticate({
-    type: "basic",
-    username: config.github.username,
-    password: config.github.password
-  })
-}
 
 var exports = new events.EventEmitter()
 
@@ -59,7 +43,7 @@ function parseManifest (body) {
   }
 }
 
-exports.getManifest = function (user, repo, cb) {
+exports.getManifest = function (user, repo, authToken, cb) {
   var manifest = manifests[user] ? manifests[user][repo] : null
 
   if (manifest && manifest.expires > new Date()) {
@@ -67,7 +51,8 @@ exports.getManifest = function (user, repo, cb) {
     return cb(null, JSON.parse(JSON.stringify(manifest.data)))
   }
 
-  github.repos.getContent({user: user, repo: repo, path: "package.json"}, function (er, resp) {
+  var gh = github.getInstance(authToken)
+  gh.repos.getContent({user: user, repo: repo, path: "package.json"}, function (er, resp) {
     if (er) return cb(er)
 
     var packageJson = new Buffer(resp.content, resp.encoding).toString()
