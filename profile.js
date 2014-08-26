@@ -1,5 +1,4 @@
 var async = require("async")
-  , config = require("config")
   , manifest = require("./manifest")
   , brains = require("./brains")
   , github = require("./github")

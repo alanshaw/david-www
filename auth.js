@@ -5,7 +5,7 @@ var config = require("config")
 
 
 module.exports.generateNonce = function (length) {
-  return crypto.randomBytes(length * 2).toString('hex').slice(0, length)
+  return crypto.randomBytes(length * 2).toString("hex").slice(0, length)
 }
 
 module.exports.requestAccessToken = function (code, cb) {
