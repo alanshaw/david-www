@@ -1,17 +1,8 @@
 var config = require("config")
   , crypto = require("crypto")
-  , GitHubApi = require("github")
   , request = require("request")
+  , github = require("./github")
 
-function github () {
-  return new GitHubApi({
-    protocol: config.github.api.protocol,
-    host: config.github.api.host,
-    version: config.github.api.version,
-    pathPrefix: config.github.api.pathPrefix,
-    timeout: 5000
-  })
-}
 
 module.exports.generateNonce = function (length) {
   return crypto.randomBytes(length * 2).toString('hex').slice(0, length)
@@ -37,12 +28,8 @@ module.exports.requestAccessToken = function (code, cb) {
     }
 
     var authData = { access_token: data.access_token }
-      , gh = github()
+      , gh = github.getInstance(data.access_token)
 
-    gh.authenticate({
-      type: "oauth",
-      token: authData.access_token
-    })
     gh.user.get({}, function (err, data) {
       if (err) {
         return cb(err)
