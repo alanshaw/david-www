@@ -78,9 +78,11 @@ app.get("/",                                   indexPage)
  */
 function _renderWithCommonData (res, template, data) {
   data = data || {}
-  res.session.get("session/csrfToken", function (err, csrfToken) {
-    data.csrfToken = csrfToken
-    data.oauthClient = config.github.oauth.id
+  res.session.getAll(function (err, sessionData) {
+    if (!sessionData["session/access-token"]) {
+      data.csrfToken = sessionData["session/csrfToken"]
+      data.oauthClient = config.github.oauth.id
+    }
     res.render(template, data)
   })
 }
