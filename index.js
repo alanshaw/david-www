@@ -73,16 +73,25 @@ app.get("/:user",                              profilePage)
 app.get("/",                                   indexPage)
 
 /**
+ * Helper for adding common data to template renders.
+ * Used to simplify setup of "Sign in with GitHub" CTA in header.
+ */
+function _renderWithCommonData (res, template, data) {
+  data = data || {}
+  res.session.get("session/csrfToken", function (err, csrfToken) {
+    data.csrfToken = csrfToken
+    data.oauthClient = config.github.oauth.id
+    res.render(template, data)
+  })
+}
+
+/**
  * Do a home page
  */
 function indexPage (req, res) {
-  req.session.get("session/csrfToken", function (err, csrfToken) {
-    res.render("index", {
-      oauthClient: config.github.oauth.id,
-      csrfToken: csrfToken,
-      recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
-      recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages()
-    })
+  _renderWithCommonData(res, "index", {
+    recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
+    recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages()
   })
 }
 
@@ -92,18 +101,14 @@ function indexPage (req, res) {
 function oauthCallback (req, res) {
   req.session.get("session/csrfToken", function (err, csrfToken) {
     if (err || csrfToken !== req.query.state || !req.query.code) {
-      return res.status(401).render(401, {
-        client_id: config.github.oauth.id,
-        csrfToken: csrfToken
-      })
+      res.status(401)
+      return _renderWithCommonData(res, 401)
     }
 
     auth.requestAccessToken(req.query.code, function (err, data) {
       if (err) {
-        return res.status(401).render(401, {
-          client_id: config.github.oauth.id,
-          csrfToken: csrfToken
-        })
+        res.status(401)
+        return _renderWithCommonData(res, 401)
       }
 
       req.session.set("session/access-token", data.access_token, function () {
@@ -120,7 +125,7 @@ function oauthCallback (req, res) {
  * Show pretty graphs and gaudy baubles
  */
 function statsPage (req, res) {
-  res.render("stats", {
+  _renderWithCommonData(res, "stats", {
     recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages(),
     recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
     recentlyUpdatedManifests: stats.getRecentlyUpdatedManifests()
@@ -147,7 +152,7 @@ function newsRssFeed (req, res) {
  */
 function statusPage (req, res) {
   withManifestAndInfo(req, res, function (manifest, info) {
-    res.render("status", {
+    _renderWithCommonData(res, "status", {
       user: req.params.user,
       repo: req.params.repo,
       manifest: manifest,
@@ -168,13 +173,13 @@ function profilePage (req, res) {
         return
       }
 
-      res.render("profile", {user: req.params.user, repos: data})
+      _renderWithCommonData(res, "profile", {user: req.params.user, repos: data})
     })
   })
 }
 
 function searchPage (req, res) {
-  res.render("search", {q: req.query.q})
+  _renderWithCommonData(res, "search", {q: req.query.q})
 }
 
 function searchQuery (req, res) {
