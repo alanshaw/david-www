@@ -28,11 +28,11 @@ statics.init(app)
 app.use(levelSession(config.db.path))
 app.use(function (req, res, next) {
   // TODO: restrict this middleware to routes that actually need it?
-  req.session.get("session/csrfToken", function (err, csrfToken) {
+  req.session.get("session/csrf-token", function (err, csrfToken) {
     if (csrfToken) {
       return next()
     }
-    req.session.set("session/csrfToken", auth.generateNonce(64), next)
+    req.session.set("session/csrf-token", auth.generateNonce(64), next)
   })
 })
 
@@ -80,7 +80,7 @@ function _renderWithCommonData (res, template, data) {
   data = data || {}
   res.session.getAll(function (err, sessionData) {
     if (!sessionData["session/access-token"]) {
-      data.csrfToken = sessionData["session/csrfToken"]
+      data.csrfToken = sessionData["session/csrf-token"]
       data.oauthClient = config.github.oauth.id
     }
     res.render(template, data)
@@ -101,7 +101,7 @@ function indexPage (req, res) {
  * Handle OAuth callback
  */
 function oauthCallback (req, res) {
-  req.session.get("session/csrfToken", function (err, csrfToken) {
+  req.session.get("session/csrf-token", function (err, csrfToken) {
     if (err || csrfToken !== req.query.state || !req.query.code) {
       res.status(401)
       return _renderWithCommonData(res, 401)
