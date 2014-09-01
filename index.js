@@ -1,9 +1,12 @@
 var express = require("express")
 var compress = require("compression")
 var consolidate = require("consolidate")
+var config = require("config")
+var levelSession = require("level-session")
 var stats = require("./stats")
 var manifest = require("./manifest")
 var statics = require("./statics")
+var auth = require("./auth")
 var brains = require("./brains")
 var errors = require("./errors")
 var graph = require("./graph")
@@ -22,6 +25,18 @@ app.use(compress())
 
 statics.init(app)
 
+app.use(levelSession(config.db.path))
+app.use(function (req, res, next) {
+  // TODO: restrict this middleware to routes that actually need it?
+  req.session.get("session/csrf-token", function (err, csrfToken) {
+    if (csrfToken) {
+      return next()
+    }
+    req.session.set("session/csrf-token", auth.generateNonce(64), next)
+  })
+})
+
+app.get("/auth/callback",                      oauthCallback)
 app.get("/news/rss.xml",                       newsRssFeed)
 app.get("/dependency-counts.json",             dependencyCounts)
 app.get("/stats",                              statsPage)
@@ -58,20 +73,61 @@ app.get("/:user",                              profilePage)
 app.get("/",                                   indexPage)
 
 /**
+ * Helper for adding common data to template renders.
+ * Used to simplify setup of "Sign in with GitHub" CTA in header.
+ */
+function _renderWithCommonData (res, template, data) {
+  data = data || {}
+  res.session.getAll(function (err, sessionData) {
+    if (!sessionData["session/access-token"]) {
+      data.csrfToken = sessionData["session/csrf-token"]
+      data.oauthClient = config.github.oauth.id
+    }
+    res.render(template, data)
+  })
+}
+
+/**
  * Do a home page
  */
 function indexPage (req, res) {
-  res.render("index", {
+  _renderWithCommonData(res, "index", {
     recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
     recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages()
   })
 }
 
 /**
+ * Handle OAuth callback
+ */
+function oauthCallback (req, res) {
+  req.session.get("session/csrf-token", function (err, csrfToken) {
+    if (err || csrfToken !== req.query.state || !req.query.code) {
+      res.status(401)
+      return _renderWithCommonData(res, 401)
+    }
+
+    auth.requestAccessToken(req.query.code, function (err, data) {
+      if (err) {
+        res.status(401)
+        return _renderWithCommonData(res, 401)
+      }
+
+      req.session.set("session/access-token", data.access_token, function () {
+        req.session.set("session/user", data.user, function () {
+          res.redirect("/?success")
+        })
+      })
+    })
+  })
+
+}
+
+/**
  * Show pretty graphs and gaudy baubles
  */
 function statsPage (req, res) {
-  res.render("stats", {
+  _renderWithCommonData(res, "stats", {
     recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages(),
     recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),
     recentlyUpdatedManifests: stats.getRecentlyUpdatedManifests()
@@ -98,7 +154,7 @@ function newsRssFeed (req, res) {
  */
 function statusPage (req, res) {
   withManifestAndInfo(req, res, function (manifest, info) {
-    res.render("status", {
+    _renderWithCommonData(res, "status", {
       user: req.params.user,
       repo: req.params.repo,
       manifest: manifest,
@@ -108,17 +164,24 @@ function statusPage (req, res) {
 }
 
 function profilePage (req, res) {
-  profile.get(req.params.user, function (er, data) {
-    if (errors.happened(er, req, res, "Failed to get profile data")) {
-      return
+  var authToken = null
+  req.session.getAll(function (err, sessionData) {
+    if (req.params.user === sessionData["session/user"]) {
+      authToken = sessionData["session/access-token"]
     }
 
-    res.render("profile", {user: req.params.user, repos: data})
+    profile.get(req.params.user, authToken, function (er, data) {
+      if (errors.happened(er, req, res, "Failed to get profile data")) {
+        return
+      }
+
+      _renderWithCommonData(res, "profile", {user: req.params.user, repos: data})
+    })
   })
 }
 
 function searchPage (req, res) {
-  res.render("search", {q: req.query.q})
+  _renderWithCommonData(res, "search", {q: req.query.q})
 }
 
 function searchQuery (req, res) {
@@ -171,17 +234,19 @@ function sendStatusBadge (req, res, opts) {
 
   res.setHeader("Cache-Control", "no-cache")
 
-  manifest.getManifest(req.params.user, req.params.repo, function (err, manifest) {
-    if (err) {
-      return res.status(404).sendfile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
-    }
-
-    brains.getInfo(manifest, opts, function (err, info) {
+  req.session.get("session/access-token", function (err, authToken) {
+    manifest.getManifest(req.params.user, req.params.repo, authToken, function (err, manifest) {
       if (err) {
-        return res.status(500).sendfile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
+        return res.status(404).sendfile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
       }
 
-      res.sendfile(badgePath(getDepsType(opts), info.status, opts.retina, req.query.style, opts.extension))
+      brains.getInfo(manifest, opts, function (err, info) {
+        if (err) {
+          return res.status(500).sendfile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
+        }
+
+        res.sendfile(badgePath(getDepsType(opts), info.status, opts.retina, req.query.style, opts.extension))
+      })
     })
   })
 }
@@ -235,31 +300,33 @@ function retinaOptionalStatusBadge (req, res) {
 }
 
 function sendDependencyGraph (req, res, opts) {
-  manifest.getManifest(req.params.user, req.params.repo, function (er, manifest) {
-    if (errors.happened(er, req, res, "Failed to get package.json")) {
-      return
-    }
+  req.session.get("session/access-token", function (err, authToken) {
+    manifest.getManifest(req.params.user, req.params.repo, authToken, function (er, manifest) {
+      if (errors.happened(er, req, res, "Failed to get package.json")) {
+        return
+      }
 
-    var depsType = getDepsType(opts)
-      , deps
+      var depsType = getDepsType(opts)
+        , deps
 
-    if (depsType) {
-      deps = manifest[depsType + "Dependencies"] || {}
-    } else {
-      deps = manifest.dependencies || {}
-    }
+      if (depsType) {
+        deps = manifest[depsType + "Dependencies"] || {}
+      } else {
+        deps = manifest.dependencies || {}
+      }
 
-    graph.getProjectDependencyGraph(
-      req.params.user + "/" + req.params.repo + (depsType ? "#" + depsType : ""),
-      manifest.version,
-      deps,
-      function (er, graph) {
-        if (errors.happened(er, req, res, "Failed to get graph data")) {
-          return
-        }
+      graph.getProjectDependencyGraph(
+        req.params.user + "/" + req.params.repo + (depsType ? "#" + depsType : ""),
+        manifest.version,
+        deps,
+        function (er, graph) {
+          if (errors.happened(er, req, res, "Failed to get graph data")) {
+            return
+          }
 
-        res.json(graph)
-      })
+          res.json(graph)
+        })
+    })
   })
 }
 
@@ -280,18 +347,20 @@ function optionalDependencyGraph (req, res) {
 }
 
 function buildRssFeed (req, res, dev) {
-  manifest.getManifest(req.params.user, req.params.repo, function (er, manifest) {
-    if (errors.happened(er, req, res, "Failed to get package.json")) {
-      return
-    }
-
-    feed.get(manifest, {dev: dev}, function (er, xml) {
-      if (errors.happened(er, req, res, "Failed to build RSS XML")) {
+  req.session.get("session/access-token", function (err, authToken) {
+    manifest.getManifest(req.params.user, req.params.repo, authToken, function (er, manifest) {
+      if (errors.happened(er, req, res, "Failed to get package.json")) {
         return
       }
 
-      res.contentType("application/rss+xml")
-      res.send(xml, 200)
+      feed.get(manifest, {dev: dev}, function (er, xml) {
+        if (errors.happened(er, req, res, "Failed to build RSS XML")) {
+          return
+        }
+
+        res.contentType("application/rss+xml")
+        res.send(xml, 200)
+      })
     })
   })
 }
@@ -340,17 +409,19 @@ function withManifestAndInfo (req, res, opts, cb) {
     opts = opts || {}
   }
 
-  manifest.getManifest(req.params.user, req.params.repo, function (er, manifest) {
-    if (errors.happened(er, req, res, "Failed to get package.json")) {
-      return
-    }
-
-    brains.getInfo(manifest, opts, function (er, info) {
-      if (errors.happened(er, req, res, "Failed to get dependency info")) {
+  req.session.get("session/access-token", function (err, authToken) {
+    manifest.getManifest(req.params.user, req.params.repo, authToken, function (er, manifest) {
+      if (errors.happened(er, req, res, "Failed to get package.json")) {
         return
       }
 
-      cb(manifest, info)
+      brains.getInfo(manifest, opts, function (er, info) {
+        if (errors.happened(er, req, res, "Failed to get dependency info")) {
+          return
+        }
+
+        cb(manifest, info)
+      })
     })
   })
 }
