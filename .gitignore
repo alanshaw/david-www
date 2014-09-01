@@ -3,3 +3,4 @@
 config/runtime.json
 dist
 node_modules
+data

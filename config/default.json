@@ -20,5 +20,8 @@
   },
   "site": {
     "hostname": "https://david-dm.org"
+  },
+  "db": {
+    "path": "data"
   }
 }
