@@ -26,6 +26,9 @@ npm install
 grunt
 ```
 
+Register a github personal oauth token and add it to `config/default.json`.  
+Register a github developer application and add oauth client id and secret to `config/default.json`.
+
 Run david-www:
 
 ```sh
