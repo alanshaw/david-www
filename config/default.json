@@ -1,24 +1,24 @@
 {
-	"brains": {
-		"cacheTime": 86400000
-	},
-	"github": {
-		"api": {
-			"version": "3.0.0",
-			"protocol": "https",
-			"host": "api.github.com"
-		},
-		"protocol": "https",
-		"host": "github.com"
-	},
-	"npm": {
-		"hostname": "http://npmjs.org",
-		"options": {
-			"registry": "http://registry.npmjs.org"
-		},
-		"feed": "https://skimdb.npmjs.com/registry"
-	},
-	"site": {
-		"hostname": "https://david-dm.org"
-	}
+  "brains": {
+    "cacheTime": 86400000
+  },
+  "github": {
+    "api": {
+      "version": "3.0.0",
+      "protocol": "https",
+      "host": "api.github.com"
+    },
+    "protocol": "https",
+    "host": "github.com"
+  },
+  "npm": {
+    "hostname": "http://npmjs.org",
+    "options": {
+      "registry": "http://registry.npmjs.org"
+    },
+    "feed": "https://skimdb.npmjs.com/registry"
+  },
+  "site": {
+    "hostname": "https://david-dm.org"
+  }
 }
