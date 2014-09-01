@@ -9,7 +9,12 @@
       "host": "api.github.com"
     },
     "protocol": "https",
-    "host": "github.com"
+    "host": "github.com",
+    "oauth": {
+      "id": null,
+      "secret": null
+    },
+    "token": null
   },
   "npm": {
     "hostname": "http://npmjs.org",
