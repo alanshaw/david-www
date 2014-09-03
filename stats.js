@@ -52,7 +52,9 @@ function RetrievedManifest (manifest, user, repo) {
 
 var recentlyRetrievedManifests = []
 
-manifest.on("retrieve", function (manifest, user, repo) {
+manifest.on("retrieve", function (manifest, user, repo, isPrivate) {
+  if (isPrivate) return
+
   var inList = false
 
   for (var i = 0; i < recentlyRetrievedManifests.length; ++i) {
@@ -85,7 +87,8 @@ function UpdatedManifest (diffs, manifest, user, repo) {
 
 var recentlyUpdatedManifests = []
 
-manifest.on("dependenciesChange", function (diffs, manifest, user, repo) {
+manifest.on("dependenciesChange", function (diffs, manifest, user, repo, isPrivate) {
+  if (isPrivate) return
 
   recentlyUpdatedManifests.unshift(new UpdatedManifest(diffs, manifest, user, repo))
 

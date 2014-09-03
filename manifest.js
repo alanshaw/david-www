@@ -1,10 +1,10 @@
 /**
  * Events:
- * dependenciesChange(differences, manifest, user, repo) - When one or more dependencies for a manifest change
- * devDependenciesChange(differences, manifest, user, repo) - When one or more devDependencies for a manifest change
- * peerDependenciesChange(differences, manifest, user, repo) - When one or more peerDependencies for a manifest change
- * optionalDependenciesChange(differences, manifest, user, repo) - When one or more optionalDependencies for a manifest change
- * retrieve(manifest, user, repo) - The first time a manifest is retrieved
+ * dependenciesChange(differences, manifest, user, repo, private) - When one or more dependencies for a manifest change
+ * devDependenciesChange(differences, manifest, user, repo, private) - When one or more devDependencies for a manifest change
+ * peerDependenciesChange(differences, manifest, user, repo, private) - When one or more peerDependencies for a manifest change
+ * optionalDependenciesChange(differences, manifest, user, repo, private) - When one or more optionalDependencies for a manifest change
+ * retrieve(manifest, user, repo, private) - The first time a manifest is retrieved
  */
 
 var events = require("events")
@@ -15,10 +15,11 @@ var events = require("events")
   , githubUrl = require("github-url")
   , depDiff = require("dep-diff")
 
-var exports = new events.EventEmitter()
+module.exports = exports = new events.EventEmitter()
 
-function Manifest (data) {
+function Manifest (data, priv) {
   this.data = data
+  this.private = priv // Is manifest in a private repo?
   this.expires = moment().add(Manifest.TTL)
 }
 
@@ -46,14 +47,20 @@ function parseManifest (body) {
 exports.getManifest = function (user, repo, authToken, cb) {
   var manifest = manifests[user] ? manifests[user][repo] : null
 
-  if (manifest && manifest.expires > new Date()) {
+  if (manifest && !manifest.private && manifest.expires > new Date()) {
     console.log("Using cached manifest", manifest.data.name, manifest.data.version)
     return cb(null, JSON.parse(JSON.stringify(manifest.data)))
   }
 
   var gh = github.getInstance(authToken)
+
   gh.repos.getContent({user: user, repo: repo, path: "package.json"}, function (er, resp) {
     if (er) return cb(er)
+
+    if (manifest && manifest.expires > new Date()) {
+      console.log("Using cached private manifest", manifest.data.name, manifest.data.version)
+      return cb(null, JSON.parse(JSON.stringify(manifest.data)))
+    }
 
     var packageJson = new Buffer(resp.content, resp.encoding).toString()
     var data = parseManifest(packageJson)
@@ -64,48 +71,53 @@ exports.getManifest = function (user, repo, authToken, cb) {
 
     console.log("Got manifest", data.name, data.version)
 
-    var oldManifest = manifest
+    // Get repo info so we can determine private/public status
+    gh.repos.get({user: user, repo: repo}, function (er, repoData) {
+      if (er) return console.error("Failed to get repo data", user, repo, er)
 
-    manifest = new Manifest(data)
+      var oldManifest = manifest
 
-    manifests[user] = manifests[user] || {}
-    manifests[user][repo] = manifest
+      manifest = new Manifest(data, repoData.private)
 
-    cb(null, manifest.data)
+      manifests[user] = manifests[user] || {}
+      manifests[user][repo] = manifest
+  
+      cb(null, manifest.data)
 
-    if (!oldManifest) {
-      exports.emit("retrieve", manifest.data, user, repo)
-    } else {
+      if (!oldManifest) {
+        exports.emit("retrieve", manifest.data, user, repo, repoData.private)
+      } else {
 
-      var oldDependencies = oldManifest ? oldManifest.data.dependencies : {}
-        , oldDevDependencies = oldManifest ? oldManifest.data.devDependencies : {}
-        , oldPeerDependencies = oldManifest ? oldManifest.data.peerDependencies : {}
-        , oldOptionalDependencies = oldManifest ? oldManifest.data.optionalDependencies : {}
+        var oldDependencies = oldManifest ? oldManifest.data.dependencies : {}
+          , oldDevDependencies = oldManifest ? oldManifest.data.devDependencies : {}
+          , oldPeerDependencies = oldManifest ? oldManifest.data.peerDependencies : {}
+          , oldOptionalDependencies = oldManifest ? oldManifest.data.optionalDependencies : {}
 
-      var diffs = depDiff(oldDependencies, data.dependencies)
+        var diffs = depDiff(oldDependencies, data.dependencies)
 
-      if (diffs.length) {
-        exports.emit("dependenciesChange", diffs, manifest.data, user, repo)
+        if (diffs.length) {
+          exports.emit("dependenciesChange", diffs, manifest.data, user, repo, repoData.private)
+        }
+
+        diffs = depDiff(oldDevDependencies, data.devDependencies)
+
+        if (diffs.length) {
+          exports.emit("devDependenciesChange", diffs, manifest.data, user, repo, repoData.private)
+        }
+
+        diffs = depDiff(oldPeerDependencies, data.peerDependencies)
+
+        if (diffs.length) {
+          exports.emit("peerDependenciesChange", diffs, manifest.data, user, repo, repoData.private)
+        }
+
+        diffs = depDiff(oldOptionalDependencies, data.optionalDependencies)
+
+        if (diffs.length) {
+          exports.emit("optionalDependenciesChange", diffs, manifest.data, user, repo, repoData.private)
+        }
       }
-
-      diffs = depDiff(oldDevDependencies, data.devDependencies)
-
-      if (diffs.length) {
-        exports.emit("devDependenciesChange", diffs, manifest.data, user, repo)
-      }
-
-      diffs = depDiff(oldPeerDependencies, data.peerDependencies)
-
-      if (diffs.length) {
-        exports.emit("peerDependenciesChange", diffs, manifest.data, user, repo)
-      }
-
-      diffs = depDiff(oldOptionalDependencies, data.optionalDependencies)
-
-      if (diffs.length) {
-        exports.emit("optionalDependenciesChange", diffs, manifest.data, user, repo)
-      }
-    }
+    })
   })
 }
 
@@ -128,5 +140,3 @@ registry.on("change", function (change) {
     manifests[info.user][info.project].expires = moment()
   }
 })
-
-module.exports = exports

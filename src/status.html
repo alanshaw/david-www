@@ -4,28 +4,24 @@
   "headHtml": "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" href=\"/{{user}}/{{repo}}/rss.xml\">"
 })
 
-  <div id="repo">
+  <div id="repo" data-user="{{user}}" data-repo="{{repo}}">
     <h1>
       <a href="@@githubsite/{{user}}">{{user}}</a> -
       <a href="@@githubsite/{{user}}/{{repo}}">{{manifest.name}}</a>
       <span>{{manifest.version}}</span>
       <a id="status" class="badge" href="#badge-embed" title="Get badge embed code"><img src="/{{user}}/{{repo}}.svg" alt="Dependency status"></a>
-      <a id="dev-status" class="badge" href="#dev-badge-embed" title="Get dev badge embed code"><img src="/{{user}}/{{repo}}/dev-status.svg" alt="devDependency status"></a>
-      <a id="peer-status" class="badge" href="#peer-badge-embed" title="Get peer badge embed code"><img src="/{{user}}/{{repo}}/peer-status.svg" alt="peerDependency status"></a>
-      <a id="optional-status" class="badge" href="#optional-badge-embed" title="Get optional badge embed code"><img src="/{{user}}/{{repo}}/optional-status.svg" alt="optionalDependency status"></a>
+      {{#if manifest.devDependencies}}
+      <a id="dev-status" class="badge" href="#dev-badge-embed" title="Get dev badge embed code" data-type="dev"><img src="/{{user}}/{{repo}}/dev-status.svg" alt="devDependency status"></a>
+      {{/if}}
+      {{#if manifest.peerDependencies}}
+      <a id="peer-status" class="badge" href="#peer-badge-embed" title="Get peer badge embed code" data-type="peer"><img src="/{{user}}/{{repo}}/peer-status.svg" alt="peerDependency status"></a>
+      {{/if}}
+      {{#if manifest.optionalDependencies}}
+      <a id="optional-status" class="badge" href="#optional-badge-embed" title="Get optional badge embed code" data-type="optional"><img src="/{{user}}/{{repo}}/optional-status.svg" alt="optionalDependency status"></a>
+      {{/if}}
     </h1>
     {{#if manifest.description}}
     <p>{{manifest.description}}</p>
-    {{/if}}
-    @@include('inc/embed-badge.html')
-    {{#if manifest.devDependencies}}
-    @@include('inc/embed-badge-type.html', {"type": "dev"})
-    {{/if}}
-    {{#if manifest.peerDependencies}}
-    @@include('inc/embed-badge-type.html', {"type": "peer"})
-    {{/if}}
-    {{#if manifest.optionalDependencies}}
-    @@include('inc/embed-badge-type.html', {"type": "optional"})
     {{/if}}
   </div>
   <ul id="dep-switch">

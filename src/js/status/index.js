@@ -14,27 +14,10 @@ require("../vendor/jquery.fancybox.js")
 require("../vendor/jquery.ba-bbq.js")
 require("../vendor/jquery.ba-hashchange.js")
 
+var embedTmpl = Handlebars.compile(fs.readFileSync(__dirname + "/../../../dist/inc/embed-badge.html", {encoding: "utf8"}))
+var embedTmplType = Handlebars.compile(fs.readFileSync(__dirname + "/../../../dist/inc/embed-badge-type.html", {encoding: "utf8"}))
+
 $("#status-page").each(function () {
-
-  $(".badge-embed input").each(function () {
-    var clicked = false
-      , embedCode = $(this)
-
-    embedCode.click(function () {
-      if (!clicked) {
-        embedCode.select()
-        clicked = true
-      }
-    })
-  })
-
-  $(".badge-embed select").change(function () {
-    var container = $(this).closest(".badge-embed")
-    $(".theme", container).hide()
-    $(".theme-" + $(this).val(), container).show()
-  })
-
-  $(".badge-embed .theme").not(".theme-svg").hide()
 
   var state = {
     info: $.bbq.getState("info", true) || "dependencies",
@@ -155,6 +138,35 @@ $("#status-page").each(function () {
     , depInfoLoaded = {}
     , depInfos = $(".dep-info")
     , depSwitchers = $("#dep-switch a")
+    , repo = $("#repo")
+
+  badges.click(function () {
+    if (!$($(this).attr("href")).size()) {
+      var data = {type: $(this).data("type"), user: repo.data("user"), repo: repo.data("repo")}
+      var ct = $(data.type ? embedTmplType(data) : embedTmpl(data))
+
+      $("input", ct).each(function () {
+        var clicked = false
+          , embedCode = $(this)
+
+        embedCode.click(function () {
+          if (!clicked) {
+            embedCode.select()
+            clicked = true
+          }
+        })
+      })
+
+      $("select", ct).change(function () {
+        $(".theme", ct).hide()
+        $(".theme-" + $(this).val(), ct).show()
+      })
+
+      $(".theme", ct).not(".theme-svg").hide()
+
+      repo.append(ct)
+    }
+  })
 
   badges.fancybox()
 

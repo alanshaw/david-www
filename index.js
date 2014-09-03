@@ -145,7 +145,7 @@ function newsRssFeed (req, res) {
     }
 
     res.contentType("application/rss+xml")
-    res.send(xml, 200)
+    res.status(200).send(xml)
   })
 }
 
