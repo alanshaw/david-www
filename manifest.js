@@ -71,8 +71,15 @@ exports.getManifest = function (user, repo, authToken, cb) {
 
     console.log("Got manifest", data.name, data.version)
 
-    // Get repo info so we can determine private/public status
-    gh.repos.get({user: user, repo: repo}, function (er, repoData) {
+    if (!authToken) {
+      // There was no authToken so MUST be public
+      onGetRepo(null, {"private": false})
+    } else {
+      // Get repo info so we can determine private/public status
+      gh.repos.get({user: user, repo: repo}, onGetRepo)
+    }
+    
+    function onGetRepo (er, repoData) {
       if (er) return console.error("Failed to get repo data", user, repo, er)
 
       var oldManifest = manifest
@@ -81,7 +88,7 @@ exports.getManifest = function (user, repo, authToken, cb) {
 
       manifests[user] = manifests[user] || {}
       manifests[user][repo] = manifest
-  
+
       cb(null, manifest.data)
 
       if (!oldManifest) {
@@ -117,7 +124,7 @@ exports.getManifest = function (user, repo, authToken, cb) {
           exports.emit("optionalDependenciesChange", diffs, manifest.data, user, repo, repoData.private)
         }
       }
-    })
+    }
   })
 }
 
