@@ -14,6 +14,7 @@ var events = require("events")
   , github = require("./github")
   , githubUrl = require("github-url")
   , depDiff = require("dep-diff")
+  , batch = require("./batch")()
 
 module.exports = exports = new events.EventEmitter()
 
@@ -53,20 +54,31 @@ exports.getManifest = function (user, repo, authToken, cb) {
   }
 
   var gh = github.getInstance(authToken)
+    , batchKey = [user, repo, authToken].join("-")
+  
+  if (batch.exists(batchKey)) {
+    return batch.push(batchKey, cb)
+  }
+
+  batch.push(batchKey, cb)
 
   gh.repos.getContent({user: user, repo: repo, path: "package.json"}, function (er, resp) {
     if (er) return cb(er)
 
     if (manifest && manifest.expires > new Date()) {
       console.log("Using cached private manifest", manifest.data.name, manifest.data.version)
-      return cb(null, JSON.parse(JSON.stringify(manifest.data)))
+      return batch.call(batchKey, function (cb) {
+        cb(null, JSON.parse(JSON.stringify(manifest.data)))
+      })
     }
 
     var packageJson = new Buffer(resp.content, resp.encoding).toString()
     var data = parseManifest(packageJson)
 
     if (!data) {
-      return cb(new Error("Failed to parse package.json: " + packageJson))
+      return batch.call(batchKey, function (cb) {
+        cb(new Error("Failed to parse package.json: " + packageJson))
+      })
     }
 
     console.log("Got manifest", data.name, data.version)
@@ -88,8 +100,10 @@ exports.getManifest = function (user, repo, authToken, cb) {
 
       manifests[user] = manifests[user] || {}
       manifests[user][repo] = manifest
-
-      cb(null, manifest.data)
+      
+      batch.call(batchKey, function (cb) {
+        cb(null, manifest.data)
+      })
 
       if (!oldManifest) {
         exports.emit("retrieve", manifest.data, user, repo, repoData.private)
