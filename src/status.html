@@ -9,15 +9,15 @@
       <a href="@@githubsite/{{user}}">{{user}}</a> -
       <a href="@@githubsite/{{user}}/{{repo}}">{{manifest.name}}</a>
       <span>{{manifest.version}}</span>
-      <a id="status" class="badge" href="#badge-embed" title="Get badge embed code"><img src="/{{user}}/{{repo}}.svg" alt="Dependency status"></a>
+      <a id="status" class="badge" href="#badge-embed" title="Get badge embed code"><img src="/{{user}}/{{repo}}.svg?style=flat" alt="Dependency status"></a>
       {{#if manifest.devDependencies}}
-      <a id="dev-status" class="badge" href="#dev-badge-embed" title="Get dev badge embed code" data-type="dev"><img src="/{{user}}/{{repo}}/dev-status.svg" alt="devDependency status"></a>
+      <a id="dev-status" class="badge" href="#dev-badge-embed" title="Get dev badge embed code" data-type="dev"><img src="/{{user}}/{{repo}}/dev-status.svg?style=flat" alt="devDependency status"></a>
       {{/if}}
       {{#if manifest.peerDependencies}}
-      <a id="peer-status" class="badge" href="#peer-badge-embed" title="Get peer badge embed code" data-type="peer"><img src="/{{user}}/{{repo}}/peer-status.svg" alt="peerDependency status"></a>
+      <a id="peer-status" class="badge" href="#peer-badge-embed" title="Get peer badge embed code" data-type="peer"><img src="/{{user}}/{{repo}}/peer-status.svg?style=flat" alt="peerDependency status"></a>
       {{/if}}
       {{#if manifest.optionalDependencies}}
-      <a id="optional-status" class="badge" href="#optional-badge-embed" title="Get optional badge embed code" data-type="optional"><img src="/{{user}}/{{repo}}/optional-status.svg" alt="optionalDependency status"></a>
+      <a id="optional-status" class="badge" href="#optional-badge-embed" title="Get optional badge embed code" data-type="optional"><img src="/{{user}}/{{repo}}/optional-status.svg?style=flat" alt="optionalDependency status"></a>
       {{/if}}
     </h1>
     {{#if manifest.description}}

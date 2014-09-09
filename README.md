@@ -1,9 +1,9 @@
 [![David](https://raw.github.com/alanshaw/david-www/master/david.png)](https://david-dm.org/)
 
-[![Build Status](https://img.shields.io/travis/alanshaw/david-www/master.svg)](https://travis-ci.org/alanshaw/david-www)
-[![Dependency Status](https://david-dm.org/alanshaw/david-www.svg?theme=shields.io)](https://david-dm.org/alanshaw/david-www)
-[![devDependency Status](https://david-dm.org/alanshaw/david-www/dev-status.svg?theme=shields.io)](https://david-dm.org/alanshaw/david-www#info=devDependencies)
-[![Donate to help support David development](http://img.shields.io/gittip/_alanshaw.svg)](https://www.gittip.com/_alanshaw/)
+[![Build Status](https://img.shields.io/travis/alanshaw/david-www/master.svg?style=flat)](https://travis-ci.org/alanshaw/david-www)
+[![Dependency Status](https://david-dm.org/alanshaw/david-www.svg?style=flat)](https://david-dm.org/alanshaw/david-www)
+[![devDependency Status](https://david-dm.org/alanshaw/david-www/dev-status.svg?style=flat)](https://david-dm.org/alanshaw/david-www#info=devDependencies)
+[![Donate to help support David development](http://img.shields.io/gratipay/_alanshaw.svg?style=flat)](https://www.gittip.com/_alanshaw/)
 ___
 
 Node.js based web service that tells you when your project npm dependencies are out of date.
