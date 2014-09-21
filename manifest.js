@@ -63,7 +63,10 @@ exports.getManifest = function (user, repo, authToken, cb) {
   batch.push(batchKey, cb)
 
   gh.repos.getContent({user: user, repo: repo, path: "package.json"}, function (er, resp) {
-    if (er) return cb(er)
+    if (er) {
+      console.error("Failed to get package.json", er)
+      return batch.call(batchKey, function (cb) { cb(er) })
+    }
 
     if (manifest && manifest.expires > new Date()) {
       console.log("Using cached private manifest", manifest.data.name, manifest.data.version)
@@ -76,6 +79,7 @@ exports.getManifest = function (user, repo, authToken, cb) {
     var data = parseManifest(packageJson)
 
     if (!data) {
+      console.error("Failed to parse package.json: ", packageJson)
       return batch.call(batchKey, function (cb) {
         cb(new Error("Failed to parse package.json: " + packageJson))
       })
@@ -92,7 +96,10 @@ exports.getManifest = function (user, repo, authToken, cb) {
     }
     
     function onGetRepo (er, repoData) {
-      if (er) return console.error("Failed to get repo data", user, repo, er)
+      if (er) {
+        console.error("Failed to get repo data", user, repo, er)
+        return batch.call(batchKey, function (cb) { cb(er) })
+      }
 
       var oldManifest = manifest
 
