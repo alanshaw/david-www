@@ -7,6 +7,7 @@ var david = require("david")
   , cache = require("memory-cache")
   , registry = require("./registry")
   , config = require("config")
+  , nsp = require("./nsp")
 
 // When a user publishes a package, delete cached david info
 registry.on("change", function (change) {

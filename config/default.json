@@ -28,5 +28,8 @@
   },
   "db": {
     "path": "data"
+  },
+  "nsp": {
+    "advisoriesUpdateInterval": 3600000
   }
 }
