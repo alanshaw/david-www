@@ -39,7 +39,7 @@ function updateAdvisories () {
         advs[m.module_name].push(m)
         return advs
       }, {})
-      console.log("Updated NSP advisories" metas.length)
+      console.log("Updated NSP advisories", metas.length)
     })
   })
 }
