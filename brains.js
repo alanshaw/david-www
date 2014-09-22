@@ -118,7 +118,7 @@ function getDependencies (manifest, opts, cb) {
     Object.keys(infos).forEach(function (depName) {
       if (config.brains.cacheTime) {
         var info = infos[depName]
-        cache.put(depName, {stable: info.stable, latest: info.latest}, config.brains.cacheTime)
+        cache.put(depName, {stable: info.stable, latest: info.latest, versions: info.versions}, config.brains.cacheTime)
       }
     })
 
@@ -164,6 +164,7 @@ function filterVersionsInRange (versions, range) {
 function getAdvisories (name, versions) {
   var advisories = nsp.getAdvisories()
   if (!advisories[name]) return []
+
   // Filter out the advisories that don't apply to the given versions
   return advisories[name].filter(function (a) {
     for (var i = 0; i < versions.length; i++) {

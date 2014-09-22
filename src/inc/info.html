@@ -17,10 +17,22 @@
     </thead>
     <tbody>
       {{#info.deps}}
-      <tr>
+      <tr class="{{#if advisories.length}}vulnerable{{/if}}">
         <td class="dep">
           <a href="@@npmsite/package/{{name}}">{{name}}</a>
           {{#if outOfDate}}<a class="changes" href="#" title="View closed issues and commits"><i class="fa fa-exclamation-circle"></i></a>{{/if}}
+          {{#if advisories}}
+          <ul class="vulns">
+            {{#each advisories}}
+            <li>
+              <a href="{{nsp_url}}">
+                <img src="https://raw.githubusercontent.com/nodesecurity/nodesecurity-www/master/public/img/nodesecurity.png" width="15">
+                {{title}}
+              </a>
+            </li>
+            {{/each}}
+          </ul>
+          {{/if}}
         </td>
         <td class="required">{{required}}</td>
         <td class="stable">{{stable}}</td>

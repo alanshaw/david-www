@@ -21,10 +21,10 @@ function updateAdvisories (cb) {
 
   var gh = github.getInstance()
 
-  gh.repos.getContent(ghOpts, function (er, advisories) {
+  gh.repos.getContent(ghOpts, function (er, files) {
     if (er) return cb(er)
 
-    var tasks = advisories.filter(function (a) {
+    var tasks = files.filter(function (a) {
       return a.name != "template.md"
     }).map(function (a) {
       return function (cb) {
@@ -33,7 +33,9 @@ function updateAdvisories (cb) {
             console.warn("Failed to update advisory", a.name, er)
             return cb()
           }
-          cb(null, metaMarked(md).meta)
+          var meta = metaMarked(md).meta
+          meta.nsp_url = "https://nodesecurity.io/advisories/" + a.name.replace(/\.md$/, "")
+          cb(null, meta)
         })
       }
     })
