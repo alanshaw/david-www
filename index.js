@@ -15,6 +15,13 @@ var profile = require("./profile")
 var newsFeed = require("./news-feed")
 var search = require("./search")
 var changelog = require("./changelog")
+var nsp = require("./nsp")
+
+nsp.updateAdvisories(function (er) {
+  if (er) console.error("Failed to update advisories", er)
+  else console.log("Updated NSP advisories")
+  nsp.updateAdvisoriesPeriodically(config.nsp && config.nsp.advisoriesUpdateInterval)
+})
 
 var app = express()
 
