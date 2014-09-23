@@ -27,7 +27,7 @@
     </thead>
     <tbody>
       {{#info.deps}}
-      <tr class="{{#if advisories.length}}vulnerable{{/if}}">
+      <tr>
         <td class="dep">
           <a href="@@npmsite/package/{{name}}">{{name}}</a>
           {{#if advisories}}
@@ -45,7 +45,7 @@
         </td>
         <td class="changes">
           {{#if outOfDate}}
-          <a href="#" title="View closed issues and commits"><i class="fa fa-file-code-o"></i></a>
+          <a href="#" title="View closed issues and commits" class="changes-icon"><i class="fa fa-file-code-o"></i></a>
           {{/if}}
         </td>
         <td class="required">{{required}}</td>
