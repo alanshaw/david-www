@@ -227,7 +227,8 @@ module.exports.getInfo = function (manifest, opts, cb) {
             unpinned: {
               upToDate: 0,
               outOfDate: 0
-            }
+            },
+            advisories: 0
           }
 
         var depList = depNames.map(function (depName) {
@@ -273,6 +274,8 @@ module.exports.getInfo = function (manifest, opts, cb) {
             totals.outOfDate++
             totals.unpinned.outOfDate++
           }
+
+          totals.advisories += advisories.length
 
           return info
         })
