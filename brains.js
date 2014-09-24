@@ -7,6 +7,7 @@ var david = require("david")
   , cache = require("memory-cache")
   , registry = require("./registry")
   , config = require("config")
+  , nsp = require("./nsp")
 
 // When a user publishes a package, delete cached david info
 registry.on("change", function (change) {
@@ -55,7 +56,7 @@ function getCachedDependencies (manifest, opts) {
 
     if (!info) return;
 
-    pkgs[depName] = {required: deps[depName], stable: info.stable, latest: info.latest}
+    pkgs[depName] = {required: deps[depName], stable: info.stable, latest: info.latest, versions: info.versions}
   })
 
   return pkgs
@@ -117,7 +118,7 @@ function getDependencies (manifest, opts, cb) {
     Object.keys(infos).forEach(function (depName) {
       if (config.brains.cacheTime) {
         var info = infos[depName]
-        cache.put(depName, {stable: info.stable, latest: info.latest}, config.brains.cacheTime)
+        cache.put(depName, {stable: info.stable, latest: info.latest, versions: info.versions}, config.brains.cacheTime)
       }
     })
 
@@ -145,6 +146,41 @@ function getUpdatedDependencies (manifest, opts, cb) {
 }
 
 /**
+ * Filter out the versions that are within the given range
+ * @param {Array} versions All versions
+ * @param {String} range Range to filter by
+ */
+function filterVersionsInRange (versions, range) {
+  return (versions || []).filter(function (v) {
+    return semver.satisfies(v, range, true)
+  })
+}
+
+/**
+ * Get advisories for this module name at these versions
+ * @param {String} name Module name
+ * @param {Array} versions Version numbers to consider
+ */
+function getAdvisories (name, versions) {
+  var advisories = nsp.getAdvisories()
+  if (!advisories[name]) return []
+
+  // Filter out the advisories that don't apply to the given versions
+  return advisories[name].filter(function (a) {
+    for (var i = 0; i < versions.length; i++) {
+      try {
+        if (semver.satisfies(versions[i], a.vulnerable_versions, true)) {
+          return true
+        }
+      } catch (er) {
+        console.error("Failed to filter advisory", name, versions[i], a, er)
+      }
+    }
+    return false
+  })
+}
+
+/**
  * @param {Object} manifest Parsed package.json file contents
  * @param {Object|Function} [opts] Options or cb
  * @param {Boolean} [opts.dev] Consider devDependencies
@@ -165,7 +201,7 @@ module.exports.getInfo = function (manifest, opts, cb) {
     opts.npm = config.npm.options
   }
 
-  var davidOptions = {dev: opts.dev, peer: opts.peer, optional: opts.optional, loose: true, npm: opts.npm, warn: {E404: true}}
+  var davidOptions = {dev: opts.dev, peer: opts.peer, optional: opts.optional, loose: true, npm: opts.npm, warn: {E404: true}, versions: true}
 
   getDependencies(manifest, davidOptions, function (er, deps) {
     if (er) return cb(er)
@@ -191,7 +227,8 @@ module.exports.getInfo = function (manifest, opts, cb) {
             unpinned: {
               upToDate: 0,
               outOfDate: 0
-            }
+            },
+            advisories: 0
           }
 
         var depList = depNames.map(function (depName) {
@@ -207,6 +244,8 @@ module.exports.getInfo = function (manifest, opts, cb) {
           }
 
           var pinned = isPinned(deps[depName].required)
+          var rangeVersions = filterVersionsInRange(deps[depName].versions, deps[depName].required)
+          var advisories = getAdvisories(depName, rangeVersions)
 
           var info = {
             name: depName,
@@ -214,7 +253,8 @@ module.exports.getInfo = function (manifest, opts, cb) {
             stable: deps[depName].stable,
             latest: deps[depName].latest,
             status: status,
-            pinned: pinned
+            pinned: pinned,
+            advisories: advisories
           }
 
           if (status === "uptodate" && pinned) {
@@ -234,6 +274,8 @@ module.exports.getInfo = function (manifest, opts, cb) {
             totals.outOfDate++
             totals.unpinned.outOfDate++
           }
+
+          totals.advisories += advisories.length
 
           return info
         })

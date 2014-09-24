@@ -91,7 +91,7 @@ $("#status-page").each(function () {
 
     /* Init changes links */
 
-    $(".changes", container).click(function (e) {
+    $(".changes-icon", container).click(function (e) {
       e.preventDefault()
 
       var row = $(this).closest("tr")
@@ -103,7 +103,7 @@ $("#status-page").each(function () {
         from = $(".st-val", row.next()).text()
         to = $(".st-val", row.next().next()).text()
       } else {
-        name = $(".dep a:first-child", row).text()
+        name = $(".dep > a:first-child", row).text()
         from = $(".required", row).text()
         to = $(".stable", row).text()
       }

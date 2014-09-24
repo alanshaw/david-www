@@ -4,11 +4,21 @@
   <li><a href="#view=tree" title="Show dependencies in a tree"><i class="fa fa-sitemap"></i> Tree</a></li>
 </ul>
 @@include('summary.html')
+{{#if info.totals.advisories}}
+<div id="summary-advisories">
+  <i class="fa fa-exclamation-circle"></i>
+  Security vulnerabilities in dependencies
+</div>
+<div id="nsp">
+  Advisories from the <a href="https://nodesecurity.io">Node Security Project</a>
+</div>
+{{/if}}
 <div class="dep-table">
   <table>
     <thead>
     <tr>
       <th>Dependency</th>
+      <th><span class="visuallyhidden">Changes</span></th>
       <th>Required</th>
       <th>Stable</th>
       <th>Latest</th>
@@ -20,7 +30,23 @@
       <tr>
         <td class="dep">
           <a href="@@npmsite/package/{{name}}">{{name}}</a>
-          {{#if outOfDate}}<a class="changes" href="#" title="View closed issues and commits"><i class="fa fa-exclamation-circle"></i></a>{{/if}}
+          {{#if advisories}}
+          <ul class="vulns">
+            {{#each advisories}}
+            <li>
+              <a href="{{nsp_url}}">
+                <i class="fa fa-exclamation-circle"></i>
+                {{title}}
+              </a>
+            </li>
+            {{/each}}
+          </ul>
+          {{/if}}
+        </td>
+        <td class="changes">
+          {{#if outOfDate}}
+          <a href="#" title="View closed issues and commits" class="changes-icon"><i class="fa fa-file-code-o"></i></a>
+          {{/if}}
         </td>
         <td class="required">{{required}}</td>
         <td class="stable">{{stable}}</td>
