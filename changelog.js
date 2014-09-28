@@ -18,7 +18,20 @@ function getUserRepo (modName, cb) {
 
     if (!repo) return cb(new Error(modName + " has no repository information"))
 
-    var info = githubUrl(repo, config.github.host)
+    var url = repo.url || repo
+    var info = githubUrl(url, config.github.host)
+
+    // Try parse with some common mistakes
+
+    // No .git ext
+    if (!info) {
+      info = githubUrl(url + ".git", config.github.host)
+    }
+
+    // Shorthand without domain
+    if (!info) {
+      info = githubUrl("git://" + config.github.host + (url[0] == "/" ? "" : "/") + url)
+    }
 
     if (!info) return cb(new Error("Unsupported repository URL"))
 
