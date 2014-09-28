@@ -2,8 +2,8 @@
 
   <h1>
     <a href="@@githubsite/{{user}}">
-      {{#if repos.length}}
-      <img class="avatar" src="{{repos.[0].repo.owner.avatar_url}}" alt="Avatar for {{user}}">
+      {{#if avatarUrl}}
+      <img class="avatar" src="{{avatarUrl}}" alt="Avatar for {{user}}">
       {{/if}}
       {{user}}
     </a>

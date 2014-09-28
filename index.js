@@ -182,7 +182,16 @@ function profilePage (req, res) {
         return
       }
 
-      _renderWithCommonData(res, "profile", {user: req.params.user, repos: data})
+      var avatarUrl
+
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].repo.owner.login == req.params.user) {
+          avatarUrl = data[i].repo.owner.avatar_url
+          break
+        }
+      }
+
+      _renderWithCommonData(res, "profile", {user: req.params.user, avatarUrl: avatarUrl, repos: data})
     })
   })
 }
