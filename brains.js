@@ -235,17 +235,24 @@ module.exports.getInfo = function (manifest, opts, cb) {
           // Lets disprove this
           var status = "uptodate"
 
-          // If there is an updated STABLE dependency then this dep is out of date
-          if (updatedStableDeps[depName]) {
-            status = "outofdate"
-          // If it is in the UNSTABLE list, and has no stable version then consider out of date
-          } else if (updatedDeps[depName] && !updatedDeps[depName].stable) {
-            status = "outofdate"
+          var rangeVersions = filterVersionsInRange(deps[depName].versions, deps[depName].required)
+          var advisories = getAdvisories(depName, rangeVersions)
+
+          // Insecure trumps everything
+          if (status != "insecure") {
+            // If there's an advisory then these dependencies are insecure
+            if (advisories.length) {
+              status = "insecure"
+            // If there is an updated STABLE dependency then this dep is out of date
+            } else if (updatedStableDeps[depName]) {
+              status = "outofdate"
+            // If it is in the UNSTABLE list, and has no stable version then consider out of date
+            } else if (updatedDeps[depName] && !updatedDeps[depName].stable) {
+              status = "outofdate"
+            }
           }
 
           var pinned = isPinned(deps[depName].required)
-          var rangeVersions = filterVersionsInRange(deps[depName].versions, deps[depName].required)
-          var advisories = getAdvisories(depName, rangeVersions)
 
           var info = {
             name: depName,
