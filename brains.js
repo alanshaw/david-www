@@ -238,18 +238,15 @@ module.exports.getInfo = function (manifest, opts, cb) {
           var rangeVersions = filterVersionsInRange(deps[depName].versions, deps[depName].required)
           var advisories = getAdvisories(depName, rangeVersions)
 
-          // Insecure trumps everything
-          if (status != "insecure") {
-            // If there's an advisory then these dependencies are insecure
-            if (advisories.length) {
-              status = "insecure"
-            // If there is an updated STABLE dependency then this dep is out of date
-            } else if (updatedStableDeps[depName]) {
-              status = "outofdate"
-            // If it is in the UNSTABLE list, and has no stable version then consider out of date
-            } else if (updatedDeps[depName] && !updatedDeps[depName].stable) {
-              status = "outofdate"
-            }
+          // If there's an advisory then these dependencies are insecure
+          if (advisories.length) {
+            status = "insecure"
+          // If there is an updated STABLE dependency then this dep is out of date
+          } else if (updatedStableDeps[depName]) {
+            status = "outofdate"
+          // If it is in the UNSTABLE list, and has no stable version then consider out of date
+          } else if (updatedDeps[depName] && !updatedDeps[depName].stable) {
+            status = "outofdate"
           }
 
           var pinned = isPinned(deps[depName].required)
@@ -290,7 +287,9 @@ module.exports.getInfo = function (manifest, opts, cb) {
         // Figure out the overall status for this manifest
         var status = depList.length ? "uptodate" : "none";
 
-        if (depList.length && totals.unpinned.outOfDate) {
+        if (totals.advisories) {
+          status = "insecure"
+        } else if (totals.unpinned.outOfDate) {
 
           if (totals.unpinned.outOfDate / depList.length > 0.25) {
             status = "outofdate"
