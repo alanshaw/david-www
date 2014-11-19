@@ -62,7 +62,7 @@ function getRepos (user, authToken, options, cb) {
 function createGetInfoTask (user, repo, authToken) {
   return function (cb) {
     manifest.getManifest(user, repo.name, null, authToken, function (er, manifest) {
-      // This is fine - perhaps the repo doesn"t have a package.json
+      // This is fine - perhaps the repo doesn't have a package.json
       if (er) return cb()
 
       brains.getInfo(manifest, function (er, info) {

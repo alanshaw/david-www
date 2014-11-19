@@ -57,7 +57,7 @@ exports.getManifest = function (user, repo, ref, authToken, cb) {
 
   var gh = github.getInstance(authToken)
     , batchKey = [user, repo, authToken].join("-")
-  
+
   if (batch.exists(batchKey)) {
     return batch.push(batchKey, cb)
   }
@@ -103,7 +103,7 @@ exports.getManifest = function (user, repo, ref, authToken, cb) {
       // Get repo info so we can determine private/public status
       gh.repos.get({user: user, repo: repo}, onGetRepo)
     }
-    
+
     function onGetRepo (er, repoData) {
       if (er) {
         console.error("Failed to get repo data", user, repo, er)
@@ -120,7 +120,7 @@ exports.getManifest = function (user, repo, ref, authToken, cb) {
       manifests[user][repo][ref] = manifest
 
       console.log("Cached at", user, repo, ref);
-      
+
       batch.call(batchKey, function (cb) {
         cb(null, manifest.data)
       })

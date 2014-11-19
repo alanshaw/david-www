@@ -63,7 +63,7 @@ function getPublishDates (modName, modVers, cb) {
         // Flip `time` from {[version]: [date]} to {[date]: [version]}
         var versionsByDate = Object.keys(time).filter(function (ver) {
           return semver.valid(ver, true)
-        }).reduce(function(versions, version) {
+        }).reduce(function (versions, version) {
           versions[time[version]] = version
           return versions
         }, {})

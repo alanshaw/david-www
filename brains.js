@@ -54,7 +54,7 @@ function getCachedDependencies (manifest, opts) {
   depNames.forEach(function (depName) {
     var info = cache.get(depName)
 
-    if (!info) return;
+    if (!info) return
 
     pkgs[depName] = {required: deps[depName], stable: info.stable, latest: info.latest, versions: info.versions}
   })
@@ -207,14 +207,14 @@ module.exports.getInfo = function (manifest, opts, cb) {
     if (er) return cb(er)
 
     // Get ALL updated dependencies including unstable
-    getUpdatedDependencies(manifest, davidOptions, function (er, updatedDeps) {
-      if (er) return cb(er)
+    getUpdatedDependencies(manifest, davidOptions, function (err, updatedDeps) {
+      if (err) return cb(err)
 
       davidOptions.stable = true
 
       // Get STABLE updated dependencies
-      getUpdatedDependencies(manifest, davidOptions, function (er, updatedStableDeps) {
-        if (er) return cb(er)
+      getUpdatedDependencies(manifest, davidOptions, function (err, updatedStableDeps) {
+        if (err) return cb(err)
 
         var depNames = Object.keys(deps).sort()
           , totals = {
@@ -285,20 +285,20 @@ module.exports.getInfo = function (manifest, opts, cb) {
         })
 
         // Figure out the overall status for this manifest
-        var status = depList.length ? "uptodate" : "none";
+        var overallStatus = depList.length ? "uptodate" : "none"
 
         if (totals.advisories) {
-          status = "insecure"
+          overallStatus = "insecure"
         } else if (totals.unpinned.outOfDate) {
 
           if (totals.unpinned.outOfDate / depList.length > 0.25) {
-            status = "outofdate"
+            overallStatus = "outofdate"
           } else {
-            status = "notsouptodate"
+            overallStatus = "notsouptodate"
           }
         }
 
-        cb(null, {status: status, deps: depList, totals: totals})
+        cb(null, {status: overallStatus, deps: depList, totals: totals})
       })
     })
   })

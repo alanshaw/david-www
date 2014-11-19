@@ -4,6 +4,7 @@ var d3 = require("d3")
 var Handlebars = require("handlebars")
 var moment = require("moment")
 var fs = require("fs")
+var path = require("path")
 var david = require("./david")
 
 require("./vendor/jquery.feed")
@@ -32,7 +33,7 @@ $("#home-page").each(function () {
 
   // Green text if it is... wait a minute should this be tied to repo health not.
   badge.load(function () {
-    if (badge.attr("src") == "/img/status/outofdate.svg") return;
+    if (badge.attr("src") == "/img/status/outofdate.svg") return
     url.removeClass("nope")
     badge.show()
   })
@@ -47,7 +48,7 @@ $("#home-page").each(function () {
       entry.datetime = moment(entry.updated).format()
       entry.formattedDate = moment(entry.updated).format("MMMM Do YYYY, HH:mm")
 
-      var tpl = fs.readFileSync(__dirname + "/../../dist/inc/news.html", {encoding: "utf8"})
+      var tpl = fs.readFileSync(path.join(__dirname, "/../../dist/inc/news.html"), {encoding: "utf8"})
       $("#stats").append(Handlebars.compile(tpl)(entry))
     }
   })

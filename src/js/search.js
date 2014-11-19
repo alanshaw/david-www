@@ -31,7 +31,7 @@ $("#search-page").each(function () {
       if (!Object.keys(results).length) {
         data = dependencyCounts
       } else {
-        Object.keys(results).forEach(function(pkgName) {
+        Object.keys(results).forEach(function (pkgName) {
           data[pkgName] = results[pkgName].count + 1
         })
       }
