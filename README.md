@@ -26,8 +26,9 @@ npm install
 grunt
 ```
 
+Register a github personal oauth token and add it to `config/default.json`.  
+
 (Optional) If you want to use "sign in" feature you should:
-* Register a github personal oauth token and add it to `config/default.json`.  
 * Register a github developer application and add oauth client id and secret to `config/default.json`.
 * Developer application should have callback URL: `http://localhost:1337/auth/callback`
 
