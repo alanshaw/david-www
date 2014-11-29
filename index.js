@@ -50,32 +50,32 @@ app.get("/stats",                              statsPage)
 app.get("/search",                             searchPage)
 app.get("/search.json",                        searchQuery)
 app.get("/package/:pkg/changes.json",          changes)
-app.get("/:user/:repo/dev-info.json",          devInfo)
-app.get("/:user/:repo/info.json",              info)
-app.get("/:user/:repo/peer-info.json",         peerInfo)
-app.get("/:user/:repo/optional-info.json",     optionalInfo)
-app.get("/:user/:repo/graph.json",             dependencyGraph)
-app.get("/:user/:repo/dev-graph.json",         devDependencyGraph)
-app.get("/:user/:repo/peer-graph.json",        peerDependencyGraph)
-app.get("/:user/:repo/optional-graph.json",    optionalDependencyGraph)
-app.get("/:user/:repo/rss.xml",                rssFeed)
-app.get("/:user/:repo/dev-rss.xml",            devRssFeed)
-app.get("/:user/:repo/status.png",             statusBadge)
-app.get("/:user/:repo/status@2x.png",          retinaStatusBadge)
-app.get("/:user/:repo/status.svg",             svgStatusBadge)
-app.get("/:user/:repo/dev-status.png",         devStatusBadge)
-app.get("/:user/:repo/dev-status@2x.png",      retinaDevStatusBadge)
-app.get("/:user/:repo/dev-status.svg",         svgDevStatusBadge)
-app.get("/:user/:repo/peer-status.png",        peerStatusBadge)
-app.get("/:user/:repo/peer-status@2x.png",     retinaPeerStatusBadge)
-app.get("/:user/:repo/peer-status.svg",        svgPeerStatusBadge)
-app.get("/:user/:repo/optional-status.png",    optionalStatusBadge)
-app.get("/:user/:repo/optional-status@2x.png", retinaOptionalStatusBadge)
-app.get("/:user/:repo/optional-status.svg",    svgOptionalStatusBadge)
-app.get("/:user/:repo@2x.png",                 retinaStatusBadge)
-app.get("/:user/:repo.svg",                    svgStatusBadge)
-app.get("/:user/:repo.png",                    statusBadge)
-app.get("/:user/:repo",                        statusPage)
+app.get("/:user/:repo/:ref?/dev-info.json",          devInfo)
+app.get("/:user/:repo/:ref?/info.json",              info)
+app.get("/:user/:repo/:ref?/peer-info.json",         peerInfo)
+app.get("/:user/:repo/:ref?/optional-info.json",     optionalInfo)
+app.get("/:user/:repo/:ref?/graph.json",             dependencyGraph)
+app.get("/:user/:repo/:ref?/dev-graph.json",         devDependencyGraph)
+app.get("/:user/:repo/:ref?/peer-graph.json",        peerDependencyGraph)
+app.get("/:user/:repo/:ref?/optional-graph.json",    optionalDependencyGraph)
+app.get("/:user/:repo/:ref?/rss.xml",                rssFeed)
+app.get("/:user/:repo/:ref?/dev-rss.xml",            devRssFeed)
+app.get("/:user/:repo/:ref?/status.png",             statusBadge)
+app.get("/:user/:repo/:ref?/status@2x.png",          retinaStatusBadge)
+app.get("/:user/:repo/:ref?/status.svg",             svgStatusBadge)
+app.get("/:user/:repo/:ref?/dev-status.png",         devStatusBadge)
+app.get("/:user/:repo/:ref?/dev-status@2x.png",      retinaDevStatusBadge)
+app.get("/:user/:repo/:ref?/dev-status.svg",         svgDevStatusBadge)
+app.get("/:user/:repo/:ref?/peer-status.png",        peerStatusBadge)
+app.get("/:user/:repo/:ref?/peer-status@2x.png",     retinaPeerStatusBadge)
+app.get("/:user/:repo/:ref?/peer-status.svg",        svgPeerStatusBadge)
+app.get("/:user/:repo/:ref?/optional-status.png",    optionalStatusBadge)
+app.get("/:user/:repo/:ref?/optional-status@2x.png", retinaOptionalStatusBadge)
+app.get("/:user/:repo/:ref?/optional-status.svg",    svgOptionalStatusBadge)
+app.get("/:user/:repo/:ref?@2x.png",                 retinaStatusBadge)
+app.get("/:user/:repo/:ref?.svg",                    svgStatusBadge)
+app.get("/:user/:repo/:ref?.png",                    statusBadge)
+app.get("/:user/:repo/:ref?",                        statusPage)
 app.get("/:user",                              profilePage)
 app.get("/",                                   indexPage)
 
@@ -252,7 +252,7 @@ function sendStatusBadge (req, res, opts) {
   res.setHeader("Cache-Control", "no-cache")
 
   req.session.get("session/access-token", function (err, authToken) {
-    manifest.getManifest(req.params.user, req.params.repo, authToken, function (err, manifest) {
+    manifest.getManifest(req.params.user, req.params.repo, req.params.ref || "master", authToken, function (err, manifest) {
       if (err) {
         return res.status(404).sendFile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
       }
@@ -318,7 +318,7 @@ function retinaOptionalStatusBadge (req, res) {
 
 function sendDependencyGraph (req, res, opts) {
   req.session.get("session/access-token", function (err, authToken) {
-    manifest.getManifest(req.params.user, req.params.repo, authToken, function (er, manifest) {
+    manifest.getManifest(req.params.user, req.params.repo, req.params.ref || "master", authToken, function (er, manifest) {
       if (errors.happened(er, req, res, "Failed to get package.json")) {
         return
       }
@@ -365,7 +365,7 @@ function optionalDependencyGraph (req, res) {
 
 function buildRssFeed (req, res, dev) {
   req.session.get("session/access-token", function (err, authToken) {
-    manifest.getManifest(req.params.user, req.params.repo, authToken, function (er, manifest) {
+    manifest.getManifest(req.params.user, req.params.repo, req.params.ref || "master", authToken, function (er, manifest) {
       if (errors.happened(er, req, res, "Failed to get package.json")) {
         return
       }
@@ -427,7 +427,7 @@ function withManifestAndInfo (req, res, opts, cb) {
   }
 
   req.session.get("session/access-token", function (err, authToken) {
-    manifest.getManifest(req.params.user, req.params.repo, authToken, function (er, manifest) {
+    manifest.getManifest(req.params.user, req.params.repo, req.params.ref || "master", authToken, function (er, manifest) {
       if (errors.happened(er, req, res, "Failed to get package.json")) {
         return
       }

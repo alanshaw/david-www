@@ -18,10 +18,11 @@ var events = require("events")
 
 module.exports = exports = new events.EventEmitter()
 
-function Manifest (data, priv) {
+function Manifest (data, priv, ref) {
   this.data = data
   this.private = priv // Is manifest in a private repo?
   this.expires = moment().add(Manifest.TTL)
+  this.ref = ref
 }
 
 Manifest.TTL = moment.duration({hours: 1})
@@ -45,11 +46,11 @@ function parseManifest (body) {
   }
 }
 
-exports.getManifest = function (user, repo, authToken, cb) {
+exports.getManifest = function (user, repo, ref, authToken, cb) {
   var manifest = manifests[user] ? manifests[user][repo] : null
 
-  if (manifest && !manifest.private && manifest.expires > new Date()) {
-    console.log("Using cached manifest", manifest.data.name, manifest.data.version)
+  if (manifest && !manifest.private && manifest.ref == ref && manifest.expires > new Date()) {
+    console.log("Using cached manifest", manifest.data.name, manifest.data.version, ref)
     return cb(null, JSON.parse(JSON.stringify(manifest.data)))
   }
 
@@ -62,14 +63,14 @@ exports.getManifest = function (user, repo, authToken, cb) {
 
   batch.push(batchKey, cb)
 
-  gh.repos.getContent({user: user, repo: repo, path: "package.json"}, function (er, resp) {
+  gh.repos.getContent({user: user, repo: repo, ref: ref, path: "package.json"}, function (er, resp) {
     if (er) {
       console.error("Failed to get package.json", er)
       return batch.call(batchKey, function (cb) { cb(er) })
     }
 
-    if (manifest && manifest.expires > new Date()) {
-      console.log("Using cached private manifest", manifest.data.name, manifest.data.version)
+    if (manifest && manifest.ref == ref && manifest.expires > new Date()) {
+      console.log("Using cached private manifest", manifest.data.name, manifest.data.version, ref)
       return batch.call(batchKey, function (cb) {
         cb(null, JSON.parse(JSON.stringify(manifest.data)))
       })
@@ -85,7 +86,7 @@ exports.getManifest = function (user, repo, authToken, cb) {
       })
     }
 
-    console.log("Got manifest", data.name, data.version)
+    console.log("Got manifest", data.name, data.version, ref)
 
     if (!authToken) {
       // There was no authToken so MUST be public
@@ -103,7 +104,7 @@ exports.getManifest = function (user, repo, authToken, cb) {
 
       var oldManifest = manifest
 
-      manifest = new Manifest(data, repoData.private)
+      manifest = new Manifest(data, repoData.private, ref)
 
       manifests[user] = manifests[user] || {}
       manifests[user][repo] = manifest
