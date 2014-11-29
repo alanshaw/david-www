@@ -253,7 +253,7 @@ function sendStatusBadge (req, res, opts) {
   res.setHeader("Cache-Control", "no-cache")
 
   req.session.get("session/access-token", function (err, authToken) {
-    manifest.getManifest(req.params.user, req.params.repo, req.params.ref || "master", authToken, function (err, manifest) {
+    manifest.getManifest(req.params.user, req.params.repo, req.params.ref, authToken, function (err, manifest) {
       if (err) {
         return res.status(404).sendFile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
       }
@@ -319,7 +319,7 @@ function retinaOptionalStatusBadge (req, res) {
 
 function sendDependencyGraph (req, res, opts) {
   req.session.get("session/access-token", function (err, authToken) {
-    manifest.getManifest(req.params.user, req.params.repo, req.params.ref || "master", authToken, function (er, manifest) {
+    manifest.getManifest(req.params.user, req.params.repo, req.params.ref, authToken, function (er, manifest) {
       if (errors.happened(er, req, res, "Failed to get package.json")) {
         return
       }
@@ -366,7 +366,7 @@ function optionalDependencyGraph (req, res) {
 
 function buildRssFeed (req, res, dev) {
   req.session.get("session/access-token", function (err, authToken) {
-    manifest.getManifest(req.params.user, req.params.repo, req.params.ref || "master", authToken, function (er, manifest) {
+    manifest.getManifest(req.params.user, req.params.repo, req.params.ref, authToken, function (er, manifest) {
       if (errors.happened(er, req, res, "Failed to get package.json")) {
         return
       }
@@ -428,7 +428,7 @@ function withManifestAndInfo (req, res, opts, cb) {
   }
 
   req.session.get("session/access-token", function (err, authToken) {
-    manifest.getManifest(req.params.user, req.params.repo, req.params.ref || "master", authToken, function (er, manifest) {
+    manifest.getManifest(req.params.user, req.params.repo, req.params.ref, authToken, function (er, manifest) {
       if (errors.happened(er, req, res, "Failed to get package.json")) {
         return
       }

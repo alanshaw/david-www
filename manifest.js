@@ -18,11 +18,10 @@ var events = require("events")
 
 module.exports = exports = new events.EventEmitter()
 
-function Manifest (data, priv, ref) {
+function Manifest (data, priv) {
   this.data = data
   this.private = priv // Is manifest in a private repo?
   this.expires = moment().add(Manifest.TTL)
-  this.ref = ref
 }
 
 Manifest.TTL = moment.duration({hours: 1})
@@ -48,8 +47,9 @@ function parseManifest (body) {
 
 exports.getManifest = function (user, repo, ref, authToken, cb) {
   var manifest = manifests[user] ? manifests[user][repo] : null
+  ref = ref || "master"
 
-  if (manifest && !manifest.private && manifest.ref == ref && manifest.expires > new Date()) {
+  if (manifest && !manifest.private && manifest.data.ref == ref && manifest.expires > new Date()) {
     console.log("Using cached manifest", manifest.data.name, manifest.data.version, ref)
     return cb(null, JSON.parse(JSON.stringify(manifest.data)))
   }
@@ -69,7 +69,7 @@ exports.getManifest = function (user, repo, ref, authToken, cb) {
       return batch.call(batchKey, function (cb) { cb(er) })
     }
 
-    if (manifest && manifest.ref == ref && manifest.expires > new Date()) {
+    if (manifest && manifest.data.ref == ref && manifest.expires > new Date()) {
       console.log("Using cached private manifest", manifest.data.name, manifest.data.version, ref)
       return batch.call(batchKey, function (cb) {
         cb(null, JSON.parse(JSON.stringify(manifest.data)))
@@ -104,7 +104,8 @@ exports.getManifest = function (user, repo, ref, authToken, cb) {
 
       var oldManifest = manifest
 
-      manifest = new Manifest(data, repoData.private, ref)
+      data.ref = ref
+      manifest = new Manifest(data, repoData.private)
 
       manifests[user] = manifests[user] || {}
       manifests[user][repo] = manifest

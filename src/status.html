@@ -1,6 +1,6 @@
 @@include('inc/top.html', {
   "id": "status-page",
-  "title": "Dependency status for {{user}} - {{manifest.name}} {{manifest.version}}",
+  "title": "Dependency status for {{user}} - {{manifest.name}} {{manifest.version}} from {{manifest.ref}}",
   "headHtml": "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" href=\"/{{user}}/{{repo}}{{ref}}/rss.xml\">"
 })
 
@@ -8,7 +8,7 @@
     <h1>
       <a href="@@githubsite/{{user}}">{{user}}</a> -
       <a href="@@githubsite/{{user}}/{{repo}}{{ref}}">{{manifest.name}}</a>
-      <span>{{manifest.version}}</span>
+      <span>{{manifest.version}} from {{manifest.ref}}</span>
       <a id="status" class="badge" href="#badge-embed" title="Get badge embed code"><img src="/{{user}}/{{repo}}{{ref}}.svg" alt="Dependency status"></a>
       {{#if manifest.devDependencies}}
       <a id="dev-status" class="badge" href="#dev-badge-embed" title="Get dev badge embed code" data-type="dev"><img src="/{{user}}/{{repo}}{{ref}}/dev-status.svg" alt="devDependency status"></a>
