@@ -165,6 +165,7 @@ function statusPage (req, res) {
     _renderWithCommonData(res, "status", {
       user: req.params.user,
       repo: req.params.repo,
+      ref:  req.params.ref ? "/" + req.params.ref : "",
       manifest: manifest,
       info: info
     })
