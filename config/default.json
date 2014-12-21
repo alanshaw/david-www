@@ -17,7 +17,7 @@
     "token": null
   },
   "npm": {
-    "hostname": "http://npmjs.org",
+    "hostname": "https://www.npmjs.org",
     "options": {
       "registry": "http://registry.npmjs.org"
     },
