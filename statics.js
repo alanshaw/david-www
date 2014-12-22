@@ -13,7 +13,7 @@ module.exports.init = function (app) {
 
   app.use(favicon(__dirname + "/dist/favicon.ico", { maxAge: oneWeek }))
 
-  app.get("/apple-touch-icon-precomposed.png", function (req, res) {
+  app.get("/apple-touch-icon.png", function (req, res) {
     res.sendfile(__dirname + "/dist" + req.url, { maxAge: oneWeek })
   })
 }
