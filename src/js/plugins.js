@@ -99,7 +99,7 @@ window.___gcfg = {lang: 'en-GB'};
     js = d.createElement(s);
     js.async = true;
     js.id = id;
-    js.src = 'https://platform.twitter.com/widgets.js';
+    js.src = '//platform.twitter.com/widgets.js';
     fjs.parentNode.insertBefore(js, fjs);
   }
 }(document, 'script', 'twitter-wjs');
