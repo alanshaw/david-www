@@ -4,7 +4,6 @@
   <select id="badge-theme">
     <option value="svg">SVG</option>
     <option value="png">PNG</option>
-    <option value="flat">Flat</option>
     <option value="flat-square">Flat Square</option>
   </select>
   <div class="theme theme-svg">
@@ -20,13 +19,6 @@
     <input id="badge-markdown-png" type="text" value="[![Dependency Status](@@hostname/{{user}}/{{repo}}.png)](@@hostname/{{user}}/{{repo}})">
     <label for="badge-html-png">HTML</label>
     <input id="badge-html-png" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}.png&quot;/&gt;&lt;/a&gt;">
-  </div>
-  <div class="theme theme-flat">
-    <a href="/{{user}}/{{repo}}.svg?style=flat"><img src="/{{user}}/{{repo}}.svg?style=flat" alt="Dependency status"></a>
-    <label for="badge-markdown-flat">Markdown</label>
-    <input id="badge-markdown-flat" type="text" value="[![Dependency Status](@@hostname/{{user}}/{{repo}}.svg?style=flat)](@@hostname/{{user}}/{{repo}})">
-    <label for="badge-html-flat">HTML</label>
-    <input id="badge-html-flat" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}.svg?style=flat&quot;/&gt;&lt;/a&gt;">
   </div>
   <div class="theme theme-flat-square">
     <a href="/{{user}}/{{repo}}.svg?style=flat-square"><img src="/{{user}}/{{repo}}.svg?style=flat-square" alt="Dependency status"></a>

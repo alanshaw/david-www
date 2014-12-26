@@ -14,8 +14,8 @@
     {{#each repos}}
     <li class="{{info.status}}">
       <a href="/{{../user}}/{{repo.name}}">{{#if manifest.name}}{{manifest.name}}{{else}}{{repo.name}}{{/if}}</a>
-      <a href="/{{../user}}/{{repo.name}}/dev-status"><img src="/{{../user}}/{{repo.name}}/dev-status.svg?style=flat" alt="devDependency status"></a>
-      <a href="/{{../user}}/{{repo.name}}"><img src="/{{../user}}/{{repo.name}}.svg?style=flat" alt="Dependency status"></a>
+      <a href="/{{../user}}/{{repo.name}}/dev-status"><img src="/{{../user}}/{{repo.name}}/dev-status.svg" alt="devDependency status"></a>
+      <a href="/{{../user}}/{{repo.name}}"><img src="/{{../user}}/{{repo.name}}.svg" alt="Dependency status"></a>
     </li>
     {{/each}}
   </ul>
