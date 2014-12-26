@@ -1,6 +1,5 @@
-*.iml
-.idea
 config/runtime.json
 dist
 node_modules
 data
+npm-debug.log

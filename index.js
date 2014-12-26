@@ -161,6 +161,7 @@ function newsRssFeed (req, res) {
  */
 function statusPage (req, res) {
   withManifestAndInfo(req, res, function (manifest, info) {
+    console.log(info)
     _renderWithCommonData(res, "status", {
       user: req.params.user,
       repo: req.params.repo,
@@ -239,7 +240,7 @@ function badgePath (depsType, status, retina, style, extension) {
   retina = retina ? "@2x" : ""
   extension = extension == "png" ? "png" : "svg"
   style = extension == "svg" && (style == "flat" || style == "flat-square") ? "-" + style : ""
-  return "dist/img/status/" + depsType + status + retina + style + "." + extension
+  return __dirname + "/dist/img/status/" + depsType + status + retina + style + "." + extension
 }
 
 /**
@@ -253,15 +254,15 @@ function sendStatusBadge (req, res, opts) {
   req.session.get("session/access-token", function (err, authToken) {
     manifest.getManifest(req.params.user, req.params.repo, authToken, function (err, manifest) {
       if (err) {
-        return res.status(404).sendfile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
+        return res.status(404).sendFile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
       }
 
       brains.getInfo(manifest, opts, function (err, info) {
         if (err) {
-          return res.status(500).sendfile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
+          return res.status(500).sendFile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
         }
 
-        res.sendfile(badgePath(getDepsType(opts), info.status, opts.retina, req.query.style, opts.extension))
+        res.sendFile(badgePath(getDepsType(opts), info.status, opts.retina, req.query.style, opts.extension))
       })
     })
   })

@@ -201,7 +201,7 @@ module.exports.getInfo = function (manifest, opts, cb) {
     opts.npm = config.npm.options
   }
 
-  var davidOptions = {dev: opts.dev, peer: opts.peer, optional: opts.optional, loose: true, npm: opts.npm, warn: {E404: true}, versions: true}
+  var davidOptions = {dev: opts.dev, peer: opts.peer, optional: opts.optional, loose: true, npm: opts.npm, versions: true}
 
   getDependencies(manifest, davidOptions, function (er, deps) {
     if (er) return cb(er)

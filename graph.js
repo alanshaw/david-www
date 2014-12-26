@@ -90,7 +90,7 @@ function getDependencyGraph (depName, version, cb) {
           // The range could be a tag, or a git repo
           if (!depDepVersion) {
 
-            // Add a dummy package with the range as it"s version
+            // Add a dummy package with the range as it's version
             dep.deps[depDepName] = new Package(depDepName, depDepRange)
 
             got++
