@@ -23,13 +23,18 @@ $("#dependency-counts-graph").each(function () {
   david.renderDependencyCountsGraph = function (data) {
     if (!Object.keys(data).length) return
 
+    // Simplify graph by removing nodes with < 2 deps
+    Object.keys(data).forEach(function (depName) {
+      if (data[depName] < 2) delete data[depName]
+    })
+
     // Get the max count
     var max = Object.keys(data).reduce(function (max, depName) {
-        return data[depName] > max ? data[depName] : max
-      }, 1)
+      return data[depName] > max ? data[depName] : max
+    }, 1)
 
     var color = d3.scale.linear()
-      .domain([1, max])
+      .domain([2, max])
       .range(["#b8e3f3", "#30aedc"])
 
     function transformData (data) {
