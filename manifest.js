@@ -46,10 +46,11 @@ function parseManifest (body) {
 }
 
 exports.getManifest = function (user, repo, ref, authToken, cb) {
-  var manifest = manifests[user] ? manifests[user][repo] : null
-  ref = ref || "master"
+  // if ref is "undefined" - use default branch
+  ref = ref || null
+  var manifest = manifests[user] && manifests[user][repo] ? manifests[user][repo][ref] : null
 
-  if (manifest && !manifest.private && manifest.data.ref == ref && manifest.expires > new Date()) {
+  if (manifest && !manifest.private && manifest.expires > new Date()) {
     console.log("Using cached manifest", manifest.data.name, manifest.data.version, ref)
     return cb(null, JSON.parse(JSON.stringify(manifest.data)))
   }
@@ -63,13 +64,20 @@ exports.getManifest = function (user, repo, ref, authToken, cb) {
 
   batch.push(batchKey, cb)
 
-  gh.repos.getContent({user: user, repo: repo, ref: ref, path: "package.json"}, function (er, resp) {
+  var opts = {user: user, repo: repo, path: "package.json"}
+
+  // Add "ref" options if ref is set. Otherwise use default branch.
+  if (ref) {
+    opts.ref = ref
+  }
+
+  gh.repos.getContent(opts, function (er, resp) {
     if (er) {
       console.error("Failed to get package.json", er)
       return batch.call(batchKey, function (cb) { cb(er) })
     }
 
-    if (manifest && manifest.data.ref == ref && manifest.expires > new Date()) {
+    if (manifest && manifest.expires > new Date()) {
       console.log("Using cached private manifest", manifest.data.name, manifest.data.version, ref)
       return batch.call(batchKey, function (cb) {
         cb(null, JSON.parse(JSON.stringify(manifest.data)))
@@ -108,7 +116,8 @@ exports.getManifest = function (user, repo, ref, authToken, cb) {
       manifest = new Manifest(data, repoData.private)
 
       manifests[user] = manifests[user] || {}
-      manifests[user][repo] = manifest
+      manifests[user][repo] = manifests[user][repo] || {}
+      manifests[user][repo][ref] = manifest
       
       batch.call(batchKey, function (cb) {
         cb(null, manifest.data)
@@ -167,6 +176,13 @@ registry.on("change", function (change) {
   // Expire the cached manifest for this user/repo
   if (info && manifests[info.user] && manifests[info.user][info.project]) {
     console.log("Expiring cached manifest", info.user, info.project)
-    manifests[info.user][info.project].expires = moment()
+    var repoBranches = manifests[info.user][info.project]
+      
+    // Reset cache for all branches
+    for (var ref in repoBranches) {
+      if (repoBranches.hasOwnProperty(ref)) {
+          repoBranches.expires = moment()
+      }
+    }
   }
 })
