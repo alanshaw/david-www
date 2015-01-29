@@ -25,7 +25,7 @@ function updateAdvisories (cb) {
     if (er) return cb(er)
 
     var tasks = files.filter(function (a) {
-      return a.name != "template.md"
+      return a.name != "template.md" && a.name != "marked_redos.md"
     }).map(function (a) {
       return function (cb) {
         request.get(rawUrl + "/" + a.name, function (er, res, md) {
