@@ -1,6 +1,6 @@
-config/runtime.json
-dist
-node_modules
-data
-npm-debug.log
 .DS_Store
+config/runtime.json
+data/
+dist/
+node_modules/
+npm-debug.log
