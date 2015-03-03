@@ -1,6 +1,6 @@
 {
   "name": "david-www",
-  "version": "9.0.2",
+  "version": "9.1.0",
   "description": "Watching your Node.js dependencies.",
   "main": "index.js",
   "homepage": "https://github.com/alanshaw/david-www",
