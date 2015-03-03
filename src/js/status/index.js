@@ -142,7 +142,7 @@ $("#status-page").each(function () {
 
   badges.click(function () {
     if (!$($(this).attr("href")).size()) {
-      var data = {type: $(this).data("type"), user: repo.data("user"), repo: repo.data("repo")}
+      var data = {type: $(this).data("type"), user: repo.data("user"), repo: repo.data("repo"), ref: repo.data("ref")}
       var ct = $(data.type ? embedTmplType(data) : embedTmpl(data))
 
       $("input", ct).each(function () {
