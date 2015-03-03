@@ -161,7 +161,6 @@ function newsRssFeed (req, res) {
  */
 function statusPage (req, res) {
   withManifestAndInfo(req, res, function (manifest, info) {
-    console.log(info)
     _renderWithCommonData(res, "status", {
       user: req.params.user,
       repo: req.params.repo,
