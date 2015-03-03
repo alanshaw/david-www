@@ -66,6 +66,7 @@
     "grunt-contrib-uglify": "^0.8.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-include-replace": "^3.0.0",
+    "load-grunt-tasks": "^3.1.0",
     "rewire": "^2.3.1"
   },
   "engines": {
