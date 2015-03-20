@@ -10,8 +10,7 @@ Node.js based web service that tells you when your project npm dependencies are 
 To use David, your project must include a [package.json](https://docs.npmjs.com/files/package.json)
 file in the root of your repository.
 
-Getting Started
----------------
+## Getting Started
 
 With [Node.js](http://nodejs.org/) and [Grunt](http://gruntjs.com/) installed already,
 do the following:
@@ -24,7 +23,7 @@ npm install
 grunt
 ```
 
-Register a github personal oauth token and add it to `config/default.json`.  
+Register a github personal oauth token and add it to `config/default.json`.
 
 (Optional) If you want to use "sign in" feature you should:
 * Register a github developer application and add oauth client id and secret to `config/default.json`.
@@ -38,11 +37,10 @@ node .
 ```
 
 
-Example usage
--------------
+## Example usage
 
 View a web page of all dependencies (and their updates, and their versions)
-for __public__ GitHub repository "grunt-jsio" owned by "alanshaw":
+for **public** GitHub repository "grunt-jsio" owned by "alanshaw":
 
 ```sh
 curl http://localhost:1337/alanshaw/grunt-jsio
