@@ -235,12 +235,15 @@ function getDepsType (opts) {
   return type
 }
 
-function badgePath (depsType, status, retina, style, extension) {
-  depsType = depsType ? depsType + "-" : ""
-  retina = retina ? "@2x" : ""
-  extension = extension == "png" ? "png" : "svg"
-  style = extension == "svg" && (style == "flat-square") ? "-" + style : ""
-  return __dirname + "/dist/img/status/" + depsType + status + retina + style + "." + extension
+function getBadgePath (status, opts) {
+  opts = opts || {}
+
+  var type = opts.type ? opts.type + "-" : ""
+  var retina = opts.retina ? "@2x" : ""
+  var extension = opts.extension == "png" ? "png" : "svg"
+  var style = extension == "svg" && (style == "flat-square") ? "-" + style : ""
+
+  return __dirname + "/dist/img/status/" + type + status + retina + style + "." + extension
 }
 
 /**
@@ -251,18 +254,31 @@ function sendStatusBadge (req, res, opts) {
 
   res.setHeader("Cache-Control", "no-cache")
 
-  req.session.get("session/access-token", function (err, authToken) {
-    manifest.getManifest(req.params.user, req.params.repo, req.params.ref, authToken, function (err, manifest) {
-      if (err) {
-        return res.status(404).sendFile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
-      }
+  var badgePathOpts = {
+    type: getDepsType(opts),
+    retina: opts.retina,
+    style: req.query.style,
+    extension: opts.extension
+  }
 
-      brains.getInfo(manifest, opts, function (err, info) {
-        if (err) {
-          return res.status(500).sendFile(badgePath(getDepsType(opts), "unknown", opts.retina, req.query.style, opts.extension))
-        }
+  var sendFileCb = function (er) {
+    if (er) {
+      console.error("Failed to send status badge", er)
+      if (er.code == "ENOENT") return res.status(404).end()
+      res.status(500).end()
+    }
+  }
 
-        res.sendFile(badgePath(getDepsType(opts), info.status, opts.retina, req.query.style, opts.extension))
+  req.session.get("session/access-token", function (er, authToken) {
+    if (er) return res.status(500).sendFile(getBadgePath("unknown", badgePathOpts), sendFileCb)
+
+    manifest.getManifest(req.params.user, req.params.repo, req.params.ref, authToken, function (er, manifest) {
+      if (er) return res.status(404).sendFile(getBadgePath("unknown", badgePathOpts), sendFileCb)
+
+      brains.getInfo(manifest, opts, function (er, info) {
+        if (er) return res.status(500).sendFile(getBadgePath("unknown", badgePathOpts), sendFileCb)
+
+        res.sendFile(getBadgePath(info.status, badgePathOpts), sendFileCb)
       })
     })
   })
