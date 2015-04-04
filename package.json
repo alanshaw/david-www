@@ -30,7 +30,7 @@
     "async": "^0.9.0",
     "compression": "^1.4.1",
     "config": "^1.12.0",
-    "consolidate": "^0.11.0",
+    "consolidate": "^0.12.1",
     "couchwatch": "^0.6.0",
     "cycle": "^1.0.3",
     "d3": "^3.5.5",
@@ -50,7 +50,7 @@
     "npm": "^2.7.0",
     "request": "^2.53.0",
     "rss": "^1.1.1",
-    "semver": "^4.3.1",
+    "semver": "^4.3.3",
     "serve-favicon": "^2.2.0"
   },
   "devDependencies": {
