@@ -118,6 +118,8 @@ exports.getManifest = function (user, repo, ref, authToken, cb) {
       manifests[user] = manifests[user] || {}
       manifests[user][repo] = manifests[user][repo] || {}
       manifests[user][repo][ref] = manifest
+
+      console.log("Cached at", user, repo, ref);
       
       batch.call(batchKey, function (cb) {
         cb(null, manifest.data)
@@ -181,7 +183,7 @@ registry.on("change", function (change) {
     // Reset cache for all branches
     for (var ref in repoBranches) {
       if (repoBranches.hasOwnProperty(ref)) {
-          repoBranches.expires = moment()
+          repoBranches[ref].expires = moment()
       }
     }
   }
