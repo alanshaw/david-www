@@ -4,6 +4,7 @@ var d3 = require("d3")
 var merge = require("merge")
 var Handlebars = require("handlebars")
 var fs = require("fs")
+var path = require("path")
 var cycle = require("cycle")
 var david = require("../david")
 var transformData = require("./transform-data")
@@ -14,8 +15,8 @@ require("../vendor/jquery.fancybox.js")
 require("../vendor/jquery.ba-bbq.js")
 require("../vendor/jquery.ba-hashchange.js")
 
-var embedTmpl = Handlebars.compile(fs.readFileSync(__dirname + "/../../../dist/inc/embed-badge.html", {encoding: "utf8"}))
-var embedTmplType = Handlebars.compile(fs.readFileSync(__dirname + "/../../../dist/inc/embed-badge-type.html", {encoding: "utf8"}))
+var embedTmpl = Handlebars.compile(fs.readFileSync(path.join(__dirname, "/../../../dist/inc/embed-badge.html"), {encoding: "utf8"}))
+var embedTmplType = Handlebars.compile(fs.readFileSync(path.join(__dirname, "/../../../dist/inc/embed-badge-type.html"), {encoding: "utf8"}))
 
 $("#status-page").each(function () {
 
@@ -118,12 +119,12 @@ $("#status-page").each(function () {
           data.from = from
           data.to = to
 
-          var tpl = fs.readFileSync(__dirname + "/../../../dist/inc/changes.html", {encoding: "utf8"})
+          var tpl = fs.readFileSync(path.join(__dirname, "/../../../dist/inc/changes.html"), {encoding: "utf8"})
           container.html(Handlebars.compile(tpl)(data))
           $.fancybox.update()
         },
         error: function () {
-          container.html(fs.readFileSync(__dirname + "/../../../dist/inc/changelog-er.html", {encoding: "utf8"}))
+          container.html(fs.readFileSync(path.join(__dirname, "/../../../dist/inc/changelog-er.html"), {encoding: "utf8"}))
           $.fancybox.update()
         }
       })
@@ -202,7 +203,7 @@ $("#status-page").each(function () {
         depInfo.prepend(loading)
 
         $.getJSON(pathname + type + "-info.json", function (data) {
-          var tpl = fs.readFileSync(__dirname + "/../../../dist/inc/info.html", {encoding: "utf8"})
+          var tpl = fs.readFileSync(path.join(__dirname, "/../../../dist/inc/info.html"), {encoding: "utf8"})
           loading.remove()
           depInfo.html(Handlebars.compile(tpl)({ info: data }))
           initInfo(depInfo, type + "-graph.json")

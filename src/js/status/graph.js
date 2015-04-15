@@ -1,6 +1,6 @@
 var d3 = require("d3")
 
-var diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x] })
+var diagonal = d3.svg.diagonal().projection(function (d) { return [d.y, d.x] })
   , id = 0 // For nodes with no ID
 
 function create (container) {

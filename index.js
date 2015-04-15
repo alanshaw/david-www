@@ -1,3 +1,4 @@
+var path = require("path")
 var express = require("express")
 var compress = require("compression")
 var consolidate = require("consolidate")
@@ -27,7 +28,7 @@ var app = express()
 
 app.engine("html", consolidate.handlebars)
 app.set("view engine", "html")
-app.set("views", __dirname + "/dist")
+app.set("views", path.join(__dirname, "/dist"))
 app.use(compress())
 
 statics.init(app)

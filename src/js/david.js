@@ -2,9 +2,10 @@
 
 var d3 = require("d3")
 var fs = require("fs")
+var path = require("path")
 var Handlebars = require("handlebars")
 
-var npmsite = fs.readFileSync(__dirname + "/../../dist/inc/config-npmsite.html", {encoding: "utf8"})
+var npmsite = fs.readFileSync(path.join(__dirname, "/../../dist/inc/config-npmsite.html"), {encoding: "utf8"})
 
 var david = {}
 
@@ -60,7 +61,7 @@ $("#dependency-counts-graph").each(function () {
       .attr("class", "node")
       .attr("transform", function () {
         return "translate(" + diameter / 2 + "," + diameter / 2 + ")"
-      }).on("click", function(d) {
+      }).on("click", function (d) {
         window.location = npmsite + "/package/" + d.depName
       })
 
@@ -92,10 +93,10 @@ $("#dependency-counts-graph").each(function () {
   }
 })
 
-var loadingTpl = fs.readFileSync(__dirname + "/../../dist/inc/loading.html", {encoding: "utf8"})
+var loadingTpl = fs.readFileSync(path.join(__dirname, "/../../dist/inc/loading.html"), {encoding: "utf8"})
 
 david.createLoadingEl = function (text) {
-  return $(Handlebars.compile(loadingTpl)({text: (text || "Reticulating splines...")}))
+  return $(Handlebars.compile(loadingTpl)({text: text || "Reticulating splines..."}))
 }
 
 module.exports = david

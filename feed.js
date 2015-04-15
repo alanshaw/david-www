@@ -126,7 +126,7 @@ function getPackage (pkgName, cb) {
 
     console.warn(pkgName + " has no time information")
 
-    // We don"t know the date/time any of the versions for this package were published
+    // We don't know the date/time any of the versions for this package were published
     // Get latest and use unix epoch as publish date
     npm.commands.view([pkgName, "version"], true, function (er, data) {
       if (er) return cb(er)

@@ -6,7 +6,7 @@ module.exports = function(grunt) {
 
     pkg: grunt.file.readJSON("package.json"),
 
-    // Copy files that don"t need compilation to dist/
+    // Copy files that don't need compilation to dist/
     copy: {
       dist: {
         files: [
