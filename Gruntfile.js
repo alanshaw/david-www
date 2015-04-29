@@ -11,14 +11,14 @@ module.exports = function(grunt) {
       dist: {
         files: [
           // Copy all (non hidden) files (not directories) from src
-          {dest: "dist/", src: ["*", "!LICENSE.md"], filter: "isFile", expand: true, cwd: "src/"},
+          {dest: "dist/", src: ["*", "!LICENSE.md"], filter: "isFile", expand: true, cwd: "public/"},
 
           // Copy any JavaScript libs
-          {dest: "dist/", src: "js/vendor/*.min.js", expand: true, cwd: "src/"},
+          {dest: "dist/", src: "js/vendor/*.min.js", expand: true, cwd: "public/"},
 
           // Copy other resources
-          {dest: "dist/", src: "fonts/**", expand: true, cwd: "src/"},
-          {dest: "dist/", src: "img/**", expand: true, cwd: "src/"}
+          {dest: "dist/", src: "fonts/**", expand: true, cwd: "public/"},
+          {dest: "dist/", src: "img/**", expand: true, cwd: "public/"}
         ]
       }
     },
@@ -35,8 +35,8 @@ module.exports = function(grunt) {
           }
         },
         files: [
-          {src: "*.html", dest: "dist/", expand: true, cwd: "src/"},
-          {src: "inc/*.html", dest: "dist/", expand: true, cwd: "src/"}
+          {src: "*.html", dest: "dist/", expand: true, cwd: "public/"},
+          {src: "inc/*.html", dest: "dist/", expand: true, cwd: "public/"}
         ]
       }
     },
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
     less: {
       compile: {
         files: {
-          "dist/css/main-<%= pkg.version %>.css": "src/css/main.less"
+          "dist/css/main-<%= pkg.version %>.css": "public/css/main.less"
         }
       }
     },
@@ -63,7 +63,7 @@ module.exports = function(grunt) {
 
     browserify: {
       dist: {
-        files: {"dist/js/bundle-<%= pkg.version %>.js": "src/js/main.js"},
+        files: {"dist/js/bundle-<%= pkg.version %>.js": "public/js/main.js"},
         options: {transform: ["brfs"]}
       }
     },
@@ -86,7 +86,7 @@ module.exports = function(grunt) {
 
     // Lint the server JavaScript
     jshint: {
-      files: ["*.js", "src/js/*.js", "!src/js/plugins.js", "test/*.js"],
+      files: ["*.js", "public/js/*.js", "!public/js/plugins.js", "test/*.js"],
       options: {
         jshintrc: ".jshintrc"
       }
@@ -101,7 +101,7 @@ module.exports = function(grunt) {
     watch: {
       project: {
         options: {atBegin: true},
-        files: ["src/js/**/*.js", "src/css/**/*.less", "src/**/*.html", "src/img/**/*"],
+        files: ["public/js/**/*.js", "public/css/**/*.less", "public/**/*.html", "public/img/**/*"],
         tasks: ["copy", "includereplace", "less:compile", "browserify"]
       }
     },

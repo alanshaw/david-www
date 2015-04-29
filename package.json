@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "async": "^0.9.0",
+    "camelcase": "^1.0.2",
     "compression": "^1.4.1",
     "config": "^1.12.0",
     "consolidate": "^0.12.1",
@@ -49,6 +50,7 @@
     "moment": "^2.9.0",
     "npm": "^2.7.0",
     "request": "^2.53.0",
+    "require-directory": "^2.1.0",
     "rss": "^1.1.1",
     "semver": "^4.3.3",
     "serve-favicon": "^2.2.0"

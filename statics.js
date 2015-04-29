@@ -5,7 +5,7 @@ var oneDay = 86400000  // milliseconds: 60 * 60 * 24 * 1000
   , oneWeek = oneDay * 7
   , oneMonth = oneWeek * 30
 
-module.exports.init = function (app) {
+module.exports = function (app) {
   app.use("/css", express.static(__dirname + "/dist/css", { maxAge: oneMonth }))
   app.use("/fonts", express.static(__dirname + "/dist/fonts", { maxAge: oneMonth }))
   app.use("/img", express.static(__dirname + "/dist/img", { maxAge: oneMonth }))

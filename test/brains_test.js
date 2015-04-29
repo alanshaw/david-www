@@ -1,5 +1,5 @@
 var rewire = require("rewire")
-var brains = rewire("../brains")
+var brains = rewire("../lib/brains")
 var david = require("david")
 
 brains.__set__("config", {brains: {cacheTime: 0}})

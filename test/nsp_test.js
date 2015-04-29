@@ -1,5 +1,5 @@
 var rewire = require("rewire")
-var nsp = rewire("../nsp")
+var nsp = rewire("../lib/nsp")
 
 function mockGithub (contents) {
   return {

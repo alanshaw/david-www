@@ -1,5 +1,5 @@
 var rewire = require("rewire")
-  , registry = rewire("../registry")
+  , registry = rewire("../lib/registry")
 
 module.exports = {
   "Error event from couchwatch should not exit process": function (test) {

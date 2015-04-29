@@ -1,5 +1,5 @@
 var rewire = require("rewire")
-var feed = rewire("../feed")
+var feed = rewire("../lib/feed")
 
 module.exports = {
 
