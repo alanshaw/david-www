@@ -241,7 +241,7 @@ function getBadgePath (status, opts) {
   var type = opts.type ? opts.type + "-" : ""
   var retina = opts.retina ? "@2x" : ""
   var extension = opts.extension == "png" ? "png" : "svg"
-  var style = extension == "svg" && (style == "flat-square") ? "-" + style : ""
+  var style = extension == "svg" && opts.style == "flat-square" ? "-" + opts.style : ""
 
   return __dirname + "/dist/img/status/" + type + status + retina + style + "." + extension
 }
