@@ -7,7 +7,7 @@
   <div id="repo" data-user="{{user}}" data-repo="{{repo}}" data-ref="{{ref}}">
     <h1>
       <a href="@@githubsite/{{user}}">{{user}}</a> -
-      <a href="@@githubsite/{{user}}/{{repo}}{{ref}}">{{manifest.name}}</a>
+      <a href="@@githubsite/{{user}}/{{repo}}{{#if ref}}/tree{{ref}}{{/if}}">{{manifest.name}}</a>
       <span>{{manifest.version}}{{#if manifest.ref}} <span id="branch"><i class="fa fa-code-fork"></i> {{manifest.ref}}</span>{{/if}}</span>
       <a id="status" class="badge" href="#badge-embed" title="Get badge embed code"><img src="/{{user}}/{{repo}}{{ref}}.svg" alt="Dependency status"></a>
       {{#if manifest.devDependencies}}
