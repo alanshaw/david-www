@@ -20,8 +20,6 @@ function getBadgePath (status, opts) {
 function sendStatusBadge (req, res, opts) {
   opts = opts || {}
 
-  res.setHeader("Cache-Control", "no-cache")
-
   var badgePathOpts = {
     type: getDepsType(opts),
     retina: opts.retina,
@@ -37,16 +35,25 @@ function sendStatusBadge (req, res, opts) {
     }
   }
 
+  var sendFileOpts = {
+    lastModified: false,
+    etag: false,
+    headers: {
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Expires": new Date().toUTCString()
+    }
+  }
+
   req.session.get("session/access-token", function (er, authToken) {
-    if (er) return res.status(500).sendFile(getBadgePath("unknown", badgePathOpts), sendFileCb)
+    if (er) return res.status(500).sendFile(getBadgePath("unknown", badgePathOpts), sendFileOpts, sendFileCb)
 
     manifest.getManifest(req.params.user, req.params.repo, req.params.ref, authToken, function (er, manifest) {
-      if (er) return res.status(404).sendFile(getBadgePath("unknown", badgePathOpts), sendFileCb)
+      if (er) return res.status(404).sendFile(getBadgePath("unknown", badgePathOpts), sendFileOpts, sendFileCb)
 
       brains.getInfo(manifest, opts, function (er, info) {
-        if (er) return res.status(500).sendFile(getBadgePath("unknown", badgePathOpts), sendFileCb)
+        if (er) return res.status(500).sendFile(getBadgePath("unknown", badgePathOpts), sendFileOpts, sendFileCb)
 
-        res.sendFile(getBadgePath(info.status, badgePathOpts), sendFileCb)
+        res.sendFile(getBadgePath(info.status, badgePathOpts), sendFileOpts, sendFileCb)
       })
     })
   })
