@@ -23,6 +23,7 @@ app.use(compress())
 statics(app)
 
 app.use(middleware.session)
+app.use(middleware.user)
 app.use(middleware.generateCsrf)
 app.use(middleware.globals)
 
