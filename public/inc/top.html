@@ -24,10 +24,14 @@
   <div>
     <a class="logo" href="/">David. <i class="fa fa-home"></i></a>
     <span>Watching your Node.js dependencies.</span>
-    {{#if oauthClient}}
-    <a class="auth" href="https://github.com/login/oauth/authorize?client_id={{oauthClient}}&state={{csrfToken}}&scope=repo,user:email">Sign in <i class="fa fa-github"></i></a>
+    {{#if user}}
+      <a class="auth">Signed in <i class="fa fa-github"></i></a>
     {{else}}
-    <a class="auth">Signed in <i class="fa fa-github"></i></a>
+      {{#if config.github.oauth.id }}
+        <a class="auth" href="https://github.com/login/oauth/authorize?client_id={{config.github.oauth.id}}&state={{csrfToken}}&scope=repo,user:email">Sign in <i class="fa fa-github"></i></a>
+      {{else}}
+        <a class="auth">Signed in <i class="fa fa-github"></i></a>
+      {{/if}}
     {{/if}}
   </div>
 </header>
