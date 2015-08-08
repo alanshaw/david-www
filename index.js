@@ -26,6 +26,7 @@ app.use(middleware.session)
 app.use(middleware.user)
 app.use(middleware.generateCsrf)
 app.use(middleware.globals)
+app.use(middleware.cors)
 
 app.get("/auth/callback", routes.session.oauthCallback)
 app.get("/news/rss.xml", routes.rss.news)
