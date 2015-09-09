@@ -1,4 +1,4 @@
-var config = require("config")
+var db = require("../lib/db")
 var levelSession = require("level-session")
 
-module.exports = levelSession(config.db.path)
+module.exports = levelSession({db: db})
