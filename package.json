@@ -44,7 +44,6 @@
     "handlebars": "^4.0.2",
     "level": "^1.3.0",
     "level-session": "^0.3.3",
-    "memory-cache": "^0.1.1",
     "merge": "^1.2.0",
     "meta-marked": "^0.3.3",
     "mkdirp": "^0.5.1",
