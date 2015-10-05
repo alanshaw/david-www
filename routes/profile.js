@@ -4,7 +4,11 @@ var errors = require("./helpers/errors")
 module.exports = function (req, res) {
   var authToken = null
 
-  req.session.getAll(function (err, sessionData) {
+  req.session.getAll(function (er, sessionData) {
+    if (errors.happened(er, req, res, "Failed to get session data")) {
+      return
+    }
+
     if (req.params.user === sessionData["session/user"]) {
       authToken = sessionData["session/access-token"]
     }

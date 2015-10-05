@@ -14,7 +14,11 @@ module.exports = function (req, res, opts, cb) {
     opts = opts || {}
   }
 
-  req.session.get("session/access-token", function (err, authToken) {
+  req.session.get("session/access-token", function (er, authToken) {
+    if (errors.happened(er, req, res, "Failed to get session access token")) {
+      return
+    }
+
     manifest.getManifest(req.params.user, req.params.repo, req.params.ref, authToken, function (er, manifest) {
       if (errors.happened(er, req, res, "Failed to get package.json")) {
         return
