@@ -1,39 +1,43 @@
 var rewire = require("rewire")
 var nsp = rewire("../lib/nsp")
 
-function mockGithub (contents) {
+function mockNspApi (results) {
   return {
-    getInstance: function () {
-      return {
-        repos: {
-          getContent: function (opts, cb) {
-            process.nextTick(function () {
-              cb(null, contents)
-            })
-          }
-        }
-      }
+    advisories: function (opts, cb) {
+      opts = opts || {}
+      process.nextTick(function () {
+        cb(null, {
+          offset: opts.offset || 0,
+          limit: opts.limit || 100,
+          total: results.length,
+          results: results
+        })
+      })
     }
   }
 }
 
 module.exports = {
   "NSP update advisories works good": function (test) {
-    nsp.__set__("github", mockGithub([
-      {name: "Hubot_Potential_command_injection_in_email.coffee.md"},
-      {name: "JS-YAML_Deserialization_Code_Execution.md"},
-      {name: "Tomato_API_Admin_Auth_Weakness.md"}
+    nsp.__set__("client", mockNspApi([
+      {module_name: "test0"},
+      {module_name: "test1"},
+      {module_name: "test2"}
     ]))
 
-    nsp.updateAdvisories(function (er, advisories) {
+    nsp.syncAdvisories(function (er) {
       test.ifError(er)
-      test.ok(advisories["hubot-scripts"])
-      test.equal(advisories["hubot-scripts"].length, 1)
-      test.ok(advisories["js-yaml"])
-      test.equal(advisories["js-yaml"].length, 1)
-      test.ok(advisories.tomato)
-      test.equal(advisories.tomato.length, 1)
-      test.done()
+
+      nsp.getAdvisories(["test0", "test1", "test2"], function (err, advisories) {
+        test.ifError(err)
+        test.ok(advisories["test0"])
+        test.equal(advisories["test0"].length, 1)
+        test.ok(advisories["test1"])
+        test.equal(advisories["test1"].length, 1)
+        test.ok(advisories["test2"])
+        test.equal(advisories["test2"].length, 1)
+        test.done()
+      })
     })
   }
 }

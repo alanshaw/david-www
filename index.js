@@ -7,11 +7,8 @@ var nsp = require("./lib/nsp")
 var middleware = require("./middleware")
 var routes = require("./routes")
 
-nsp.updateAdvisories(function (er, advisories) {
-  if (er) return console.error("Failed to update advisories", er)
-  console.log("Updated", Object.keys(advisories).length, "NSP advisories")
-  nsp.updateAdvisoriesPeriodically(config.nsp && config.nsp.advisoriesUpdateInterval)
-})
+nsp.syncAdvisories()
+nsp.syncAdvisoriesPeriodically(config.nsp && config.nsp.syncAdvisoriesInterval)
 
 var app = express()
 

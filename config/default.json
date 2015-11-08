@@ -30,6 +30,6 @@
     "path": "data"
   },
   "nsp": {
-    "advisoriesUpdateInterval": 3600000
+    "syncAdvisoriesInterval": 3600000
   }
 }
