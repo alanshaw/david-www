@@ -13,7 +13,7 @@ module.exports = function (req, res) {
       authToken = sessionData["session/access-token"]
     }
 
-    profile.get(req.params.user, req.query.path, authToken, function (er, data) {
+    profile.get(req.params.user, authToken, function (er, data) {
       if (errors.happened(er, req, res, "Failed to get profile data")) {
         return
       }
