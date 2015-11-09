@@ -24,6 +24,7 @@ $("#status-page").each(function () {
     view: $.bbq.getState("view", true) || "table"
   }
 
+  var query = $.deparam($.param.querystring())
   // Normalized pathname for use with XHR requests
   var pathname = window.location.pathname
 
@@ -31,8 +32,8 @@ $("#status-page").each(function () {
     pathname += "/"
   }
 
-  function initInfo (container, graphJsonUrl) {
-    graphJsonUrl = graphJsonUrl || "graph.json"
+  function initInfo (container, depsType) {
+    var graphJsonUrl = (depsType ? depsType + "-" : "") + "graph.json" + (query.path ? "?path=" + encodeURIComponent(query.path) : "")
 
     $(".dep-table table", container).stacktable()
 
@@ -142,7 +143,7 @@ $("#status-page").each(function () {
 
   badges.click(function () {
     if (!$($(this).attr("href")).size()) {
-      var data = {type: $(this).data("type"), user: repo.data("user"), repo: repo.data("repo"), ref: repo.data("ref")}
+      var data = {type: $(this).data("type"), user: repo.data("user"), repo: repo.data("repo"), path: repo.data("path"), ref: repo.data("ref")}
       var ct = $(data.type ? embedTmplType(data) : embedTmpl(data))
 
       $("input", ct).each(function () {
@@ -201,11 +202,13 @@ $("#status-page").each(function () {
 
         depInfo.prepend(loading)
 
-        $.getJSON(pathname + type + "-info.json", function (data) {
+        var infoUrl = pathname + type + "-info.json" + (query.path ? "?path=" + encodeURIComponent(query.path) : "")
+
+        $.getJSON(infoUrl, function (data) {
           var tpl = fs.readFileSync(__dirname + "/../../../dist/inc/info.html", {encoding: "utf8"})
           loading.remove()
           depInfo.html(Handlebars.compile(tpl)({ info: data }))
-          initInfo(depInfo, type + "-graph.json")
+          initInfo(depInfo, type)
         })
       }
     }

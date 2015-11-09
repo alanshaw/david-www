@@ -47,7 +47,7 @@ function sendStatusBadge (req, res, opts) {
   req.session.get("session/access-token", function (er, authToken) {
     if (er) return res.status(500).sendFile(getBadgePath("unknown", badgePathOpts), sendFileOpts, sendFileCb)
 
-    manifest.getManifest(req.params.user, req.params.repo, req.params.ref, req.query.path, authToken, function (er, manifest) {
+    manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, function (er, manifest) {
       if (er) return res.status(404).sendFile(getBadgePath("unknown", badgePathOpts), sendFileOpts, sendFileCb)
 
       brains.getInfo(manifest, opts, function (er, info) {
