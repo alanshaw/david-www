@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
 
-    conf: require("config"),
+    conf: require("./config"),
 
     pkg: grunt.file.readJSON("package.json"),
 
