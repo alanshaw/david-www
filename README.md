@@ -51,3 +51,57 @@ Get the current build status badge:
 ```sh
 curl http://localhost:1337/alanshaw/grunt-jsio.png
 ```
+
+## Configuration
+
+Configuration is handled by `rc` (https://github.com/dominictarr/rc), see the repo for full usage. 
+
+For basic configuration, add a `.davidrc` file in the local directory (it is git ignored) and you can you JSON to override any of the default values.
+
+Example:
+```json
+{
+  "github": {
+    "token": "some_github_token"
+  }
+}
+```
+
+You can also use environment variables. 
+
+Example:
+
+```
+david_github__token=some_github_token
+```
+
+## Docker Support
+
+This example will run david-www interactively and will exit and destroy the container upon a control-c.
+
+```
+docker run -it --rm \
+  -p 11337:1337 \
+  -e david_github__token=github-token \
+  -e david_site__hostname=http://localhost:11337 \
+  -v /data/david:/opt/data \
+  david
+```
+
+This example will run it in detached mode.
+
+```
+david run -d --name="david-www" \
+  --restart=always \
+  -p 11337:1337 \
+  -e david_github__token=github-token \
+  -e david_site__hostname=http://localhost:11337 \
+  -v /data/david:/opt/data \
+  david
+```
+
+### Building
+
+```
+docker build -t david .
+```
