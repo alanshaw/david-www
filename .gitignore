@@ -1,5 +1,4 @@
 .DS_Store
-config/runtime.json
 data/
 dist/
 node_modules/
