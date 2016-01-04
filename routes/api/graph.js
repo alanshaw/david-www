@@ -9,7 +9,7 @@ function sendDependencyGraph (req, res, opts) {
       return
     }
 
-    manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, function (er, manifest) {
+    manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, req.query, authToken, function (er, manifest) {
       if (errors.happened(er, req, res, "Failed to get package.json")) {
         return
       }
