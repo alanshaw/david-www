@@ -9,7 +9,7 @@ function sendDependencyGraph (req, res, opts) {
       return
     }
 
-    manifest.getManifest(req.params.user, req.params.repo, req.params.ref, authToken, function (er, manifest) {
+    manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, function (er, manifest) {
       if (errors.happened(er, req, res, "Failed to get package.json")) {
         return
       }
@@ -23,8 +23,26 @@ function sendDependencyGraph (req, res, opts) {
         deps = manifest.dependencies || {}
       }
 
+      var graphName = req.params.user + "/" + req.params.repo
+
+      if (req.query.path && req.query.path[req.query.path.length - 1] === "/") {
+        req.query.path = req.query.path.slice(0, -1)
+      }
+
+      if (req.query.path) {
+        graphName += "/" + req.query.path
+      }
+
+      if (req.params.ref) {
+        graphName += "/#" + req.params.ref
+      }
+
+      if (depsType) {
+        graphName += "/" + depsType
+      }
+
       graph.getProjectDependencyGraph(
-        req.params.user + "/" + req.params.repo + (depsType ? "#" + depsType : ""),
+        graphName,
         manifest.version,
         deps,
         function (er, graph) {

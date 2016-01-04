@@ -64,7 +64,7 @@
       {{#if recentlyRetrievedManifests.length}}
       <ul class="border-list">
         {{#each recentlyRetrievedManifests}}
-        <li>{{user}} - <a href="/{{user}}/{{repo}}">{{repo}}</a></li>
+        <li>{{user}} - <a href="/{{user}}/{{repo}}{{#if ref}}/{{ref}}{{/if}}{{#if path}}?path={{path}}{{/if}}">{{manifest.name}}</a></li>
         {{/each}}
       </ul>
       {{else}}

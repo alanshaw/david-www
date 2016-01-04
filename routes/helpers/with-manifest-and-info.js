@@ -19,7 +19,7 @@ module.exports = function (req, res, opts, cb) {
       return
     }
 
-    manifest.getManifest(req.params.user, req.params.repo, req.params.ref, authToken, function (er, manifest) {
+    manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, function (er, manifest) {
       if (errors.happened(er, req, res, "Failed to get package.json")) {
         return
       }

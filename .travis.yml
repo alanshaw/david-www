@@ -1,9 +1,7 @@
 language: node_js
 node_js:
-  - '0.10'
-  - '0.12'
-  - 'iojs'
-  - '4'
+  - 4
+  - 5
 before_script:
   - npm install -g grunt-cli
 matrix:
