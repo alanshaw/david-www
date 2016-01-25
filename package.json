@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "async": "^1.4.1",
-    "camelcase": "^2.0.0",
+    "camelcase": "^2.1.0",
     "compression": "^1.4.1",
     "consolidate": "^0.13.1",
     "couchwatch": "^0.6.0",
@@ -64,7 +64,6 @@
     "grunt-browserify": "^4.0.0",
     "grunt-contrib-clean": "^0.7.0",
     "grunt-cli": "^0.1.13",
-    "grunt-contrib-clean": "^0.7.0",
     "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-cssmin": "^0.14.0",
     "grunt-contrib-jshint": "^0.11.0",
