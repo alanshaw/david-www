@@ -28,7 +28,7 @@
       <a class="auth">Signed in <i class="fa fa-github"></i></a>
     {{else}}
       {{#if config.github.oauth.id }}
-        <a class="auth" href="https://github.com/login/oauth/authorize?client_id={{config.github.oauth.id}}&state={{csrfToken}}&scope=repo,user:email">Sign in <i class="fa fa-github"></i></a>
+        <a class="auth" href="@@githubsite/login/oauth/authorize?client_id={{config.github.oauth.id}}&state={{csrfToken}}&scope=repo,user:email">Sign in <i class="fa fa-github"></i></a>
       {{else}}
         <a class="auth">Signed in <i class="fa fa-github"></i></a>
       {{/if}}

@@ -56,7 +56,7 @@
     <h1>Access Denied</h1>
     <p>Either your authentication attempt failed, or you need to authenticate.</p>
     <p>To use David with private repos,
-        <a href="https://github.com/login/oauth/authorize?client_id={{oauthClient}}&state={{csrfToken}}&scope=repo,user:email">sign in with GitHub</a>.
+        <a href="@@githubsite/login/oauth/authorize?client_id={{config.github.oauth.id}}&state={{csrfToken}}&scope=repo,user:email">sign in with GitHub</a>.
     </p>
 </body>
 </html>
