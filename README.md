@@ -50,11 +50,10 @@ curl http://localhost:1337/alanshaw/grunt-jsio.png
 
 Configuration is handled by `rc` (https://github.com/dominictarr/rc), see [config.js](config.js) for default configuration values.
 
-For basic configuration, add a `.davidrc` file in the local directory (it is git ignored) and you can you JSON to override any of the default values.
+For basic configuration, add a `.davidrc` file in the local directory (it is git ignored) and you can use JSON to override any of the default values.
 
-Register a github personal oauth token and add it to the config:
+Register a [github personal oauth token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/) and add it to the config:
 
-Example:
 ```json
 {
   "github": {
@@ -63,9 +62,7 @@ Example:
 }
 ```
 
-You can also use environment variables.
-
-Example:
+You can also use environment variables e.g.
 
 ```
 david_github__token=some_github_token
