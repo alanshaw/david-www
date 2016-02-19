@@ -15,26 +15,20 @@ file in the root of your repository.
 With [Node.js](http://nodejs.org/) and [Grunt](http://gruntjs.com/) installed already,
 do the following:
 
-Install david-www:
+* Install david-www:
 
-```sh
-cd /path/to/david-www
-npm install
-grunt
-```
+    ```sh
+    cd /path/to/david-www
+    npm install
+    npm run build
+    ```
 
-Register a github personal oauth token and add it to `config/default.json`.
+* Create a `.davidrc` file (see [Configuration](#configuration) section below)
+* Run david-www:
 
-(Optional) If you want to use "sign in" feature you should:
-* Register a github developer application and add oauth client id and secret to `config/default.json`.
-* Developer application should have callback URL: `http://localhost:1337/auth/callback`
-
-
-Run david-www:
-
-```sh
-node .
-```
+    ```sh
+    npm start
+    ```
 
 
 ## Example usage
@@ -54,7 +48,7 @@ curl http://localhost:1337/alanshaw/grunt-jsio.png
 
 ## Configuration
 
-Configuration is handled by `rc` (https://github.com/dominictarr/rc), see the repo for full usage. 
+Configuration is handled by `rc` (https://github.com/dominictarr/rc), see [config.js](config.js) for default configuration values.
 
 For basic configuration, add a `.davidrc` file in the local directory (it is git ignored) and you can you JSON to override any of the default values.
 
@@ -67,13 +61,17 @@ Example:
 }
 ```
 
-You can also use environment variables. 
+You can also use environment variables.
 
 Example:
 
 ```
 david_github__token=some_github_token
 ```
+
+* (Optional) If you want to use "sign in" feature you should:
+    * Register a github developer application and add oauth client id and secret to `.davidrc`.
+    * Developer application should have callback URL: `http://localhost:1337/auth/callback`
 
 ## Docker Support
 
