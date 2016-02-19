@@ -52,6 +52,8 @@ Configuration is handled by `rc` (https://github.com/dominictarr/rc), see [confi
 
 For basic configuration, add a `.davidrc` file in the local directory (it is git ignored) and you can you JSON to override any of the default values.
 
+Register a github personal oauth token and add it to the config:
+
 Example:
 ```json
 {
