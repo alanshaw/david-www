@@ -1,4 +1,4 @@
-var config = module.exports = require('rc')('david', {
+module.exports = require("rc")("david", {
   brains: {
     cacheTime: 86400000
   },
