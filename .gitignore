@@ -2,5 +2,6 @@
 data/
 dist/
 node_modules/
+.idea/
 npm-debug.log
 .*rc

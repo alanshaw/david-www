@@ -46,6 +46,12 @@ Get the current build status badge:
 curl http://localhost:1337/alanshaw/grunt-jsio.png
 ```
 
+Use the `npm-shrinkwrap.json` file as base for the required package version:
+
+```sh
+curl http://localhost:1337/alanshaw/grunt-jsio.png?shrinkwrap=true
+```
+
 ## Configuration
 
 Configuration is handled by `rc` (https://github.com/dominictarr/rc), see [config.js](config.js) for default configuration values.
