@@ -1,3 +1,5 @@
+var $ = require('jquery')
+
 function createNode (dep) {
   return {
     name: dep.name,
@@ -20,7 +22,7 @@ function sortByName (a, b) {
  */
 module.exports = function (rootDep, cb) {
   var transformsCount = 0
-    , rootNode = createNode(rootDep)
+  var rootNode = createNode(rootDep)
 
   // Avoid "too much recursion" errors
   function scheduleTransform (dep, node, level, maxLevel) {

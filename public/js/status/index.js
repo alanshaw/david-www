@@ -1,46 +1,45 @@
-/* jshint browser:true, jquery:true */
+var $ = require('jquery')
+var d3 = require('d3')
+var merge = require('merge')
+var Handlebars = require('handlebars')
+var fs = require('fs')
+var path = require('path')
+var cycle = require('cycle')
+var david = require('../david')
+var transformData = require('./transform-data')
+var graph = require('./graph')
 
-var d3 = require("d3")
-var merge = require("merge")
-var Handlebars = require("handlebars")
-var fs = require("fs")
-var cycle = require("cycle")
-var david = require("../david")
-var transformData = require("./transform-data")
-var graph = require("./graph")
+require('../vendor/stackable')
+require('../vendor/jquery.fancybox.js')
+require('../vendor/jquery.ba-bbq.js')
+require('../vendor/jquery.ba-hashchange.js')
 
-require("../vendor/stackable")
-require("../vendor/jquery.fancybox.js")
-require("../vendor/jquery.ba-bbq.js")
-require("../vendor/jquery.ba-hashchange.js")
+var embedTmpl = Handlebars.compile(fs.readFileSync(path.join(__dirname, '..', '..', '..', 'dist', 'inc', 'embed-badge.html'), {encoding: 'utf8'}))
+var embedTmplType = Handlebars.compile(fs.readFileSync(path.join(__dirname, '..', '..', '..', 'dist', 'inc', 'embed-badge-type.html'), {encoding: 'utf8'}))
 
-var embedTmpl = Handlebars.compile(fs.readFileSync(__dirname + "/../../../dist/inc/embed-badge.html", {encoding: "utf8"}))
-var embedTmplType = Handlebars.compile(fs.readFileSync(__dirname + "/../../../dist/inc/embed-badge-type.html", {encoding: "utf8"}))
-
-$("#status-page").each(function () {
-
+$('#status-page').each(function () {
   var state = {
-    info: $.bbq.getState("info", true) || "dependencies",
-    view: $.bbq.getState("view", true) || "table"
+    info: $.bbq.getState('info', true) || 'dependencies',
+    view: $.bbq.getState('view', true) || 'table'
   }
 
   var query = $.deparam($.param.querystring())
   // Normalized pathname for use with XHR requests
   var pathname = window.location.pathname
 
-  if (pathname[pathname.length - 1] !== "/") {
-    pathname += "/"
+  if (pathname[pathname.length - 1] !== '/') {
+    pathname += '/'
   }
 
   function initInfo (container, depsType) {
-    var graphJsonUrl = (depsType ? depsType + "-" : "") + "graph.json" + (query.path ? "?path=" + encodeURIComponent(query.path) : "")
+    var graphJsonUrl = (depsType ? depsType + '-' : '') + 'graph.json' + (query.path ? '?path=' + encodeURIComponent(query.path) : '')
 
-    $(".dep-table table", container).stacktable()
+    $('.dep-table table', container).stacktable()
 
     // Load the graph data and render when change view
     var graphLoaded = false
-      , graphContainer = $(".dep-graph", container)
-      , tableContainer = $(".dep-table", container)
+    var graphContainer = $('.dep-graph', container)
+    var tableContainer = $('.dep-table', container)
 
     graphContainer.hide()
 
@@ -48,8 +47,11 @@ $("#status-page").each(function () {
       var loading = david.createLoadingEl()
       graphContainer.prepend(loading)
 
-      d3.json(pathname + graphJsonUrl, function (er, json) {
-        if (er) return loading.empty().text("Error occurred retrieving graph data")
+      d3.json(pathname + graphJsonUrl, function (err, json) {
+        if (err) {
+          console.error('Failed to load graph data', err)
+          return loading.empty().text('Error occurred retrieving graph data')
+        }
 
         transformData(cycle.retrocycle(json), function (er, root) {
           var vis = graph.create(container)
@@ -61,27 +63,27 @@ $("#status-page").each(function () {
       })
     }
 
-    var viewSwitchers = $(".switch a", container)
+    var viewSwitchers = $('.switch a', container)
 
     viewSwitchers.click(function (e) {
       e.preventDefault()
-      merge(state, $.deparam.fragment($(this).attr("href")))
+      merge(state, $.deparam.fragment($(this).attr('href')))
       $.bbq.pushState(state)
     })
 
     function onHashChange () {
       merge(state, $.bbq.getState())
 
-      viewSwitchers.removeClass("selected")
+      viewSwitchers.removeClass('selected')
 
-      if (state.view != "tree") {
+      if (state.view !== 'tree') {
         graphContainer.hide()
         tableContainer.fadeIn()
-        viewSwitchers.first().addClass("selected")
+        viewSwitchers.first().addClass('selected')
       } else {
         tableContainer.hide()
         graphContainer.fadeIn()
-        viewSwitchers.last().addClass("selected")
+        viewSwitchers.last().addClass('selected')
 
         if (!graphLoaded) {
           graphLoaded = true
@@ -92,63 +94,63 @@ $("#status-page").each(function () {
 
     /* Init changes links */
 
-    $(".changes-icon", container).click(function (e) {
+    $('.changes-icon', container).click(function (e) {
       e.preventDefault()
 
-      var row = $(this).closest("tr")
-        , container = $("<div class=\"changes-popup\"/>").append(david.createLoadingEl())
-        , name, from, to
+      var row = $(this).closest('tr')
+      var container = $('<div class="changes-popup"/>').append(david.createLoadingEl())
+      var name, from, to
 
-      if (row.closest("table").is(".stacktable")) {
-        name = $("a:first-child", row).text()
-        from = $(".st-val", row.next()).text()
-        to = $(".st-val", row.next().next()).text()
+      if (row.closest('table').is('.stacktable')) {
+        name = $('a:first-child', row).text()
+        from = $('.st-val', row.next()).text()
+        to = $('.st-val', row.next().next()).text()
       } else {
-        name = $(".dep > a:first-child", row).text()
-        from = $(".required", row).text()
-        to = $(".stable", row).text()
+        name = $('.dep > a:first-child', row).text()
+        from = $('.required', row).text()
+        to = $('.stable', row).text()
       }
 
       $.fancybox.open(container)
 
       $.ajax({
-        url: "/package/" + name + "/changes.json",
-        dataType: "json",
+        url: '/package/' + name + '/changes.json',
+        dataType: 'json',
         data: {from: from, to: to},
         success: function (data) {
           data.from = from
           data.to = to
 
-          var tpl = fs.readFileSync(__dirname + "/../../../dist/inc/changes.html", {encoding: "utf8"})
+          var tpl = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'dist', 'inc', 'changes.html'), {encoding: 'utf8'})
           container.html(Handlebars.compile(tpl)(data))
           $.fancybox.update()
         },
         error: function () {
-          container.html(fs.readFileSync(__dirname + "/../../../dist/inc/changelog-er.html", {encoding: "utf8"}))
+          container.html(fs.readFileSync(path.join(__dirname, '..', '..', '..', 'dist', 'inc', 'changelog-er.html'), {encoding: 'utf8'}))
           $.fancybox.update()
         }
       })
     })
 
-    $(window).bind("hashchange", onHashChange)
+    $(window).bind('hashchange', onHashChange)
 
     onHashChange()
   }
 
-  var badges = $(".badge")
-    , depInfoLoaded = {}
-    , depInfos = $(".dep-info")
-    , depSwitchers = $("#dep-switch a")
-    , repo = $("#repo")
+  var badges = $('.badge')
+  var depInfoLoaded = {}
+  var depInfos = $('.dep-info')
+  var depSwitchers = $('#dep-switch a')
+  var repo = $('#repo')
 
   badges.click(function () {
-    if (!$($(this).attr("href")).size()) {
-      var data = {type: $(this).data("type"), user: repo.data("user"), repo: repo.data("repo"), path: repo.data("path"), ref: repo.data("ref")}
+    if (!$($(this).attr('href')).size()) {
+      var data = {type: $(this).data('type'), user: repo.data('user'), repo: repo.data('repo'), path: repo.data('path'), ref: repo.data('ref')}
       var ct = $(data.type ? embedTmplType(data) : embedTmpl(data))
 
-      $("input", ct).each(function () {
+      $('input', ct).each(function () {
         var clicked = false
-          , embedCode = $(this)
+        var embedCode = $(this)
 
         embedCode.click(function () {
           if (!clicked) {
@@ -158,12 +160,12 @@ $("#status-page").each(function () {
         })
       })
 
-      $("select", ct).change(function () {
-        $(".theme", ct).hide()
-        $(".theme-" + $(this).val(), ct).show()
+      $('select', ct).change(function () {
+        $('.theme', ct).hide()
+        $('.theme-' + $(this).val(), ct).show()
       })
 
-      $(".theme", ct).not(".theme-svg").hide()
+      $('.theme', ct).not('.theme-svg').hide()
 
       repo.append(ct)
     }
@@ -173,27 +175,27 @@ $("#status-page").each(function () {
 
   depSwitchers.click(function (e) {
     e.preventDefault()
-    merge(state, $.deparam.fragment($(this).attr("href")))
+    merge(state, $.deparam.fragment($(this).attr('href')))
     $.bbq.pushState(state)
   })
 
   // Hash change for info switch
   function onHashChange () {
     merge(state, $.bbq.getState())
-    depSwitchers.removeClass("selected")
+    depSwitchers.removeClass('selected')
 
     var badge, depInfo
 
-    if (!state.info || state.info == "dependencies") {
+    if (!state.info || state.info === 'dependencies') {
       badge = badges.first()
       depInfo = depInfos.first()
-      depSwitchers.filter("[href='#info=dependencies']").addClass("selected")
+      depSwitchers.filter("[href='#info=dependencies']").addClass('selected')
     } else {
-      var type = state.info.replace("Dependencies", "")
+      var type = state.info.replace('Dependencies', '')
 
-      badge = $("#" + type + "-status")
-      depInfo = $("#" + type + "-dep-info")
-      depSwitchers.filter("[href='#info=" + type + "Dependencies']").addClass("selected")
+      badge = $('#' + type + '-status')
+      depInfo = $('#' + type + '-dep-info')
+      depSwitchers.filter("[href='#info=" + type + "Dependencies']").addClass('selected')
 
       if (!depInfoLoaded[type]) {
         depInfoLoaded[type] = true
@@ -202,10 +204,10 @@ $("#status-page").each(function () {
 
         depInfo.prepend(loading)
 
-        var infoUrl = pathname + type + "-info.json" + (query.path ? "?path=" + encodeURIComponent(query.path) : "")
+        var infoUrl = pathname + type + '-info.json' + (query.path ? '?path=' + encodeURIComponent(query.path) : '')
 
         $.getJSON(infoUrl, function (data) {
-          var tpl = fs.readFileSync(__dirname + "/../../../dist/inc/info.html", {encoding: "utf8"})
+          var tpl = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'dist', 'inc', 'info.html'), {encoding: 'utf8'})
           loading.remove()
           depInfo.html(Handlebars.compile(tpl)({ info: data }))
           initInfo(depInfo, type)
@@ -220,7 +222,7 @@ $("#status-page").each(function () {
     badge.show()
   }
 
-  $(window).bind("hashchange", onHashChange)
+  $(window).bind('hashchange', onHashChange)
 
   onHashChange()
   initInfo(depInfos.first())

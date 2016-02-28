@@ -1,3 +1,3 @@
-require("./plugins")
-require("./homepage")
-require("./status/index")
+require('./plugins')
+require('./homepage')
+require('./status/index')

@@ -24,8 +24,9 @@
   "license": "MIT",
   "scripts": {
     "start": "node index",
+    "lint": "standard",
     "build": "grunt",
-    "test": "grunt"
+    "test": "npm run lint && grunt nodeunit"
   },
   "dependencies": {
     "async": "^1.4.1",
@@ -60,25 +61,35 @@
   },
   "devDependencies": {
     "brfs": "^1.4.0",
+    "browserify-shim": "^3.8.12",
     "grunt": "^0.4.5",
     "grunt-browserify": "^4.0.0",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-cssmin": "^0.14.0",
-    "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-less": "^1.0.0",
     "grunt-contrib-nodeunit": "^0.4.1",
     "grunt-contrib-uglify": "^0.11.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-include-replace": "^3.0.0",
     "load-grunt-tasks": "^3.1.0",
-    "rewire": "^2.3.1"
+    "rewire": "^2.3.1",
+    "standard": "^6.0.7"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "directories": {
     "test": "test"
+  },
+  "standard": {
+    "ignore": [
+      "public/js/vendor/*",
+      "public/js/plugins.js"
+    ]
+  },
+  "browserify-shim": {
+    "jquery": "global:$"
   }
 }

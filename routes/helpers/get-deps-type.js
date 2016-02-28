@@ -1,12 +1,12 @@
 module.exports = function (opts) {
-  var type = ""
+  var type = ''
 
   if (opts.dev) {
-    type = "dev"
+    type = 'dev'
   } else if (opts.peer) {
-    type = "peer"
+    type = 'peer'
   } else if (opts.optional) {
-    type = "optional"
+    type = 'optional'
   }
 
   return type

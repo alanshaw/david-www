@@ -1,4 +1,4 @@
-var withManifestAndInfo = require("../helpers/with-manifest-and-info")
+var withManifestAndInfo = require('../helpers/with-manifest-and-info')
 
 function info (req, res) {
   withManifestAndInfo(req, res, function (manifest, info) {

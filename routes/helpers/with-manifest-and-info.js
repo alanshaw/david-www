@@ -1,6 +1,6 @@
-var manifest = require("../../lib/manifest")
-var brains = require("../../lib/brains")
-var errors = require("./errors")
+var manifest = require('../../lib/manifest')
+var brains = require('../../lib/brains')
+var errors = require('./errors')
 
 /**
  * Common callback boilerplate of getting a manifest and info for the status page and badge
@@ -14,18 +14,18 @@ module.exports = function (req, res, opts, cb) {
     opts = opts || {}
   }
 
-  req.session.get("session/access-token", function (er, authToken) {
-    if (errors.happened(er, req, res, "Failed to get session access token")) {
+  req.session.get('session/access-token', function (err, authToken) {
+    if (errors.happened(err, req, res, 'Failed to get session access token')) {
       return
     }
 
-    manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, function (er, manifest) {
-      if (errors.happened(er, req, res, "Failed to get package.json")) {
+    manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, function (err, manifest) {
+      if (errors.happened(err, req, res, 'Failed to get package.json')) {
         return
       }
 
-      brains.getInfo(manifest, opts, function (er, info) {
-        if (errors.happened(er, req, res, "Failed to get dependency info")) {
+      brains.getInfo(manifest, opts, function (err, info) {
+        if (errors.happened(err, req, res, 'Failed to get dependency info')) {
           return
         }
 
