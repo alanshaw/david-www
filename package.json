@@ -69,7 +69,7 @@
     "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-cssmin": "^0.14.0",
     "grunt-contrib-less": "^1.0.0",
-    "grunt-contrib-nodeunit": "^0.4.1",
+    "grunt-contrib-nodeunit": "^1.0.0",
     "grunt-contrib-uglify": "^0.11.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-include-replace": "^3.0.0",
