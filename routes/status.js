@@ -1,7 +1,7 @@
 var withManifestAndInfo = require('./helpers/with-manifest-and-info')
 
 module.exports = function (req, res) {
-  withManifestAndInfo(req, res, function (manifest, info) {
+  withManifestAndInfo(req, res, {noCache: !!res.locals.user}, function (manifest, info) {
     res.render('status', {
       user: req.params.user,
       repo: req.params.repo,
