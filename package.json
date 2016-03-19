@@ -26,7 +26,7 @@
     "start": "node index",
     "lint": "standard",
     "build": "grunt",
-    "test": "npm run lint && grunt nodeunit"
+    "test": "npm run lint && tape test/*.js"
   },
   "dependencies": {
     "async": "^1.4.1",
@@ -69,13 +69,13 @@
     "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-cssmin": "^0.14.0",
     "grunt-contrib-less": "^1.0.0",
-    "grunt-contrib-nodeunit": "^0.4.1",
     "grunt-contrib-uglify": "^0.11.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-include-replace": "^3.0.0",
     "load-grunt-tasks": "^3.1.0",
     "rewire": "^2.3.1",
-    "standard": "^6.0.7"
+    "standard": "^6.0.7",
+    "tape": "^4.4.0"
   },
   "engines": {
     "node": ">=0.10.0"

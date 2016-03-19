@@ -1,36 +1,34 @@
-var feed = require('../../lib/feed')
-var manifest = require('../../lib/manifest')
 var errors = require('../helpers/errors')
 
-function buildRssFeed (req, res, dev) {
-  req.session.get('session/access-token', function (err, authToken) {
-    if (errors.happened(err, req, res, 'Failed to get session access token')) {
-      return
-    }
+module.exports = function (app, feed, manifest) {
+  app.get('/:user/:repo/:ref?/rss.xml', function (req, res) {
+    buildRssFeed(req, res, false)
+  })
 
-    manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, function (err, manifest) {
-      if (errors.happened(err, req, res, 'Failed to get package.json')) {
+  app.get('/:user/:repo/:ref?/dev-rss.xml', function (req, res) {
+    buildRssFeed(req, res, true)
+  })
+
+  function buildRssFeed (req, res, dev) {
+    req.session.get('session/access-token', function (err, authToken) {
+      if (errors.happened(err, req, res, 'Failed to get session access token')) {
         return
       }
 
-      feed.get(manifest, {dev: dev}, function (err, xml) {
-        if (errors.happened(err, req, res, 'Failed to build RSS XML')) {
+      manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, function (err, manifest) {
+        if (errors.happened(err, req, res, 'Failed to get package.json')) {
           return
         }
 
-        res.contentType('application/rss+xml')
-        res.send(xml, 200)
+        feed.get(manifest, {dev: dev}, function (err, xml) {
+          if (errors.happened(err, req, res, 'Failed to build RSS XML')) {
+            return
+          }
+
+          res.contentType('application/rss+xml')
+          res.send(xml, 200)
+        })
       })
     })
-  })
+  }
 }
-
-function rssFeed (req, res) {
-  buildRssFeed(req, res, false)
-}
-
-rssFeed.dev = function (req, res) {
-  buildRssFeed(req, res, true)
-}
-
-module.exports = rssFeed

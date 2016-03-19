@@ -1,4 +1,5 @@
-var db = require('../lib/db')
 var levelSession = require('level-session')
 
-module.exports = levelSession({db: db})
+module.exports = function (app, db) {
+  app.use(levelSession({db: db}))
+}

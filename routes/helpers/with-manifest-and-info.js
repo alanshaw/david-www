@@ -1,36 +1,36 @@
-var manifest = require('../../lib/manifest')
-var brains = require('../../lib/brains')
 var errors = require('./errors')
 
 /**
  * Common callback boilerplate of getting a manifest and info for the status page and badge
  */
-module.exports = function (req, res, opts, cb) {
-  // Allow callback to be passed as third parameter
-  if (!cb) {
-    cb = opts
-    opts = {}
-  } else {
-    opts = opts || {}
-  }
-
-  req.session.get('session/access-token', function (err, authToken) {
-    if (errors.happened(err, req, res, 'Failed to get session access token')) {
-      return
+module.exports = function (manifest, brains) {
+  return function (req, res, opts, cb) {
+    // Allow callback to be passed as third parameter
+    if (!cb) {
+      cb = opts
+      opts = {}
     }
 
-    manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, opts, function (err, manifest) {
-      if (errors.happened(err, req, res, 'Failed to get package.json')) {
+    opts = opts || {}
+
+    req.session.get('session/access-token', function (err, authToken) {
+      if (errors.happened(err, req, res, 'Failed to get session access token')) {
         return
       }
 
-      brains.getInfo(manifest, opts, function (err, info) {
-        if (errors.happened(err, req, res, 'Failed to get dependency info')) {
+      manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, opts, function (err, manifest) {
+        if (errors.happened(err, req, res, 'Failed to get package.json')) {
           return
         }
 
-        cb(manifest, info)
+        brains.getInfo(manifest, opts, function (err, info) {
+          if (errors.happened(err, req, res, 'Failed to get dependency info')) {
+            return
+          }
+
+          cb(manifest, info)
+        })
       })
     })
-  })
+  }
 }

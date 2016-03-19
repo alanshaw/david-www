@@ -1,5 +1,5 @@
-var stats = require('../../lib/stats')
-
-module.exports = function (req, res) {
-  res.json(stats.getDependencyCounts())
+module.exports = function (app, stats) {
+  app.get('/dependency-counts.json', function (req, res) {
+    res.json(stats.getDependencyCounts())
+  })
 }
