@@ -3,6 +3,7 @@ var express = require('express')
 var compress = require('compression')
 var consolidate = require('consolidate')
 var david = require('david')
+var npm = require('npm')
 
 var config = require('./config')
 var db = require('./lib/db')(config.db)
@@ -14,7 +15,7 @@ var brains = require('./lib/brains')(david, db, registry, nsp, config.brains, co
 var graph = require('./lib/graph')(db, config.npm)
 var changelog = require('./lib/changelog')(config.github, config.npm)
 var profile = require('./lib/profile')(manifest, brains, github)
-var feed = require('./lib/feed')(config.npm, config.site)
+var feed = require('./lib/feed')(npm, config.npm, config.site)
 var stats = require('./lib/stats')(registry, manifest)
 
 var app = express()
