@@ -1,6 +1,4 @@
-var auth = require('../lib/auth')
-
-module.exports = function (app) {
+module.exports = function (app, auth) {
   app.use(function (req, res, next) {
     req.session.get('session/csrf-token', function (err, csrfToken) {
       if (!err && csrfToken) {

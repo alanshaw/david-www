@@ -1,6 +1,4 @@
-var auth = require('../lib/auth')
-
-module.exports.oauthCallback = function (app) {
+module.exports.oauthCallback = function (app, auth) {
   app.get('/auth/callback', function (req, res) {
     req.session.get('session/csrf-token', function (err, csrfToken) {
       if (err || csrfToken !== req.query.state || !req.query.code) {
