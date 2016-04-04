@@ -42,6 +42,18 @@ footer {
     span {
       color: @grey4;
     }
+    a, a:visited {
+      font-weight: normal;
+      font-style: normal;
+      color: @grey4;
+
+      &:hover {
+        color: @grey0;
+      }
+      img {
+        height: 16px;
+      }
+    }
   }
   ul {
     list-style-type: none;
@@ -54,6 +66,10 @@ footer {
 
       &:first-child {
         margin: 0;
+
+        iframe {
+          margin-top: 5px;
+        }
       }
       a, a:visited {
         color: @grey0;
@@ -90,12 +106,8 @@ ul.stats {
 }
 .logo {
   display: inline-block;
-  /* TODO: Change it to this when it's fixed in less and IE8 support isn't no more
   background: url(../img/logo-david@2x.png) no-repeat left center/5.188em 3.375em;
-  */
-  background: url(../img/logo-david@2x.png) no-repeat left center;
-  background-size: 5.188em 3.375em;
-  margin-left: 3.6em;
+  margin-left: 2em;
   padding-left: 5.733em;
   font: 1.071em/3.610em Cardo, sans-serif;
   font-weight: 700;
@@ -114,7 +126,7 @@ ul.stats {
 .auth {
   display: inline-block;
   float: right;
-  margin-right: 3.6em;
+  margin-right: 2em;
   font: 1.071em/3.610em Cardo, sans-serif;
   font-weight: 700;
   text-decoration: none;
