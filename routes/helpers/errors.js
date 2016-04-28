@@ -54,7 +54,7 @@ module.exports.happened = function (err, req, res, msg) {
     console.log(err.stack)
   }
 
-  res.status(500).render(500, {error: msg})
+  res.status(500).render('500', {error: msg})
 
   return true
 }
