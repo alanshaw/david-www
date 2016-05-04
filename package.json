@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "async": "^1.4.1",
-    "camelcase": "^2.0.0",
+    "camelcase": "^3.0.0",
     "compression": "^1.4.1",
     "consolidate": "^0.14.0",
     "couchwatch": "^0.6.0",
