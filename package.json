@@ -73,7 +73,7 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-include-replace": "^3.0.0",
     "load-grunt-tasks": "^3.1.0",
-    "standard": "^6.0.7",
+    "standard": "^7.0.1",
     "tape": "^4.4.0"
   },
   "engines": {
