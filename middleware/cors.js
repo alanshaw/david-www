@@ -1,5 +1,5 @@
-module.exports = function (app) {
-  app.use(function (req, res, next) {
+module.exports = (app) => {
+  app.use((req, res, next) => {
     res.set('Access-Control-Allow-Origin', '*')
     res.set('Access-Control-Allow-Methods', 'GET')
 

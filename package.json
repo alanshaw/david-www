@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "async": "^1.4.1",
-    "camelcase": "^2.0.0",
+    "camelcase": "^3.0.0",
     "compression": "^1.4.1",
     "consolidate": "^0.14.0",
     "couchwatch": "^0.6.0",
@@ -62,7 +62,7 @@
   "devDependencies": {
     "brfs": "^1.4.0",
     "browserify-shim": "^3.8.12",
-    "grunt": "^0.4.5",
+    "grunt": "^1.0.1",
     "grunt-browserify": "^5.0.0",
     "grunt-cli": "^1.1.0",
     "grunt-contrib-clean": "^1.0.0",
@@ -71,9 +71,9 @@
     "grunt-contrib-less": "^1.0.0",
     "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-include-replace": "^3.0.0",
+    "grunt-include-replace": "^4.0.1",
     "load-grunt-tasks": "^3.1.0",
-    "standard": "^6.0.7",
+    "standard": "^7.0.1",
     "tape": "^4.4.0"
   },
   "engines": {

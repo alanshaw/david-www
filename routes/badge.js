@@ -1,70 +1,70 @@
-var path = require('path')
-var getDepsType = require('./helpers/get-deps-type')
+const path = require('path')
+const getDepsType = require('./helpers/get-deps-type')
 
 module.exports = function (app, manifest, brains) {
-  app.get('/:user/:repo/:ref?/status.svg', function (req, res) {
+  app.get('/:user/:repo/:ref?/status.svg', (req, res) => {
     sendStatusBadge(req, res, {extension: 'svg'})
   })
 
-  app.get('/:user/:repo/:ref?/status.png', function (req, res) {
+  app.get('/:user/:repo/:ref?/status.png', (req, res) => {
     sendStatusBadge(req, res, {extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?/status@2x.png', function (req, res) {
+  app.get('/:user/:repo/:ref?/status@2x.png', (req, res) => {
     sendStatusBadge(req, res, {retina: true, extension: 'png'})
   })
 
   /* dev */
 
-  app.get('/:user/:repo/:ref?/dev-status.svg', function (req, res) {
+  app.get('/:user/:repo/:ref?/dev-status.svg', (req, res) => {
     sendStatusBadge(req, res, {dev: true, extension: 'svg'})
   })
 
-  app.get('/:user/:repo/:ref?/dev-status.png', function (req, res) {
+  app.get('/:user/:repo/:ref?/dev-status.png', (req, res) => {
     sendStatusBadge(req, res, {dev: true, extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?/dev-status@2x.png', function (req, res) {
+  app.get('/:user/:repo/:ref?/dev-status@2x.png', (req, res) => {
     sendStatusBadge(req, res, {dev: true, retina: true, extension: 'png'})
   })
 
   /* peer */
 
-  app.get('/:user/:repo/:ref?/peer-status.png', function (req, res) {
+  app.get('/:user/:repo/:ref?/peer-status.png', (req, res) => {
     sendStatusBadge(req, res, {peer: true, extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?/peer-status@2x.png', function (req, res) {
+  app.get('/:user/:repo/:ref?/peer-status@2x.png', (req, res) => {
     sendStatusBadge(req, res, {peer: true, retina: true, extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?/peer-status.svg', function (req, res) {
+  app.get('/:user/:repo/:ref?/peer-status.svg', (req, res) => {
     sendStatusBadge(req, res, {peer: true, extension: 'svg'})
   })
 
   /* optional */
 
-  app.get('/:user/:repo/:ref?/optional-status.svg', function (req, res) {
+  app.get('/:user/:repo/:ref?/optional-status.svg', (req, res) => {
     sendStatusBadge(req, res, {optional: true, extension: 'svg'})
   })
 
-  app.get('/:user/:repo/:ref?/optional-status.png', function (req, res) {
+  app.get('/:user/:repo/:ref?/optional-status.png', (req, res) => {
     sendStatusBadge(req, res, {optional: true, extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?/optional-status@2x.png', function (req, res) {
+  app.get('/:user/:repo/:ref?/optional-status@2x.png', (req, res) => {
     sendStatusBadge(req, res, {optional: true, retina: true, extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?.svg', function (req, res) {
+  app.get('/:user/:repo/:ref?.svg', (req, res) => {
     sendStatusBadge(req, res, {extension: 'svg'})
   })
 
-  app.get('/:user/:repo/:ref?@2x.png', function (req, res) {
+  app.get('/:user/:repo/:ref?@2x.png', (req, res) => {
     sendStatusBadge(req, res, {retina: true, extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?.png', function (req, res) {
+  app.get('/:user/:repo/:ref?.png', (req, res) => {
     sendStatusBadge(req, res, {extension: 'png'})
   })
 
@@ -72,14 +72,14 @@ module.exports = function (app, manifest, brains) {
   function sendStatusBadge (req, res, opts) {
     opts = opts || {}
 
-    var badgePathOpts = {
+    const badgePathOpts = {
       type: getDepsType(opts),
       retina: opts.retina,
       style: req.query.style,
       extension: opts.extension
     }
 
-    var sendFileCb = function (err) {
+    const sendFileCb = function (err) {
       if (err) {
         console.error('Failed to send status badge', err)
         if (err.code === 'ENOENT') return res.status(404).end()
@@ -87,7 +87,7 @@ module.exports = function (app, manifest, brains) {
       }
     }
 
-    var sendFileOpts = {
+    const sendFileOpts = {
       lastModified: false,
       etag: false,
       headers: {
@@ -96,19 +96,19 @@ module.exports = function (app, manifest, brains) {
       }
     }
 
-    req.session.get('session/access-token', function (err, authToken) {
+    req.session.get('session/access-token', (err, authToken) => {
       if (err) {
         console.error('Failed to get session access token', err)
         return res.status(500).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
       }
 
-      manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, function (err, manifest) {
+      manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, (err, manifest) => {
         if (err) {
           console.error('Failed to get manifest', req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, err)
           return res.status(404).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
         }
 
-        brains.getInfo(manifest, opts, function (err, info) {
+        brains.getInfo(manifest, opts, (err, info) => {
           if (err) {
             console.error('Failed to get info', manifest, opts, err)
             return res.status(500).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
@@ -124,10 +124,10 @@ module.exports = function (app, manifest, brains) {
 function getBadgePath (status, opts) {
   opts = opts || {}
 
-  var type = opts.type ? opts.type + '-' : ''
-  var retina = opts.retina ? '@2x' : ''
-  var extension = opts.extension === 'png' ? 'png' : 'svg'
-  var style = extension === 'svg' && opts.style === 'flat-square' ? '-' + opts.style : ''
+  const type = opts.type ? opts.type + '-' : ''
+  const retina = opts.retina ? '@2x' : ''
+  const extension = opts.extension === 'png' ? 'png' : 'svg'
+  const style = extension === 'svg' && opts.style === 'flat-square' ? '-' + opts.style : ''
 
   return path.resolve(path.join(__dirname, '..', 'dist', 'img', 'status', type + status + retina + style + '.' + extension))
 }

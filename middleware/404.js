@@ -1,5 +1,5 @@
-module.exports = function (app) {
-  app.use(function (req, res) {
+module.exports = (app) => {
+  app.use((req, res) => {
     res.status(404)
 
     // respond with html page
@@ -9,7 +9,7 @@ module.exports = function (app) {
 
     // respond with json
     if (req.accepts('json')) {
-      return res.send({er: 'Not found'})
+      return res.send({error: 'Not found'})
     }
 
     // default to plain-text. send()

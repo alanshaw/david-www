@@ -1,9 +1,9 @@
-var newsFeed = require('../../lib/news-feed')
-var errors = require('../helpers/errors')
+const newsFeed = require('../../lib/news-feed')
+const errors = require('../helpers/errors')
 
-module.exports = function (app) {
-  app.get('/news/rss.xml', function (req, res) {
-    newsFeed.get(function (err, xml) {
+module.exports = (app) => {
+  app.get('/news/rss.xml', (req, res) => {
+    newsFeed.get((err, xml) => {
       if (errors.happened(err, req, res, 'Failed to get news feed xml')) {
         return
       }

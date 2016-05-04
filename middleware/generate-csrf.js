@@ -1,6 +1,6 @@
-module.exports = function (app, auth) {
-  app.use(function (req, res, next) {
-    req.session.get('session/csrf-token', function (err, csrfToken) {
+module.exports = (app, auth) => {
+  app.use((req, res, next) => {
+    req.session.get('session/csrf-token', (err, csrfToken) => {
       if (!err && csrfToken) {
         res.locals.csrfToken = csrfToken
         return next()

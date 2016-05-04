@@ -1,19 +1,19 @@
-var test = require('tape')
-var createFeed = require('../lib/feed')
+const test = require('tape')
+const createFeed = require('../lib/feed')
 
-test("Test get feed for dependency with no 'time' information", function (t) {
+test("Test get feed for dependency with no 'time' information", (t) => {
   t.plan(2)
 
-  var pkgName = 'sprintf'
+  const pkgName = 'sprintf'
 
   // Create a mock NPM
-  var mockNpm = {
-    load: function (opts, cb) {
+  const mockNpm = {
+    load (opts, cb) {
       process.nextTick(cb)
     },
     commands: {
-      view: function (args, silent, cb) {
-        process.nextTick(function () {
+      view (args, silent, cb) {
+        process.nextTick(() => {
           if (args[0] === pkgName) {
             // Simulate NPM response for no time information
             if (args[1] === 'time') {
@@ -27,22 +27,22 @@ test("Test get feed for dependency with no 'time' information", function (t) {
             }
           }
 
-          cb(new Error('Unexpected arguments to mock NPM view command ' + args))
+          cb(new Error(`Unexpected arguments to mock NPM view command ${args}`))
         })
       }
     }
   }
 
-  var feed = createFeed(mockNpm)
+  const feed = createFeed(mockNpm)
 
-  var manifest = {
+  const manifest = {
     name: 'Test',
     dependencies: {
       'sprintf': '~0.1.1'
     }
   }
 
-  feed.get(manifest, function (err, xml) {
+  feed.get(manifest, (err, xml) => {
     t.ifError(err)
 
     // If no time information was present then the feed should have defaulted to the unix epoch as the publish
@@ -53,19 +53,19 @@ test("Test get feed for dependency with no 'time' information", function (t) {
   })
 })
 
-test('Test get feed for package with invalid semver range dependency', function (t) {
+test('Test get feed for package with invalid semver range dependency', (t) => {
   t.plan(1)
 
-  var pkgName = 'sprintf'
+  const pkgName = 'sprintf'
 
   // Create a mock NPM
-  var mockNpm = {
-    load: function (opts, cb) {
+  const mockNpm = {
+    load (opts, cb) {
       process.nextTick(cb)
     },
     commands: {
-      view: function (args, silent, cb) {
-        process.nextTick(function () {
+      view (args, silent, cb) {
+        process.nextTick(() => {
           if (args[0] === pkgName) {
             if (args[1] === 'version') {
               cb(null, {'0.2.1': {version: '0.2.1'}})
@@ -73,22 +73,22 @@ test('Test get feed for package with invalid semver range dependency', function 
             }
           }
 
-          cb(new Error('Unexpected arguments to mock NPM view command ' + args))
+          cb(new Error(`Unexpected arguments to mock NPM view command ${args}`))
         })
       }
     }
   }
 
-  var feed = createFeed(mockNpm)
+  const feed = createFeed(mockNpm)
 
-  var manifest = {
+  const manifest = {
     name: 'Test',
     dependencies: {
       'sprintf': 'GARBAGE-'
     }
   }
 
-  feed.get(manifest, function (err) {
+  feed.get(manifest, (err) => {
     t.ifError(err)
     t.end()
   })

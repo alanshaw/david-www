@@ -1,10 +1,10 @@
-var errors = require('./helpers/errors')
+const errors = require('./helpers/errors')
 
-module.exports = function (app, profile) {
-  app.get('/:user', function (req, res) {
+module.exports = (app, profile) => {
+  app.get('/:user', (req, res) => {
     var authToken = null
 
-    req.session.getAll(function (err, sessionData) {
+    req.session.getAll((err, sessionData) => {
       if (errors.happened(err, req, res, 'Failed to get session data')) {
         return
       }
@@ -29,7 +29,7 @@ module.exports = function (app, profile) {
 
         res.render('profile', {
           user: req.params.user,
-          avatarUrl: avatarUrl,
+          avatarUrl,
           repos: data
         })
       })

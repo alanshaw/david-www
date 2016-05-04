@@ -1,5 +1,5 @@
-module.exports = function (app, config) {
-  app.use(function (req, res, next) {
+module.exports = (app, config) => {
+  app.use((req, res, next) => {
     res.locals.config = config
     next()
   })

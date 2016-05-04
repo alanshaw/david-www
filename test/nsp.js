@@ -1,11 +1,11 @@
-var test = require('tape')
-var createNsp = require('../lib/nsp')
+const test = require('tape')
+const createNsp = require('../lib/nsp')
 
 function mockNspApi (results) {
   return {
-    advisories: function (opts, cb) {
+    advisories (opts, cb) {
       opts = opts || {}
-      process.nextTick(function () {
+      process.nextTick(() => {
         cb(null, {
           offset: opts.offset || 0,
           limit: opts.limit || 100,
@@ -18,42 +18,40 @@ function mockNspApi (results) {
 }
 
 function mockDb () {
-  var data = {}
+  const data = {}
 
   return {
-    get: function (key, cb) {
+    get (key, cb) {
       if (data[key]) {
-        return process.nextTick(function () {
-          cb(null, data[key])
-        })
+        return process.nextTick(() => cb(null, data[key]))
       }
 
-      var err = new Error(key + ' not found')
+      const err = new Error(key + ' not found')
       err.notFound = true
-      process.nextTick(function () { cb(err) })
+      process.nextTick(() => cb(err))
     },
-    put: function (key, value, cb) {
+    put (key, value, cb) {
       data[key] = value
       process.nextTick(cb)
     }
   }
 }
 
-test('NSP update advisories works good', function (t) {
+test('NSP update advisories works good', (t) => {
   t.plan(8)
 
-  var apiResp = [
+  const apiResp = [
     {id: 0, module_name: 'test0'},
     {id: 1, module_name: 'test1'},
     {id: 2, module_name: 'test2'}
   ]
 
-  var nsp = createNsp(mockNspApi(apiResp), mockDb())
+  const nsp = createNsp(mockNspApi(apiResp), mockDb())
 
   nsp.syncAdvisories(function (err) {
     t.ifError(err)
 
-    nsp.getAdvisories(['test0', 'test1', 'test2'], function (err, advisories) {
+    nsp.getAdvisories(['test0', 'test1', 'test2'], (err, advisories) => {
       t.ifError(err)
       t.ok(advisories['test0'])
       t.equal(advisories['test0'].length, 1)

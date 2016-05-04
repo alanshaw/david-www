@@ -1,4 +1,4 @@
-module.exports = function (opts) {
+module.exports = (opts) => {
   var type = ''
 
   if (opts.dev) {

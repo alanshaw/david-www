@@ -1,5 +1,5 @@
-module.exports = function (app, stats) {
-  app.get('/dependency-counts.json', function (req, res) {
+module.exports = (app, stats) => {
+  app.get('/dependency-counts.json', (req, res) => {
     res.json(stats.getDependencyCounts())
   })
 }

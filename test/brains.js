@@ -1,11 +1,11 @@
-var test = require('tape')
-var david = require('david')
-var merge = require('merge')
-var createBrains = require('../lib/brains')
+const test = require('tape')
+const david = require('david')
+const merge = require('merge')
+const createBrains = require('../lib/brains')
 
 // Create a mock manifest from the deps info david should return
 function mockManifest (deps) {
-  var manifest = {name: 'mockery', dependencies: {}}
+  const manifest = {name: 'mockery', dependencies: {}}
   Object.keys(deps).forEach(function (depName) {
     manifest.dependencies[depName] = deps[depName].required
   })
@@ -14,7 +14,7 @@ function mockManifest (deps) {
 
 function mockDavid (deps, updatedDeps, updatedStableDeps) {
   return {
-    getDependencies: function (manifest, options, cb) {
+    getDependencies (manifest, options, cb) {
       // Allow cb to be passed as second parameter
       if (!cb) {
         cb = options
@@ -25,7 +25,7 @@ function mockDavid (deps, updatedDeps, updatedStableDeps) {
 
       cb(null, merge({}, deps))
     },
-    getUpdatedDependencies: function (manifest, options, cb) {
+    getUpdatedDependencies (manifest, options, cb) {
       // Allow cb to be passed as second parameter
       if (!cb) {
         cb = options
@@ -41,20 +41,20 @@ function mockDavid (deps, updatedDeps, updatedStableDeps) {
 }
 
 function mockRegistry () {
-  return {on: function () {}}
+  return {on () {}}
 }
 
 function mockDb () {
   return {
-    get: function (key, cb) {
-      var err = new Error(key + ' not found')
+    get (key, cb) {
+      const err = new Error(key + ' not found')
       err.notFound = true
-      process.nextTick(function () { cb(err) })
+      process.nextTick(() => cb(err))
     },
-    batch: function (batch, cb) {
+    batch (batch, cb) {
       process.nextTick(cb)
     },
-    del: function (key, cb) {
+    del (key, cb) {
       process.nextTick(cb)
     }
   }
@@ -62,16 +62,16 @@ function mockDb () {
 
 function mockNsp () {
   return {
-    getAdvisories: function (depNames, cb) {
-      process.nextTick(function () { cb(null, {}) })
+    getAdvisories (depNames, cb) {
+      process.nextTick(() => cb(null, {}))
     }
   }
 }
 
-test('Test single, up to date, unpinned dependency', function (t) {
+test('Test single, up to date, unpinned dependency', (t) => {
   t.plan(19)
 
-  var deps = {
+  const deps = {
     foo: {
       required: '~1.0.0',
       stable: '1.0.0',
@@ -79,9 +79,9 @@ test('Test single, up to date, unpinned dependency', function (t) {
     }
   }
 
-  var brains = createBrains(mockDavid(deps, {}, {}), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, {}, {}), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -111,10 +111,10 @@ test('Test single, up to date, unpinned dependency', function (t) {
   })
 })
 
-test('Test single, up to date, pinned dependency', function (t) {
+test('Test single, up to date, pinned dependency', (t) => {
   t.plan(19)
 
-  var deps = {
+  const deps = {
     foo: {
       required: '1.0.0',
       stable: '1.0.0',
@@ -122,9 +122,9 @@ test('Test single, up to date, pinned dependency', function (t) {
     }
   }
 
-  var brains = createBrains(mockDavid(deps, {}, {}), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, {}, {}), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -154,7 +154,7 @@ test('Test single, up to date, pinned dependency', function (t) {
   })
 })
 
-test('Test single, out of date, unpinned dependency', function (t) {
+test('Test single, out of date, unpinned dependency', (t) => {
   t.plan(19)
 
   var deps, updatedDeps, updatedStableDeps
@@ -167,9 +167,9 @@ test('Test single, out of date, unpinned dependency', function (t) {
     }
   }
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -199,7 +199,7 @@ test('Test single, out of date, unpinned dependency', function (t) {
   })
 })
 
-test('Test single, out of date, pinned dependency', function (t) {
+test('Test single, out of date, pinned dependency', (t) => {
   t.plan(19)
 
   var deps, updatedDeps, updatedStableDeps
@@ -212,9 +212,9 @@ test('Test single, out of date, pinned dependency', function (t) {
     }
   }
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -244,10 +244,10 @@ test('Test single, out of date, pinned dependency', function (t) {
   })
 })
 
-test('Test unstable dependency not flagged as out of date when no stable to upgrade to', function (t) {
+test('Test unstable dependency not flagged as out of date when no stable to upgrade to', (t) => {
   t.plan(19)
 
-  var deps = {
+  const deps = {
     foo: {
       required: '~0.4.0rc7',
       stable: '0.3.7',
@@ -255,14 +255,14 @@ test('Test unstable dependency not flagged as out of date when no stable to upgr
     }
   }
 
-  var updatedDeps = {foo: deps.foo}
+  const updatedDeps = {foo: deps.foo}
 
   // No stable deps to upgrade to
-  var updatedStableDeps = {}
+  const updatedStableDeps = {}
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -292,7 +292,7 @@ test('Test unstable dependency not flagged as out of date when no stable to upgr
   })
 })
 
-test('Test 2 dependencies, 1 up to date & unpinned, 1 up to date & unpinned', function (t) {
+test('Test 2 dependencies, 1 up to date & unpinned, 1 up to date & unpinned', (t) => {
   t.plan(25)
 
   var deps, updatedDeps, updatedStableDeps
@@ -312,9 +312,9 @@ test('Test 2 dependencies, 1 up to date & unpinned, 1 up to date & unpinned', fu
 
   updatedDeps = updatedStableDeps = {}
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -354,7 +354,7 @@ test('Test 2 dependencies, 1 up to date & unpinned, 1 up to date & unpinned', fu
   })
 })
 
-test('Test 2 dependencies, 1 up to date & unpinned, 1 out of date & unpinned', function (t) {
+test('Test 2 dependencies, 1 up to date & unpinned, 1 out of date & unpinned', (t) => {
   t.plan(25)
 
   var deps, updatedDeps, updatedStableDeps
@@ -377,9 +377,9 @@ test('Test 2 dependencies, 1 up to date & unpinned, 1 out of date & unpinned', f
   // Setup foo as the updated dep
   updatedDeps.foo = deps.foo
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -419,7 +419,7 @@ test('Test 2 dependencies, 1 up to date & unpinned, 1 out of date & unpinned', f
   })
 })
 
-test('Test 2 dependencies, 1 out of date & unpinned, 1 out of date & unpinned', function (t) {
+test('Test 2 dependencies, 1 out of date & unpinned, 1 out of date & unpinned', (t) => {
   t.plan(25)
 
   var deps, updatedDeps, updatedStableDeps
@@ -437,9 +437,9 @@ test('Test 2 dependencies, 1 out of date & unpinned, 1 out of date & unpinned', 
     }
   }
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -479,7 +479,7 @@ test('Test 2 dependencies, 1 out of date & unpinned, 1 out of date & unpinned', 
   })
 })
 
-test('Test 2 dependencies, 1 up to date & pinned, 1 up to date & pinned', function (t) {
+test('Test 2 dependencies, 1 up to date & pinned, 1 up to date & pinned', (t) => {
   t.plan(25)
 
   var deps, updatedDeps, updatedStableDeps
@@ -499,9 +499,9 @@ test('Test 2 dependencies, 1 up to date & pinned, 1 up to date & pinned', functi
 
   updatedDeps = updatedStableDeps = {}
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -541,7 +541,7 @@ test('Test 2 dependencies, 1 up to date & pinned, 1 up to date & pinned', functi
   })
 })
 
-test('Test 2 dependencies, 1 up to date & pinned, 1 out of date & pinned', function (t) {
+test('Test 2 dependencies, 1 up to date & pinned, 1 out of date & pinned', (t) => {
   t.plan(25)
 
   var deps, updatedDeps, updatedStableDeps
@@ -564,9 +564,9 @@ test('Test 2 dependencies, 1 up to date & pinned, 1 out of date & pinned', funct
   // Setup bar as the updated dep
   updatedDeps.bar = deps.bar
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -606,7 +606,7 @@ test('Test 2 dependencies, 1 up to date & pinned, 1 out of date & pinned', funct
   })
 })
 
-test('Test 2 dependencies, 1 out of date & pinned, 1 out of date & pinned', function (t) {
+test('Test 2 dependencies, 1 out of date & pinned, 1 out of date & pinned', (t) => {
   t.plan(25)
 
   var deps, updatedDeps, updatedStableDeps
@@ -624,9 +624,9 @@ test('Test 2 dependencies, 1 out of date & pinned, 1 out of date & pinned', func
     }
   }
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -666,7 +666,7 @@ test('Test 2 dependencies, 1 out of date & pinned, 1 out of date & pinned', func
   })
 })
 
-test('Test 2 dependencies, 1 up to date & unpinned, 1 up to date & pinned', function (t) {
+test('Test 2 dependencies, 1 up to date & unpinned, 1 up to date & pinned', (t) => {
   t.plan(25)
 
   var deps, updatedDeps, updatedStableDeps
@@ -686,9 +686,9 @@ test('Test 2 dependencies, 1 up to date & unpinned, 1 up to date & pinned', func
 
   updatedDeps = updatedStableDeps = {}
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -728,7 +728,7 @@ test('Test 2 dependencies, 1 up to date & unpinned, 1 up to date & pinned', func
   })
 })
 
-test('Test 2 dependencies, 1 up to date & unpinned, 1 out of date & pinned', function (t) {
+test('Test 2 dependencies, 1 up to date & unpinned, 1 out of date & pinned', (t) => {
   t.plan(25)
 
   var deps, updatedDeps, updatedStableDeps
@@ -750,9 +750,9 @@ test('Test 2 dependencies, 1 up to date & unpinned, 1 out of date & pinned', fun
 
   updatedDeps.bar = deps.bar
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -792,7 +792,7 @@ test('Test 2 dependencies, 1 up to date & unpinned, 1 out of date & pinned', fun
   })
 })
 
-test('Test 2 dependencies, 1 up to date & pinned, 1 out of date & unpinned', function (t) {
+test('Test 2 dependencies, 1 up to date & pinned, 1 out of date & unpinned', (t) => {
   t.plan(25)
 
   var deps, updatedDeps, updatedStableDeps
@@ -814,9 +814,9 @@ test('Test 2 dependencies, 1 up to date & pinned, 1 out of date & unpinned', fun
 
   updatedDeps.foo = deps.foo
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
@@ -856,7 +856,7 @@ test('Test 2 dependencies, 1 up to date & pinned, 1 out of date & unpinned', fun
   })
 })
 
-test('Test 2 dependencies, 1 out of date & pinned, 1 out of date & unpinned', function (t) {
+test('Test 2 dependencies, 1 out of date & pinned, 1 out of date & unpinned', (t) => {
   t.plan(25)
 
   var deps, updatedDeps, updatedStableDeps
@@ -874,9 +874,9 @@ test('Test 2 dependencies, 1 out of date & pinned, 1 out of date & unpinned', fu
     }
   }
 
-  var brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
 
-  brains.getInfo(mockManifest(deps), function (err, info) {
+  brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
 
     t.ok(info, 'An info object should have been returned')
