@@ -145,7 +145,9 @@ $('#status-page').each(function () {
 
   badges.click(function () {
     if (!$($(this).attr('href')).size()) {
-      var data = {type: $(this).data('type'), user: repo.data('user'), repo: repo.data('repo'), path: repo.data('path'), ref: repo.data('ref')}
+      var qs = $.param(JSON.parse(JSON.stringify({path: repo.data('path') || void 0, token: $(this).data('token')})))
+      var linkQs = $.param(JSON.parse(JSON.stringify({path: repo.data('path') || void 0})))
+      var data = {type: $(this).data('type'), user: repo.data('user'), repo: repo.data('repo'), ref: repo.data('ref'), qs: qs, linkQs: linkQs}
       var ct = $(data.type ? embedTmplType(data) : embedTmpl(data))
 
       $('input', ct).each(function () {

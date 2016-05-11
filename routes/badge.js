@@ -1,7 +1,7 @@
 const path = require('path')
 const getDepsType = require('./helpers/get-deps-type')
 
-module.exports = function (app, manifest, brains) {
+module.exports = function (app, manifest, brains, badgeToken) {
   app.get('/:user/:repo/:ref?/status.svg', (req, res) => {
     sendStatusBadge(req, res, {extension: 'svg'})
   })
@@ -96,12 +96,29 @@ module.exports = function (app, manifest, brains) {
       }
     }
 
-    req.session.get('session/access-token', (err, authToken) => {
-      if (err) {
-        console.error('Failed to get session access token', err)
-        return res.status(500).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
+    if (req.query.token && badgeToken.enabled) {
+      let authToken
+
+      try {
+        // badgeToken.decrypt will barf with a TypeError if the body is ill.
+        authToken = badgeToken.decrypt(req.query.token)
+      } catch (err) {
+        return res.status(401).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
       }
 
+      send(authToken)
+    } else {
+      req.session.get('session/access-token', (err, authToken) => {
+        if (err) {
+          console.error('Failed to get session access token', err)
+          return res.status(500).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
+        }
+
+        send(authToken)
+      })
+    }
+
+    function send (authToken) {
       manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, (err, manifest) => {
         if (err) {
           console.error('Failed to get manifest', req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, err)
@@ -117,7 +134,7 @@ module.exports = function (app, manifest, brains) {
           res.sendFile(getBadgePath(info.status, badgePathOpts), sendFileOpts, sendFileCb)
         })
       })
-    })
+    }
   }
 }
 
