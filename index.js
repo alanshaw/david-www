@@ -19,7 +19,7 @@ const changelog = require('./lib/changelog')(config.github, config.npm)
 const profile = require('./lib/profile')(manifest, brains, github)
 const feed = require('./lib/feed')(npm, config.npm, config.site)
 const stats = require('./lib/stats')(registry, manifest)
-const badgeToken = require('./lib/badge-token')(config.token)
+const badgeToken = require('./lib/badge-token')(config.token, config.github)
 
 const app = express()
 
