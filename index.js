@@ -1,9 +1,14 @@
-const path = require('path')
+const Path = require('path')
 const express = require('express')
 const compress = require('compression')
-const consolidate = require('consolidate')
 const david = require('david')
 const npm = require('npm')
+const Helmet = require('react-helmet')
+const { match } = require('react-router')
+const { createStore } = require('redux')
+const Boom = require('boom')
+const reducers = require('dist/ui/reducers')
+const { layoutTpl, bodyTpl } = require('dist/ui/server')
 
 const config = require('./config')
 const nspApiClient = require('nsp-advisories-api')()
@@ -22,9 +27,7 @@ const stats = require('./lib/stats')(registry, manifest)
 
 const app = express()
 
-app.engine('html', consolidate.handlebars)
-app.set('view engine', 'html')
-app.set('views', path.join(__dirname, 'dist'))
+app.set('views', Path.join(__dirname, 'dist'))
 app.use(compress())
 
 const statics = require('./statics')
@@ -54,10 +57,45 @@ routes.status(app, manifest, brains)
 routes.profile(app, profile)
 routes.homepage(app, stats)
 
-middleware['404'](app)
+app.get('*', (req, res, next) => {
+  match({ routes: routes(), location: req.url }, (err, redirectLocation, renderProps) => {
+    if (err) return next(err)
+
+    if (redirectLocation) {
+      return res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+    }
+
+    if (!renderProps) {
+      return next(Boom.notFound())
+    }
+
+    const components = renderProps.components
+
+    if (components.some((c) => c && c.displayName === 'error-404')) {
+      return next(Boom.notFound())
+    }
+
+    const Comp = components[components.length - 1].WrappedComponent
+    const fetchData = (Comp && Comp.fetchData) || ((_, cb) => cb())
+
+    const store = createStore(reducers)
+    const {location, params, history} = renderProps
+
+    fetchData({ location, params, history, store }, (err) => {
+      if (err) return next(err)
+
+      const state = store.getState()
+      const html = bodyTpl({ store, props: renderProps })
+
+      const head = Helmet.rewind()
+
+      res.send(layoutTpl({ html, state, head }))
+    })
+  })
+})
 
 nsp.syncAdvisories()
 nsp.syncAdvisoriesPeriodically(config.nsp && config.nsp.syncAdvisoriesInterval)
 
-const port = process.env.PORT || 1337
+const port = parseInt(process.env.PORT || 1337, 10)
 const server = app.listen(port, () => console.log('David started', server.address()))
