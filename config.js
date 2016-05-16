@@ -31,5 +31,9 @@ module.exports = require('rc')('david', {
   },
   nsp: {
     syncAdvisoriesInterval: 3600000
+  },
+  token: {
+    algorithm: 'aes-256-ctr',
+    secret: null
   }
 })

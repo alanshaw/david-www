@@ -28,7 +28,7 @@ module.exports = (manifest, brains) => {
             return
           }
 
-          cb(manifest, info)
+          cb(manifest, info, authToken)
         })
       })
     })

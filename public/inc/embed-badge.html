@@ -7,24 +7,24 @@
     <option value="flat-square">Flat Square</option>
   </select>
   <div class="theme theme-svg">
-    <a href="/{{user}}/{{repo}}{{ref}}.svg{{#if path}}?path={{path}}{{/if}}"><img src="/{{user}}/{{repo}}{{ref}}.svg{{#if path}}?path={{path}}{{/if}}" alt="Dependency status"></a>
+    <a href="/{{user}}/{{repo}}{{ref}}.svg{{#if qs}}?{{qs}}{{/if}}"><img src="/{{user}}/{{repo}}{{ref}}.svg{{#if qs}}?{{qs}}{{/if}}" alt="Dependency status"></a>
     <label for="badge-markdown-svg">Markdown</label>
-    <input id="badge-markdown-svg" type="text" value="[![Dependency Status](@@hostname/{{user}}/{{repo}}{{ref}}.svg{{#if path}}?path={{path}}{{/if}})](@@hostname/{{user}}/{{repo}}{{ref}}{{#if path}}?path={{path}}{{/if}})">
+    <input id="badge-markdown-svg" type="text" value="[![Dependency Status](@@hostname/{{user}}/{{repo}}{{ref}}.svg{{#if qs}}?{{qs}}{{/if}})](@@hostname/{{user}}/{{repo}}{{ref}}{{#if linkQs}}?{{linkQs}}{{/if}})">
     <label for="badge-html-svg">HTML</label>
-    <input id="badge-html-svg" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}{{ref}}{{#if path}}?path={{path}}{{/if}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}{{ref}}.svg{{#if path}}?path={{path}}{{/if}}&quot;/&gt;&lt;/a&gt;">
+    <input id="badge-html-svg" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}{{ref}}{{#if linkQs}}?{{linkQs}}{{/if}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}{{ref}}.svg{{#if qs}}?{{qs}}{{/if}}&quot;/&gt;&lt;/a&gt;">
   </div>
   <div class="theme theme-png">
-    <a href="/{{user}}/{{repo}}{{ref}}.png{{#if path}}?path={{path}}{{/if}}"><img src="/{{user}}/{{repo}}{{ref}}.png{{#if path}}?path={{path}}{{/if}}" alt="Dependency status"></a>
+    <a href="/{{user}}/{{repo}}{{ref}}.png{{#if qs}}?{{qs}}{{/if}}"><img src="/{{user}}/{{repo}}{{ref}}.png{{#if linkQs}}?{{linkQs}}{{/if}}" alt="Dependency status"></a>
     <label for="badge-markdown-png">Markdown</label>
-    <input id="badge-markdown-png" type="text" value="[![Dependency Status](@@hostname/{{user}}/{{repo}}{{ref}}.png{{#if path}}?path={{path}}{{/if}})](@@hostname/{{user}}/{{repo}}{{ref}}{{#if path}}?path={{path}}{{/if}})">
+    <input id="badge-markdown-png" type="text" value="[![Dependency Status](@@hostname/{{user}}/{{repo}}{{ref}}.png{{#if qs}}?{{qs}}{{/if}})](@@hostname/{{user}}/{{repo}}{{ref}}{{#if linkQs}}?{{linkQs}}{{/if}})">
     <label for="badge-html-png">HTML</label>
-    <input id="badge-html-png" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}{{ref}}{{#if path}}?path={{path}}{{/if}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}{{ref}}.png{{#if path}}?path={{path}}{{/if}}&quot;/&gt;&lt;/a&gt;">
+    <input id="badge-html-png" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}{{ref}}{{#if linkQs}}?{{linkQs}}{{/if}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}{{ref}}.png{{#if qs}}?{{qs}}{{/if}}&quot;/&gt;&lt;/a&gt;">
   </div>
   <div class="theme theme-flat-square">
-    <a href="/{{user}}/{{repo}}{{ref}}.svg?style=flat-square{{#if path}}&amp;path={{path}}{{/if}}"><img src="/{{user}}/{{repo}}{{ref}}.svg?style=flat-square{{#if path}}&amp;path={{path}}{{/if}}" alt="Dependency status"></a>
+    <a href="/{{user}}/{{repo}}{{ref}}.svg?style=flat-square{{#if qs}}&amp;{{qs}}{{/if}}"><img src="/{{user}}/{{repo}}{{ref}}.svg?style=flat-square{{#if qs}}&amp;{{qs}}{{/if}}" alt="Dependency status"></a>
     <label for="badge-markdown-flat-square">Markdown</label>
-    <input id="badge-markdown-flat-square" type="text" value="[![Dependency Status](@@hostname/{{user}}/{{repo}}{{ref}}.svg?style=flat-square{{#if path}}&amp;path={{path}}{{/if}})](@@hostname/{{user}}/{{repo}}{{ref}}{{#if path}}?path={{path}}{{/if}})">
+    <input id="badge-markdown-flat-square" type="text" value="[![Dependency Status](@@hostname/{{user}}/{{repo}}{{ref}}.svg?style=flat-square{{#if qs}}&amp;{{qs}}{{/if}})](@@hostname/{{user}}/{{repo}}{{ref}}{{#if linkQs}}?{{linkQs}}{{/if}})">
     <label for="badge-html-flat-square">HTML</label>
-    <input id="badge-html-flat-square" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}{{ref}}{{#if path}}?path={{path}}{{/if}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}{{ref}}.svg?style=flat-square{{#if path}}&amp;path={{path}}{{/if}}&quot;/&gt;&lt;/a&gt;">
+    <input id="badge-html-flat-square" type="text" value="&lt;a href=&quot;@@hostname/{{user}}/{{repo}}{{ref}}{{#if linkQs}}?{{linkQs}}{{/if}}&quot; title=&quot;Dependency status&quot;&gt;&lt;img src=&quot;@@hostname/{{user}}/{{repo}}{{ref}}.svg?style=flat-square{{#if qs}}&amp;{{qs}}{{/if}}&quot;/&gt;&lt;/a&gt;">
   </div>
 </div>
