@@ -2,7 +2,7 @@ import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { Provider } from 'react-redux'
 import { RouterContext } from 'react-router'
-import Head from './components/head'
+import Head from './components/head.jsx'
 
 export function layoutTpl ({ head, html, state }) {
   return `<!DOCTYPE html>

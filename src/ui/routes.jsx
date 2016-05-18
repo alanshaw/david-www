@@ -2,7 +2,7 @@ import React from 'react'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import pages from './pages'
-import Layout from './components/layout'
+import Layout from './components/layout.jsx'
 
 export default function (props = {}) {
   let history = browserHistory

@@ -9,10 +9,10 @@ export default ({app}) => {
 
   const publicPath = (folder) => Path.join(__dirname, '..', 'public', folder)
 
-  app.use('/css', express.static(publicPath('css'), { maxAge: oneMonth }))
+  app.use('/bundle.css', express.static(publicPath('bundle.css'), { maxAge: oneMonth }))
+  app.use('/bundle.js', express.static(publicPath('bundle.js'), { maxAge: oneMonth }))
   app.use('/fonts', express.static(publicPath('fonts'), { maxAge: oneMonth }))
   app.use('/img', express.static(publicPath('img'), { maxAge: oneMonth }))
-  app.use('/js', express.static(publicPath('js'), { maxAge: oneMonth }))
 
   app.use(favicon(publicPath('favicon.ico'), { maxAge: oneWeek }))
 

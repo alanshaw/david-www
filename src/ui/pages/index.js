@@ -1,5 +1,5 @@
-import Home from './home'
-import Error404 from './error-404'
+import Home from './home.jsx'
+import Error404 from './error-404.jsx'
 
 export default {
   Home,

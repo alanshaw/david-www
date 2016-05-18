@@ -7,7 +7,7 @@ import { match } from 'react-router'
 import { createStore } from 'redux'
 import Boom from 'boom'
 import reducers from './ui/reducers'
-import { layoutTpl, bodyTpl } from './ui/server'
+import { layoutTpl, bodyTpl } from './ui/server.jsx'
 
 import config from './config'
 import createNspApiClient from 'nsp-advisories-api'
@@ -54,7 +54,7 @@ middleware.generateCsrf({ app, auth })
 middleware.globals({ app, config })
 middleware.cors({ app })
 
-import uiRoutes from './ui/routes'
+import uiRoutes from './ui/routes.jsx'
 
 app.get('*', (req, res, next) => {
   match({ routes: uiRoutes(), location: req.url }, (err, redirectLocation, renderProps) => {
