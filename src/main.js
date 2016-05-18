@@ -77,7 +77,8 @@ app.get('*', (req, res, next) => {
     const Comp = components[components.length - 1].WrappedComponent
     const fetchData = (Comp && Comp.fetchData) || ((_, cb) => cb())
 
-    const store = createStore(reducers)
+    const initialState = { config: config.public }
+    const store = createStore(reducers, initialState)
     const {location, params, history} = renderProps
 
     fetchData({ location, params, history, store }, (err) => {

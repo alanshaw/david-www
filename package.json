@@ -23,7 +23,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "start": "node dist/index",
+    "start": "node dist/main",
     "build": "run-p build:**",
     "build:js:client": "browserify src/ui/main.js -o public/bundle.js",
     "build:js:server": "babel src --out-dir dist",
@@ -49,7 +49,6 @@
     "babelify": "^7.3.0",
     "boom": "^3.1.3",
     "compression": "^1.4.1",
-    "configurify": "^1.0.0",
     "couchwatch": "^0.6.0",
     "cycle": "^1.0.3",
     "d3": "^3.5.5",
@@ -101,12 +100,6 @@
             "react",
             "es2015"
           ]
-        }
-      ],
-      [
-        "configurify",
-        {
-          "pattern": "**/config/*"
         }
       ]
     ]

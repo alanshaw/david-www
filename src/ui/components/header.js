@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Config from '../../config/public'
 
 const Header = React.createClass({
   propTypes: {
-    user: React.PropTypes.object
+    user: React.PropTypes.object,
+    config: React.PropTypes.object.isRequired
   },
 
   render () {
@@ -26,11 +26,13 @@ const Header = React.createClass({
   },
 
   renderSignedOut () {
-    if (!Config.github.oauth || !Config.github.oauth.id) return
+    const config = this.props.config
 
-    const github = `${Config.github.protocol}://${Config.github.host}`
+    if (!config.github.oauth || !config.github.oauth.id) return
+
+    const github = `${config.github.protocol}://${config.github.host}`
     // TODO: how to CSRF token
-    const url = `${github}/login/oauth/authorize?client_id=${Config.github.oauth.id}&state={{csrfToken}}&scope=repo,read:org,user:email`
+    const url = `${github}/login/oauth/authorize?client_id=${config.github.oauth.id}&state={{csrfToken}}&scope=repo,read:org,user:email`
 
     return (
       <a className='auth' href={url}>Sign in <i className='fa fa-github'></i></a>
@@ -38,8 +40,8 @@ const Header = React.createClass({
   }
 })
 
-function mapStateToProps ({user, config}) {
-  return {user, config}
+function mapStateToProps ({ user, config }) {
+  return { user, config }
 }
 
 export default connect(mapStateToProps)(Header)
