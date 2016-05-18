@@ -23,12 +23,22 @@
   ],
   "license": "MIT",
   "scripts": {
-    "start": "node index",
-    "build": "npm-run-all build:**",
-    "build:js:client": "browserify ./ui/main.jsx -o public/bundle.js",
-    "build:js:server": "babel ui --out-dir dist/ui",
+    "start": "node dist/index",
+    "build": "run-p build:**",
+    "build:js:client": "browserify src/ui/main.js -o public/bundle.js",
+    "build:js:server": "babel src --out-dir dist",
+    "build:css": "node-sass --include-path node_modules src/ui/main.scss public/bundle.css",
+    "minify": "run-p minify:*",
+    "minify:js": "uglifyjs public/bundle.js -o public/bundle.js",
+    "minify:css": "postcss -u cssnano -i public/bundle.css -o public/bundle.css",
     "lint": "standard",
-    "test": "npm run lint && npm run build && tape test/*.js"
+    "test": "run-s lint build test:*",
+    "test:unit": "tape test/*.js",
+    "watch": "npm-run-all build --parallel watch:*",
+    "watch:js": "nodemon --watch src -x 'run-p build:js:*'",
+    "watch:css": "node-sass --include-path node_modules -w src/ui/main.scss public/bundle.css",
+    "watch:server": "nodemon --watch dist --watch public -e js,css -x 'npm start'",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "async": "^1.4.1",
@@ -39,12 +49,13 @@
     "babelify": "^7.3.0",
     "boom": "^3.1.3",
     "compression": "^1.4.1",
+    "configurify": "^1.0.0",
     "couchwatch": "^0.6.0",
     "cycle": "^1.0.3",
     "d3": "^3.5.5",
     "david": "^7.0.0",
     "dep-diff": "^1.0.1",
-    "express": "^4.12.2",
+    "express": "^4.13.4",
     "extract": "^1.0.0",
     "github": "^0.2.3",
     "github-url": "^1.1.0",
@@ -76,7 +87,7 @@
     "tape": "^4.4.0"
   },
   "engines": {
-    "node": "^6.0.0"
+    "node": "^6.1.0"
   },
   "directories": {
     "test": "test"
@@ -90,6 +101,12 @@
             "react",
             "es2015"
           ]
+        }
+      ],
+      [
+        "configurify",
+        {
+          "pattern": "**/config/*"
         }
       ]
     ]
