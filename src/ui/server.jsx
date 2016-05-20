@@ -35,7 +35,7 @@ export function layoutTpl ({ head, html, state }) {
   <body>
     <div id="root">${html}</div>
     <script>window.__REDUX_STATE__ = ${JSON.stringify(state)}</script>
-    <script src="/bundle.js?v=1"></script>
+    <script src="/bundle.js"></script>
   </body>
 </html>`
 }

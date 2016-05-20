@@ -4,6 +4,7 @@ import Helmet from 'react-helmet'
 export default function () {
   return (
     <Helmet
+      htmlAttributes={{lang: 'en'}}
       defaultTitle='David, a dependency management tool for Node.js projects'
       titleTemplate='David - %s'
       meta={[
@@ -23,6 +24,7 @@ export default function () {
         { name: 'twitter:image', content: null }
       ]}
       link={[
+        { rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Cardo:400,700|Lato:900' },
         { rel: 'stylesheet', href: '/bundle.css' }
       ]}
     />

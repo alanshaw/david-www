@@ -1,4 +1,4 @@
-#home-page {
+.home-page {
   #examples {
     list-style-type: none;
     padding: 0;
@@ -121,7 +121,7 @@
 }
 
 @media only screen and (min-width: 768px) {
-  #home-page {
+  .home-page {
     #main > div {
       float: left;
       width: 57%;

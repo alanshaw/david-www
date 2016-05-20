@@ -1,7 +1,7 @@
 import React from 'react'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
-import pages from './pages'
+import { Home, Status, Error404 } from './pages'
 import Layout from './components/layout.jsx'
 
 export default function (props = {}) {
@@ -14,8 +14,9 @@ export default function (props = {}) {
   return (
     <Router history={history}>
       <Route path='/' component={Layout}>
-        <IndexRoute component={pages.Home} />
-        <Route path='*' component={pages.Error404} />
+        <IndexRoute component={Home} />
+        <Route path='status' component={Status} />
+        <Route path='*' component={Error404} />
       </Route>
     </Router>
   )
