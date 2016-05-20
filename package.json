@@ -25,8 +25,8 @@
   "scripts": {
     "start": "node dist/main",
     "build": "run-p build:**",
-    "build:js:client": "browserify src/ui/main.jsx -o public/bundle.js",
     "build:js:server": "BABEL_ENV=server babel src --out-dir dist",
+    "build:js:client": "browserify src/ui/main.jsx -o public/bundle.js",
     "build:css": "node-sass --include-path node_modules src/ui/main.scss public/bundle.css",
     "minify": "run-p minify:*",
     "minify:js": "uglifyjs public/bundle.js -o public/bundle.js",
@@ -34,11 +34,12 @@
     "lint": "standard",
     "test": "run-s lint build test:*",
     "test:unit": "tape test/*.js",
-    "watch": "run-p watch:*",
-    "watch:js": "nodemon --watch src -x 'run-p build:js:*'",
+    "watch": "run-p watch:**",
+    "watch:js:server": "BABEL_ENV=server babel -w src --out-dir dist",
+    "watch:js:client": "watchify src/ui/main.jsx -o public/bundle.js -v",
     "watch:css": "node-sass --include-path node_modules -w src/ui/main.scss public/bundle.css",
     "watch:server": "nodemon --watch dist --watch public -e js,css -x 'npm start'",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build && npm run minify"
   },
   "dependencies": {
     "async": "^1.4.1",
