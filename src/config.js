@@ -30,6 +30,8 @@ module.exports = require('rc')('david', {
     syncAdvisoriesInterval: 3600000
   },
   public: {
+    siteUrl: 'http://localhost:1337',
+    apiUrl: 'http://localhost:1337',
     github: {
       protocol: 'https',
       host: 'github.com',

@@ -4,7 +4,8 @@ import david from 'david'
 import npm from 'npm'
 import Helmet from 'react-helmet'
 import { match } from 'react-router'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
+import thunkMiddleware from 'redux-thunk'
 import Boom from 'boom'
 import reducers from './ui/reducers'
 import { layoutTpl, bodyTpl } from './ui/server.jsx'
@@ -54,6 +55,18 @@ middleware.generateCsrf({ app, auth })
 middleware.globals({ app, config })
 middleware.cors({ app })
 
+import routes from './routes'
+
+routes.session.oauthCallback(app, auth)
+routes.rss.news(app)
+routes.api.dependencyCounts(app, stats)
+routes.api.stats(app, stats)
+routes.api.changelog(app, changelog)
+routes.api.info(app, manifest, brains)
+routes.api.graph(app, graph, manifest)
+routes.rss.feed(app, feed, manifest)
+routes.badge(app, manifest, brains)
+
 import uiRoutes from './ui/routes.jsx'
 
 app.get('*', (req, res, next) => {
@@ -75,39 +88,30 @@ app.get('*', (req, res, next) => {
     }
 
     const Comp = components[components.length - 1].WrappedComponent
-    const fetchData = (Comp && Comp.fetchData) || ((_, cb) => cb())
+    const fetchData = (Comp && Comp.fetchData) || (() => Promise.resolve())
 
     const initialState = { config: config.public }
-    const store = createStore(reducers, initialState)
-    const {location, params, history} = renderProps
+    const store = createStore(reducers, initialState, applyMiddleware(thunkMiddleware))
+    const { location, params, history } = renderProps
 
-    fetchData({ location, params, history, store }, (err) => {
-      if (err) return next(err)
+    fetchData({ store, location, params, history })
+      .then(() => {
+        const state = store.getState()
+        const html = bodyTpl({ store, props: renderProps })
 
-      const state = store.getState()
-      const html = bodyTpl({ store, props: renderProps })
+        const head = Helmet.rewind()
 
-      const head = Helmet.rewind()
-
-      res.send(layoutTpl({ html, state, head }))
-    })
+        res.send(layoutTpl({ html, state, head }))
+      })
+      .catch((err) => next(err))
   })
 })
 
-import routes from './routes'
-
-routes.session.oauthCallback(app, auth)
-routes.rss.news(app)
-routes.api.dependencyCounts(app, stats)
-routes.stats(app, stats)
-routes.api.changelog(app, changelog)
-routes.api.info(app, manifest, brains)
-routes.api.graph(app, graph, manifest)
-routes.rss.feed(app, feed, manifest)
-routes.badge(app, manifest, brains)
 routes.status(app, manifest, brains)
 routes.profile(app, profile)
 routes.homepage(app, stats)
+
+// TODO: error middleware
 
 nsp.syncAdvisories()
 nsp.syncAdvisoriesPeriodically(config.nsp && config.nsp.syncAdvisoriesInterval)

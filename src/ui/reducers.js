@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
-import { SET_CONFIG, SET_USER, SET_PROJECT } from './actions'
+import { SET_CONFIG, SET_USER, SET_PROJECT, RECEIVE_STATS } from './actions'
 
 function config (state = null, action) {
   switch (action.type) {
@@ -29,4 +29,19 @@ function project (state = null, action) {
   }
 }
 
-export default combineReducers({ config, user, project, routing: routerReducer })
+function stats (state = null, action) {
+  switch (action.type) {
+    case RECEIVE_STATS:
+      return action.stats
+    default:
+      return state
+  }
+}
+
+export default combineReducers({
+  config,
+  user,
+  project,
+  stats,
+  routing: routerReducer
+})

@@ -129,5 +129,5 @@ function getBadgePath (status, opts) {
   const extension = opts.extension === 'png' ? 'png' : 'svg'
   const style = extension === 'svg' && opts.style === 'flat-square' ? '-' + opts.style : ''
 
-  return path.resolve(path.join(__dirname, '..', 'dist', 'img', 'status', type + status + retina + style + '.' + extension))
+  return path.resolve(path.join(__dirname, '..', '..', 'public', 'img', 'status', type + status + retina + style + '.' + extension))
 }
