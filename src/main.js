@@ -7,6 +7,7 @@ import { match } from 'react-router'
 import { createStore, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import Boom from 'boom'
+import pkg from '../package.json'
 import reducers from './ui/reducers'
 import { layoutTpl, bodyTpl } from './ui/server.jsx'
 
@@ -45,7 +46,7 @@ app.use(compress())
 
 import statics from './statics'
 
-statics({app})
+statics({ app, version: pkg.version })
 
 import middleware from './middleware'
 
@@ -97,11 +98,11 @@ app.get('*', (req, res, next) => {
     fetchData({ store, location, params, history })
       .then(() => {
         const state = store.getState()
-        const html = bodyTpl({ store, props: renderProps })
+        const body = bodyTpl({ store, props: renderProps })
 
         const head = Helmet.rewind()
 
-        res.send(layoutTpl({ html, state, head }))
+        res.send(layoutTpl({ body, state, head, version: pkg.version }))
       })
       .catch((err) => next(err))
   })

@@ -4,13 +4,14 @@ import { Provider } from 'react-redux'
 import { RouterContext } from 'react-router'
 import Head from './components/head.jsx'
 
-export function layoutTpl ({ head, html, state }) {
+export function layoutTpl ({ head, body, state, version }) {
   return `<!DOCTYPE html>
 <html ${head.htmlAttributes.toString()}>
   <head>
     ${head.title.toString()}
     ${head.meta.toString()}
     ${head.link.toString()}
+    <link rel="stylesheet" href="/bundle-${version}.css">
     ${head.script.toString()}
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
@@ -33,9 +34,9 @@ export function layoutTpl ({ head, html, state }) {
     <meta name="theme-color" content="#ffffff">
   </head>
   <body>
-    <div id="root">${html}</div>
+    <div id="root">${body}</div>
     <script>window.__REDUX_STATE__ = ${JSON.stringify(state)}</script>
-    <script src="/bundle.js"></script>
+    <script src="/bundle-${version}.js"></script>
   </body>
 </html>`
 }

@@ -24,8 +24,7 @@ export default function () {
         { name: 'twitter:image', content: null }
       ]}
       link={[
-        { rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Cardo:400,700|Lato:900' },
-        { rel: 'stylesheet', href: '/bundle.css' }
+        { rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Cardo:400,700|Lato:900' }
       ]}
     />
   )
