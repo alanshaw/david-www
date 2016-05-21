@@ -2,17 +2,21 @@ import React from 'react'
 import Helmet from 'react-helmet'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import { fetchStats } from '../actions'
+import { fetchStats, fetchDependencyCounts } from '../actions'
+import DependencyGraph from '../components/dependency-graph.jsx'
 
 const Home = React.createClass({
   propTypes: {
     config: React.PropTypes.object.isRequired,
     stats: React.PropTypes.object,
-    fetchStats: React.PropTypes.func.isRequired
+    dependencyCounts: React.PropTypes.object,
+    fetchStats: React.PropTypes.func.isRequired,
+    fetchDependencyCounts: React.PropTypes.func.isRequired
   },
 
   componentDidMount () {
     this.props.fetchStats()
+    this.props.fetchDependencyCounts()
   },
 
   render () {
@@ -72,7 +76,7 @@ const Home = React.createClass({
 
           <p>These are the most used NPM dependencies based on open source GitHub projects that are using them.</p>
 
-          <div id='dependency-counts-graph'></div>
+          <DependencyGraph counts={this.props.dependencyCounts} />
 
         </div>
 
@@ -96,7 +100,7 @@ const Home = React.createClass({
               let url = `/${user}/${repo}`
               url += ref ? `/${ref}` : ''
               url += path ? `?path=${path}` : ''
-              return (<li>{user} - <Link to={url}>{manifest.name}</Link></li>)
+              return (<li key={url}>{user} - <Link to={url}>{manifest.name}</Link></li>)
             })}
           </ul>
         </div>
@@ -107,7 +111,7 @@ const Home = React.createClass({
             {stats.recentlyUpdatedPackages.map(({ name, previous, version }) => {
               const url = `https://www.npmjs.com/package/${name}`
               return (
-                <li className='pinned'><a href={url}>{name}</a> <span>{previous} <i className='fa fa-angle-double-right'></i> {version}</span></li>
+                <li key={url} className='pinned'><a href={url}>{name}</a> <span>{previous} <i className='fa fa-angle-double-right'></i> {version}</span></li>
               )
             })}
           </ul>
@@ -117,9 +121,22 @@ const Home = React.createClass({
   }
 })
 
-Home.fetchData = ({ store }) => store.dispatch(fetchStats())
+Home.fetchData = ({ store }) => {
+  return Promise.all([
+    store.dispatch(fetchStats()),
+    store.dispatch(fetchDependencyCounts())
+  ])
+}
 
-const mapStateToProps = ({ stats, config }) => ({ stats, config })
-const mapDispatchToProps = (dispatch) => ({ fetchStats: () => dispatch(fetchStats()) })
+const mapStateToProps = ({ config, stats, dependencyCounts }) => {
+  return { config, stats, dependencyCounts }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchStats: () => dispatch(fetchStats()),
+    fetchDependencyCounts: () => dispatch(fetchDependencyCounts())
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

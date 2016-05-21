@@ -25,12 +25,32 @@ export function receiveStats (stats) {
   return { type: RECEIVE_STATS, stats }
 }
 
-export function fetchStats (stats) {
+export function fetchStats () {
   return (dispatch, getState) => {
     dispatch(requestStats())
 
     return fetch(`${getState().config.apiUrl}/stats.json`)
       .then(response => response.json())
       .then(json => dispatch(receiveStats(json)))
+  }
+}
+
+export const REQUEST_DEPENDENCY_COUNTS = 'REQUEST_DEPENDENCY_COUNTS'
+export function requestDependencyCounts () {
+  return { type: REQUEST_DEPENDENCY_COUNTS }
+}
+
+export const RECEIVE_DEPENDENCY_COUNTS = 'RECEIVE_DEPENDENCY_COUNTS'
+export function receiveDependencyCounts (counts) {
+  return { type: RECEIVE_DEPENDENCY_COUNTS, counts }
+}
+
+export function fetchDependencyCounts () {
+  return (dispatch, getState) => {
+    dispatch(requestDependencyCounts())
+
+    return fetch(`${getState().config.apiUrl}/dependency-counts.json`)
+      .then(response => response.json())
+      .then(json => dispatch(requestDependencyCounts(json)))
   }
 }

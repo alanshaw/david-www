@@ -68,7 +68,7 @@
     "meta-marked": "^0.4.0",
     "mkdirp": "^0.5.1",
     "moment": "^2.11.2",
-    "normalize-scss": "^4.2.1",
+    "normalize-scss": "^5.0.1",
     "npm": "^3.8.8",
     "nsp-advisories-api": "^2.0.2",
     "rc": "^1.1.5",
