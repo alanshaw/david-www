@@ -47,7 +47,7 @@ const dependencies = {}
 function getDependencyGraph (depName, version, cb) {
   dependencies[depName] = dependencies[depName] || {}
 
-  var dep = dependencies[depName][version]
+  let dep = dependencies[depName][version]
 
   if (dep) {
     if (dep.expires > new Date()) return cb(null, dep)
@@ -67,7 +67,7 @@ function getDependencyGraph (depName, version, cb) {
       // No dependencies?
       if (!depDepNames.length) return cb(null, dep)
 
-      var got = 0
+      let got = 0
 
       depDepNames.forEach((depDepName) => {
         const depDepRange = depDeps[depDepName]
@@ -170,7 +170,7 @@ export default ({db, npmConfig}) => {
           if (err) return cb(err)
 
           const depNames = Object.keys(deps)
-          var done = 0
+          let done = 0
 
           if (!depNames.length) {
             project = cycle.decycle(project)

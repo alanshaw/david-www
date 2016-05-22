@@ -28,7 +28,7 @@
  *
  */
 
-const util = require('util')
+import util from 'util'
 
 /**
  * Default error handler, for when you don't know better.
@@ -45,7 +45,7 @@ const util = require('util')
  * @param msg {String} Additional message to display to the user
  * @return {Boolean}
  */
-module.exports.happened = (err, req, res, msg) => {
+const happened = (err, req, res, msg) => {
   if (!err) return false
 
   console.log(msg, err)
@@ -58,3 +58,5 @@ module.exports.happened = (err, req, res, msg) => {
 
   return true
 }
+
+export default { happened }

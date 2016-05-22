@@ -1,9 +1,9 @@
-const errors = require('./errors')
+import errors from './errors'
 
 /**
  * Common callback boilerplate of getting a manifest and info for the status page and badge
  */
-module.exports = (manifest, brains) => {
+export default (manifest, brains) => {
   return (req, res, opts, cb) => {
     // Allow callback to be passed as third parameter
     if (!cb) {

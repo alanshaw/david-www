@@ -65,6 +65,7 @@ routes.api.stats(app, stats)
 routes.api.changelog(app, changelog)
 routes.api.info(app, manifest, brains)
 routes.api.graph(app, graph, manifest)
+routes.api.news(app)
 routes.rss.feed(app, feed, manifest)
 routes.badge(app, manifest, brains)
 

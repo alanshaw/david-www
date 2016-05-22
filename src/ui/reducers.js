@@ -5,7 +5,8 @@ import {
   SET_USER,
   SET_PROJECT,
   RECEIVE_STATS,
-  RECEIVE_DEPENDENCY_COUNTS
+  RECEIVE_DEPENDENCY_COUNTS,
+  RECEIVE_LATEST_NEWS
 } from './actions'
 
 function config (state = null, action) {
@@ -53,11 +54,21 @@ function dependencyCounts (state = null, action) {
   }
 }
 
+function latestNews (state = null, action) {
+  switch (action.type) {
+    case RECEIVE_LATEST_NEWS:
+      return action.news
+    default:
+      return state
+  }
+}
+
 export default combineReducers({
   config,
   user,
   project,
   stats,
   dependencyCounts,
+  latestNews,
   routing: routerReducer
 })

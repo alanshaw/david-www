@@ -1,7 +1,7 @@
-const path = require('path')
-const getDepsType = require('./helpers/get-deps-type')
+import path from 'path'
+import getDepsType from './helpers/get-deps-type'
 
-module.exports = function (app, manifest, brains) {
+export default (app, manifest, brains) => {
   app.get('/:user/:repo/:ref?/status.svg', (req, res) => {
     sendStatusBadge(req, res, {extension: 'svg'})
   })

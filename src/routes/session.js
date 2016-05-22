@@ -1,4 +1,4 @@
-module.exports.oauthCallback = (app, auth) => {
+const oauthCallback = (app, auth) => {
   app.get('/auth/callback', (req, res) => {
     req.session.get('session/csrf-token', (err, csrfToken) => {
       if (err || csrfToken !== req.query.state || !req.query.code) {
@@ -17,3 +17,5 @@ module.exports.oauthCallback = (app, auth) => {
     })
   })
 }
+
+export default { oauthCallback }

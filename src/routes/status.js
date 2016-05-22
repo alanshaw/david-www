@@ -1,5 +1,7 @@
-module.exports = (app, manifest, brains) => {
-  const withManifestAndInfo = require('./helpers/with-manifest-and-info')(manifest, brains)
+import createWithManifestAndInfo from './helpers/with-manifest-and-info'
+
+export default (app, manifest, brains) => {
+  const withManifestAndInfo = createWithManifestAndInfo(manifest, brains)
 
   app.get('/:user/:repo/:ref?', (req, res) => {
     withManifestAndInfo(req, res, {noCache: !!res.locals.user}, (manifest, info) => {

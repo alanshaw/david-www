@@ -1,7 +1,7 @@
-const errors = require('../helpers/errors')
-const getDepsType = require('../helpers/get-deps-type')
+import errors from '../helpers/errors'
+import getDepsType from '../helpers/get-deps-type'
 
-module.exports = (app, graph, manifest) => {
+export default (app, graph, manifest) => {
   app.get('/:user/:repo/:ref?/graph.json', (req, res) => {
     sendDependencyGraph(req, res, {})
   })
@@ -30,7 +30,7 @@ module.exports = (app, graph, manifest) => {
         }
 
         const depsType = getDepsType(opts)
-        var deps
+        let deps
 
         if (depsType) {
           deps = manifest[depsType + 'Dependencies'] || {}
@@ -38,7 +38,7 @@ module.exports = (app, graph, manifest) => {
           deps = manifest.dependencies || {}
         }
 
-        var graphName = req.params.user + '/' + req.params.repo
+        let graphName = req.params.user + '/' + req.params.repo
 
         if (req.query.path && req.query.path[req.query.path.length - 1] === '/') {
           req.query.path = req.query.path.slice(0, -1)

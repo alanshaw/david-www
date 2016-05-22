@@ -1,4 +1,4 @@
-module.exports = (app, changelog) => {
+export default (app, changelog) => {
   app.get('/package/:pkg/changes.json', (req, res) => {
     changelog.getChanges(req.params.pkg, req.query.from, req.query.to, (err, changes) => {
       if (err) {

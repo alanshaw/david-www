@@ -1,4 +1,4 @@
-module.exports = (app, stats) => {
+export default (app, stats) => {
   app.get('/', (req, res) => {
     res.render('index', {
       recentlyRetrievedManifests: stats.getRecentlyRetrievedManifests(),

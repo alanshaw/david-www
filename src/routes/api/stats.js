@@ -1,4 +1,4 @@
-module.exports = (app, stats) => {
+export default (app, stats) => {
   app.get('/stats.json', (req, res) => {
     res.json({
       recentlyUpdatedPackages: stats.getRecentlyUpdatedPackages(),

@@ -20,10 +20,10 @@ export default ({npm, npmConfig, siteConfig}) => {
       npm.load(npmConfig.options, (err) => {
         if (err) return cb(err)
 
-        var items = []
+        let items = []
         const deps = opts.dev ? manifest.devDependencies : manifest.dependencies
         const depNames = Object.keys(deps || {})
-        var processedDeps = 0
+        let processedDeps = 0
 
         if (!depNames.length) {
           return cb(null, buildFeedXml([], manifest.name, deps, opts.limit, siteConfig, npmConfig))
@@ -57,7 +57,7 @@ export default ({npm, npmConfig, siteConfig}) => {
    * @param cb
    */
   function getPackage (pkgName, cb) {
-    var pkg = packages[pkgName]
+    let pkg = packages[pkgName]
 
     if (pkg && pkg.expires > new Date()) {
       return cb(null, pkg)
@@ -67,7 +67,7 @@ export default ({npm, npmConfig, siteConfig}) => {
       if (err) return cb(err)
 
       const keys = Object.keys(data)
-      var time = keys.length ? data[keys[0]].time : null
+      let time = keys.length ? data[keys[0]].time : null
       const repository = keys.length ? data[keys[0]].repository : null
 
       if (time) {
@@ -145,7 +145,7 @@ function getRepoUrl (data) {
 
 // Create a bunch of Feed items from the passed package
 function packageToFeedItems (pkg) {
-  var previous = null
+  let previous = null
 
   return Object.keys(pkg.versions).map((version) => {
     const item = new FeedItem(pkg.name, previous, version, pkg.versions[version], getRepoUrl(pkg.repo))
@@ -184,7 +184,7 @@ function buildFeedXml (items, name, deps, limit, siteConfig, npmConfig) {
     site_url: siteConfig.hostname
   })
 
-  for (var i = 0, len = items.length; i < len; ++i) {
+  for (let i = 0, len = items.length; i < len; ++i) {
     rssFeed.item({
       title: `${items[i].name} ${items[i].previous} to ${items[i].current} (${deps[items[i].name]} required)`,
       description: items[i].repoUrl ? `<a href="${items[i].repoUrl}">${items[i].repoUrl}</a>` : null,

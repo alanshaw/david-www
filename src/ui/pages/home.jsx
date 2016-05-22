@@ -2,14 +2,17 @@ import React from 'react'
 import Helmet from 'react-helmet'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import { fetchStats } from '../actions'
+import moment from 'moment'
+import { fetchStats, fetchLatestNews } from '../actions'
 import DependencyCountsGraph from '../components/dependency-counts-graph.jsx'
 
 const Home = React.createClass({
   propTypes: {
     config: React.PropTypes.object.isRequired,
     stats: React.PropTypes.object,
-    fetchStats: React.PropTypes.func.isRequired
+    latestNews: React.PropTypes.array,
+    fetchStats: React.PropTypes.func.isRequired,
+    fetchLatestNews: React.PropTypes.func.isRequired
   },
 
   getInitialState () {
@@ -21,9 +24,8 @@ const Home = React.createClass({
   },
 
   componentDidMount () {
-    if (!this.props.stats) {
-      this.props.fetchStats()
-    }
+    if (!this.props.stats) this.props.fetchStats()
+    if (!this.props.latestNews) this.props.fetchLatestNews()
   },
 
   render () {
@@ -89,6 +91,7 @@ const Home = React.createClass({
 
         <aside id='stats'>
           {this.renderStats()}
+          {this.renderNews()}
         </aside>
       </div>
     )
@@ -127,6 +130,28 @@ const Home = React.createClass({
     )
   },
 
+  renderNews () {
+    const news = this.props.latestNews
+    if (!news) return
+
+    const item = news[0]
+
+    return (
+      <article id='news'>
+        <div className='content'>
+          <h1><a href={item.link}>{item.title}</a></h1>
+          <p><a href={item.link}>{item.summary}</a></p>
+        </div>
+        <div className='cite'>
+          <div className='author'>David Blog</div>
+          <time dateTime={item.pubDate} pubdate>
+            {moment(item.pubDate).format('MMMM Do YYYY, HH:mm')}
+          </time>
+        </div>
+      </article>
+    )
+  },
+
   onBadgeKeyPress (e) {
     if (e.key === 'Enter') e.preventDefault()
   },
@@ -147,17 +172,19 @@ const Home = React.createClass({
 
 Home.fetchData = ({ store }) => {
   return Promise.all([
-    store.dispatch(fetchStats())
+    store.dispatch(fetchStats()),
+    store.dispatch(fetchLatestNews())
   ])
 }
 
-const mapStateToProps = ({ config, stats }) => {
-  return { config, stats }
+const mapStateToProps = ({ config, stats, latestNews }) => {
+  return { config, stats, latestNews }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStats: () => dispatch(fetchStats())
+    fetchStats: () => dispatch(fetchStats()),
+    fetchLatestNews: () => dispatch(fetchLatestNews())
   }
 }
 

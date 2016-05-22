@@ -1,8 +1,8 @@
-const errors = require('./helpers/errors')
+import errors from './helpers/errors'
 
-module.exports = (app, profile) => {
+export default (app, profile) => {
   app.get('/:user', (req, res) => {
-    var authToken = null
+    let authToken = null
 
     req.session.getAll((err, sessionData) => {
       if (errors.happened(err, req, res, 'Failed to get session data')) {
@@ -18,9 +18,9 @@ module.exports = (app, profile) => {
           return
         }
 
-        var avatarUrl
+        let avatarUrl
 
-        for (var i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
           if (data[i].repo.owner.login === req.params.user) {
             avatarUrl = data[i].repo.owner.avatar_url
             break

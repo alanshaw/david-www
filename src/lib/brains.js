@@ -73,7 +73,7 @@ export default ({david, db, registry, nsp, brainsConfig, npmConfig}) => {
 
               const depList = depNames.map((depName) => {
                 // Lets disprove this
-                var status = 'uptodate'
+                let status = 'uptodate'
 
                 const rangeVersions = filterVersionsInRange(deps[depName].versions, deps[depName].required)
                 const depAdvisories = filterAdvisories(advisories[depName], rangeVersions)
@@ -125,7 +125,7 @@ export default ({david, db, registry, nsp, brainsConfig, npmConfig}) => {
               })
 
               // Figure out the overall status for this manifest
-              var status = depList.length ? 'uptodate' : 'none'
+              let status = depList.length ? 'uptodate' : 'none'
 
               if (totals.advisories) {
                 status = 'insecure'
@@ -292,7 +292,7 @@ function normaliseDeps (deps) {
 }
 
 function getDepList (manifest, opts) {
-  var deps = null
+  let deps = null
 
   if (opts.dev) {
     deps = manifest.devDependencies
@@ -326,7 +326,7 @@ function filterAdvisories (advisories, versions) {
 
   // Filter out the advisories that don't apply to the given versions
   return advisories.filter((a) => {
-    for (var i = 0; i < versions.length; i++) {
+    for (let i = 0; i < versions.length; i++) {
       try {
         if (semver.satisfies(versions[i], a.vulnerable_versions, true)) {
           return true

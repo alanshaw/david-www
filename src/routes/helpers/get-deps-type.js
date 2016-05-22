@@ -1,5 +1,5 @@
-module.exports = (opts) => {
-  var type = ''
+export default (opts) => {
+  let type = ''
 
   if (opts.dev) {
     type = 'dev'

@@ -30,7 +30,7 @@ export default ({db, registry, github, githubConfig}) => {
 
     opts = opts || {}
 
-    var manifestKey = `manifest/${user}/${repo}`
+    let manifestKey = `manifest/${user}/${repo}`
 
     if (path && path[path.length - 1] === '/') {
       path = path.slice(0, -1)
@@ -79,7 +79,7 @@ export default ({db, registry, github, githubConfig}) => {
           })
         }
 
-        var data
+        let data
 
         try {
           // JSON.parse will barf with a SyntaxError if the body is ill.
@@ -141,7 +141,7 @@ export default ({db, registry, github, githubConfig}) => {
               const oldPeerDependencies = oldManifest ? oldManifest.data.peerDependencies : {}
               const oldOptionalDependencies = oldManifest ? oldManifest.data.optionalDependencies : {}
 
-              var diffs
+              let diffs
 
               if (Manifest.listenerCount('dependenciesChange')) {
                 diffs = depDiff(oldDependencies, data.dependencies)

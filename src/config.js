@@ -1,4 +1,6 @@
-module.exports = require('rc')('david', {
+import rc from 'rc'
+
+export default rc('david', {
   brains: {
     cacheTime: 86400000
   },

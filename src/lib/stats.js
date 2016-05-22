@@ -20,7 +20,7 @@ export default ({registry, manifest}) => {
 
     const pkg = new UpdatedPackage(change.doc.name, versions[versions.length - 1], versions[versions.length - 2])
 
-    for (var i = 0; i < recentlyUpdatedPackages.length; i++) {
+    for (let i = 0; i < recentlyUpdatedPackages.length; i++) {
       if (recentlyUpdatedPackages[i].name === pkg.name) {
         recentlyUpdatedPackages.splice(i, 1)
         break
@@ -51,9 +51,9 @@ export default ({registry, manifest}) => {
   manifest.on('retrieve', (manifest, user, repo, path, ref, isPrivate) => {
     if (isPrivate) return
 
-    var inList = false
+    let inList = false
 
-    for (var i = 0; i < recentlyRetrievedManifests.length; ++i) {
+    for (let i = 0; i < recentlyRetrievedManifests.length; ++i) {
       if (
         recentlyRetrievedManifests[i].user === user &&
         recentlyRetrievedManifests[i].repo === repo &&

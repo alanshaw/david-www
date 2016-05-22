@@ -1,7 +1,7 @@
 import async from 'async'
 
 export default ({nspApiClient, db}) => {
-  var syncAdvisoriesIntervalId = null
+  let syncAdvisoriesIntervalId = null
 
   const Nsp = {
     // Given a list of dependency names, retrieve an object that lists advisories
@@ -28,7 +28,7 @@ export default ({nspApiClient, db}) => {
 
       // Get the first page
       const limit = 100
-      var done = false
+      let done = false
 
       nspApiClient.advisories({limit: 1, offset: 0}, (err, response) => {
         if (err) return cb(err)
@@ -36,7 +36,7 @@ export default ({nspApiClient, db}) => {
         const pages = Math.ceil(response.total / limit)
         const offsets = []
 
-        for (var i = 0; i < pages; i++) {
+        for (let i = 0; i < pages; i++) {
           offsets.push(i * limit)
         }
 

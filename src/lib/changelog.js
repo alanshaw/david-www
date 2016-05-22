@@ -25,7 +25,7 @@ function getUserRepo (modName, opts, cb) {
     if (!repo) return cb(new Error(`${modName} has no repository information`))
 
     const url = repo.url || repo
-    var info = githubUrl(url, opts.githubHost)
+    let info = githubUrl(url, opts.githubHost)
 
     // Try parse with some common mistakes
 
@@ -78,7 +78,7 @@ function getPublishDates (modName, modVers, cb) {
         }).sort()
 
         // Get the first version that satisfies the range
-        for (var i = 0, len = ascPublishDates.length; i < len; ++i) {
+        for (let i = 0, len = ascPublishDates.length; i < len; ++i) {
           if (semver.satisfies(versionsByDate[ascPublishDates[i]], ver, true)) {
             return cb(null, moment(ascPublishDates[i]).toDate())
           }

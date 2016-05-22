@@ -54,3 +54,23 @@ export function fetchDependencyCounts () {
       .then(json => dispatch(receiveDependencyCounts(json)))
   }
 }
+
+export const REQUEST_LATEST_NEWS = 'REQUEST_LATEST_NEWS'
+export function requestLatestNews () {
+  return { type: REQUEST_LATEST_NEWS }
+}
+
+export const RECEIVE_LATEST_NEWS = 'RECEIVE_LATEST_NEWS'
+export function receiveLatestNews (news) {
+  return { type: RECEIVE_LATEST_NEWS, news }
+}
+
+export function fetchLatestNews () {
+  return (dispatch, getState) => {
+    dispatch(requestLatestNews())
+
+    return fetch(`${getState().config.apiUrl}/news/latest.json`)
+      .then(response => response.json())
+      .then(json => dispatch(receiveLatestNews(json)))
+  }
+}
