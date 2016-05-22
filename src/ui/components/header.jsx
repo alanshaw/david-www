@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router'
 
 const Header = React.createClass({
   propTypes: {
@@ -11,7 +12,7 @@ const Header = React.createClass({
     return (
       <header role='banner'>
         <div>
-          <a className='logo' href='/'>David. <i className='fa fa-home'></i></a>
+          <Link className='logo' to='/'>David. <i className='fa fa-home'></i></Link>
           <span>Watching your Node.js dependencies.</span>
           {this.props.user ? this.renderSignedIn() : this.renderSignedOut()}
         </div>
