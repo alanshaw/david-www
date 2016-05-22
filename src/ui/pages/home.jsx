@@ -2,21 +2,20 @@ import React from 'react'
 import Helmet from 'react-helmet'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import { fetchStats, fetchDependencyCounts } from '../actions'
-import DependencyGraph from '../components/dependency-graph.jsx'
+import { fetchStats } from '../actions'
+import DependencyCountsGraph from '../components/dependency-counts-graph.jsx'
 
 const Home = React.createClass({
   propTypes: {
     config: React.PropTypes.object.isRequired,
     stats: React.PropTypes.object,
-    dependencyCounts: React.PropTypes.object,
-    fetchStats: React.PropTypes.func.isRequired,
-    fetchDependencyCounts: React.PropTypes.func.isRequired
+    fetchStats: React.PropTypes.func.isRequired
   },
 
   componentDidMount () {
-    this.props.fetchStats()
-    this.props.fetchDependencyCounts()
+    if (!this.props.stats) {
+      this.props.fetchStats()
+    }
   },
 
   render () {
@@ -76,7 +75,7 @@ const Home = React.createClass({
 
           <p>These are the most used NPM dependencies based on open source GitHub projects that are using them.</p>
 
-          <DependencyGraph counts={this.props.dependencyCounts} />
+          <DependencyCountsGraph />
 
         </div>
 
@@ -123,19 +122,17 @@ const Home = React.createClass({
 
 Home.fetchData = ({ store }) => {
   return Promise.all([
-    store.dispatch(fetchStats()),
-    store.dispatch(fetchDependencyCounts())
+    store.dispatch(fetchStats())
   ])
 }
 
-const mapStateToProps = ({ config, stats, dependencyCounts }) => {
-  return { config, stats, dependencyCounts }
+const mapStateToProps = ({ config, stats }) => {
+  return { config, stats }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStats: () => dispatch(fetchStats()),
-    fetchDependencyCounts: () => dispatch(fetchDependencyCounts())
+    fetchStats: () => dispatch(fetchStats())
   }
 }
 

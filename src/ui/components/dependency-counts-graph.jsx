@@ -1,24 +1,33 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import d3 from 'd3'
+import { fetchDependencyCounts } from '../actions'
 
-const DependencyGraph = React.createClass({
+const DependencyCountsGraph = React.createClass({
   propTypes: {
-    counts: React.PropTypes.object
+    dependencyCounts: React.PropTypes.object,
+    fetchDependencyCounts: React.PropTypes.func.isRequired
+  },
+
+  componentDidMount () {
+    if (!this.props.dependencyCounts) {
+      this.props.fetchDependencyCounts()
+    }
   },
 
   render () {
-    return (<div ref={(r) => { this.graphContainer = r }}></div>)
+    return (<div className='dependency-counts-graph' ref={(r) => { this.graphContainer = r }}></div>)
   },
 
   componentDidUpdate () {
-    const data = this.props.counts
+    const data = this.props.dependencyCounts
     if (!data) return
 
     const diameter = this.graphContainer.clientWidth
     const format = d3.format(',d')
     const bubble = d3.layout.pack().sort(null).size([diameter, diameter]).padding(1.5)
 
-    const svg = d3.select(this).append('svg')
+    const svg = d3.select(this.graphContainer).append('svg')
       .attr('width', diameter)
       .attr('height', diameter)
       .attr('class', 'bubble')
@@ -54,7 +63,7 @@ const DependencyGraph = React.createClass({
         window.location = `https://www.npmjs.com/package/${d.depName}`
       })
 
-    nodeEnter.append('title').text((d) => d.depName + ': ' + format(d.value))
+    nodeEnter.append('title').text((d) => `${d.depName}: ${format(d.value)}`)
 
     nodeEnter.append('circle')
 
@@ -75,4 +84,14 @@ const DependencyGraph = React.createClass({
   }
 })
 
-export default DependencyGraph
+const mapStateToProps = ({ dependencyCounts }) => {
+  return { dependencyCounts }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchDependencyCounts: () => dispatch(fetchDependencyCounts())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DependencyCountsGraph)

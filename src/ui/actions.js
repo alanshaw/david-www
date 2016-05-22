@@ -51,6 +51,6 @@ export function fetchDependencyCounts () {
 
     return fetch(`${getState().config.apiUrl}/dependency-counts.json`)
       .then(response => response.json())
-      .then(json => dispatch(requestDependencyCounts(json)))
+      .then(json => dispatch(receiveDependencyCounts(json)))
   }
 }
