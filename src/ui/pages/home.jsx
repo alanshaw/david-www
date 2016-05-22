@@ -12,6 +12,14 @@ const Home = React.createClass({
     fetchStats: React.PropTypes.func.isRequired
   },
 
+  getInitialState () {
+    return {
+      badgeUrlClass: 'nope',
+      badgeImgClass: '',
+      badgeSrc: '/img/status/outofdate.svg'
+    }
+  },
+
   componentDidMount () {
     if (!this.props.stats) {
       this.props.fetchStats()
@@ -61,8 +69,8 @@ const Home = React.createClass({
           <p>Type your username / repo name in below and get yours...</p>
 
           <p className='badge-maker'>
-            <strong>{this.props.config.siteUrl}/<span contentEditable className='nope' id='username' title='[Github username] / [repo name]'>username/repo</span>.svg</strong>
-            <img id='badge' src='/img/status/outofdate.svg' alt='badge' />
+            <strong>{this.props.config.siteUrl}/<span contentEditable className={this.state.badgeUrlClass} id='username' title='[Github username] / [repo name]' onInput={this.onBadgeInput} onKeyPress={this.onBadgeKeyPress}>username/repo</span>.svg</strong>
+            <img id='badge' src={this.state.badgeSrc} alt='badge' onLoad={this.onBadgeLoad} onError={this.onBadgeError} className={this.state.badgeImgClass} />
           </p>
 
           <p>
@@ -117,6 +125,23 @@ const Home = React.createClass({
         </div>
       </div>
     )
+  },
+
+  onBadgeKeyPress (e) {
+    if (e.key === 'Enter') e.preventDefault()
+  },
+
+  onBadgeInput (e) {
+    const badgeSrc = `${this.props.config.siteUrl}/${e.currentTarget.textContent}.svg`
+    this.setState({ badgeSrc })
+  },
+
+  onBadgeLoad () {
+    this.setState({ badgeUrlClass: '', badgeImgClass: '' })
+  },
+
+  onBadgeError () {
+    this.setState({ badgeUrlClass: 'nope', badgeImgClass: 'hidden' })
   }
 })
 
