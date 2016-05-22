@@ -1,22 +1,18 @@
-import errors from './helpers/errors'
+import Boom from 'boom'
 
 export default (app, profile) => {
-  app.get('/:user', (req, res) => {
+  app.get('/:user', (req, res, next) => {
     let authToken = null
 
     req.session.getAll((err, sessionData) => {
-      if (errors.happened(err, req, res, 'Failed to get session data')) {
-        return
-      }
+      if (err) return next(Boom.wrap(err, 500, 'Failed to get session data'))
 
       if (req.params.user === sessionData['session/user']) {
         authToken = sessionData['session/access-token']
       }
 
       profile.get(req.params.user, authToken, function (err, data) {
-        if (errors.happened(err, req, res, 'Failed to get profile data')) {
-          return
-        }
+        if (err) return next(Boom.wrap(err, 500, 'Failed to get profile data'))
 
         let avatarUrl
 

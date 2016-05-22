@@ -53,8 +53,8 @@ import middleware from './middleware'
 middleware.session({ app, db })
 middleware.user({ app })
 middleware.generateCsrf({ app, auth })
-middleware.globals({ app, config })
 middleware.cors({ app })
+middleware.errorHandler({ app })
 
 import routes from './routes'
 
@@ -86,7 +86,7 @@ app.get('*', (req, res, next) => {
     const components = renderProps.components
 
     if (components.some((c) => c && c.displayName === 'error-404')) {
-      return next(Boom.notFound())
+      res.status(404)
     }
 
     const Comp = components[components.length - 1].WrappedComponent
@@ -98,12 +98,11 @@ app.get('*', (req, res, next) => {
 
     fetchData({ store, location, params, history })
       .then(() => {
-        const state = store.getState()
-        const body = bodyTpl({ store, props: renderProps })
-
         const head = Helmet.rewind()
+        const body = bodyTpl({ store, props: renderProps })
+        const state = store.getState()
 
-        res.send(layoutTpl({ body, state, head, version: pkg.version }))
+        res.send(layoutTpl({ head, body, state, version: pkg.version }))
       })
       .catch((err) => next(err))
   })
@@ -112,8 +111,6 @@ app.get('*', (req, res, next) => {
 routes.status(app, manifest, brains)
 routes.profile(app, profile)
 routes.homepage(app, stats)
-
-// TODO: error middleware
 
 nsp.syncAdvisories()
 nsp.syncAdvisoriesPeriodically(config.nsp && config.nsp.syncAdvisoriesInterval)

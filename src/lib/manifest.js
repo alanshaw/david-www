@@ -22,7 +22,7 @@ export default ({db, registry, github, githubConfig}) => {
    */
   const Manifest = new EventEmitter()
 
-  Manifest.getManifest = (user, repo, path, ref, authToken, opts, cb) => {
+  Manifest.getManifest = (user, repo, opts, cb) => {
     if (!cb) {
       cb = opts
       opts = {}
@@ -32,15 +32,15 @@ export default ({db, registry, github, githubConfig}) => {
 
     let manifestKey = `manifest/${user}/${repo}`
 
-    if (path && path[path.length - 1] === '/') {
-      path = path.slice(0, -1)
+    if (opts.path && opts.path[opts.path.length - 1] === '/') {
+      opts.path = opts.path.slice(0, -1)
     }
 
-    if (path) {
-      manifestKey += '/' + path
+    if (opts.path) {
+      manifestKey += '/' + opts.path
     }
 
-    manifestKey += '/#' + (ref || '')
+    manifestKey += '/#' + (opts.ref || '')
 
     db.get(manifestKey, (err, manifest) => {
       if (err && !err.notFound) return cb(err)
@@ -50,8 +50,8 @@ export default ({db, registry, github, githubConfig}) => {
         return cb(null, JSON.parse(JSON.stringify(manifest.data)))
       }
 
-      const gh = github.getInstance(authToken)
-      const batchKey = manifestKey + (authToken || '')
+      const gh = github.getInstance(opts.authToken)
+      const batchKey = manifestKey + (opts.authToken || '')
 
       if (batch.exists(batchKey)) {
         return batch.push(batchKey, cb)
@@ -59,21 +59,21 @@ export default ({db, registry, github, githubConfig}) => {
 
       batch.push(batchKey, cb)
 
-      const ghOpts = {user: user, repo: repo, path: (path ? path + '/' : '') + 'package.json'}
+      const ghOpts = {user: user, repo: repo, path: (opts.path ? opts.path + '/' : '') + 'package.json'}
 
       // Add "ref" options if ref is set. Otherwise use default branch.
-      if (ref) {
-        ghOpts.ref = ref
+      if (opts.ref) {
+        ghOpts.ref = opts.ref
       }
 
       gh.repos.getContent(ghOpts, (err, resp) => {
         if (err) {
-          console.error('Failed to get package.json', user, repo, path, ref, err)
+          console.error('Failed to get package.json', user, repo, opts.path, opts.ref, err)
           return batch.call(batchKey, function (cb) { cb(err) })
         }
 
         if (!opts.noCache && manifest && manifest.expires > Date.now()) {
-          console.log('Using cached private manifest', manifest.data.name, manifest.data.version, ref)
+          console.log('Using cached private manifest', manifest.data.name, manifest.data.version, opts.ref)
           return batch.call(batchKey, function (cb) {
             cb(null, manifest.data)
           })
@@ -98,9 +98,9 @@ export default ({db, registry, github, githubConfig}) => {
           })
         }
 
-        console.log('Got manifest', data.name, data.version, ref)
+        console.log('Got manifest', data.name, data.version, opts.ref)
 
-        if (!authToken) {
+        if (!opts.authToken) {
           // There was no authToken so MUST be public
           onGetRepo(null, {'private': false})
         } else {
@@ -116,7 +116,7 @@ export default ({db, registry, github, githubConfig}) => {
 
           const oldManifest = manifest
 
-          data.ref = ref
+          data.ref = opts.ref
           manifest = {
             data,
             private: repoData.private,
@@ -134,7 +134,7 @@ export default ({db, registry, github, githubConfig}) => {
             batch.call(batchKey, (cb) => cb(null, manifest.data))
 
             if (!oldManifest) {
-              Manifest.emit('retrieve', manifest.data, user, repo, path, ref, repoData.private)
+              Manifest.emit('retrieve', manifest.data, user, repo, opts.path, opts.ref, repoData.private)
             } else {
               const oldDependencies = oldManifest ? oldManifest.data.dependencies : {}
               const oldDevDependencies = oldManifest ? oldManifest.data.devDependencies : {}
@@ -147,7 +147,7 @@ export default ({db, registry, github, githubConfig}) => {
                 diffs = depDiff(oldDependencies, data.dependencies)
 
                 if (diffs.length) {
-                  Manifest.emit('dependenciesChange', diffs, manifest.data, user, repo, path, ref, repoData.private)
+                  Manifest.emit('dependenciesChange', diffs, manifest.data, user, repo, opts.path, opts.ref, repoData.private)
                 }
               }
 
@@ -155,7 +155,7 @@ export default ({db, registry, github, githubConfig}) => {
                 diffs = depDiff(oldDevDependencies, data.devDependencies)
 
                 if (diffs.length) {
-                  Manifest.emit('devDependenciesChange', diffs, manifest.data, user, repo, path, ref, repoData.private)
+                  Manifest.emit('devDependenciesChange', diffs, manifest.data, user, repo, opts.path, opts.ref, repoData.private)
                 }
               }
 
@@ -163,7 +163,7 @@ export default ({db, registry, github, githubConfig}) => {
                 diffs = depDiff(oldPeerDependencies, data.peerDependencies)
 
                 if (diffs.length) {
-                  Manifest.emit('peerDependenciesChange', diffs, manifest.data, user, repo, path, ref, repoData.private)
+                  Manifest.emit('peerDependenciesChange', diffs, manifest.data, user, repo, opts.path, opts.ref, repoData.private)
                 }
               }
 
@@ -171,7 +171,7 @@ export default ({db, registry, github, githubConfig}) => {
                 diffs = depDiff(oldOptionalDependencies, data.optionalDependencies)
 
                 if (diffs.length) {
-                  Manifest.emit('optionalDependenciesChange', diffs, manifest.data, user, repo, path, ref, repoData.private)
+                  Manifest.emit('optionalDependenciesChange', diffs, manifest.data, user, repo, opts.path, opts.ref, repoData.private)
                 }
               }
             }

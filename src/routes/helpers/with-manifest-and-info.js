@@ -1,11 +1,11 @@
-import errors from './errors'
+import Boom from 'boom'
 
 /**
  * Common callback boilerplate of getting a manifest and info for the status page and badge
  */
 export default (manifest, brains) => {
-  return (req, res, opts, cb) => {
-    // Allow callback to be passed as third parameter
+  return (req, opts, cb) => {
+    // Allow callback to be passed as second parameter
     if (!cb) {
       cb = opts
       opts = {}
@@ -13,22 +13,22 @@ export default (manifest, brains) => {
 
     opts = opts || {}
 
-    req.session.get('session/access-token', (err, authToken) => {
-      if (errors.happened(err, req, res, 'Failed to get session access token')) {
-        return
-      }
+    const { user, repo, ref } = req.params
 
-      manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, opts, (err, manifest) => {
-        if (errors.happened(err, req, res, 'Failed to get package.json')) {
-          return
-        }
+    opts.ref = opts.ref || ref
+    opts.path = opts.path || req.query.path
+
+    req.session.get('session/access-token', (err, authToken) => {
+      if (err) return cb(Boom.wrap(err, 500, 'Failed to get session access token'))
+
+      opts.authToken = opts.authToken || authToken
+
+      manifest.getManifest(user, repo, opts, (err, manifest) => {
+        if (err) return cb(Boom.wrap(err, 500, 'Failed to get package.json'))
 
         brains.getInfo(manifest, opts, (err, info) => {
-          if (errors.happened(err, req, res, 'Failed to get dependency info')) {
-            return
-          }
-
-          cb(manifest, info)
+          if (err) return cb(Boom.wrap(err, 500, 'Failed to get dependency info'))
+          cb(null, manifest, info)
         })
       })
     })

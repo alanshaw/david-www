@@ -1,29 +1,26 @@
-const errors = require('../helpers/errors')
+import Boom from 'boom'
 
-module.exports = function (app, feed, manifest) {
-  app.get('/:user/:repo/:ref?/rss.xml', (req, res) => {
-    buildRssFeed(req, res, false)
+export default (app, feed, manifest) => {
+  app.get('/:user/:repo/:ref?/rss.xml', (req, res, next) => {
+    buildRssFeed(req, res, next, false)
   })
 
-  app.get('/:user/:repo/:ref?/dev-rss.xml', (req, res) => {
-    buildRssFeed(req, res, true)
+  app.get('/:user/:repo/:ref?/dev-rss.xml', (req, res, next) => {
+    buildRssFeed(req, res, next, true)
   })
 
-  function buildRssFeed (req, res, dev) {
+  function buildRssFeed (req, res, next, dev) {
     req.session.get('session/access-token', (err, authToken) => {
-      if (errors.happened(err, req, res, 'Failed to get session access token')) {
-        return
-      }
+      if (err) return next(Boom.wrap(err, 500, 'Failed to get session access token'))
 
-      manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, (err, manifest) => {
-        if (errors.happened(err, req, res, 'Failed to get package.json')) {
-          return
-        }
+      const { user, repo, ref } = req.params
+      const path = req.query.path
 
-        feed.get(manifest, {dev: dev}, (err, xml) => {
-          if (errors.happened(err, req, res, 'Failed to build RSS XML')) {
-            return
-          }
+      manifest.getManifest(user, repo, { path, ref, authToken }, (err, manifest) => {
+        if (err) return next(Boom.wrap(err, 500, 'Failed to get package.json'))
+
+        feed.get(manifest, { dev }, (err, xml) => {
+          if (err) return next(Boom.wrap(err, 500, 'Failed to build RSS XML'))
 
           res.contentType('application/rss+xml')
           res.send(xml, 200)

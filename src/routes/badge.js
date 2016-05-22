@@ -1,4 +1,4 @@
-import path from 'path'
+import Path from 'path'
 import getDepsType from './helpers/get-deps-type'
 
 export default (app, manifest, brains) => {
@@ -102,9 +102,12 @@ export default (app, manifest, brains) => {
         return res.status(500).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
       }
 
-      manifest.getManifest(req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, (err, manifest) => {
+      const { user, repo, ref } = req.params
+      const path = req.query.path
+
+      manifest.getManifest(user, repo, { path, ref, authToken }, (err, manifest) => {
         if (err) {
-          console.error('Failed to get manifest', req.params.user, req.params.repo, req.query.path, req.params.ref, authToken, err)
+          console.error('Failed to get manifest', user, repo, path, ref, authToken, err)
           return res.status(404).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
         }
 
@@ -129,5 +132,5 @@ function getBadgePath (status, opts) {
   const extension = opts.extension === 'png' ? 'png' : 'svg'
   const style = extension === 'svg' && opts.style === 'flat-square' ? '-' + opts.style : ''
 
-  return path.resolve(path.join(__dirname, '..', '..', 'public', 'img', 'status', type + status + retina + style + '.' + extension))
+  return Path.resolve(Path.join(__dirname, '..', '..', 'public', 'img', 'status', type + status + retina + style + '.' + extension))
 }
