@@ -1,7 +1,8 @@
 import React from 'react'
-import { Router, Route, IndexRoute, browserHistory } from 'react-router'
+import { Router, Route, IndexRoute, browserHistory, applyRouterMiddleware } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
-import { Home, Status, Error404 } from './pages'
+import useScroll from 'react-router-scroll'
+import { Home, Stats, Status, Error404 } from './pages'
 import Layout from './components/layout.jsx'
 
 export default function (props = {}) {
@@ -12,9 +13,10 @@ export default function (props = {}) {
   }
 
   return (
-    <Router history={history}>
+    <Router history={history} render={applyRouterMiddleware(useScroll())}>
       <Route path='/' component={Layout}>
         <IndexRoute component={Home} />
+        <Route path='stats' component={Stats} />
         <Route path='status' component={Status} />
         <Route path='*' component={Error404} />
       </Route>
