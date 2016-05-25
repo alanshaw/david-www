@@ -89,14 +89,16 @@ app.get('*', (req, res, next) => {
       res.status(404)
     }
 
-    const Comp = components[components.length - 1].WrappedComponent
-    const fetchData = (Comp && Comp.fetchData) || (() => Promise.resolve())
-
     const initialState = { config: config.public }
     const store = createStore(reducers, initialState, applyMiddleware(thunkMiddleware))
     const { location, params, history } = renderProps
 
-    fetchData({ store, location, params, history })
+    Promise
+      .all(
+        components
+          .filter((c) => c && c.fetchData)
+          .map((c) => c.fetchData({ store, location, params, history }))
+      )
       .then(() => {
         const head = Helmet.rewind()
         const body = bodyTpl({ store, props: renderProps })
