@@ -1,5 +1,10 @@
 import fetch from 'isomorphic-fetch'
 
+export const SET_VERSION = 'SET_VERSION'
+export function setVersion (version) {
+  return { type: SET_VERSION, version }
+}
+
 export const SET_CONFIG = 'SET_CONFIG'
 export function setConfig (user) {
   return { type: SET_CONFIG, user }

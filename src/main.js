@@ -89,7 +89,7 @@ app.get('*', (req, res, next) => {
       res.status(404)
     }
 
-    const initialState = { config: config.public }
+    const initialState = { config: config.public, version: pkg.version }
     const store = createStore(reducers, initialState, applyMiddleware(thunkMiddleware))
     const { location, params, history } = renderProps
 

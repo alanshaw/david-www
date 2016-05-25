@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
 import {
+  SET_VERSION,
   SET_CONFIG,
   SET_USER,
   SET_PROJECT,
@@ -8,6 +9,15 @@ import {
   RECEIVE_DEPENDENCY_COUNTS,
   RECEIVE_LATEST_NEWS
 } from './actions'
+
+function version (state = null, action) {
+  switch (action.type) {
+    case SET_VERSION:
+      return action.version
+    default:
+      return state
+  }
+}
 
 function config (state = null, action) {
   switch (action.type) {
@@ -64,6 +74,7 @@ function latestNews (state = null, action) {
 }
 
 export default combineReducers({
+  version,
   config,
   user,
   project,
