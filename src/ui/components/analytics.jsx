@@ -5,7 +5,8 @@ import Qs from 'querystring'
 
 const Analytics = React.createClass({
   propTypes: {
-    routing: React.PropTypes.object.isRequired
+    routing: React.PropTypes.object.isRequired,
+    config: React.PropTypes.object.isRequired
   },
 
   componentDidMount () {
@@ -14,7 +15,7 @@ const Analytics = React.createClass({
       (window.ga.q = window.ga.q || []).push(arguments)
     }
     window.ga.l = 1 * new Date()
-    window.ga('create', 'UA-38876227-1')
+    window.ga('create', this.props.config.google.trackingId)
     window.ga('send', 'pageview')
   },
 
@@ -42,6 +43,6 @@ const Analytics = React.createClass({
   }
 })
 
-const mapStateToProps = ({ routing }) => ({ routing })
+const mapStateToProps = ({ routing, config }) => ({ routing, config })
 
 export default connect(mapStateToProps)(Analytics)

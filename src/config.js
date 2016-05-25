@@ -40,6 +40,9 @@ export default rc('david', {
       oauth: {
         id: null
       }
+    },
+    google: {
+      trackingId: ''
     }
   }
 })
