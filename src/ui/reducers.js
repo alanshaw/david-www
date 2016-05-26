@@ -4,9 +4,15 @@ import {
   SET_VERSION,
   SET_CONFIG,
   SET_USER,
+  REQUEST_PROJECT,
   RECEIVE_PROJECT,
+  REQUEST_INFO,
+  RECEIVE_INFO,
+  REQUEST_STATS,
   RECEIVE_STATS,
+  REQUEST_DEPENDENCY_COUNTS,
   RECEIVE_DEPENDENCY_COUNTS,
+  REQUEST_LATEST_NEWS,
   RECEIVE_LATEST_NEWS
 } from './actions'
 
@@ -39,6 +45,8 @@ function user (state = null, action) {
 
 function project (state = null, action) {
   switch (action.type) {
+    case REQUEST_PROJECT:
+      return null
     case RECEIVE_PROJECT:
       return action.project
     default:
@@ -46,8 +54,21 @@ function project (state = null, action) {
   }
 }
 
+function info (state = null, action) {
+  switch (action.type) {
+    case REQUEST_INFO:
+      return null
+    case RECEIVE_INFO:
+      return action.info
+    default:
+      return state
+  }
+}
+
 function stats (state = null, action) {
   switch (action.type) {
+    case REQUEST_STATS:
+      return null
     case RECEIVE_STATS:
       return action.stats
     default:
@@ -57,6 +78,8 @@ function stats (state = null, action) {
 
 function dependencyCounts (state = null, action) {
   switch (action.type) {
+    case REQUEST_DEPENDENCY_COUNTS:
+      return null
     case RECEIVE_DEPENDENCY_COUNTS:
       return action.counts
     default:
@@ -66,6 +89,8 @@ function dependencyCounts (state = null, action) {
 
 function latestNews (state = null, action) {
   switch (action.type) {
+    case REQUEST_LATEST_NEWS:
+      return null
     case RECEIVE_LATEST_NEWS:
       return action.news
     default:
@@ -78,6 +103,7 @@ export default combineReducers({
   config,
   user,
   project,
+  info,
   stats,
   dependencyCounts,
   latestNews,

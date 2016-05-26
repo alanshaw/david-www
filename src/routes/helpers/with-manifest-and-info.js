@@ -25,6 +25,7 @@ export default (manifest, brains) => {
 
       manifest.getManifest(user, repo, opts, (err, manifest) => {
         if (err) return cb(Boom.wrap(err, 500, 'Failed to get package.json'))
+        if (!brains) return cb(null, manifest)
 
         brains.getInfo(manifest, opts, (err, info) => {
           if (err) return cb(Boom.wrap(err, 500, 'Failed to get dependency info'))

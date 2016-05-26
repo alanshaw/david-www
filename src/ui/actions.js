@@ -1,6 +1,8 @@
 import fetch from 'isomorphic-fetch'
 import Qs from 'querystring'
 
+const e = encodeURIComponent
+
 export const SET_VERSION = 'SET_VERSION'
 export function setVersion (version) {
   return { type: SET_VERSION, version }
@@ -17,8 +19,8 @@ export function setUser (user) {
 }
 
 export const REQUEST_PROJECT = 'REQUEST_PROJECT'
-export function requestProject (data) {
-  return { type: REQUEST_PROJECT, data }
+export function requestProject (params) {
+  return { type: REQUEST_PROJECT, params }
 }
 
 export const RECEIVE_PROJECT = 'RECEIVE_PROJECT'
@@ -26,21 +28,13 @@ export function receiveProject (project) {
   return { type: RECEIVE_PROJECT, project }
 }
 
-export function fetchProject ({ user, repo, path, ref, type }) {
+export function fetchProject ({ user, repo, path, ref }) {
   return (dispatch, getState) => {
-    const project = getState().project
-    const projectData = { user, repo, path, ref, type }
+    dispatch(requestProject({ user, repo, path, ref }))
 
-    if (!projectChanged(project, projectData)) {
-      return Promise.resolve(project)
-    }
-
-    dispatch(requestProject(projectData))
-
-    const e = encodeURIComponent
     let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
     url += ref ? `/${e(ref)}` : ''
-    url += type ? `/${e(type)}-info.json` : '/info.json'
+    url += '/project.json'
     url += path ? `?path=${e(path)}` : ''
 
     // TODO: Cache?
@@ -51,28 +45,31 @@ export function fetchProject ({ user, repo, path, ref, type }) {
   }
 }
 
-function projectChanged (p1, p2) {
-  return getProjectUrl(p1) !== getProjectUrl(p2)
+export const REQUEST_INFO = 'REQUEST_INFO'
+export function requestInfo (params) {
+  return { type: REQUEST_INFO, params }
 }
 
-function getProjectUrl (project) {
-  if (!project) return null
+export const RECEIVE_INFO = 'RECEIVE_INFO'
+export function receiveInfo (info) {
+  return { type: RECEIVE_INFO, info }
+}
 
-  let url = `/${project.user}/${project.repo}`
-  url += project.ref ? `/${project.ref}` : ''
+export function fetchInfo ({ user, repo, path, ref, type }) {
+  return (dispatch, getState) => {
+    dispatch(requestInfo({ user, repo, path, ref, type }))
 
-  let qs = {}
+    let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
+    url += ref ? `/${e(ref)}` : ''
+    url += type ? `/${e(type)}-info.json` : '/info.json'
+    url += path ? `?path=${e(path)}` : ''
 
-  if (project.path) {
-    qs.path = project.path
+    // TODO: Cache?
+
+    return fetch(url)
+      .then(response => response.json())
+      .then(json => dispatch(receiveInfo(json)))
   }
-
-  if (project.type) {
-    qs.type = project.type
-  }
-
-  qs = Qs.stringify(qs)
-  return url + (qs ? `?${qs}` : '')
 }
 
 export const REQUEST_STATS = 'REQUEST_STATS'

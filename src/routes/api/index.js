@@ -3,6 +3,7 @@ import dependencyCounts from './dependency-counts'
 import graph from './graph'
 import info from './info'
 import news from './news'
+import project from './project'
 import stats from './stats'
 
 export default {
@@ -11,5 +12,6 @@ export default {
   graph,
   info,
   news,
+  project,
   stats
 }
