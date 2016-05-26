@@ -112,7 +112,6 @@ app.get('*', (req, res, next) => {
 
 routes.status(app, manifest, brains)
 routes.profile(app, profile)
-routes.homepage(app, stats)
 
 nsp.syncAdvisories()
 nsp.syncAdvisoriesPeriodically(config.nsp && config.nsp.syncAdvisoriesInterval)
