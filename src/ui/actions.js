@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import Qs from 'querystring'
 
 export const SET_VERSION = 'SET_VERSION'
 export function setVersion (version) {
@@ -27,7 +28,14 @@ export function receiveProject (project) {
 
 export function fetchProject ({ user, repo, path, ref, type }) {
   return (dispatch, getState) => {
-    dispatch(requestProject({ user, repo, path, ref, type }))
+    const project = getState().project
+    const projectData = { user, repo, path, ref, type }
+
+    if (!projectChanged(project, projectData)) {
+      return Promise.resolve(project)
+    }
+
+    dispatch(requestProject(projectData))
 
     const e = encodeURIComponent
     let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
@@ -41,6 +49,30 @@ export function fetchProject ({ user, repo, path, ref, type }) {
       .then(response => response.json())
       .then(json => dispatch(receiveProject(json)))
   }
+}
+
+function projectChanged (p1, p2) {
+  return getProjectUrl(p1) !== getProjectUrl(p2)
+}
+
+function getProjectUrl (project) {
+  if (!project) return null
+
+  let url = `/${project.user}/${project.repo}`
+  url += project.ref ? `/${project.ref}` : ''
+
+  let qs = {}
+
+  if (project.path) {
+    qs.path = project.path
+  }
+
+  if (project.type) {
+    qs.type = project.type
+  }
+
+  qs = Qs.stringify(qs)
+  return url + (qs ? `?${qs}` : '')
 }
 
 export const REQUEST_STATS = 'REQUEST_STATS'

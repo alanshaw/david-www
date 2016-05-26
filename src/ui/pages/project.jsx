@@ -1,6 +1,8 @@
 import React from 'react'
 import Helmet from 'react-helmet'
 import { connect } from 'react-redux'
+import { Link } from 'react-router'
+import merge from 'merge'
 import { fetchProject } from '../actions'
 import Badge from '../components/badge.jsx'
 
@@ -23,40 +25,36 @@ const Project = React.createClass({
       repo: React.PropTypes.string.isRequired,
       ref: React.PropTypes.string
     }).isRequired,
+    location: React.PropTypes.shape({
+      query: React.PropTypes.shape({
+        path: React.PropTypes.string,
+        type: React.PropTypes.string,
+        view: React.PropTypes.string
+      })
+    }).isRequired,
     fetchProject: React.PropTypes.func.isRequired
   },
 
-  getInitialState () {
-    return { project: null }
-  },
-
   componentWillReceiveProps (props) {
-    if (props && props.project) {
-      this.setState({ project: props.project })
-    }
+    const projectData = this.getProjectData(props.params, props.location.query)
+    this.props.fetchProject(projectData)
   },
 
   componentDidMount () {
-    const project = this.props.project
-    const projectData = this.props.params
-
-    if (project) {
-      if (
-        project.user === projectData.user &&
-        project.repo === projectData.repo &&
-        project.path === projectData.path &&
-        project.ref === projectData.ref
-      ) {
-        return this.setState({ project })
-      }
-    }
-
+    const projectData = this.getProjectData(this.props.params, this.props.location.query)
     this.props.fetchProject(projectData)
+  },
+
+  // Get project data from the URL
+  getProjectData (params, query) {
+    const { user, repo, ref } = params
+    const { path, type } = query
+    return { user, repo, ref, path, type }
   },
 
   render () {
     const params = this.props.params
-    const project = this.state.project
+    const project = this.props.project
     let title = 'Dependency status for '
 
     if (project) {
@@ -78,7 +76,7 @@ const Project = React.createClass({
 
   renderHeader () {
     const params = this.props.params
-    const project = this.state.project
+    const project = this.props.project
     const githubUrl = this.props.config.githubUrl
 
     let githubProjectUrl = `${githubUrl}/${params.user}/${params.repo}/`
@@ -113,18 +111,43 @@ const Project = React.createClass({
   },
 
   renderTabs () {
-    const project = this.state.project
+    const project = this.props.project
     if (!project) return
-
-    const manifest = project.manifest
 
     return (
       <ul id='dep-switch'>
-        <li><a href='#info=dependencies' title='Show dependencies' class='selected'><i className='fa fa-cogs'></i> dependencies</a></li>
-        {manifest.devDependencies && <li><a href='#info=devDependencies' title='Show devDependencies'><i className='fa fa-code'></i> devDependencies</a></li>}
-        {manifest.peerDependencies && <li><a href='#info=peerDependencies' title='Show peerDependencies'><i className='fa fa-cubes'></i> peerDependencies</a></li>}
-        {manifest.optionalDependencies && <li><a href='#info=optionalDependencies' title='Show optionalDependencies'><i className='fa fa-sliders'></i> optionalDependencies</a></li>}
+        {this.renderTab(null, 'cogs')}
+        {this.renderTab('dev', 'code')}
+        {this.renderTab('peer', 'cubes')}
+        {this.renderTab('optional', 'sliders')}
       </ul>
+    )
+  },
+
+  renderTab (type, icon) {
+    const project = this.props.project
+    const manifest = project.manifest
+
+    if (type && !manifest[`${type}Dependencies`]) return
+
+    let pathname = `/${project.user}/${project.repo}/`
+    pathname += project.ref ? `/${project.ref}` : ''
+    const { query } = this.props.location
+
+    const to = {
+      pathname,
+      query: merge(true, query, { type })
+    }
+
+    if (!type) {
+      delete to.query.type
+    }
+
+    const name = type ? `${type}Dependencies` : 'dependencies'
+    const className = (this.props.location.query.type || null) === type ? 'selected' : ''
+
+    return (
+      <li><Link to={to} className={className} title={`Show ${name}`}><i className={`fa fa-${icon}`}></i> {name}</Link></li>
     )
   }
 })
