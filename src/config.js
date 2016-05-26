@@ -34,6 +34,7 @@ export default rc('david', {
   public: {
     siteUrl: 'http://localhost:1337',
     apiUrl: 'http://localhost:1337',
+    githubUrl: 'https://github.com',
     github: {
       protocol: 'https',
       host: 'github.com',

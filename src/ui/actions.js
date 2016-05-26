@@ -15,9 +15,32 @@ export function setUser (user) {
   return { type: SET_USER, user }
 }
 
-export const SET_PROJECT = 'SET_PROJECT'
-export function setProject (project) {
-  return { type: SET_PROJECT, project }
+export const REQUEST_PROJECT = 'REQUEST_PROJECT'
+export function requestProject (data) {
+  return { type: REQUEST_PROJECT, data }
+}
+
+export const RECEIVE_PROJECT = 'RECEIVE_PROJECT'
+export function receiveProject (project) {
+  return { type: RECEIVE_PROJECT, project }
+}
+
+export function fetchProject ({ user, repo, path, ref, type }) {
+  return (dispatch, getState) => {
+    dispatch(requestProject({ user, repo, path, ref, type }))
+
+    const e = encodeURIComponent
+    let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
+    url += ref ? `/${e(ref)}` : ''
+    url += type ? `/${e(type)}-info.json` : '/info.json'
+    url += path ? `?path=${e(path)}` : ''
+
+    // TODO: Cache?
+
+    return fetch(url)
+      .then(response => response.json())
+      .then(json => dispatch(receiveProject(json)))
+  }
 }
 
 export const REQUEST_STATS = 'REQUEST_STATS'

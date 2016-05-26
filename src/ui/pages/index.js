@@ -1,11 +1,11 @@
-import Home from './home.jsx'
-import Stats from './stats.jsx'
-import Status from './status.jsx'
 import Error404 from './error-404.jsx'
+import Home from './home.jsx'
+import Project from './project.jsx'
+import Stats from './stats.jsx'
 
 export {
+  Error404,
   Home,
-  Stats,
-  Status,
-  Error404
+  Project,
+  Stats
 }

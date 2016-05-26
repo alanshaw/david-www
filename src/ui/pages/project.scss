@@ -1,0 +1,423 @@
+.project-page {
+  #repo {
+    h1 {
+      color: $grey0;
+      overflow: hidden;
+
+      a {
+        font-family: nevisbold, sans-serif;
+        font-weight: 400;
+
+        &:first-child {
+          color: $grey0;
+
+          &:hover {
+            color: $black0;
+          }
+        }
+      }
+      span {
+        font-family: Cardo, sans-serif;
+        font-size: 0.750em;
+      }
+      #branch {
+        font-family: nevisbold,sans-serif;
+        font-weight: 400;
+        white-space: nowrap;
+
+        .fa {
+          margin-left: 0.25em;
+          color: $blue0;
+        }
+      }
+      img {
+        vertical-align: baseline;
+      }
+    }
+    p {
+      font-size: 1.143em;
+      margin-top: -1em;
+    }
+  }
+  #status {
+    display: inline;
+  }
+  .badge {
+    padding: 0 0.5em;
+    background-color: transparent;
+  }
+  #dep-switch {
+    list-style-type: none;
+    padding: 0;
+    border-bottom: 2px solid $grey2;
+
+    li {
+      display: inline-block;
+      margin: 0 0.25em 0 0;
+
+      a {
+        background-color: $grey3;
+        display: block;
+        padding: 0.250em 1.333em;
+        -webkit-border-radius: 0.250em 0.250em 0 0;
+        -moz-border-radius: 0.250em 0.250em 0 0;
+        border-radius: 0.250em 0.250em 0 0;
+        -webkit-box-shadow: 0 0 0.5em $grey2;
+        -moz-box-shadow: 0 0 0.5em $grey2;
+        box-shadow: 0 0 0.5em $grey2;
+        font-family: nevisbold, sans-serif;
+        font-weight: 400;
+        font-size: 0.857em;
+        text-transform: uppercase;
+        color: $grey4;
+
+        &.selected {
+          background-color: $white;
+          color: $grey0;
+
+          i {
+            color: $blue0;
+          }
+        }
+        &:focus {
+          outline: none;
+        }
+        &:hover {
+          color: $black0;
+        }
+      }
+    }
+  }
+  .loading {
+    margin: 2em 0;
+    text-align: center;
+
+    * {
+      vertical-align: middle;
+    }
+  }
+  .summary {
+    font-size: 1.286em;
+    padding: 0 0.889em;
+    list-style-type: none;
+
+    span {
+      color: $blue0;
+      margin-right: 0.250em;
+    }
+  }
+  #summary-advisories {
+    box-shadow: 0 0 0.5em $grey2;
+    border-radius: 3px;
+    font-family: nevisbold,sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 1em 0 2.5em;
+    padding: 0.5em 1em;
+    background: #c20000 url(../img/bg-nsp-lock.png);
+
+    * {
+      vertical-align: middle;
+    }
+    i {
+      font-size: 2.5em;
+      margin-right: 10px;
+    }
+  }
+  #nsp {
+    float: right;
+    margin-top: -2.25em;
+
+    a {
+      font-family: Lato, Helvetica, sans-serif;
+      color: #333;
+      background: transparent url(../img/logo-nsp.png) no-repeat;
+      background-size: auto 100%;
+      margin-left: 0.25em;
+      padding-left: 1.3em;
+    }
+  }
+  #dep-info {
+    display: block;
+  }
+  .dep-info {
+    display: none;
+  }
+  .dep-table {
+    table {
+      width: 100%;
+
+      .js & {
+        display: none;
+      }
+      &.stacktable {
+        display: table;
+
+        .st-head-row.st-head-row-main {
+          display: none;
+        }
+        .st-head-row {
+          padding-top: 2em;
+        }
+        tr:nth-child(even) {
+          -webkit-box-shadow: none;
+          -moz-box-shadow: none;
+          box-shadow: none;
+        }
+      }
+      th, th a {
+        font-family: nevisbold, sans-serif;
+        font-weight: 400;
+        text-transform: uppercase;
+        color: $blue0;
+      }
+      th {
+        font-size: 0.875em;
+        text-align: left;
+        padding: 1em;
+      }
+      tbody {
+
+        td {
+          font-size: 1.143em;
+          padding: 0.750em 1em;
+          min-width: 5em;
+          border-bottom: 1px solid $blue0;
+        }
+        tr:first-child td {
+          border-top: 1px solid $blue0;
+        }
+        tr:nth-child(odd) td {
+          background-color: $white;
+          background-color: rgba(255, 255, 255, 0.6);
+        }
+      }
+      .status {
+        padding-left: 1.75em;
+        min-width: 3em;
+      }
+      .dep {
+        width: 100%;
+      }
+      .changes {
+        width: 14px;
+        min-width: 0;
+      }
+      a {
+        font-family: Cardo, sans-serif;
+        color: $grey0;
+
+        &:hover {
+          color: $black0;
+        }
+      }
+    }
+    .vulns {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        font-size: 0.875em;
+        line-height: 1.75;
+      }
+      a {
+        background: #c20000 url(../img/bg-nsp-lock.png);
+        color: #fff;
+        padding: 1px 5px;
+        border-radius: 3px;
+
+        &:hover {
+          background-color: #222;
+          color: #fff;
+        }
+      }
+    }
+  }
+  .fancybox-opened .badge-embed, .fancybox-opened .badge-embed {
+    display: block;
+  }
+  .badge-embed {
+    display: none;
+    width: 30em;
+
+    .theme > a, label {
+      display: block;
+      margin-top: 1em;
+    }
+    input {
+      width: 96%;
+    }
+  }
+  .switch, .dep-graph {
+    display: none;
+  }
+  .changes-popup {
+    width: 245px;
+
+    h1 span {
+      display: block;
+      color: $grey0;
+      font-size: 0.75em;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+
+      &.issues {
+        span {
+          color: $grey0;
+        }
+      }
+    }
+    li {
+      position: relative;
+      padding: 0.75em 0 0.75em 4.25em;
+      min-height: 2.5em;
+      line-height: 1.3;
+
+      &:nth-child(odd) {
+        background-color: $white;
+        background-color: rgba(255, 255, 255, 0.6);
+      }
+    }
+    img {
+      position: absolute;
+      top: 0.786em;
+      left: 0.75em;
+      width: 2.571em;
+      height: 2.571em;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+    }
+    .title {
+      display: block;
+      font-size: 1.143em;
+    }
+    .login {
+      color: $grey4;
+
+      &:hover {
+        color: $grey0;
+      }
+    }
+    time {
+      color: $grey4;
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .project-page {
+    #main {
+      background-position: center 22em;
+      min-height: 66em;
+    }
+    .badge {
+      float: right;
+    }
+    .summary {
+      li {
+        display: inline;
+        margin-left: 1.75em;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+    }
+    .dep-table {
+      table {
+        .js & {
+          display: table;
+        }
+        &.stacktable {
+          display: none;
+        }
+        tbody {
+          -webkit-box-shadow: 0 0 0.5em $grey2;
+          -moz-box-shadow: 0 0 0.5em $grey2;
+          box-shadow: 0 0 0.5em $grey2;
+        }
+      }
+    }
+    .changes-popup {
+      width: 693px;
+
+      h1 span {
+        float: right;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 960px) {
+  .project-page {
+    .node {
+      circle {
+        cursor: pointer;
+        fill: $white;
+        stroke: #7E827A;
+        stroke-width: 1.5px;
+      }
+      text {
+        font-size: 11px;
+      }
+    }
+    path.link {
+      fill: none;
+      stroke: #ccc;
+      stroke-width: 1.5px;
+    }
+    .switch {
+      display: block;
+      list-style-type: none;
+      margin: -3.75em 0 0 0;
+      padding: 0;
+      float: right;
+
+      li {
+        display: inline;
+        margin-left: 1em;
+      }
+      a {
+        font-family: nevisbold, sans-serif;
+        font-weight: 400;
+        font-size: 0.857em;
+        text-transform: uppercase;
+        color: $grey4;
+
+        &.selected {
+          color: $grey0;
+
+          i {
+            color: $blue0;
+          }
+        }
+        &:focus {
+          outline: 0;
+        }
+        &:hover {
+          color: $black0;
+        }
+      }
+    }
+    .loading {
+      margin: 10em 0;
+    }
+    .summary {
+      li {
+        margin-left: 4.5em;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+    }
+    .changes-popup {
+      width: 960px;
+    }
+  }
+}

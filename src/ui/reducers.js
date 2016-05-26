@@ -4,7 +4,7 @@ import {
   SET_VERSION,
   SET_CONFIG,
   SET_USER,
-  SET_PROJECT,
+  RECEIVE_PROJECT,
   RECEIVE_STATS,
   RECEIVE_DEPENDENCY_COUNTS,
   RECEIVE_LATEST_NEWS
@@ -39,7 +39,7 @@ function user (state = null, action) {
 
 function project (state = null, action) {
   switch (action.type) {
-    case SET_PROJECT:
+    case RECEIVE_PROJECT:
       return action.project
     default:
       return state

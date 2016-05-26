@@ -6,7 +6,7 @@ export default function () {
     <Helmet
       htmlAttributes={{lang: 'en'}}
       defaultTitle='David, a dependency management tool for Node.js projects'
-      titleTemplate='David - %s'
+      titleTemplate='%s - David'
       meta={[
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
