@@ -23,7 +23,7 @@ const Analytics = React.createClass({
     const currUrl = this.buildUrl(this.props.routing.locationBeforeTransitions)
     const nextUrl = this.buildUrl(props.routing.locationBeforeTransitions)
 
-    if (currUrl != nextUrl) {
+    if (currUrl !== nextUrl) {
       window.ga('send', 'pageview')
     }
   },

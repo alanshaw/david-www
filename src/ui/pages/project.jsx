@@ -6,6 +6,7 @@ import merge from 'merge'
 import isEqual from 'lodash.isequal'
 import { fetchProject, fetchInfo } from '../actions'
 import Badge from '../components/badge.jsx'
+import Loading from '../components/loading.jsx'
 
 const Project = React.createClass({
   propTypes: {
@@ -168,7 +169,7 @@ const Project = React.createClass({
     const info = this.props.info
 
     if (!info) {
-      return (<div className='loading'><i className='fa fa-spinner fa-spin fa-2x'></i> Reticulating splines...</div>)
+      return (<Loading />)
     }
 
     if (!info.deps.length) {
