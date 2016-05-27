@@ -7,6 +7,9 @@ import isEqual from 'lodash.isequal'
 import { fetchProject, fetchInfo } from '../actions'
 import Badge from '../components/badge.jsx'
 import Loading from '../components/loading.jsx'
+import Summary from '../components/project/summary.jsx'
+import SecurityWarning from '../components/project/security-warning.jsx'
+import DependencyTable from '../components/project/dependency-table.jsx'
 
 const Project = React.createClass({
   propTypes: {
@@ -167,14 +170,8 @@ const Project = React.createClass({
 
   renderInfo () {
     const info = this.props.info
-
-    if (!info) {
-      return (<Loading />)
-    }
-
-    if (!info.deps.length) {
-      return (<p>No dependencies</p>)
-    }
+    if (!info) return (<Loading />)
+    if (!info.deps.length) return (<p>No dependencies</p>)
 
     return (
       <div>
@@ -182,99 +179,11 @@ const Project = React.createClass({
           <li><a href='#view=list' title='Show dependencies in a list' className='selected'><i className='fa fa-list'></i> List</a></li>
           <li><a href='#view=tree' title='Show dependencies in a tree'><i className='fa fa-sitemap'></i> Tree</a></li>
         </ul>
-        {this.renderSummary()}
-        {this.renderSecurityWarning()}
-        {this.renderDependencyTable()}
-        {this.renderSummary()}
+        <Summary info={info} />
+        <SecurityWarning info={info} />
+        <DependencyTable info={info} />
+        <Summary info={info} />
       </div>
-    )
-  },
-
-  renderSummary () {
-    const info = this.props.info
-
-    return (
-      <ul className='summary'>
-        <li><span>{info.deps.length}</span> Dependencies total</li>
-        <li><span className='sqr uptodate'></span> <span>{info.totals.upToDate}</span> Up to date</li>
-        <li><span className='sqr pinned'></span> <span>{info.totals.pinned.outOfDate}</span> Pinned, out of date</li>
-        <li><span className='sqr outofdate'></span> <span>{info.totals.unpinned.outOfDate}</span> Out of date</li>
-      </ul>
-    )
-  },
-
-  renderSecurityWarning () {
-    const info = this.props.info
-    if (!info.totals.advisories) return
-
-    return (
-      <div>
-        <div id='summary-advisories'>
-          <i className='fa fa-exclamation-circle'></i>
-          Security vulnerabilities in dependencies
-        </div>
-        <div id='nsp'>
-          Advisories from the <a href='https://nodesecurity.io'>Node Security Project</a>
-        </div>
-      </div>
-    )
-  },
-
-  renderDependencyTable () {
-    const info = this.props.info
-
-    return (
-      <div className='dep-table'>
-        <table>
-          <thead>
-            <tr>
-              <th>Dependency</th>
-              <th><span className='visuallyhidden'>Changes</span></th>
-              <th>Required</th>
-              <th>Stable</th>
-              <th>Latest</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {info.deps.map(dep => {
-              return (
-                <tr>
-                  <td className='dep'>
-                    <a href={`https://www.npmjs.com/package/${dep.name}`}>{dep.name}</a>
-                    {this.renderAdvisories(dep)}
-                  </td>
-                  <td className='changes'>
-                    {dep.outOfDate && <a href='#' title='View closed issues and commits' className='changes-icon'><i className='fa fa-file-code-o'></i></a>}
-                  </td>
-                  <td className='required'>{dep.required}</td>
-                  <td className='stable'>{dep.stable}</td>
-                  <td className='latest'>{dep.latest}</td>
-                  <td className='status'>
-                    <span className={`sqr ${dep.status} ${dep.pinned ? 'pinned' : 'unpinned'}`} title={`${dep.pinned ? 'pinned ' : ''}${dep.status}`}></span>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
-    )
-  },
-
-  renderAdvisories (dep) {
-    if (!dep.advisories) return
-    return (
-      <ul className='vulns'>
-        {dep.advisories.map((a) => (
-          <li>
-            <a href={`https://nodesecurity.io/advisories/${a.slug}`}>
-              <i className='fa fa-exclamation-circle'></i>
-              {a.title}
-            </a>
-          </li>
-        ))}
-      </ul>
     )
   }
 })
