@@ -3,13 +3,13 @@ import Helmet from 'react-helmet'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import merge from 'merge'
-import isEqual from 'lodash.isequal'
 import { fetchProject, fetchInfo } from '../actions'
 import Badge from '../components/badge.jsx'
 import Loading from '../components/loading.jsx'
 import Summary from '../components/project/summary.jsx'
 import SecurityWarning from '../components/project/security-warning.jsx'
 import DependencyTable from '../components/project/dependency-table.jsx'
+import DependencyGraph from '../components/project/dependency-graph.jsx'
 
 const Project = React.createClass({
   propTypes: {
@@ -46,7 +46,10 @@ const Project = React.createClass({
   },
 
   componentWillReceiveProps (props) {
-    if (!isEqual(this.props.location.query, props.location.query)) {
+    const currType = this.props.location.query.type
+    const nextType = props.location.query.type
+
+    if (currType !== nextType) {
       const params = this.getProjectFetchParams(props.params, props.location.query)
       this.props.fetchInfo(params)
     }
@@ -63,6 +66,13 @@ const Project = React.createClass({
     const { user, repo, ref } = params
     const { path, type } = query
     return { user, repo, ref, path, type }
+  },
+
+  getLinkTo (query) {
+    const params = this.props.params
+    let pathname = `/${params.user}/${params.repo}/`
+    pathname += params.ref ? `/${params.ref}` : ''
+    return { pathname, query: merge(true, this.props.location.query, query) }
   },
 
   render () {
@@ -147,14 +157,10 @@ const Project = React.createClass({
 
   renderTab (type, icon) {
     const project = this.props.project
-    const params = this.props.params
-
     if (type && !project[`${type}Dependencies`]) return
 
-    let pathname = `/${params.user}/${params.repo}/`
-    pathname += params.ref ? `/${params.ref}` : ''
     const { query } = this.props.location
-    const to = {pathname, query: merge(true, query, { type })}
+    const to = this.getLinkTo({ type })
 
     if (!type) {
       delete to.query.type
@@ -173,17 +179,35 @@ const Project = React.createClass({
     if (!info) return (<Loading />)
     if (!info.deps.length) return (<p>No dependencies</p>)
 
+    const view = this.props.location.query.view || 'list'
+
     return (
       <div>
-        <ul className='switch'>
-          <li><a href='#view=list' title='Show dependencies in a list' className='selected'><i className='fa fa-list'></i> List</a></li>
-          <li><a href='#view=tree' title='Show dependencies in a tree'><i className='fa fa-sitemap'></i> Tree</a></li>
-        </ul>
-        <Summary info={info} />
-        <SecurityWarning info={info} />
-        <DependencyTable info={info} />
-        <Summary info={info} />
+        {this.renderViewSwitcher()}
+        <Summary />
+        <SecurityWarning />
+        {view === 'list' ? <DependencyTable /> : <DependencyGraph />}
+        <Summary />
       </div>
+    )
+  },
+
+  renderViewSwitcher () {
+    return (
+      <ul className='switch'>
+        {this.renderViewSwitcherButton('list', 'list')}
+        {this.renderViewSwitcherButton('tree', 'sitemap')}
+      </ul>
+    )
+  },
+
+  renderViewSwitcherButton (view, icon) {
+    const { query } = this.props.location
+    const to = this.getLinkTo({ view })
+    const className = (query.view || 'list') === view ? 'selected' : ''
+
+    return (
+      <li><Link to={to} className={className} title={`Show dependencies in a ${view}`}><i className={`fa fa-${icon}`}></i> {view}</Link></li>
     )
   }
 })

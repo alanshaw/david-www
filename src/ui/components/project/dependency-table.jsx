@@ -1,6 +1,7 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-export default ({ info }) => (
+const DependencyTable = ({ info }) => (
   <div className='dep-table'>
     <table>
       <thead>
@@ -46,11 +47,12 @@ function Advisories ({ dep }) {
       {dep.advisories.map((a) => (
         <li>
           <a href={`https://nodesecurity.io/advisories/${a.slug}`}>
-            <i className='fa fa-exclamation-circle'></i>
-            {a.title}
+            <i className='fa fa-exclamation-circle'></i> {a.title}
           </a>
         </li>
       ))}
     </ul>
   )
 }
+
+export default connect(({ info }) => ({ info }))(DependencyTable)

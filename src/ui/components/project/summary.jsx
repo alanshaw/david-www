@@ -1,6 +1,7 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-export default ({ info }) => (
+const Summary = ({ info }) => (
   <ul className='summary'>
     <li><span>{info.deps.length}</span> Dependencies total</li>
     <li><span className='sqr uptodate'></span> <span>{info.totals.upToDate}</span> Up to date</li>
@@ -8,3 +9,5 @@ export default ({ info }) => (
     <li><span className='sqr outofdate'></span> <span>{info.totals.unpinned.outOfDate}</span> Out of date</li>
   </ul>
 )
+
+export default connect(({ info }) => ({ info }))(Summary)

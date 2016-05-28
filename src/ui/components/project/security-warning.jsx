@@ -1,6 +1,7 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-export default ({ info }) => {
+const SecurityWarning = ({ info }) => {
   if (!info.totals.advisories) return null
 
   return (
@@ -15,3 +16,5 @@ export default ({ info }) => {
     </div>
   )
 }
+
+export default connect(({ info }) => ({ info }))(SecurityWarning)
