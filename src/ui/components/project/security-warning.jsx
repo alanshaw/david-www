@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 const SecurityWarning = ({ info }) => {
-  if (!info.totals.advisories) return null
+  if (!info || !info.totals.advisories) return null
 
   return (
     <div>

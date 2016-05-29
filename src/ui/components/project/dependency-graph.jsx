@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import cycle from 'cycle'
 import d3 from 'd3'
 import { fetchDependencyGraph } from '../../actions'
+import Loading from '../loading.jsx'
 
-const diagonal = d3.svg.diagonal().projection((d) => [d.y, d.x])
+const diagonal = d3.svg.diagonal().projection(({ x, y }) => [y, x])
 let id = 0 // For nodes with no ID
 
 const DependencyGraph = React.createClass({
@@ -25,7 +26,13 @@ const DependencyGraph = React.createClass({
   },
 
   render () {
-    return (<div className='dep-graph' ref={(r) => { this.graphContainer = r }}></div>)
+    return (
+      <div>
+        {this.props.dependencyGraph
+          ? <div className='dep-graph' ref={(r) => { this.graphContainer = r }}></div>
+          : <Loading />}
+      </div>
+    )
   },
 
   componentDidUpdate () {
@@ -38,19 +45,7 @@ const DependencyGraph = React.createClass({
       // Initialize the display to show the first level of nodes
       root.children.forEach(toggleChildren)
 
-      const margin = [20, 120, 20, 120]
-      const width = this.graphContainer.clientWidth - margin[1] - margin[3]
-      const height = 768 - margin[0] - margin[2]
-      const layout = d3.layout.tree().size([height, width])
-
-      const container = d3.select(this.graphContainer).append('svg:svg')
-        .attr('width', width + margin[1] + margin[3])
-        .attr('height', height + margin[0] + margin[2])
-        .append('svg:g')
-        .attr('transform', `translate(${margin[3]}, ${margin[0]})`)
-
-      const vis = { container, margin, width, height, layout }
-
+      const vis = createGraph(this.graphContainer)
       updateGraph(vis, root)
     })
   }
@@ -130,6 +125,21 @@ function toggleChildren (d) {
   }
 }
 
+function createGraph (container) {
+  const margin = [20, 120, 20, 120]
+  const width = container.clientWidth - margin[1] - margin[3]
+  const height = 768 - margin[0] - margin[2]
+  const layout = d3.layout.tree().size([height, width])
+
+  const svg = d3.select(container).append('svg:svg')
+    .attr('width', width + margin[1] + margin[3])
+    .attr('height', height + margin[0] + margin[2])
+    .append('svg:g')
+    .attr('transform', `translate(${margin[3]}, ${margin[0]})`)
+
+  return { svg, margin, width, height, layout }
+}
+
 function updateGraph (vis, root, source) {
   source = source || root
 
@@ -147,7 +157,7 @@ function updateGraph (vis, root, source) {
   })
 
   // Update the nodes...
-  const node = vis.container.selectAll('g.node').data(nodes, (d) => {
+  const node = vis.svg.selectAll('g.node').data(nodes, (d) => {
     d.id = d.id || ++id
     return d.id
   })
@@ -187,7 +197,7 @@ function updateGraph (vis, root, source) {
   nodeExit.select('text').style('fill-opacity', 0.000001)
 
   // Update the links...
-  const link = vis.container.selectAll('path.link').data(vis.layout.links(nodes), (d) => d.target.id)
+  const link = vis.svg.selectAll('path.link').data(vis.layout.links(nodes), (d) => d.target.id)
 
   // Enter any new links at the parent's previous position.
   link.enter().insert('svg:path', 'g').attr('class', 'link').attr('d', () => {
