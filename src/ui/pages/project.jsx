@@ -180,13 +180,14 @@ const Project = React.createClass({
     if (!info.deps.length) return (<p>No dependencies</p>)
 
     const view = this.props.location.query.view || 'list'
+    const params = this.getProjectFetchParams(this.props.params, this.props.location.query)
 
     return (
       <div>
         {this.renderViewSwitcher()}
         <Summary />
         <SecurityWarning />
-        {view === 'list' ? <DependencyTable /> : <DependencyGraph />}
+        {view === 'list' ? <DependencyTable /> : <DependencyGraph project={params} />}
         <Summary />
       </div>
     )

@@ -8,6 +8,8 @@ import {
   RECEIVE_PROJECT,
   REQUEST_INFO,
   RECEIVE_INFO,
+  REQUEST_DEPENDENCY_GRAPH,
+  RECEIVE_DEPENDENCY_GRAPH,
   REQUEST_STATS,
   RECEIVE_STATS,
   REQUEST_DEPENDENCY_COUNTS,
@@ -65,6 +67,17 @@ function info (state = null, action) {
   }
 }
 
+function dependencyGraph (state = null, action) {
+  switch (action.type) {
+    case REQUEST_DEPENDENCY_GRAPH:
+      return null
+    case RECEIVE_DEPENDENCY_GRAPH:
+      return action.graph
+    default:
+      return state
+  }
+}
+
 function stats (state = null, action) {
   switch (action.type) {
     case REQUEST_STATS:
@@ -104,6 +117,7 @@ export default combineReducers({
   user,
   project,
   info,
+  dependencyGraph,
   stats,
   dependencyCounts,
   latestNews,

@@ -1,5 +1,4 @@
 import fetch from 'isomorphic-fetch'
-import Qs from 'querystring'
 
 const e = encodeURIComponent
 
@@ -69,6 +68,33 @@ export function fetchInfo ({ user, repo, path, ref, type }) {
     return fetch(url)
       .then(response => response.json())
       .then(json => dispatch(receiveInfo(json)))
+  }
+}
+
+export const REQUEST_DEPENDENCY_GRAPH = 'REQUEST_DEPENDENCY_GRAPH'
+export function requestDependencyGraph (params) {
+  return { type: REQUEST_DEPENDENCY_GRAPH, params }
+}
+
+export const RECEIVE_DEPENDENCY_GRAPH = 'RECEIVE_DEPENDENCY_GRAPH'
+export function receiveDependencyGraph (graph) {
+  return { type: RECEIVE_DEPENDENCY_GRAPH, graph }
+}
+
+export function fetchDependencyGraph ({ user, repo, path, ref, type }) {
+  return (dispatch, getState) => {
+    dispatch(requestDependencyGraph({ user, repo, path, ref, type }))
+
+    let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
+    url += ref ? `/${e(ref)}` : ''
+    url += type ? `/${e(type)}-graph.json` : '/graph.json'
+    url += path ? `?path=${e(path)}` : ''
+
+    // TODO: Cache?
+
+    return fetch(url)
+      .then(response => response.json())
+      .then(json => dispatch(receiveDependencyGraph(json)))
   }
 }
 

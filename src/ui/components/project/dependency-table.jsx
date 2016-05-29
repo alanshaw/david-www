@@ -17,7 +17,7 @@ const DependencyTable = ({ info }) => (
       <tbody>
         {info.deps.map(dep => {
           return (
-            <tr>
+            <tr key={dep.name}>
               <td className='dep'>
                 <a href={`https://www.npmjs.com/package/${dep.name}`}>{dep.name}</a>
                 <Advisories dep={dep} />

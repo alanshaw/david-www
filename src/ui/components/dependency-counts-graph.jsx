@@ -84,14 +84,10 @@ const DependencyCountsGraph = React.createClass({
   }
 })
 
-const mapStateToProps = ({ dependencyCounts }) => {
-  return { dependencyCounts }
-}
+const mapStateToProps = ({ dependencyCounts }) => ({ dependencyCounts })
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    fetchDependencyCounts: () => dispatch(fetchDependencyCounts())
-  }
+  return { fetchDependencyCounts: () => dispatch(fetchDependencyCounts()) }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DependencyCountsGraph)
