@@ -58,14 +58,11 @@ const Home = React.createClass({
           <h2>Giving you badges.</h2>
 
           <p>
-            Got a <a href='http://nodejs.org/'>Node.js</a> project? Get a badge.
-            David is free for public projects on <a href='https://github.com/'>Github</a>.
+            Got a <a href='http://nodejs.org/'>Node.js</a> project? Get a badge. David is free for public projects on <a href='https://github.com/'>Github</a>.
           </p>
 
           <p>
-            Declare your dependencies in a <a href='http://package.json.nodejitsu.com/'>package.json</a>
-            file and you're good. David will go work the rest out and you'll get your own project status page,
-            listing your dependencies and their freshness. Click on the examples above for a preview.
+            Declare your dependencies in a <a href='http://package.json.nodejitsu.com/'>package.json</a> file and you're good. David will go work the rest out and you'll get your own project status page, listing your dependencies and their freshness. Click on the examples above for a preview.
           </p>
 
           <p>Type your username / repo name in below and get yours...</p>
@@ -76,8 +73,7 @@ const Home = React.createClass({
           </p>
 
           <p>
-            David is currently <em>BETA</em>, which means it may be unreliable, unavailable or not working.
-            That said, it's already useful and we're working to make it rock solid.
+            David is currently <em>BETA</em>, which means it may be unreliable, unavailable or not working. That said, it's already useful and we're working to make it rock solid.
             It's all in Github so <a href='https://github.com/alanshaw/david-www'>feel free to help</a>.
           </p>
 

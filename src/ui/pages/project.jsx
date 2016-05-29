@@ -213,6 +213,23 @@ const Project = React.createClass({
   }
 })
 
+Project.fetchData = ({ params, location, store }) => {
+  const { user, repo, ref } = params
+  const { path, type } = location.query
+  const projectParams = { user, repo, ref, path, type }
+
+  return Promise.all([
+    store.dispatch(fetchProject(projectParams)),
+    store.dispatch(fetchInfo(projectParams))
+  ])
+}
+
+Project.shouldUpdateScroll = (prevRouterProps, { routes }) => {
+  if (!prevRouterProps) return true
+  const { routes: prevRoutes } = prevRouterProps
+  return prevRoutes[prevRoutes.length - 1] !== routes[routes.length - 1]
+}
+
 const mapStateToProps = ({ config, project, info }) => {
   return { config, project, info }
 }
