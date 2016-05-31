@@ -29,6 +29,10 @@ export function receiveProject (project) {
 
 export function fetchProject ({ user, repo, path, ref }) {
   return (dispatch, getState) => {
+    if (isEqual(getState().projectParams, { user, repo, path, ref })) {
+      return Promise.resolve(getState().project)
+    }
+
     dispatch(requestProject({ user, repo, path, ref }))
 
     let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
@@ -56,6 +60,10 @@ export function receiveInfo (info) {
 
 export function fetchInfo ({ user, repo, path, ref, type }) {
   return (dispatch, getState) => {
+    if (isEqual(getState().infoParams, { user, repo, path, ref, type })) {
+      return Promise.resolve(getState().info)
+    }
+
     dispatch(requestInfo({ user, repo, path, ref, type }))
 
     let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
@@ -156,4 +164,8 @@ export function fetchLatestNews () {
       .then(response => response.json())
       .then(json => dispatch(receiveLatestNews(json)))
   }
+}
+
+function isEqual (obj1, obj2) {
+  return JSON.stringify(obj1) === JSON.stringify(obj2)
 }

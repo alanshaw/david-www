@@ -45,12 +45,30 @@ function user (state = null, action) {
   }
 }
 
+function projectParams (state = null, action) {
+  switch (action.type) {
+    case REQUEST_PROJECT:
+      return action.params
+    default:
+      return state
+  }
+}
+
 function project (state = null, action) {
   switch (action.type) {
     case REQUEST_PROJECT:
       return null
     case RECEIVE_PROJECT:
       return action.project
+    default:
+      return state
+  }
+}
+
+function infoParams (state = null, action) {
+  switch (action.type) {
+    case REQUEST_INFO:
+      return action.params
     default:
       return state
   }
@@ -115,7 +133,9 @@ export default combineReducers({
   version,
   config,
   user,
+  projectParams,
   project,
+  infoParams,
   info,
   dependencyGraph,
   stats,
