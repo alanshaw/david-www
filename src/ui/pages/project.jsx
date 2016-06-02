@@ -10,6 +10,7 @@ import Summary from '../components/project/summary.jsx'
 import SecurityWarning from '../components/project/security-warning.jsx'
 import DependencyTable from '../components/project/dependency-table.jsx'
 import DependencyGraph from '../components/project/dependency-graph.jsx'
+import BadgeModal from '../components/project/badge-modal.jsx'
 
 const Project = React.createClass({
   propTypes: {
@@ -43,6 +44,10 @@ const Project = React.createClass({
       })
     }).isRequired,
     fetchProject: React.PropTypes.func.isRequired
+  },
+
+  getInitialState () {
+    return { badgeModalIsOpen: false }
   },
 
   componentWillReceiveProps (props) {
@@ -101,6 +106,10 @@ const Project = React.createClass({
         <div id='dep-info' className='dep-info'>
           {this.renderInfo()}
         </div>
+        <BadgeModal
+          project={this.getProjectFetchParams(params, this.props.location.query)}
+          isOpen={this.state.badgeModalIsOpen}
+          onRequestClose={this.onBadgeModalClose} />
       </div>
     )
   },
@@ -123,7 +132,9 @@ const Project = React.createClass({
           <h1>
             <a href={`${githubUrl}/${params.user}`}>{params.user}</a> - <a href={githubProjectUrl}>{project.name}</a>
             <span> {project.version} {params.ref ? <span id='branch'><i className='fa fa-code-fork'></i> {params.ref}</span> : ''}</span>
-            <Badge project={this.getProjectFetchParams(this.props.params, this.props.location.query)} />
+            <Badge
+              project={this.getProjectFetchParams(this.props.params, this.props.location.query)}
+              onClick={this.onBadgeClick} />
           </h1>
           {project.description && <p>{project.description}</p>}
         </div>
@@ -210,6 +221,15 @@ const Project = React.createClass({
     return (
       <li><Link to={to} className={className} title={`Show dependencies in a ${view}`}><i className={`fa fa-${icon}`}></i> {view}</Link></li>
     )
+  },
+
+  onBadgeClick (e) {
+    e.preventDefault()
+    this.setState({ badgeModalIsOpen: true })
+  },
+
+  onBadgeModalClose () {
+    this.setState({ badgeModalIsOpen: false })
   }
 })
 

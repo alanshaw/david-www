@@ -88,14 +88,6 @@
       }
     }
   }
-  .loading {
-    margin: 2em 0;
-    text-align: center;
-
-    * {
-      vertical-align: middle;
-    }
-  }
   .summary {
     font-size: 1.286em;
     padding: 0 0.889em;
@@ -235,21 +227,6 @@
       }
     }
   }
-  .fancybox-opened .badge-embed, .fancybox-opened .badge-embed {
-    display: block;
-  }
-  .badge-embed {
-    display: none;
-    width: 30em;
-
-    .theme > a, label {
-      display: block;
-      margin-top: 1em;
-    }
-    input {
-      width: 96%;
-    }
-  }
   .changes-popup {
     width: 245px;
 
@@ -303,6 +280,10 @@
     time {
       color: $grey4;
     }
+  }
+  .modal-badge {
+    width: 450px;
+    max-width: 100%;
   }
 }
 
@@ -400,9 +381,6 @@
           color: $black0;
         }
       }
-    }
-    .loading {
-      margin: 10em 0;
     }
     .summary {
       li {
