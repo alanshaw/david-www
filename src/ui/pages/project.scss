@@ -88,145 +88,6 @@
       }
     }
   }
-  .summary {
-    font-size: 1.286em;
-    padding: 0 0.889em;
-    list-style-type: none;
-
-    span {
-      color: $blue0;
-      margin-right: 0.250em;
-    }
-  }
-  #summary-advisories {
-    box-shadow: 0 0 0.5em $grey2;
-    border-radius: 3px;
-    font-family: nevisbold,sans-serif;
-    font-weight: 400;
-    text-transform: uppercase;
-    color: #fff;
-    margin: 1em 0 2.5em;
-    padding: 0.5em 1em;
-    background: #c20000 url(../img/bg-nsp-lock.png);
-
-    * {
-      vertical-align: middle;
-    }
-    i {
-      font-size: 2.5em;
-      margin-right: 10px;
-    }
-  }
-  #nsp {
-    float: right;
-    margin-top: -2.25em;
-
-    a {
-      font-family: Lato, Helvetica, sans-serif;
-      color: #333;
-      background: transparent url(../img/logo-nsp.png) no-repeat;
-      background-size: auto 100%;
-      margin-left: 0.25em;
-      padding-left: 1.3em;
-    }
-  }
-  #dep-info {
-    display: block;
-  }
-  .dep-info {
-    display: none;
-  }
-  .dep-table {
-    table {
-      width: 100%;
-
-      .js & {
-        display: none;
-      }
-      &.stacktable {
-        display: table;
-
-        .st-head-row.st-head-row-main {
-          display: none;
-        }
-        .st-head-row {
-          padding-top: 2em;
-        }
-        tr:nth-child(even) {
-          -webkit-box-shadow: none;
-          -moz-box-shadow: none;
-          box-shadow: none;
-        }
-      }
-      th, th a {
-        font-family: nevisbold, sans-serif;
-        font-weight: 400;
-        text-transform: uppercase;
-        color: $blue0;
-      }
-      th {
-        font-size: 0.875em;
-        text-align: left;
-        padding: 1em;
-      }
-      tbody {
-
-        td {
-          font-size: 1.143em;
-          padding: 0.750em 1em;
-          min-width: 5em;
-          border-bottom: 1px solid $blue0;
-        }
-        tr:first-child td {
-          border-top: 1px solid $blue0;
-        }
-        tr:nth-child(odd) td {
-          background-color: $white;
-          background-color: rgba(255, 255, 255, 0.6);
-        }
-      }
-      .status {
-        padding-left: 1.75em;
-        min-width: 3em;
-      }
-      .dep {
-        width: 100%;
-      }
-      .changes {
-        width: 14px;
-        min-width: 0;
-      }
-      a {
-        font-family: Cardo, sans-serif;
-        color: $grey0;
-
-        &:hover {
-          color: $black0;
-        }
-      }
-    }
-    .vulns {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-
-      li {
-        font-size: 0.875em;
-        line-height: 1.75;
-      }
-      a {
-        background: #c20000 url(../img/bg-nsp-lock.png);
-        color: #fff;
-        padding: 1px 5px;
-        border-radius: 3px;
-
-        &:hover {
-          background-color: #222;
-          color: #fff;
-        }
-      }
-    }
-  }
   .changes-popup {
     width: 245px;
 
@@ -281,10 +142,6 @@
       color: $grey4;
     }
   }
-  .modal-badge {
-    width: 450px;
-    max-width: 100%;
-  }
 }
 
 @media only screen and (min-width: 768px) {
@@ -295,31 +152,6 @@
     }
     .badge {
       float: right;
-    }
-    .summary {
-      li {
-        display: inline;
-        margin-left: 1.75em;
-
-        &:first-child {
-          margin-left: 0;
-        }
-      }
-    }
-    .dep-table {
-      table {
-        .js & {
-          display: table;
-        }
-        &.stacktable {
-          display: none;
-        }
-        tbody {
-          -webkit-box-shadow: 0 0 0.5em $grey2;
-          -moz-box-shadow: 0 0 0.5em $grey2;
-          box-shadow: 0 0 0.5em $grey2;
-        }
-      }
     }
     .changes-popup {
       width: 693px;
@@ -333,22 +165,6 @@
 
 @media only screen and (min-width: 960px) {
   .project-page {
-    .node {
-      circle {
-        cursor: pointer;
-        fill: $white;
-        stroke: #7E827A;
-        stroke-width: 1.5px;
-      }
-      text {
-        font-size: 11px;
-      }
-    }
-    path.link {
-      fill: none;
-      stroke: #ccc;
-      stroke-width: 1.5px;
-    }
     .switch {
       display: block;
       list-style-type: none;
@@ -379,15 +195,6 @@
         }
         &:hover {
           color: $black0;
-        }
-      }
-    }
-    .summary {
-      li {
-        margin-left: 4.5em;
-
-        &:first-child {
-          margin-left: 0;
         }
       }
     }

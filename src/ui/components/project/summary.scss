@@ -1,0 +1,41 @@
+.project-page {
+  .summary {
+    font-size: 1.286em;
+    padding: 0 0.889em;
+    list-style-type: none;
+
+    span {
+      color: $blue0;
+      margin-right: 0.250em;
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .project-page {
+    .summary {
+      li {
+        display: inline;
+        margin-left: 1.75em;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 960px) {
+  .project-page {
+    .summary {
+      li {
+        margin-left: 4.5em;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}

@@ -103,9 +103,7 @@ const Project = React.createClass({
           ]} />
         {this.renderHeader()}
         {this.renderTabs()}
-        <div id='dep-info' className='dep-info'>
-          {this.renderInfo()}
-        </div>
+        {this.renderInfo()}
         <BadgeModal
           project={this.getProjectFetchParams(params, this.props.location.query)}
           isOpen={this.state.badgeModalIsOpen}

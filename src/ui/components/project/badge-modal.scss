@@ -1,13 +1,18 @@
-.modal-badge {
-  .badge-embed {
-    width: 30em;
+.project-page {
+  .modal-badge {
+    width: 450px;
+    max-width: 100%;
 
-    .theme > a, label {
-      display: block;
-      margin-top: 1em;
-    }
-    input {
-      width: 96%;
+    .badge-embed {
+      width: 30em;
+
+      .theme > a, label {
+        display: block;
+        margin-top: 1em;
+      }
+      input {
+        width: 96%;
+      }
     }
   }
 }
