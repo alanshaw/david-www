@@ -3,6 +3,7 @@ import Helmet from 'react-helmet'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import merge from 'merge'
+import Modal from 'react-modal'
 import { fetchProject, fetchInfo } from '../actions'
 import Badge from '../components/badge.jsx'
 import Loading from '../components/loading.jsx'
@@ -10,7 +11,7 @@ import Summary from '../components/project/summary.jsx'
 import SecurityWarning from '../components/project/security-warning.jsx'
 import DependencyTable from '../components/project/dependency-table.jsx'
 import DependencyGraph from '../components/project/dependency-graph.jsx'
-import BadgeModal from '../components/project/badge-modal.jsx'
+import BadgeEmbed from '../components/project/badge-embed.jsx'
 
 const Project = React.createClass({
   propTypes: {
@@ -104,10 +105,9 @@ const Project = React.createClass({
         {this.renderHeader()}
         {this.renderTabs()}
         {this.renderInfo()}
-        <BadgeModal
-          project={this.getProjectFetchParams(params, this.props.location.query)}
-          isOpen={this.state.badgeModalIsOpen}
-          onRequestClose={this.onBadgeModalClose} />
+        <Modal isOpen={this.state.badgeModalIsOpen} onRequestClose={this.onBadgeModalClose} className='modal modal-badge' overlayClassName='modal-overlay'>
+          <BadgeEmbed project={this.getProjectFetchParams(params, this.props.location.query)} />
+        </Modal>
       </div>
     )
   },

@@ -1,5 +1,4 @@
 import React from 'react'
-import Modal from 'react-modal'
 import { connect } from 'react-redux'
 
 const BadgeModal = React.createClass({
@@ -82,24 +81,22 @@ const BadgeModal = React.createClass({
     const html = `<a href="${url}" title="${name} status"><img src="${src}"/></a>`
 
     return (
-      <Modal {...this.props}>
-        <div className='badge-embed'>
-          <h1>Embed badge</h1>
-          <label htmlFor='badge-theme'>Type</label>
-          <select id='badge-theme' onChange={this.onBadgeThemeChange} value={this.state.theme}>
-            <option value='svg'>SVG</option>
-            <option value='png'>PNG</option>
-            <option value='flat-square'>Flat Square</option>
-          </select>
-          <div className={`theme theme-${this.state.theme}`}>
-            <a href={src}><img src={src} alt={`${name} status`} /></a>
-            <label htmlFor='badge-markdown'>Markdown</label>
-            <input id='badge-markdown' type='text' value={md} />
-            <label htmlFor='badge-html'>HTML</label>
-            <input id='badge-html' type='text' value={html} />
-          </div>
+      <div className='badge-embed'>
+        <h1>Embed badge</h1>
+        <label htmlFor='badge-theme'>Type</label>
+        <select id='badge-theme' onChange={this.onBadgeThemeChange} value={this.state.theme}>
+          <option value='svg'>SVG</option>
+          <option value='png'>PNG</option>
+          <option value='flat-square'>Flat Square</option>
+        </select>
+        <div className={`theme theme-${this.state.theme}`}>
+          <a href={src}><img src={src} alt={`${name} status`} /></a>
+          <label htmlFor='badge-markdown'>Markdown</label>
+          <input id='badge-markdown' type='text' value={md} />
+          <label htmlFor='badge-html'>HTML</label>
+          <input id='badge-html' type='text' value={html} />
         </div>
-      </Modal>
+      </div>
     )
   }
 })
