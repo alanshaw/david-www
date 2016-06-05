@@ -4,7 +4,6 @@ import moment from 'moment'
 import githubUrl from 'github-url'
 import async from 'async'
 import extract from 'extract'
-import github from './github'
 
 // Get a username and repo name for a github repository
 function getUserRepo (modName, opts, cb) {
@@ -31,15 +30,19 @@ function getUserRepo (modName, opts, cb) {
 
     // No .git ext
     if (!info) {
-      info = githubUrl(url + '.git', opts.githubHost)
+      info = githubUrl(`${url}.git`, opts.githubHost)
     }
 
     // Shorthand without domain
     if (!info) {
-      info = githubUrl('git://' + opts.githubHost + (url[0] === '/' ? '' : '/') + url)
+      info = githubUrl('git://github.com' + (url[0] === '/' ? '' : '/') + url)
     }
 
-    if (!info) return cb(new Error('Unsupported repository URL'))
+    if (!info) {
+      info = githubUrl(url.replace('git+ssh://git@github.com/', 'git@github.com:'))
+    }
+
+    if (!info) return cb(new Error(`Unsupported repository URL: ${url}`))
 
     cb(null, info.user, info.project)
   })
@@ -92,7 +95,7 @@ function getPublishDates (modName, modVers, cb) {
   async.parallel(tasks, cb)
 }
 
-export default ({githubConfig, npmConfig}) => {
+export default ({github, githubConfig, npmConfig}) => {
   const Changelog = {
     /**
      * Get closed issues and commits for a module between two versions
@@ -125,7 +128,7 @@ export default ({githubConfig, npmConfig}) => {
               per_page: 100
             }
 
-            gh.issues.repoIssues(issuesOpts, (err, issues) => {
+            gh.issues.getForRepo(issuesOpts, (err, issues) => {
               if (err) return cb(err)
 
               issues = issues.filter((issue) => dates[1] > moment(issue.closed_at).toDate())

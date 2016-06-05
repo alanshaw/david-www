@@ -1,0 +1,76 @@
+.project-page {
+  .changes-popup {
+    width: 245px;
+
+    h1 span {
+      display: block;
+      color: $grey0;
+      font-size: 0.75em;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+
+      &.issues {
+        span {
+          color: $grey0;
+        }
+      }
+    }
+    li {
+      position: relative;
+      padding: 0.75em 0 0.75em 4.25em;
+      min-height: 2.5em;
+      line-height: 1.3;
+
+      &:nth-child(odd) {
+        background-color: $white;
+        background-color: rgba(255, 255, 255, 0.6);
+      }
+    }
+    img {
+      position: absolute;
+      top: 0.786em;
+      left: 0.75em;
+      width: 2.571em;
+      height: 2.571em;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+    }
+    .title {
+      display: block;
+      font-size: 1.143em;
+    }
+    .login {
+      color: $grey4;
+
+      &:hover {
+        color: $grey0;
+      }
+    }
+    time {
+      color: $grey4;
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .project-page {
+    .changes-popup {
+      width: 693px;
+
+      h1 span {
+        float: right;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 960px) {
+  .project-page {
+    .changes-popup {
+      width: 960px;
+    }
+  }
+}

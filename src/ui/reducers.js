@@ -15,7 +15,9 @@ import {
   REQUEST_DEPENDENCY_COUNTS,
   RECEIVE_DEPENDENCY_COUNTS,
   REQUEST_LATEST_NEWS,
-  RECEIVE_LATEST_NEWS
+  RECEIVE_LATEST_NEWS,
+  REQUEST_CHANGES,
+  RECEIVE_CHANGES
 } from './actions'
 
 function version (state = null, action) {
@@ -129,6 +131,17 @@ function latestNews (state = null, action) {
   }
 }
 
+function changes (state = null, action) {
+  switch (action.type) {
+    case REQUEST_CHANGES:
+      return null
+    case RECEIVE_CHANGES:
+      return action.changes
+    default:
+      return state
+  }
+}
+
 export default combineReducers({
   version,
   config,
@@ -141,5 +154,6 @@ export default combineReducers({
   stats,
   dependencyCounts,
   latestNews,
+  changes,
   routing: routerReducer
 })
