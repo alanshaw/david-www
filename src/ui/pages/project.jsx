@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import merge from 'merge'
 import Modal from 'react-modal'
-import { fetchProject, fetchInfo } from '../actions'
+import { requestProject, requestInfo } from '../actions'
 import Badge from '../components/badge.jsx'
 import Loading from '../components/loading.jsx'
 import Summary from '../components/project/summary.jsx'
@@ -44,7 +44,7 @@ const Project = React.createClass({
         view: React.PropTypes.string
       })
     }).isRequired,
-    fetchProject: React.PropTypes.func.isRequired
+    requestProject: React.PropTypes.func.isRequired
   },
 
   getInitialState () {
@@ -56,19 +56,19 @@ const Project = React.createClass({
     const nextType = props.location.query.type
 
     if (currType !== nextType) {
-      const params = this.getProjectFetchParams(props.params, props.location.query)
-      this.props.fetchInfo(params)
+      const params = this.getProjectRequestParams(props.params, props.location.query)
+      this.props.requestInfo(params)
     }
   },
 
   componentDidMount () {
-    const params = this.getProjectFetchParams(this.props.params, this.props.location.query)
-    this.props.fetchProject(params)
-    this.props.fetchInfo(params)
+    const params = this.getProjectRequestParams(this.props.params, this.props.location.query)
+    this.props.requestProject(params)
+    this.props.requestInfo(params)
   },
 
   // Get project data from the URL
-  getProjectFetchParams (params, query) {
+  getProjectRequestParams (params, query) {
     const { user, repo, ref } = params
     const { path, type } = query
     return { user, repo, ref, path, type }
@@ -106,7 +106,7 @@ const Project = React.createClass({
         {this.renderTabs()}
         {this.renderInfo()}
         <Modal isOpen={this.state.badgeModalIsOpen} onRequestClose={this.onBadgeModalClose} className='modal modal-badge' overlayClassName='modal-overlay'>
-          <BadgeEmbed project={this.getProjectFetchParams(params, this.props.location.query)} />
+          <BadgeEmbed project={this.getProjectRequestParams(params, this.props.location.query)} />
         </Modal>
       </div>
     )
@@ -131,7 +131,7 @@ const Project = React.createClass({
             <a href={`${githubUrl}/${params.user}`}>{params.user}</a> - <a href={githubProjectUrl}>{project.name}</a>
             <span> {project.version} {params.ref ? <span id='branch'><i className='fa fa-code-fork'></i> {params.ref}</span> : ''}</span>
             <Badge
-              project={this.getProjectFetchParams(this.props.params, this.props.location.query)}
+              project={this.getProjectRequestParams(this.props.params, this.props.location.query)}
               onClick={this.onBadgeClick} />
           </h1>
           {project.description && <p>{project.description}</p>}
@@ -189,7 +189,7 @@ const Project = React.createClass({
     if (!info.deps.length) return (<p>No dependencies</p>)
 
     const view = this.props.location.query.view || 'list'
-    const params = this.getProjectFetchParams(this.props.params, this.props.location.query)
+    const params = this.getProjectRequestParams(this.props.params, this.props.location.query)
 
     return (
       <div>
@@ -231,14 +231,14 @@ const Project = React.createClass({
   }
 })
 
-Project.fetchData = ({ params, location, store }) => {
+Project.requestData = ({ params, location, store }) => {
   const { user, repo, ref } = params
   const { path, type } = location.query
   const projectParams = { user, repo, ref, path, type }
 
   return Promise.all([
-    store.dispatch(fetchProject(projectParams)),
-    store.dispatch(fetchInfo(projectParams))
+    store.dispatch(requestProject(projectParams)),
+    store.dispatch(requestInfo(projectParams))
   ])
 }
 
@@ -254,8 +254,8 @@ const mapStateToProps = ({ config, project, info }) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchProject: (params) => dispatch(fetchProject(params)),
-    fetchInfo: (params) => dispatch(fetchInfo(params))
+    requestProject: (params) => dispatch(requestProject(params)),
+    requestInfo: (params) => dispatch(requestInfo(params))
   }
 }
 

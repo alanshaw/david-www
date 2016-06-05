@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import cycle from 'cycle'
 import d3 from 'd3'
-import { fetchDependencyGraph } from '../../actions'
+import { requestDependencyGraph } from '../../actions'
 import Loading from '../loading.jsx'
 
 const diagonal = d3.svg.diagonal().projection(({ x, y }) => [y, x])
@@ -17,12 +17,12 @@ const DependencyGraph = React.createClass({
       ref: React.PropTypes.string,
       type: React.PropTypes.string
     }).isRequired,
-    fetchDependencyGraph: React.PropTypes.func,
+    requestDependencyGraph: React.PropTypes.func,
     dependencyGraph: React.PropTypes.object
   },
 
   componentDidMount () {
-    this.props.fetchDependencyGraph(this.props.project)
+    this.props.requestDependencyGraph(this.props.project)
   },
 
   render () {
@@ -224,7 +224,7 @@ function updateGraph (vis, root, source) {
 const mapStateToProps = ({ dependencyGraph }) => ({ dependencyGraph })
 
 const mapDispatchToProps = (dispatch) => {
-  return { fetchDependencyGraph: (params) => dispatch(fetchDependencyGraph(params)) }
+  return { requestDependencyGraph: (params) => dispatch(requestDependencyGraph(params)) }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DependencyGraph)

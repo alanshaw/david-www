@@ -2,17 +2,17 @@ import React from 'react'
 import Helmet from 'react-helmet'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import { fetchStats } from '../actions'
+import { requestStats } from '../actions'
 
 const Stats = React.createClass({
   propTypes: {
     config: React.PropTypes.object.isRequired,
     stats: React.PropTypes.object,
-    fetchStats: React.PropTypes.func.isRequired
+    requestStats: React.PropTypes.func.isRequired
   },
 
   componentDidMount () {
-    if (!this.props.stats) this.props.fetchStats()
+    if (!this.props.stats) this.props.requestStats()
   },
 
   render () {
@@ -74,9 +74,9 @@ const Stats = React.createClass({
   }
 })
 
-Stats.fetchData = ({ store }) => {
+Stats.requestData = ({ store }) => {
   return Promise.all([
-    store.dispatch(fetchStats())
+    store.dispatch(requestStats())
   ])
 }
 
@@ -86,7 +86,7 @@ const mapStateToProps = ({ config, stats }) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStats: () => dispatch(fetchStats())
+    requestStats: () => dispatch(requestStats())
   }
 }
 

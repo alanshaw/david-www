@@ -19,21 +19,14 @@ export function setUser (user) {
 
 export const REQUEST_PROJECT = 'REQUEST_PROJECT'
 export function requestProject (params) {
-  return { type: REQUEST_PROJECT, params }
-}
-
-export const RECEIVE_PROJECT = 'RECEIVE_PROJECT'
-export function receiveProject (project) {
-  return { type: RECEIVE_PROJECT, project }
-}
-
-export function fetchProject ({ user, repo, path, ref }) {
   return (dispatch, getState) => {
-    if (isEqual(getState().projectParams, { user, repo, path, ref })) {
+    if (isEqual(getState().projectParams, params)) {
       return Promise.resolve(getState().project)
     }
 
-    dispatch(requestProject({ user, repo, path, ref }))
+    dispatch({ type: REQUEST_PROJECT, params })
+
+    const { user, repo, path, ref } = params
 
     let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
     url += ref ? `/${e(ref)}` : ''
@@ -48,23 +41,21 @@ export function fetchProject ({ user, repo, path, ref }) {
   }
 }
 
+export const RECEIVE_PROJECT = 'RECEIVE_PROJECT'
+export function receiveProject (project) {
+  return { type: RECEIVE_PROJECT, project }
+}
+
 export const REQUEST_INFO = 'REQUEST_INFO'
 export function requestInfo (params) {
-  return { type: REQUEST_INFO, params }
-}
-
-export const RECEIVE_INFO = 'RECEIVE_INFO'
-export function receiveInfo (info) {
-  return { type: RECEIVE_INFO, info }
-}
-
-export function fetchInfo ({ user, repo, path, ref, type }) {
   return (dispatch, getState) => {
-    if (isEqual(getState().infoParams, { user, repo, path, ref, type })) {
+    if (isEqual(getState().infoParams, params)) {
       return Promise.resolve(getState().info)
     }
 
-    dispatch(requestInfo({ user, repo, path, ref, type }))
+    dispatch({ type: REQUEST_INFO, params })
+
+    const { user, repo, path, ref, type } = params
 
     let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
     url += ref ? `/${e(ref)}` : ''
@@ -79,19 +70,17 @@ export function fetchInfo ({ user, repo, path, ref, type }) {
   }
 }
 
+export const RECEIVE_INFO = 'RECEIVE_INFO'
+export function receiveInfo (info) {
+  return { type: RECEIVE_INFO, info }
+}
+
 export const REQUEST_DEPENDENCY_GRAPH = 'REQUEST_DEPENDENCY_GRAPH'
 export function requestDependencyGraph (params) {
-  return { type: REQUEST_DEPENDENCY_GRAPH, params }
-}
-
-export const RECEIVE_DEPENDENCY_GRAPH = 'RECEIVE_DEPENDENCY_GRAPH'
-export function receiveDependencyGraph (graph) {
-  return { type: RECEIVE_DEPENDENCY_GRAPH, graph }
-}
-
-export function fetchDependencyGraph ({ user, repo, path, ref, type }) {
   return (dispatch, getState) => {
-    dispatch(requestDependencyGraph({ user, repo, path, ref, type }))
+    dispatch({ type: REQUEST_DEPENDENCY_GRAPH, params })
+
+    const { user, repo, path, ref, type } = params
 
     let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
     url += ref ? `/${e(ref)}` : ''
@@ -106,19 +95,15 @@ export function fetchDependencyGraph ({ user, repo, path, ref, type }) {
   }
 }
 
+export const RECEIVE_DEPENDENCY_GRAPH = 'RECEIVE_DEPENDENCY_GRAPH'
+export function receiveDependencyGraph (graph) {
+  return { type: RECEIVE_DEPENDENCY_GRAPH, graph }
+}
+
 export const REQUEST_STATS = 'REQUEST_STATS'
 export function requestStats () {
-  return { type: REQUEST_STATS }
-}
-
-export const RECEIVE_STATS = 'RECEIVE_STATS'
-export function receiveStats (stats) {
-  return { type: RECEIVE_STATS, stats }
-}
-
-export function fetchStats () {
   return (dispatch, getState) => {
-    dispatch(requestStats())
+    dispatch({ type: REQUEST_STATS })
 
     return fetch(`${getState().config.apiUrl}/stats.json`)
       .then(response => response.json())
@@ -126,19 +111,15 @@ export function fetchStats () {
   }
 }
 
+export const RECEIVE_STATS = 'RECEIVE_STATS'
+export function receiveStats (stats) {
+  return { type: RECEIVE_STATS, stats }
+}
+
 export const REQUEST_DEPENDENCY_COUNTS = 'REQUEST_DEPENDENCY_COUNTS'
 export function requestDependencyCounts () {
-  return { type: REQUEST_DEPENDENCY_COUNTS }
-}
-
-export const RECEIVE_DEPENDENCY_COUNTS = 'RECEIVE_DEPENDENCY_COUNTS'
-export function receiveDependencyCounts (counts) {
-  return { type: RECEIVE_DEPENDENCY_COUNTS, counts }
-}
-
-export function fetchDependencyCounts () {
   return (dispatch, getState) => {
-    dispatch(requestDependencyCounts())
+    dispatch({ type: REQUEST_DEPENDENCY_COUNTS })
 
     return fetch(`${getState().config.apiUrl}/dependency-counts.json`)
       .then(response => response.json())
@@ -146,24 +127,25 @@ export function fetchDependencyCounts () {
   }
 }
 
+export const RECEIVE_DEPENDENCY_COUNTS = 'RECEIVE_DEPENDENCY_COUNTS'
+export function receiveDependencyCounts (counts) {
+  return { type: RECEIVE_DEPENDENCY_COUNTS, counts }
+}
+
 export const REQUEST_LATEST_NEWS = 'REQUEST_LATEST_NEWS'
 export function requestLatestNews () {
-  return { type: REQUEST_LATEST_NEWS }
-}
-
-export const RECEIVE_LATEST_NEWS = 'RECEIVE_LATEST_NEWS'
-export function receiveLatestNews (news) {
-  return { type: RECEIVE_LATEST_NEWS, news }
-}
-
-export function fetchLatestNews () {
   return (dispatch, getState) => {
-    dispatch(requestLatestNews())
+    dispatch({ type: REQUEST_LATEST_NEWS })
 
     return fetch(`${getState().config.apiUrl}/news/latest.json`)
       .then(response => response.json())
       .then(json => dispatch(receiveLatestNews(json)))
   }
+}
+
+export const RECEIVE_LATEST_NEWS = 'RECEIVE_LATEST_NEWS'
+export function receiveLatestNews (news) {
+  return { type: RECEIVE_LATEST_NEWS, news }
 }
 
 function isEqual (obj1, obj2) {

@@ -1,16 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import d3 from 'd3'
-import { fetchDependencyCounts } from '../../actions'
+import { requestDependencyCounts } from '../../actions'
 
 const DependencyCountsGraph = React.createClass({
   propTypes: {
     dependencyCounts: React.PropTypes.object,
-    fetchDependencyCounts: React.PropTypes.func.isRequired
+    requestDependencyCounts: React.PropTypes.func.isRequired
   },
 
   componentDidMount () {
-    this.props.fetchDependencyCounts()
+    this.props.requestDependencyCounts()
   },
 
   render () {
@@ -85,7 +85,7 @@ const DependencyCountsGraph = React.createClass({
 const mapStateToProps = ({ dependencyCounts }) => ({ dependencyCounts })
 
 const mapDispatchToProps = (dispatch) => {
-  return { fetchDependencyCounts: () => dispatch(fetchDependencyCounts()) }
+  return { requestDependencyCounts: () => dispatch(requestDependencyCounts()) }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DependencyCountsGraph)

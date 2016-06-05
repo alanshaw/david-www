@@ -3,7 +3,7 @@ import Helmet from 'react-helmet'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { fetchStats, fetchLatestNews } from '../actions'
+import { requestStats, requestLatestNews } from '../actions'
 import DependencyCountsGraph from '../components/home/dependency-counts-graph.jsx'
 
 const Home = React.createClass({
@@ -11,8 +11,8 @@ const Home = React.createClass({
     config: React.PropTypes.object.isRequired,
     stats: React.PropTypes.object,
     latestNews: React.PropTypes.array,
-    fetchStats: React.PropTypes.func.isRequired,
-    fetchLatestNews: React.PropTypes.func.isRequired
+    requestStats: React.PropTypes.func.isRequired,
+    requestLatestNews: React.PropTypes.func.isRequired
   },
 
   getInitialState () {
@@ -24,8 +24,8 @@ const Home = React.createClass({
   },
 
   componentDidMount () {
-    this.props.fetchStats()
-    this.props.fetchLatestNews()
+    this.props.requestStats()
+    this.props.requestLatestNews()
   },
 
   render () {
@@ -166,10 +166,10 @@ const Home = React.createClass({
   }
 })
 
-Home.fetchData = ({ store }) => {
+Home.requestData = ({ store }) => {
   return Promise.all([
-    store.dispatch(fetchStats()),
-    store.dispatch(fetchLatestNews())
+    store.dispatch(requestStats()),
+    store.dispatch(requestLatestNews())
   ])
 }
 
@@ -179,8 +179,8 @@ const mapStateToProps = ({ config, stats, latestNews }) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStats: () => dispatch(fetchStats()),
-    fetchLatestNews: () => dispatch(fetchLatestNews())
+    requestStats: () => dispatch(requestStats()),
+    requestLatestNews: () => dispatch(requestLatestNews())
   }
 }
 

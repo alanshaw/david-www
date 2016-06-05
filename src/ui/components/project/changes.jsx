@@ -19,6 +19,11 @@ const Changes = React.createClass({
     }).isRequired
   },
 
+  componentDidMount () {
+    const { required: from, stable: to } = this.props.dep
+    this.props.requestChanges({ from, to })
+  },
+
   render () {
     return (
       <p>Changes here</p>
