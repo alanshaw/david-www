@@ -20,8 +20,8 @@ const Changes = React.createClass({
   },
 
   componentDidMount () {
-    const { required: from, stable: to } = this.props.dep
-    this.props.requestChanges({ from, to })
+    const { name, required: from, stable: to } = this.props.dep
+    this.props.requestChanges({ name, from, to })
   },
 
   render () {

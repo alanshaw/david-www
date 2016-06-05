@@ -27,7 +27,7 @@ const DependencyTable = React.createClass({
 
     return (
       <div className='dep-table'>
-        <table>
+        <table cellPadding='0' cellSpacing='0'>
           <thead>
             <tr>
               <th>Dependency</th>

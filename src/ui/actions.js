@@ -151,3 +151,30 @@ export function receiveLatestNews (news) {
 function isEqual (obj1, obj2) {
   return JSON.stringify(obj1) === JSON.stringify(obj2)
 }
+
+export const REQUEST_CHANGES = 'REQUEST_CHANGES'
+export function requestChanges (params) {
+  return (dispatch, getState) => {
+    if (isEqual(getState().changesParams, params)) {
+      return Promise.resolve(getState().project)
+    }
+
+    dispatch({ type: REQUEST_CHANGES, params })
+
+    const { name, from, to } = params
+
+    let url = `${getState().config.apiUrl}/package/${e(name)}/changes.json`
+    url += `?from=${e(from)}&to=${e(to)}`
+
+    // TODO: Cache?
+
+    return fetch(url)
+      .then(response => response.json())
+      .then(json => dispatch(receiveChanges(json)))
+  }
+}
+
+export const RECEIVE_CHANGES = 'RECEIVE_CHANGES'
+export function receiveChanges (changes) {
+  return { type: RECEIVE_CHANGES, changes }
+}
