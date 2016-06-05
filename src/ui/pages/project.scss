@@ -1,3 +1,9 @@
+@import '../components/project/badge-embed';
+@import '../components/project/dependency-graph';
+@import '../components/project/dependency-table';
+@import '../components/project/security-warning';
+@import '../components/project/summary';
+
 .project-page {
   #repo {
     h1 {

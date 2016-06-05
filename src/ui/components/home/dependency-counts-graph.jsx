@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import d3 from 'd3'
-import { fetchDependencyCounts } from '../actions'
+import { fetchDependencyCounts } from '../../actions'
 
 const DependencyCountsGraph = React.createClass({
   propTypes: {
@@ -10,9 +10,7 @@ const DependencyCountsGraph = React.createClass({
   },
 
   componentDidMount () {
-    if (!this.props.dependencyCounts) {
-      this.props.fetchDependencyCounts()
-    }
+    this.props.fetchDependencyCounts()
   },
 
   render () {

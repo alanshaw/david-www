@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import { fetchStats, fetchLatestNews } from '../actions'
-import DependencyCountsGraph from '../components/dependency-counts-graph.jsx'
+import DependencyCountsGraph from '../components/home/dependency-counts-graph.jsx'
 
 const Home = React.createClass({
   propTypes: {
@@ -24,8 +24,8 @@ const Home = React.createClass({
   },
 
   componentDidMount () {
-    if (!this.props.stats) this.props.fetchStats()
-    if (!this.props.latestNews) this.props.fetchLatestNews()
+    this.props.fetchStats()
+    this.props.fetchLatestNews()
   },
 
   render () {
