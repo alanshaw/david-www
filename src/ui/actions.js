@@ -36,14 +36,33 @@ export function requestProject (params) {
     // TODO: Cache?
 
     return fetch(url)
-      .then(response => response.json())
-      .then(json => dispatch(receiveProject(json)))
+      .then((res) => {
+        return res.json().then((json) => {
+          if (res.ok) {
+            dispatch(receiveProject(json))
+            return json
+          } else {
+            dispatch(requestProjectError(json))
+            return Promise.reject(new Error(json.message || 'Failed to request project'))
+          }
+        })
+      })
+      .catch((err) => {
+        console.error('Failed to request project', err)
+        dispatch(requestProjectError(new Error('Request project failed')))
+        return Promise.reject(err)
+      })
   }
 }
 
 export const RECEIVE_PROJECT = 'RECEIVE_PROJECT'
 export function receiveProject (project) {
   return { type: RECEIVE_PROJECT, project }
+}
+
+export const REQUEST_PROJECT_ERROR = 'REQUEST_PROJECT_ERROR'
+export function requestProjectError (err) {
+  return { type: REQUEST_PROJECT_ERROR, err }
 }
 
 export const REQUEST_INFO = 'REQUEST_INFO'
@@ -65,14 +84,33 @@ export function requestInfo (params) {
     // TODO: Cache?
 
     return fetch(url)
-      .then(response => response.json())
-      .then(json => dispatch(receiveInfo(json)))
+      .then((res) => {
+        return res.json().then((json) => {
+          if (res.ok) {
+            dispatch(receiveInfo(json))
+            return json
+          } else {
+            dispatch(requestInfoError(json))
+            return Promise.reject(new Error(json.message || 'Failed to request info'))
+          }
+        })
+      })
+      .catch((err) => {
+        console.error('Failed to request info', err)
+        dispatch(requestInfoError(new Error('Request info failed')))
+        return Promise.reject(err)
+      })
   }
 }
 
 export const RECEIVE_INFO = 'RECEIVE_INFO'
 export function receiveInfo (info) {
   return { type: RECEIVE_INFO, info }
+}
+
+export const REQUEST_INFO_ERROR = 'REQUEST_INFO_ERROR'
+export function requestInfoError (err) {
+  return { type: REQUEST_INFO_ERROR, err }
 }
 
 export const REQUEST_DEPENDENCY_GRAPH = 'REQUEST_DEPENDENCY_GRAPH'
@@ -90,8 +128,22 @@ export function requestDependencyGraph (params) {
     // TODO: Cache?
 
     return fetch(url)
-      .then(response => response.json())
-      .then(json => dispatch(receiveDependencyGraph(json)))
+      .then((res) => {
+        return res.json().then((json) => {
+          if (res.ok) {
+            dispatch(receiveDependencyGraph(json))
+            return json
+          } else {
+            dispatch(requestDependencyGraphError(json))
+            return Promise.reject(new Error(json.message || 'Failed to request dependency graph'))
+          }
+        })
+      })
+      .catch((err) => {
+        console.error('Failed to request dependency graph', err)
+        dispatch(requestDependencyGraphError(new Error('Request dependency graph failed')))
+        return Promise.reject(err)
+      })
   }
 }
 
@@ -100,14 +152,33 @@ export function receiveDependencyGraph (graph) {
   return { type: RECEIVE_DEPENDENCY_GRAPH, graph }
 }
 
+export const REQUEST_DEPENDENCY_GRAPH_ERROR = 'REQUEST_DEPENDENCY_GRAPH_ERROR'
+export function requestDependencyGraphError (err) {
+  return { type: REQUEST_DEPENDENCY_GRAPH_ERROR, err }
+}
+
 export const REQUEST_STATS = 'REQUEST_STATS'
 export function requestStats () {
   return (dispatch, getState) => {
     dispatch({ type: REQUEST_STATS })
 
     return fetch(`${getState().config.apiUrl}/stats.json`)
-      .then(response => response.json())
-      .then(json => dispatch(receiveStats(json)))
+      .then((res) => {
+        return res.json().then((json) => {
+          if (res.ok) {
+            dispatch(receiveStats(json))
+            return json
+          } else {
+            dispatch(requestStatsError(json))
+            return Promise.reject(new Error(json.message || 'Failed to request stats'))
+          }
+        })
+      })
+      .catch((err) => {
+        console.error('Failed to request stats', err)
+        dispatch(requestStatsError(new Error('Request stats failed')))
+        return Promise.reject(err)
+      })
   }
 }
 
@@ -116,14 +187,33 @@ export function receiveStats (stats) {
   return { type: RECEIVE_STATS, stats }
 }
 
+export const REQUEST_STATS_ERROR = 'REQUEST_STATS_ERROR'
+export function requestStatsError (err) {
+  return { type: REQUEST_STATS_ERROR, err }
+}
+
 export const REQUEST_DEPENDENCY_COUNTS = 'REQUEST_DEPENDENCY_COUNTS'
 export function requestDependencyCounts () {
   return (dispatch, getState) => {
     dispatch({ type: REQUEST_DEPENDENCY_COUNTS })
 
     return fetch(`${getState().config.apiUrl}/dependency-counts.json`)
-      .then(response => response.json())
-      .then(json => dispatch(receiveDependencyCounts(json)))
+      .then((res) => {
+        return res.json().then((json) => {
+          if (res.ok) {
+            dispatch(receiveDependencyCounts(json))
+            return json
+          } else {
+            dispatch(requestDependencyCountsError(json))
+            return Promise.reject(new Error(json.message || 'Failed to request dependency counts'))
+          }
+        })
+      })
+      .catch((err) => {
+        console.error('Failed to request dependency counts', err)
+        dispatch(requestDependencyCountsError(new Error('Request dependency counts failed')))
+        return Promise.reject(err)
+      })
   }
 }
 
@@ -132,20 +222,44 @@ export function receiveDependencyCounts (counts) {
   return { type: RECEIVE_DEPENDENCY_COUNTS, counts }
 }
 
+export const REQUEST_DEPENDENCY_COUNTS_ERROR = 'REQUEST_DEPENDENCY_COUNTS_ERROR'
+export function requestDependencyCountsError (err) {
+  return { type: REQUEST_DEPENDENCY_COUNTS_ERROR, err }
+}
+
 export const REQUEST_LATEST_NEWS = 'REQUEST_LATEST_NEWS'
 export function requestLatestNews () {
   return (dispatch, getState) => {
     dispatch({ type: REQUEST_LATEST_NEWS })
 
     return fetch(`${getState().config.apiUrl}/news/latest.json`)
-      .then(response => response.json())
-      .then(json => dispatch(receiveLatestNews(json)))
+      .then((res) => {
+        return res.json().then((json) => {
+          if (res.ok) {
+            dispatch(receiveLatestNews(json))
+            return json
+          } else {
+            dispatch(requestLatestNewsError(json))
+            return Promise.reject(new Error(json.message || 'Failed to request latest news'))
+          }
+        })
+      })
+      .catch((err) => {
+        console.error('Failed to request latest news', err)
+        dispatch(requestLatestNewsError(new Error('Request latest news failed')))
+        return Promise.reject(err)
+      })
   }
 }
 
 export const RECEIVE_LATEST_NEWS = 'RECEIVE_LATEST_NEWS'
 export function receiveLatestNews (news) {
   return { type: RECEIVE_LATEST_NEWS, news }
+}
+
+export const REQUEST_LATEST_NEWS_ERROR = 'REQUEST_LATEST_NEWS_ERROR'
+export function requestLatestNewsError (err) {
+  return { type: REQUEST_LATEST_NEWS_ERROR, err }
 }
 
 function isEqual (obj1, obj2) {
@@ -169,12 +283,31 @@ export function requestChanges (params) {
     // TODO: Cache?
 
     return fetch(url)
-      .then(response => response.json())
-      .then(json => dispatch(receiveChanges(json)))
+      .then((res) => {
+        return res.json().then((json) => {
+          if (res.ok) {
+            dispatch(receiveChanges(json))
+            return json
+          } else {
+            dispatch(requestChangesError(json))
+            return Promise.reject(new Error(json.message || 'Failed to request changes'))
+          }
+        })
+      })
+      .catch((err) => {
+        console.error('Failed to request changes', err)
+        dispatch(requestChangesError(new Error('Request changes failed')))
+        return Promise.reject(err)
+      })
   }
 }
 
 export const RECEIVE_CHANGES = 'RECEIVE_CHANGES'
 export function receiveChanges (changes) {
   return { type: RECEIVE_CHANGES, changes }
+}
+
+export const REQUEST_CHANGES_ERROR = 'REQUEST_CHANGES_ERROR'
+export function requestChangesError (err) {
+  return { type: REQUEST_CHANGES_ERROR, err }
 }
