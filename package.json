@@ -56,7 +56,7 @@
     "require-directory": "^2.1.0",
     "rimraf": "^2.4.3",
     "rss": "^1.1.1",
-    "semver": "^5.0.1",
+    "semver": "^5.2.0",
     "serve-favicon": "^2.2.0"
   },
   "devDependencies": {
