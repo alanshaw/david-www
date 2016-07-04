@@ -48,7 +48,7 @@
     "merge": "^1.2.0",
     "meta-marked": "^0.4.0",
     "mkdirp": "^0.5.1",
-    "moment": "^2.11.2",
+    "moment": "^2.14.0",
     "npm": "^3.8.8",
     "nsp-advisories-api": "^2.0.2",
     "rc": "^1.1.5",
