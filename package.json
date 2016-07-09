@@ -52,7 +52,7 @@
     "npm": "^3.8.8",
     "nsp-advisories-api": "^2.0.2",
     "rc": "^1.1.5",
-    "request": "^2.53.0",
+    "request": "^2.73.0",
     "require-directory": "^2.1.0",
     "rimraf": "^2.4.3",
     "rss": "^1.1.1",
