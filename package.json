@@ -29,7 +29,7 @@
     "test": "npm run lint && tape test/*.js"
   },
   "dependencies": {
-    "async": "^1.4.1",
+    "async": "^2.0.0",
     "camelcase": "^3.0.0",
     "compression": "^1.4.1",
     "consolidate": "^0.14.0",
