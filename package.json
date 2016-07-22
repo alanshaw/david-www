@@ -54,7 +54,7 @@
     "rc": "^1.1.5",
     "request": "^2.53.0",
     "require-directory": "^2.1.0",
-    "rimraf": "^2.4.3",
+    "rimraf": "^2.5.4",
     "rss": "^1.1.1",
     "semver": "^5.0.1",
     "serve-favicon": "^2.2.0"
