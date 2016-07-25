@@ -52,7 +52,6 @@ import middleware from './middleware'
 
 middleware.session({ app, db })
 middleware.user({ app })
-middleware.generateCsrf({ app, auth })
 middleware.cors({ app })
 middleware.errorHandler({ app })
 
@@ -60,6 +59,7 @@ import routes from './routes'
 
 routes.session.oauthCallback(app, auth)
 routes.rss.news(app)
+routes.api.csrfToken(app, auth)
 routes.api.dependencyCounts(app, stats)
 routes.api.stats(app, stats)
 routes.api.changelog(app, changelog)
@@ -67,6 +67,7 @@ routes.api.info(app, manifest, brains)
 routes.api.graph(app, graph, manifest)
 routes.api.news(app)
 routes.api.project(app, manifest)
+routes.api.user(app)
 routes.rss.feed(app, feed, manifest)
 routes.badge(app, manifest, brains)
 
@@ -97,8 +98,8 @@ app.get('*', (req, res, next) => {
     Promise
       .all(
         components
-          .filter((c) => c && c.fetchData)
-          .map((c) => c.fetchData({ store, location, params, history }))
+          .filter((c) => c && c.requestData)
+          .map((c) => c.requestData({ store, location, params, history }))
       )
       .then(() => {
         const head = Helmet.rewind()

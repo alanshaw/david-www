@@ -10,7 +10,10 @@ export default rc('david', {
       protocol: 'https',
       host: 'api.github.com'
     },
+    protocol: 'https',
+    host: 'github.com',
     oauth: {
+      clientId: null,
       secret: null
     },
     token: null
@@ -39,7 +42,7 @@ export default rc('david', {
       protocol: 'https',
       host: 'github.com',
       oauth: {
-        id: null
+        clientId: null
       }
     },
     google: {

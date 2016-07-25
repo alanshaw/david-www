@@ -5,8 +5,16 @@ const oauthCallback = (app, auth) => {
     req.session.get('session/csrf-token', (err, csrfToken) => {
       if (err) return next(Boom.wrap(err, 500, 'Failed to get CSRF token'))
 
-      if (csrfToken !== req.query.state || !req.query.code) {
-        return next(Boom.wrap(err, 401))
+      if (!csrfToken) {
+        return next(Boom.create(401, 'Missing CSRF token'))
+      }
+
+      if (csrfToken !== req.query.state) {
+        return next(Boom.create(401, 'Invalid CSRF token'))
+      }
+
+      if (!req.query.code) {
+        return next(Boom.create(401, 'Missing code'))
       }
 
       auth.requestAccessToken(req.query.code, (err, data) => {
@@ -15,7 +23,7 @@ const oauthCallback = (app, auth) => {
         req.session.set('session/access-token', data.access_token, (err) => {
           if (err) return next(Boom.wrap(err, 500, 'Failed to store access token in session'))
 
-          req.session.set('session/user', data.user, () => {
+          req.session.set('session/user', data.user, (err) => {
             if (err) return next(Boom.wrap(err, 500, 'Failed to store user in session'))
             res.redirect('/?success')
           })

@@ -4,6 +4,10 @@ import {
   SET_VERSION,
   SET_CONFIG,
   SET_USER,
+  REQUEST_CSRF_TOKEN,
+  RECEIVE_CSRF_TOKEN,
+  REQUEST_USER,
+  RECEIVE_USER,
   REQUEST_PROJECT,
   RECEIVE_PROJECT,
   REQUEST_INFO,
@@ -40,8 +44,22 @@ function config (state = null, action) {
 
 function user (state = null, action) {
   switch (action.type) {
+    case REQUEST_USER:
+      return null
     case SET_USER:
+    case RECEIVE_USER:
       return action.user
+    default:
+      return state
+  }
+}
+
+function csrfToken (state = null, action) {
+  switch (action.type) {
+    case REQUEST_CSRF_TOKEN:
+      return null
+    case RECEIVE_CSRF_TOKEN:
+      return action.csrfToken
     default:
       return state
   }
@@ -146,6 +164,7 @@ export default combineReducers({
   version,
   config,
   user,
+  csrfToken,
   projectParams,
   project,
   infoParams,

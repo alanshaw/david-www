@@ -17,6 +17,80 @@ export function setUser (user) {
   return { type: SET_USER, user }
 }
 
+export const REQUEST_CSRF_TOKEN = 'REQUEST_CSRF_TOKEN'
+export function requestCsrfToken () {
+  return (dispatch, getState) => {
+    dispatch({ type: REQUEST_CSRF_TOKEN })
+
+    const url = `${getState().config.apiUrl}/csrf-token.json`
+
+    return fetch(url, { credentials: 'same-origin' })
+      .then((res) => {
+        return res.json().then((json) => {
+          if (res.ok) {
+            dispatch(receiveCsrfToken(json))
+            return json
+          } else {
+            dispatch(requestCsrfTokenError(json))
+            return Promise.reject(new Error(json.message || 'Failed to request CSRF token'))
+          }
+        })
+      })
+      .catch((err) => {
+        console.error('Failed to request CSRF token', err)
+        dispatch(requestCsrfTokenError(new Error('Request CSRF token failed')))
+        return Promise.reject(err)
+      })
+  }
+}
+
+export const RECEIVE_CSRF_TOKEN = 'RECEIVE_CSRF_TOKEN'
+export function receiveCsrfToken (csrfToken) {
+  return { type: RECEIVE_CSRF_TOKEN, csrfToken }
+}
+
+export const REQUEST_CSRF_TOKEN_ERROR = 'REQUEST_CSRF_TOKEN_ERROR'
+export function requestCsrfTokenError (err) {
+  return { type: REQUEST_CSRF_TOKEN_ERROR, err }
+}
+
+export const REQUEST_USER = 'REQUEST_USER'
+export function requestUser () {
+  return (dispatch, getState) => {
+    dispatch({ type: REQUEST_USER })
+
+    const url = `${getState().config.apiUrl}/user.json`
+
+    return fetch(url, { credentials: 'same-origin' })
+      .then((res) => {
+        return res.json().then((json) => {
+          if (res.ok) {
+            dispatch(receiveUser(json))
+            return json
+          } else {
+            dispatch(requestUserError(json))
+            return Promise.reject(new Error(json.message || 'Failed to request user'))
+          }
+        })
+      })
+      .catch((err) => {
+        console.error('Failed to request user', err)
+        dispatch(requestUserError(new Error('Request user failed')))
+        return Promise.reject(err)
+      })
+  }
+}
+
+export const RECEIVE_USER = 'RECEIVE_USER'
+export function receiveUser (user) {
+  return { type: RECEIVE_USER, user }
+}
+
+export const REQUEST_USER_ERROR = 'REQUEST_USER_ERROR'
+export function requestUserError (err) {
+  return { type: REQUEST_USER_ERROR, err }
+}
+
 export const REQUEST_PROJECT = 'REQUEST_PROJECT'
 export function requestProject (params) {
   return (dispatch, getState) => {

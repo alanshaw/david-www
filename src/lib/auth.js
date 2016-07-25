@@ -11,7 +11,7 @@ export default ({github, githubConfig}) => {
       const tokenRequest = {
         url: `${githubConfig.protocol}://${githubConfig.host}/login/oauth/access_token`,
         json: {
-          client_id: githubConfig.oauth.id,
+          client_id: githubConfig.oauth.clientId,
           client_secret: githubConfig.oauth.secret,
           code
         }
@@ -30,7 +30,7 @@ export default ({github, githubConfig}) => {
         const authData = { access_token: data.access_token }
         const gh = github.getInstance(data.access_token)
 
-        gh.user.get({}, (err, data) => {
+        gh.users.get({}, (err, data) => {
           if (err) {
             return cb(err)
           } else if (!data.login) {
