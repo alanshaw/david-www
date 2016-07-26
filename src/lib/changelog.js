@@ -113,7 +113,7 @@ export default ({github, githubConfig, npmConfig}) => {
       npm.load(npmConfig.options, (err) => {
         if (err) return cb(err)
 
-        getUserRepo(modName, githubConfig.host, (err, user, repo) => {
+        getUserRepo(modName, { githubHost: githubConfig.host }, (err, user, repo) => {
           if (err) return cb(err)
 
           getPublishDates(modName, [fromVer, toVer], (err, dates) => {

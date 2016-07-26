@@ -7,7 +7,7 @@ export default ({ app, version }) => {
   const oneWeek = oneDay * 7
   const oneMonth = oneWeek * 30
 
-  const publicPath = (folder) => Path.join(__dirname, '..', 'public', folder)
+  const publicPath = (relativePath) => Path.join(__dirname, '..', 'public', relativePath)
 
   app.use(`/bundle-${version}.css`, express.static(publicPath('bundle.css'), { maxAge: oneMonth }))
   app.use(`/bundle-${version}.js`, express.static(publicPath('bundle.js'), { maxAge: oneMonth }))
@@ -16,7 +16,5 @@ export default ({ app, version }) => {
 
   app.use(favicon(publicPath('favicon.ico'), { maxAge: oneWeek }))
 
-  app.get('/apple-touch-icon.png', (req, res) => {
-    res.sendfile(Path.join(__dirname, 'dist', req.url), { maxAge: oneWeek })
-  })
+  app.use('/apple-touch-icon.png', express.static(publicPath('apple-touch-icon.png'), { maxAge: oneWeek }))
 }
