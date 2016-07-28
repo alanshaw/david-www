@@ -53,6 +53,7 @@
     "cheerio": "^0.20.0",
     "compression": "^1.4.1",
     "couchwatch": "^0.6.0",
+    "cssnano": "^3.7.3",
     "cycle": "^1.0.3",
     "d3": "^3.5.17",
     "dateformat": "^1.0.12",
@@ -71,9 +72,12 @@
     "meta-marked": "^0.4.0",
     "mkdirp": "^0.5.1",
     "moment": "^2.11.2",
+    "node-sass": "^3.8.0",
     "normalize-scss": "^5.0.1",
     "npm": "^3.8.8",
+    "npm-run-all": "^2.3.0",
     "nsp-advisories-api": "^2.0.2",
+    "postcss-cli": "^2.5.2",
     "rc": "^1.1.5",
     "react": "^15.0.2",
     "react-dom": "^15.0.2",
@@ -90,6 +94,7 @@
     "rss": "^1.1.1",
     "semver": "^5.0.1",
     "serve-favicon": "^2.2.0",
+    "uglify-js": "^2.7.0",
     "xml2js": "^0.4.16"
   },
   "devDependencies": {
