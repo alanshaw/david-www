@@ -1,0 +1,34 @@
+.project-page {
+  #summary-advisories {
+    box-shadow: 0 0 0.5em $grey2;
+    border-radius: 3px;
+    font-family: nevisbold,sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 1em 0 2.5em;
+    padding: 0.5em 1em;
+    background: #c20000 url(../img/bg-nsp-lock.png);
+
+    * {
+      vertical-align: middle;
+    }
+    i {
+      font-size: 2.5em;
+      margin-right: 10px;
+    }
+  }
+  #nsp {
+    float: right;
+    margin-top: -2.25em;
+
+    a {
+      font-family: Lato, Helvetica, sans-serif;
+      color: #333;
+      background: transparent url(../img/logo-nsp.png) no-repeat;
+      background-size: auto 100%;
+      margin-left: 0.25em;
+      padding-left: 1.3em;
+    }
+  }
+}

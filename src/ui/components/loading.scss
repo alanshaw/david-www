@@ -1,0 +1,14 @@
+.loading {
+  margin: 2em 0;
+  text-align: center;
+
+  * {
+    vertical-align: middle;
+  }
+}
+
+@media only screen and (min-width: 960px) {
+  .loading {
+    margin: 10em 0;
+  }
+}

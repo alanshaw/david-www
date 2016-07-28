@@ -1,0 +1,18 @@
+.dependency-counts-graph {
+  text {
+    font-size: 0.875em;
+  }
+  .node {
+    cursor: pointer;
+
+    &:hover {
+
+      text {
+        fill: $white;
+      }
+      circle {
+        fill: #7f7f7f !important;
+      }
+    }
+  }
+}

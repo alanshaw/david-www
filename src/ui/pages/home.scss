@@ -1,0 +1,148 @@
+@import '../components/home/dependency-counts-graph';
+
+.home-page {
+  #examples {
+    list-style-type: none;
+    padding: 0;
+
+    li {
+      position: relative;
+      background-color: $white;
+      font-size: 0.857em;
+      padding-left: 1em;
+      margin: 0.25em 0;
+    }
+    img {
+      position: absolute;
+      top: 0.5em;
+      left: 12em;
+    }
+  }
+  .badge-maker {
+    background-color: $white;
+    font-size: 1.286em;
+    padding: 0 1em;
+
+    strong {
+      font-weight: normal;
+      margin: 0 1em 0 0;
+    }
+    span {
+      color: $green0;
+
+      &:hover {
+        background-color: $grey1;
+      }
+    }
+    span.nope {
+      color: $red0;
+    }
+  }
+  #recently-updated-npm {
+    li {
+      padding: 0.45em 0 0.45em 1em;
+      line-height: 1.4;
+    }
+    span {
+      display: block;
+    }
+  }
+  #news {
+    margin-left: 3em;
+
+    .content {
+      background-color: $white;
+      padding: 1em;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      -webkit-box-shadow: 0 0 0.5em $grey2;
+      -moz-box-shadow: 0 0 0.5em $grey2;
+      box-shadow: 0 0 0.5em $grey2;
+      position: relative;
+
+      h1 {
+        font-size: 0.857em;
+        border-top: 0;
+        border-bottom-color: $grey1;
+        padding: 0;
+        color: $grey0;
+
+        a {
+          font-family: nevisbold, sans-serif;
+          font-weight: 400;
+        }
+      }
+      p {
+        margin: 0;
+        line-height: 1.4;
+      }
+      a, a:visited {
+        color: $grey0;
+      }
+      a {
+        display: block;
+      }
+      &:hover {
+        -webkit-box-shadow: 0 0 1em $grey2;
+        -moz-box-shadow: 0 0 1em $grey2;
+        box-shadow: 0 0 1em $grey2;
+      }
+      &:after {
+        content: ' ';
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 20px 20px 0 0;
+        border-color: $white transparent transparent transparent;
+        position: absolute;
+        bottom: -1.4em;
+        right: 1.4em;
+      }
+    }
+    .cite {
+      text-align: right;
+      margin: 0.5em 3.5em 0 0;
+
+      .author {
+        font-family: Cardo, sans-serif;
+        font-weight: 700;
+        color: $black0;
+      }
+      time {
+        font-family: nevisbold, sans-serif;
+        font-weight: 400;
+        font-size: 0.857em;
+        text-transform: uppercase;
+      }
+    }
+    .no-js & {
+      display: none;
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .home-page {
+    #main > div > div {
+      float: left;
+      width: 57%;
+    }
+    #examples {
+      li {
+        font-size: 1.286em;
+      }
+      img {
+        top: 0.65em;
+        left: 13em;
+      }
+    }
+    .dependency-counts-graph {
+      margin: 0 -15%;
+    }
+    #stats {
+      float: right;
+      width: 32%;
+    }
+  }
+}

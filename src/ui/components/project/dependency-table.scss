@@ -1,0 +1,113 @@
+.project-page {
+  .dep-table {
+    table {
+      width: 100%;
+
+      .js & {
+        display: none;
+      }
+      &.stacktable {
+        display: table;
+
+        .st-head-row.st-head-row-main {
+          display: none;
+        }
+        .st-head-row {
+          padding-top: 2em;
+        }
+        tr:nth-child(even) {
+          -webkit-box-shadow: none;
+          -moz-box-shadow: none;
+          box-shadow: none;
+        }
+      }
+      th, th a {
+        font-family: nevisbold, sans-serif;
+        font-weight: 400;
+        text-transform: uppercase;
+        color: $blue0;
+      }
+      th {
+        font-size: 0.875em;
+        text-align: left;
+        padding: 1em;
+      }
+      tbody {
+
+        td {
+          font-size: 1.143em;
+          padding: 0.750em 1em;
+          min-width: 5em;
+          border-bottom: 1px solid $blue0;
+        }
+        tr:first-child td {
+          border-top: 1px solid $blue0;
+        }
+        tr:nth-child(odd) td {
+          background-color: $white;
+          background-color: rgba(255, 255, 255, 0.6);
+        }
+      }
+      .status {
+        padding-left: 1.75em;
+        min-width: 3em;
+      }
+      .dep {
+        width: 100%;
+      }
+      .changes {
+        width: 14px;
+        min-width: 0;
+      }
+      a {
+        font-family: Cardo, sans-serif;
+        color: $grey0;
+
+        &:hover {
+          color: $black0;
+        }
+      }
+    }
+    .vulns {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        font-size: 0.875em;
+        line-height: 1.75;
+      }
+      a {
+        background: #c20000 url(../img/bg-nsp-lock.png);
+        color: #fff;
+        padding: 1px 5px;
+        border-radius: 3px;
+
+        &:hover {
+          background-color: #222;
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .project-page {
+    .dep-table {
+      table {
+        .js & {
+          display: table;
+        }
+        &.stacktable {
+          display: none;
+        }
+        tbody {
+          -webkit-box-shadow: 0 0 0.5em $grey2;
+          -moz-box-shadow: 0 0 0.5em $grey2;
+          box-shadow: 0 0 0.5em $grey2;
+        }
+      }
+    }
+  }
+}

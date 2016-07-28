@@ -1,5 +1,5 @@
 const test = require('tape')
-const createNsp = require('../lib/nsp')
+const createNsp = require('../dist/lib/nsp').default
 
 function mockNspApi (results) {
   return {
@@ -46,7 +46,7 @@ test('NSP update advisories works good', (t) => {
     {id: 2, module_name: 'test2'}
   ]
 
-  const nsp = createNsp(mockNspApi(apiResp), mockDb())
+  const nsp = createNsp({ nspApiClient: mockNspApi(apiResp), db: mockDb() })
 
   nsp.syncAdvisories(function (err) {
     t.ifError(err)

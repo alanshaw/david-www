@@ -1,0 +1,152 @@
+@import '../components/project/badge-embed';
+@import '../components/project/dependency-graph';
+@import '../components/project/dependency-table';
+@import '../components/project/security-warning';
+@import '../components/project/summary';
+@import '../components/project/changes';
+
+.project-page {
+  #repo {
+    h1 {
+      color: $grey0;
+      overflow: hidden;
+
+      a {
+        font-family: nevisbold, sans-serif;
+        font-weight: 400;
+
+        &:first-child {
+          color: $grey0;
+
+          &:hover {
+            color: $black0;
+          }
+        }
+      }
+      span {
+        font-family: Cardo, sans-serif;
+        font-size: 0.750em;
+      }
+      #branch {
+        font-family: nevisbold,sans-serif;
+        font-weight: 400;
+        white-space: nowrap;
+
+        .fa {
+          margin-left: 0.25em;
+          color: $blue0;
+        }
+      }
+      img {
+        vertical-align: baseline;
+      }
+    }
+    p {
+      font-size: 1.143em;
+      margin-top: -1em;
+    }
+  }
+  #status {
+    display: inline;
+  }
+  .badge {
+    padding: 0 0.5em;
+    background-color: transparent;
+  }
+  #dep-switch {
+    list-style-type: none;
+    padding: 0;
+    border-bottom: 2px solid $grey2;
+
+    li {
+      display: inline-block;
+      margin: 0 0.25em 0 0;
+
+      a {
+        background-color: $grey3;
+        display: block;
+        padding: 0.250em 1.333em;
+        -webkit-border-radius: 0.250em 0.250em 0 0;
+        -moz-border-radius: 0.250em 0.250em 0 0;
+        border-radius: 0.250em 0.250em 0 0;
+        -webkit-box-shadow: 0 0 0.5em $grey2;
+        -moz-box-shadow: 0 0 0.5em $grey2;
+        box-shadow: 0 0 0.5em $grey2;
+        font-family: nevisbold, sans-serif;
+        font-weight: 400;
+        font-size: 0.857em;
+        text-transform: uppercase;
+        color: $grey4;
+
+        &.selected {
+          background-color: $white;
+          color: $grey0;
+
+          i {
+            color: $blue0;
+          }
+        }
+        &:focus {
+          outline: none;
+        }
+        &:hover {
+          color: $black0;
+        }
+      }
+    }
+  }
+  .modal-badge {
+    width: 450px;
+    max-width: 100%;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .project-page {
+    #main {
+      background-position: center 22em;
+      min-height: 66em;
+    }
+    .badge {
+      float: right;
+    }
+  }
+}
+
+@media only screen and (min-width: 960px) {
+  .project-page {
+    .switch {
+      display: block;
+      list-style-type: none;
+      margin: -3.75em 0 0 0;
+      padding: 0;
+      float: right;
+
+      li {
+        display: inline;
+        margin-left: 1em;
+      }
+      a {
+        font-family: nevisbold, sans-serif;
+        font-weight: 400;
+        font-size: 0.857em;
+        text-transform: uppercase;
+        color: $grey4;
+
+        &.selected {
+          color: $grey0;
+
+          i {
+            color: $blue0;
+          }
+        }
+        &:focus {
+          outline: 0;
+        }
+        &:hover {
+          color: $black0;
+        }
+      }
+    }
+  }
+}
