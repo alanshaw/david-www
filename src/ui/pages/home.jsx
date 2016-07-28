@@ -2,7 +2,7 @@ import React from 'react'
 import Helmet from 'react-helmet'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import moment from 'moment'
+import dateFormat from 'dateformat'
 import { requestStats, requestLatestNews } from '../actions'
 import DependencyCountsGraph from '../components/home/dependency-counts-graph.jsx'
 
@@ -141,7 +141,7 @@ const Home = React.createClass({
         <div className='cite'>
           <div className='author'>David Blog</div>
           <time dateTime={item.pubDate} pubdate>
-            {moment(item.pubDate).format('MMMM Do YYYY, HH:mm')}
+            {dateFormat(item.pubDate, 'mmmm dS yyyy, hh:MM')}
           </time>
         </div>
       </article>
