@@ -40,7 +40,7 @@
     "dep-diff": "^1.0.1",
     "express": "^4.12.2",
     "extract": "^1.0.0",
-    "github": "^0.2.3",
+    "github": "^2.4.0",
     "github-url": "^1.1.0",
     "handlebars": "^4.0.2",
     "level": "^1.3.0",
