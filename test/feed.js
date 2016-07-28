@@ -1,5 +1,5 @@
 const test = require('tape')
-const createFeed = require('../lib/feed')
+const createFeed = require('../dist/lib/feed').default
 
 test("Test get feed for dependency with no 'time' information", (t) => {
   t.plan(2)
@@ -33,7 +33,7 @@ test("Test get feed for dependency with no 'time' information", (t) => {
     }
   }
 
-  const feed = createFeed(mockNpm)
+  const feed = createFeed({ npm: mockNpm })
 
   const manifest = {
     name: 'Test',
@@ -79,7 +79,7 @@ test('Test get feed for package with invalid semver range dependency', (t) => {
     }
   }
 
-  const feed = createFeed(mockNpm)
+  const feed = createFeed({ npm: mockNpm })
 
   const manifest = {
     name: 'Test',

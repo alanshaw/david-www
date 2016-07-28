@@ -1,7 +1,7 @@
 const test = require('tape')
 const david = require('david')
 const merge = require('merge')
-const createBrains = require('../lib/brains')
+const createBrains = require('../dist/lib/brains').default
 
 // Create a mock manifest from the deps info david should return
 function mockManifest (deps) {
@@ -79,7 +79,7 @@ test('Test single, up to date, unpinned dependency', (t) => {
     }
   }
 
-  const brains = createBrains(mockDavid(deps, {}, {}), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, {}, {}), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -122,7 +122,7 @@ test('Test single, up to date, pinned dependency', (t) => {
     }
   }
 
-  const brains = createBrains(mockDavid(deps, {}, {}), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, {}, {}), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -167,7 +167,7 @@ test('Test single, out of date, unpinned dependency', (t) => {
     }
   }
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -212,7 +212,7 @@ test('Test single, out of date, pinned dependency', (t) => {
     }
   }
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -260,7 +260,7 @@ test('Test unstable dependency not flagged as out of date when no stable to upgr
   // No stable deps to upgrade to
   const updatedStableDeps = {}
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -312,7 +312,7 @@ test('Test 2 dependencies, 1 up to date & unpinned, 1 up to date & unpinned', (t
 
   updatedDeps = updatedStableDeps = {}
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -377,7 +377,7 @@ test('Test 2 dependencies, 1 up to date & unpinned, 1 out of date & unpinned', (
   // Setup foo as the updated dep
   updatedDeps.foo = deps.foo
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -437,7 +437,7 @@ test('Test 2 dependencies, 1 out of date & unpinned, 1 out of date & unpinned', 
     }
   }
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -499,7 +499,7 @@ test('Test 2 dependencies, 1 up to date & pinned, 1 up to date & pinned', (t) =>
 
   updatedDeps = updatedStableDeps = {}
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -564,7 +564,7 @@ test('Test 2 dependencies, 1 up to date & pinned, 1 out of date & pinned', (t) =
   // Setup bar as the updated dep
   updatedDeps.bar = deps.bar
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -624,7 +624,7 @@ test('Test 2 dependencies, 1 out of date & pinned, 1 out of date & pinned', (t) 
     }
   }
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -686,7 +686,7 @@ test('Test 2 dependencies, 1 up to date & unpinned, 1 up to date & pinned', (t) 
 
   updatedDeps = updatedStableDeps = {}
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -750,7 +750,7 @@ test('Test 2 dependencies, 1 up to date & unpinned, 1 out of date & pinned', (t)
 
   updatedDeps.bar = deps.bar
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -814,7 +814,7 @@ test('Test 2 dependencies, 1 up to date & pinned, 1 out of date & unpinned', (t)
 
   updatedDeps.foo = deps.foo
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
@@ -874,7 +874,7 @@ test('Test 2 dependencies, 1 out of date & pinned, 1 out of date & unpinned', (t
     }
   }
 
-  const brains = createBrains(mockDavid(deps, updatedDeps, updatedStableDeps), mockDb(), mockRegistry(), mockNsp())
+  const brains = createBrains({ david: mockDavid(deps, updatedDeps, updatedStableDeps), db: mockDb(), registry: mockRegistry(), nsp: mockNsp() })
 
   brains.getInfo(mockManifest(deps), (err, info) => {
     t.ifError(err)
