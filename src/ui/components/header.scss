@@ -1,0 +1,69 @@
+header {
+  background-color: $white;
+  border-top: 5px solid $black0;
+  border-bottom: 2px solid $grey2;
+
+  > div {
+    padding: 1em 0;
+  }
+  span {
+    display: none;
+  }
+}
+.logo, .logo:visited, .auth, .auth:visited {
+  color: $black0;
+}
+.logo {
+  display: inline-block;
+  background: url(../img/logo-david@2x.png) no-repeat left center/5.188em 3.375em;
+  margin-left: 2em;
+  padding-left: 5.733em;
+  font: 1.071em/3.610em Cardo, sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+
+  .no-backgroundsize & {
+    background-image: url(../img/logo-david.png);
+  }
+  &:hover i:before {
+    visibility: visible;
+  }
+  i:before {
+    visibility: hidden;
+  }
+}
+.auth {
+  display: inline-block;
+  float: right;
+  margin-right: 2em;
+  font: 1.071em/3.610em Cardo, sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media only screen and (min-width: 768px) {
+  header {
+    span {
+      display: inline;
+      font-size: 1em;
+      font-family: nevisbold, sans-serif;
+      font-weight: 400;
+      text-transform: uppercase;
+      color: $black0;
+      margin-left: 9em;
+    }
+  }
+  .logo {
+    margin-left: 3.6em;
+  }
+  .auth {
+    margin-right: 3.6em;
+  }
+}
+
+@media only screen and (min-width: 960px) {
+  header > div {
+    margin: 0 auto;
+    max-width: 67.143em;
+  }
+}
