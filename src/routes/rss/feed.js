@@ -23,7 +23,7 @@ export default (app, feed, manifest) => {
           if (err) return next(Boom.wrap(err, 500, 'Failed to build RSS XML'))
 
           res.contentType('application/rss+xml')
-          res.send(xml, 200)
+          res.send(xml)
         })
       })
     })
