@@ -24,13 +24,15 @@ const Header = React.createClass({
 
   render () {
     return (
-      <header role='banner'>
-        <div>
-          <Link className='logo' to='/'>David. <i className='fa fa-home'></i></Link>
-          <span>Watching your Node.js dependencies.</span>
-          {this.props.user ? <SignedIn /> : <SignedOut {...this.props} />}
-        </div>
-      </header>
+      <div>
+        <header role='banner'>
+          <div>
+            <Link className='logo' to='/'>David. <i className='fa fa-home'></i></Link>
+            <span>Watching your Node.js dependencies.</span>
+            {this.props.user ? <SignedIn /> : <SignedOut {...this.props} />}
+          </div>
+        </header>
+      </div>
     )
   }
 })
