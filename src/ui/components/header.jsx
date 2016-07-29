@@ -33,6 +33,16 @@ class Header extends Component {
             {this.props.user ? <SignedIn /> : <SignedOut {...this.props} />}
           </div>
         </header>
+        <div id='sponsor-0' className='sponsor'>
+          <div>
+            Proudly sponsored by <a href='http://microapps.com/' target='_blank'><img src='/img/logo-microapps.svg' alt='microapps' /></a>
+          </div>
+        </div>
+        <div id='sponsor-1' className='sponsor'>
+          <div>
+            <a href='http://microapps.com/pages/were-hiring/' target='_blank'><img src='/img/logo-microapps.svg' alt='microapps' /></a> wants to hire you
+          </div>
+        </div>
       </div>
     )
   }
