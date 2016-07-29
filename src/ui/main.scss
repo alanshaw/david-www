@@ -188,18 +188,6 @@ p, li {
 // Structure
 ////////////////////////////////////////////////////////////////////////////////
 
-header {
-  background-color: $white;
-  border-top: 5px solid $black0;
-  border-bottom: 2px solid $grey2;
-
-  > div {
-    padding: 1em 0;
-  }
-  span {
-    display: none;
-  }
-}
 #main {
   /* TODO: Change it to this when it's fixed in less and IE8 support isn't no more
   background: url(../img/bg-david.png) no-repeat center 16em/100% auto;
@@ -208,66 +196,6 @@ header {
   background-size: 100% auto;
   margin: 4.571em 1em 0;
   min-height: 60em;
-}
-footer {
-  background-color: $white;
-  border-top: 2px solid $grey2;
-  border-bottom: 5px solid $black0;
-  margin: 1em 0;
-
-  > div {
-    padding: 1em 0;
-    text-align: center;
-  }
-  small {
-    display: block;
-    margin: 1em 0;
-    font: italic 1.071em juraregular, sans-serif;
-    color: $grey0;
-
-    span {
-      color: $grey4;
-    }
-    a, a:visited {
-      font-weight: normal;
-      font-style: normal;
-      color: $grey4;
-
-      &:hover {
-        color: $grey0;
-      }
-      img {
-        height: 16px;
-      }
-    }
-  }
-  ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-
-    li {
-      display: inline-block;
-      margin: 0 0 0 1em;
-
-      &:first-child {
-        margin: 0;
-
-        iframe {
-          margin-top: 5px;
-        }
-      }
-      a, a:visited {
-        color: $grey0;
-      }
-      a {
-        font-family: nevisbold, sans-serif;
-        font-weight: 400;
-        font-size: 0.857em;
-        text-transform: uppercase;
-      }
-    }
-  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -286,36 +214,6 @@ ul.stats {
       display: block;
     }
   }
-}
-.logo, .logo:visited, .auth, .auth:visited {
-  color: $black0;
-}
-.logo {
-  display: inline-block;
-  background: url(../img/logo-david@2x.png) no-repeat left center/5.188em 3.375em;
-  margin-left: 2em;
-  padding-left: 5.733em;
-  font: 1.071em/3.610em Cardo, sans-serif;
-  font-weight: 700;
-  text-decoration: none;
-
-  .no-backgroundsize & {
-    background-image: url(../img/logo-david.png);
-  }
-  &:hover i:before {
-    visibility: visible;
-  }
-  i:before {
-    visibility: hidden;
-  }
-}
-.auth {
-  display: inline-block;
-  float: right;
-  margin-right: 2em;
-  font: 1.071em/3.610em Cardo, sans-serif;
-  font-weight: 700;
-  text-decoration: none;
 }
 .box {
   background-color: $grey2;
@@ -424,6 +322,8 @@ ul.stats {
 // Component
 ////////////////////////////////////////////////////////////////////////////////
 
+@import 'components/header';
+@import 'components/footer';
 @import 'components/loading';
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -515,76 +415,10 @@ ul.stats {
    Modify as content requires.
    ========================================================================== */
 
-@media only screen and (min-width: 768px) {
-
-  //////////////////////////////////////////////////////////////////////////////
-  // Structure
-  //////////////////////////////////////////////////////////////////////////////
-
-  header {
-    span {
-      display: inline;
-      font-size: 1em;
-      font-family: nevisbold, sans-serif;
-      font-weight: 400;
-      text-transform: uppercase;
-      color: $black0;
-      margin-left: 9em;
-    }
-  }
-  footer {
-    margin: 4em 0 0;
-
-    > div {
-      position: relative;
-      text-align: left;
-    }
-    small {
-      display: inline-block;
-    }
-    ul {
-      position: absolute;
-      top: 2.2em;
-      right: 0;
-      text-align: right;
-
-      &.social {
-        top: -3.75em;
-      }
-    }
-  }
-
-  //////////////////////////////////////////////////////////////////////////////
-  // Class
-  //////////////////////////////////////////////////////////////////////////////
-
-  .logo {
-    margin-left: 3.6em;
-  }
-  .auth {
-    margin-right: 3.6em;
-  }
-}
-
 @media only screen and (min-width: 960px) {
-
-  //////////////////////////////////////////////////////////////////////////////
-  // Structure
-  //////////////////////////////////////////////////////////////////////////////
-
-  header > div {
-    margin: 0 auto;
-    max-width: 67.143em;
-  }
   #main {
     margin: 4.571em auto 0;
     max-width: 67.143em;
-  }
-  footer {
-    > div {
-      margin: 0 auto;
-      max-width: 67.143em;
-    }
   }
 }
 
