@@ -40,6 +40,23 @@ header {
   font-weight: 700;
   text-decoration: none;
 }
+.sponsor {
+  display: none;
+  > div {
+    float: left;
+    margin: 1.4em 3.6em 0 3.6em;
+  }
+  img {
+    width: 80px;
+    vertical-align: top;
+  }
+}
+.home-page #sponsor-0 {
+  display: block;
+}
+.project-page #sponsor-1 {
+  display: block;
+}
 
 @media only screen and (min-width: 768px) {
   header {
@@ -58,6 +75,14 @@ header {
   }
   .auth {
     margin-right: 3.6em;
+  }
+  .sponsor {
+    margin: 0 auto;
+    max-width: 67.143em;
+
+    > div {
+      float: right;
+    }
   }
 }
 
