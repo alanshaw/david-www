@@ -76,7 +76,7 @@ const Project = React.createClass({
 
   getLinkTo (query) {
     const params = this.props.params
-    let pathname = `/${params.user}/${params.repo}/`
+    let pathname = `/${params.user}/${params.repo}`
     pathname += params.ref ? `/${params.ref}` : ''
     return { pathname, query: merge(true, this.props.location.query, query) }
   },
