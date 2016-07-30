@@ -1,8 +1,8 @@
 <p align="center"><a href="https://david-dm.org"><img src="https://raw.github.com/alanshaw/david-www/master/david-logo.png" alt="David" height="50" /></a></p>
 <p align="center">
-<a href="https://travis-ci.org/alanshaw/david-www"><img src="https://travis-ci.org/alanshaw/david-www.svg" alt="Build Status" data-canonical-src="https://travis-ci.org/alanshaw/david-www.svg"></a>
-<a href="https://david-dm.org/alanshaw/david-www"><img src="https://david-dm.org/alanshaw/david-www.svg" alt="Dependency Status" data-canonical-src="https://david-dm.org/alanshaw/david-www.svg"></a>
-<a href="https://david-dm.org/alanshaw/david-www/?type=dev"><img src="https://david-dm.org/alanshaw/david-www/dev-status.svg" alt="devDependency Status" data-canonical-src="https://david-dm.org/alanshaw/david-www/dev-status.svg"></a>
+<a href="https://travis-ci.org/alanshaw/david-www"><img src="https://travis-ci.org/alanshaw/david-www.svg" alt="Build Status"></a>
+<a href="https://david-dm.org/alanshaw/david-www"><img src="https://david-dm.org/alanshaw/david-www.svg" alt="Dependency Status"></a>
+<a href="https://david-dm.org/alanshaw/david-www/?type=dev"><img src="https://david-dm.org/alanshaw/david-www/dev-status.svg" alt="devDependency Status"></a>
 <a href="https://www.gittip.com/_alanshaw/"><img src="http://img.shields.io/gratipay/_alanshaw.svg?style=flat" alt="Donate to help support David development"></a>
 </p>
 ___
