@@ -1,4 +1,4 @@
-<a href="https://david-dm.org"><img src="https://raw.github.com/alanshaw/david-www/master/david.png" alt="David" height="50" /></a>
+<a href="https://david-dm.org"><img src="https://raw.github.com/alanshaw/david-www/master/david-logo.png" alt="David" height="50" /></a>
 
 [![Build Status](https://travis-ci.org/alanshaw/david-www.svg)](https://travis-ci.org/alanshaw/david-www)
 [![Dependency Status](https://david-dm.org/alanshaw/david-www.svg)](https://david-dm.org/alanshaw/david-www)
