@@ -34,7 +34,7 @@ const Header = React.createClass({
         </header>
         <div id='sponsor-0' className='sponsor'>
           <div>
-            Proudly sponsored by <a href='http://microapps.com/' target='_blank'><img src='/img/logo-microapps.svg' alt='microapps' /></a>
+            Proudly sponsored by <a href='https://moonmail.io/?utm_source=david-dm&amp;utm_medium=cpc&amp;utm_campaign=home-header' target='_blank'>MoonMail</a>
           </div>
         </div>
         <div id='sponsor-1' className='sponsor'>
