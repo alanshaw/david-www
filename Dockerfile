@@ -1,13 +1,13 @@
-FROM node:4
+FROM node:6
 
 WORKDIR /opt
 EXPOSE 1337
 VOLUME ["/opt/data"]
-CMD ["node", "index.js"]
-
-ADD package.json /opt/package.json
-RUN cd /opt && npm install
 
 ADD . /opt
+RUN npm install &&            \
+    npm run build &&          \
+    npm prune --production && \
+    npm cache clean
 
-RUN npm run build
+CMD ["npm", "start"]
