@@ -49,7 +49,7 @@ curl http://localhost:1337/alanshaw/grunt-jsio.png
 
 ## Configuration
 
-Configuration is handled by `rc` (https://github.com/dominictarr/rc), see [config.js](config.js) for default configuration values.
+Configuration is handled by `rc` (https://github.com/dominictarr/rc), see [config.js](src/config.js) for default configuration values.
 
 For basic configuration, add a `.davidrc` file in the local directory (it is git ignored) and you can use JSON to override any of the default values.
 
@@ -89,7 +89,7 @@ docker run -it --rm \
 This example will run it in detached mode.
 
 ```
-david run -d --name="david-www" \
+docker run -d --name="david-www" \
   --restart=always \
   -p 11337:1337 \
   -e david_github__token=github-token \
