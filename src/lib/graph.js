@@ -12,18 +12,19 @@ function ModuleVersions ({ name, versions }) {
 
 ModuleVersions.TTL = moment.duration({ days: 1 })
 
-function Project ({ id, dependencyGraph = {} }) {
-  this.id = id
-  this.dependencyGraph = dependencyGraph
+function Project ({ name, version, dependencies = [] }) {
+  this.name = name
+  this.version = version
+  this.dependencies = dependencies
   this.expires = moment().add(Project.TTL).valueOf()
 }
 
 Project.TTL = moment.duration({ hours: 1 })
 
-function Module ({ name, version, dependencyGraph = {} }) {
+function Module ({ name, version, dependencies = [] }) {
   this.name = name
   this.version = version
-  this.dependencyGraph = dependencyGraph
+  this.dependencies = dependencies
 }
 
 export default ({db, npmConfig}) => {
@@ -50,7 +51,7 @@ export default ({db, npmConfig}) => {
           return cb(null, project)
         }
 
-        project = new Project({ id: `${name}@${version}` })
+        project = new Project({ name, version })
 
         npm.load(npmConfig.options, (err) => {
           if (err) return cb(err)
@@ -61,7 +62,7 @@ export default ({db, npmConfig}) => {
 
           const cache = {}
 
-          Async.eachOf(dependencies, (name, range, cb) => {
+          Async.eachOf(dependencies, (range, name, cb) => {
             getLatestSatisfying(name, range, (err, version) => {
               if (err && err.code !== 'E404') return cb(err)
 
@@ -70,13 +71,13 @@ export default ({db, npmConfig}) => {
               // The range could be a tag, or a git repo
               if (!version) {
                 // Add a dummy package with the range as it's version
-                project.dependencyGraph[name] = new Module({ name, range })
+                project.dependencies.push(new Module({ name, range }))
                 return cb()
               }
 
               getDependencyGraph(name, version, cache, (err, dependencyGraph) => {
                 if (err) return cb(err)
-                project.dependencyGraph[name] = dependencyGraph
+                project.dependencies.push(dependencyGraph)
                 cb()
               })
             })
@@ -114,7 +115,7 @@ export default ({db, npmConfig}) => {
       // No dependencies?
       if (!Object.keys(dependencies).length) return cb(null, module)
 
-      Async.eachOf(dependencies, (name, range, cb) => {
+      Async.eachOf(dependencies, (range, name, cb) => {
         getLatestSatisfying(name, range, (err, version) => {
           if (err && err.code !== 'E404') return cb(err)
 
@@ -123,13 +124,13 @@ export default ({db, npmConfig}) => {
           // The range could be a tag, or a git repo
           if (!version) {
             // Add a dummy package with the range as it's version
-            module.dependencyGraph[name] = new Module({ name, range })
+            module.dependencies.push(new Module({ name, range }))
             return cb()
           }
 
           getDependencyGraph(name, version, cache, (err, dependencyGraph) => {
             if (err) return cb(err)
-            module.dependencyGraph[name] = dependencyGraph
+            module.dependencies.push(dependencyGraph)
             cb()
           })
         })
@@ -154,7 +155,7 @@ export default ({db, npmConfig}) => {
         db.get(key, (err, moduleVersions) => {
           if (err && !err.notFound) return cb(err)
 
-          if (moduleVersions.expires > Date.now()) {
+          if (moduleVersions && moduleVersions.expires > Date.now()) {
             return cb(null, moduleVersions)
           }
 
