@@ -74,8 +74,7 @@ function transformData (rootDep, cb) {
     level = level || 0
     maxLevel = maxLevel || 10
 
-    Object.keys(dep.deps).forEach((depName) => {
-      const depDep = dep.deps[depName]
+    dep.dependencies.forEach((depDep) => {
       const node = createNode(depDep)
 
       if (level < maxLevel) {
