@@ -7,7 +7,7 @@ const SecurityWarning = ({ info }) => {
   return (
     <div>
       <div id='summary-advisories'>
-        <i className='fa fa-exclamation-circle'></i>
+        <i className='fa fa-exclamation-circle' />
         Security vulnerabilities in dependencies
       </div>
       <div id='nsp'>

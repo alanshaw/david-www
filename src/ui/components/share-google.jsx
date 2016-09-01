@@ -14,7 +14,7 @@ export default React.createClass({
     return (
       <div>
         <Helmet script={[{ src: '//apis.google.com/js/plusone.js' }]} />
-        <div className='g-plusone' data-size='medium' data-annotation='none' data-href='https://david-dm.org'></div>
+        <div className='g-plusone' data-size='medium' data-annotation='none' data-href='https://david-dm.org' />
       </div>
     )
   }

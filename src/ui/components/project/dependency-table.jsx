@@ -53,7 +53,7 @@ const DependencyTable = React.createClass({
                   <td className='stable'>{dep.stable}</td>
                   <td className='latest'>{dep.latest}</td>
                   <td className='status'>
-                    <span className={`sqr ${dep.status} ${dep.pinned ? 'pinned' : 'unpinned'}`} title={`${dep.pinned ? 'pinned ' : ''}${dep.status}`}></span>
+                    <span className={`sqr ${dep.status} ${dep.pinned ? 'pinned' : 'unpinned'}`} title={`${dep.pinned ? 'pinned ' : ''}${dep.status}`} />
                   </td>
                 </tr>
               )
@@ -70,7 +70,7 @@ const DependencyTable = React.createClass({
 
     return (
       <div>
-        <a href='#' title='View closed issues and commits' className='changes-icon' data-dep-name={dep.name} onClick={this.onChangesIconClick}><i className='fa fa-file-code-o'></i></a>
+        <a href='#' title='View closed issues and commits' className='changes-icon' data-dep-name={dep.name} onClick={this.onChangesIconClick}><i className='fa fa-file-code-o' /></a>
         <Modal isOpen={isOpen} onRequestClose={this.onChangesModalClose} className='modal modal-changes' overlayClassName='modal-overlay'>
           <Changes dep={dep} />
         </Modal>
@@ -87,7 +87,7 @@ function Advisories ({ dep }) {
       {dep.advisories.map((a) => (
         <li key={a.slug}>
           <a href={`https://nodesecurity.io/advisories/${a.slug}`}>
-            <i className='fa fa-exclamation-circle'></i> {a.title}
+            <i className='fa fa-exclamation-circle' /> {a.title}
           </a>
         </li>
       ))}

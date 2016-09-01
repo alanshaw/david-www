@@ -14,7 +14,7 @@ const DependencyCountsGraph = React.createClass({
   },
 
   render () {
-    return (<div className='dependency-counts-graph' ref={(r) => { this.graphContainer = r }}></div>)
+    return (<div className='dependency-counts-graph' ref={(r) => { this.graphContainer = r }} />)
   },
 
   componentDidUpdate () {

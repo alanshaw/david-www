@@ -117,7 +117,7 @@ const Home = React.createClass({
             {stats.recentlyUpdatedPackages.map(({ name, previous, version }) => {
               const url = `https://www.npmjs.com/package/${name}`
               return (
-                <li key={url} className='pinned'><a href={url}>{name}</a> <span>{previous} <i className='fa fa-angle-double-right'></i> {version}</span></li>
+                <li key={url} className='pinned'><a href={url}>{name}</a> <span>{previous} <i className='fa fa-angle-double-right' /> {version}</span></li>
               )
             })}
           </ul>

@@ -27,7 +27,7 @@ const Header = React.createClass({
       <div>
         <header role='banner'>
           <div>
-            <Link className='logo' to='/'>David. <i className='fa fa-home'></i></Link>
+            <Link className='logo' to='/'>David. <i className='fa fa-home' /></Link>
             <span>Watching your Node.js dependencies.</span>
             {this.props.user ? <SignedIn /> : <SignedOut {...this.props} />}
           </div>
@@ -38,7 +38,7 @@ const Header = React.createClass({
 })
 
 const SignedIn = () => (
-  <a className='auth'>Signed in <i className='fa fa-github'></i></a>
+  <a className='auth'>Signed in <i className='fa fa-github' /></a>
 )
 
 const SignedOut = ({ csrfToken, config }) => {
@@ -52,7 +52,7 @@ const SignedOut = ({ csrfToken, config }) => {
   githubUrl += '&scope=repo,read:org,user:email'
 
   return (
-    <a className='auth' href={githubUrl}>Sign in <i className='fa fa-github'></i></a>
+    <a className='auth' href={githubUrl}>Sign in <i className='fa fa-github' /></a>
   )
 }
 

@@ -129,7 +129,7 @@ const Project = React.createClass({
         <div id='repo'>
           <h1>
             <a href={`${githubUrl}/${params.user}`}>{params.user}</a> - <a href={githubProjectUrl}>{project.name}</a>
-            <span> {project.version} {params.ref ? <span id='branch'><i className='fa fa-code-fork'></i> {params.ref}</span> : ''}</span>
+            <span> {project.version} {params.ref ? <span id='branch'><i className='fa fa-code-fork' /> {params.ref}</span> : ''}</span>
             <Badge
               project={this.getProjectRequestParams(this.props.params, this.props.location.query)}
               onClick={this.onBadgeClick} />
@@ -142,7 +142,7 @@ const Project = React.createClass({
         <div id='repo'>
           <h1>
             <a href={`${githubUrl}/${params.user}`}>{params.user}</a> - <a href={githubProjectUrl}>{params.repo}</a>
-            <span>{params.ref ? <span id='branch'><i className='fa fa-code-fork'></i> {params.ref}</span> : ''}</span>
+            <span>{params.ref ? <span id='branch'><i className='fa fa-code-fork' /> {params.ref}</span> : ''}</span>
             <Badge />
           </h1>
         </div>
@@ -179,7 +179,7 @@ const Project = React.createClass({
     const className = (query.type || null) === type ? 'selected' : ''
 
     return (
-      <li><Link to={to} className={className} title={`Show ${name}`}><i className={`fa fa-${icon}`}></i> {name}</Link></li>
+      <li><Link to={to} className={className} title={`Show ${name}`}><i className={`fa fa-${icon}`} /> {name}</Link></li>
     )
   },
 
@@ -217,7 +217,7 @@ const Project = React.createClass({
     const className = (query.view || 'list') === view ? 'selected' : ''
 
     return (
-      <li><Link to={to} className={className} title={`Show dependencies in a ${view}`}><i className={`fa fa-${icon}`}></i> {view}</Link></li>
+      <li><Link to={to} className={className} title={`Show dependencies in a ${view}`}><i className={`fa fa-${icon}`} /> {view}</Link></li>
     )
   },
 

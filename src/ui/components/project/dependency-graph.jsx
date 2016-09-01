@@ -29,7 +29,7 @@ const DependencyGraph = React.createClass({
     return (
       <div>
         {this.props.dependencyGraph
-          ? <div className='dep-graph' ref={(r) => { this.graphContainer = r }}></div>
+          ? <div className='dep-graph' ref={(r) => { this.graphContainer = r }} />
           : <Loading />}
       </div>
     )

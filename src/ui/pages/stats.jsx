@@ -41,7 +41,7 @@ const Stats = React.createClass({
             {stats.recentlyUpdatedPackages.map(({ name, previous, version }) => {
               const url = `https://www.npmjs.com/package/${name}`
               return (
-                <li key={url} className='pinned'><a href={url}>{name}</a> <span>{previous} <i className='fa fa-angle-double-right'></i> {version}</span></li>
+                <li key={url} className='pinned'><a href={url}>{name}</a> <span>{previous} <i className='fa fa-angle-double-right' /> {version}</span></li>
               )
             })}
           </ul>
@@ -59,7 +59,7 @@ const Stats = React.createClass({
                       <a href={`https://www.npmjs.com/package/${name}`}>{name}</a>
                       <span>
                         {previous || 'Nothing'}
-                        <i class='fa fa-arrow-right'></i>
+                        <i class='fa fa-arrow-right' />
                         {version || 'Nothing'}
                       </span>
                     </li>

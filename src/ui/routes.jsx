@@ -1,7 +1,7 @@
 import React from 'react'
 import { Router, Route, IndexRoute, browserHistory, applyRouterMiddleware } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
-import useScroll from 'react-router-scroll'
+import { useScroll } from 'react-router-scroll'
 import { Error404, Home, Project, Stats } from './pages'
 import Layout from './components/layout.jsx'
 
