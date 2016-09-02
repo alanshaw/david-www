@@ -124,6 +124,8 @@ export default (app, manifest, brains) => {
   }
 }
 
+const badgePath = Path.resolve(__dirname, '..', '..', 'public', 'img', 'status')
+
 function getBadgePath (status, opts) {
   opts = opts || {}
 
@@ -132,5 +134,5 @@ function getBadgePath (status, opts) {
   const extension = opts.extension === 'png' ? 'png' : 'svg'
   const style = extension === 'svg' && opts.style === 'flat-square' ? '-' + opts.style : ''
 
-  return Path.resolve(Path.join(__dirname, '..', '..', 'public', 'img', 'status', type + status + retina + style + '.' + extension))
+  return Path.join(badgePath, `${type}${status}${retina}${style}.${extension}`)
 }
