@@ -75,7 +75,7 @@
     "moment": "^2.11.2",
     "node-sass": "^3.8.0",
     "normalize-scss": "^5.0.1",
-    "npm": "^3.8.8",
+    "npm": "^3.10.8",
     "npm-run-all": "^3.0.0",
     "nsp-advisories-api": "^2.0.2",
     "postcss-cli": "^2.5.2",
