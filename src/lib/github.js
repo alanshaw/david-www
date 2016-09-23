@@ -7,7 +7,7 @@ export default ({githubConfig}) => {
     port: githubConfig.api.port,
     version: githubConfig.api.version,
     pathPrefix: githubConfig.api.pathPrefix,
-    timeout: 5000
+    timeout: githubConfig.api.timeout
   }
 
   const defaultInstance = new GitHubApi(apiOpts)

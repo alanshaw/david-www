@@ -8,7 +8,8 @@ export default rc('david', {
     api: {
       version: '3.0.0',
       protocol: 'https',
-      host: 'api.github.com'
+      host: 'api.github.com',
+      timeout: 5000
     },
     protocol: 'https',
     host: 'github.com',
