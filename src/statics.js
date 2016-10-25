@@ -5,7 +5,7 @@ import favicon from 'serve-favicon'
 export default ({ app, version }) => {
   const oneDay = 86400000 // milliseconds: 60 * 60 * 24 * 1000
   const oneWeek = oneDay * 7
-  const oneMonth = oneWeek * 30
+  const oneMonth = oneDay * 30
 
   const publicPath = (relativePath) => Path.join(__dirname, '..', 'public', relativePath)
 
