@@ -68,7 +68,7 @@ export default ({db, registry, github, githubConfig}) => {
 
       gh.repos.getContent(ghOpts, (err, resp) => {
         if (err) {
-          if (err.code === 504 && !opts.noCache && manifest && !manifest.private) {
+          if (err.code === '504' && !opts.noCache && manifest && !manifest.private) {
             console.log('Using expired cached manifest', manifestKey, manifest.data.name, manifest.data.version)
             return batch.call(batchKey, (cb) => cb(null, manifest.data))
           }
