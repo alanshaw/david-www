@@ -72,7 +72,7 @@
     "merge": "^1.2.0",
     "meta-marked": "^0.4.0",
     "mkdirp": "^0.5.1",
-    "moment": "^2.11.2",
+    "moment": "^2.16.0",
     "node-sass": "^3.8.0",
     "normalize-scss": "^5.0.1",
     "npm": "^3.8.8",
