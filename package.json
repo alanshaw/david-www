@@ -90,7 +90,7 @@
     "react-router-scroll": "^0.3.2",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
-    "request": "^2.53.0",
+    "request": "^2.79.0",
     "rimraf": "^2.4.3",
     "rss": "^1.1.1",
     "semver": "^5.0.1",
