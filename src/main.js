@@ -74,6 +74,22 @@ routes.badge(app, manifest, brains)
 
 import uiRoutes from './ui/routes.jsx'
 
+app.get('/detect', (req, res, next) => {
+  const referer = req.get('Referer')
+  if (!referer) {
+    return next(Boom.notFound())
+  }
+  const slugs = routes.referer.parseReferer(referer)
+  if (!slugs) {
+    return next(Boom.notFound())
+  }
+  let target = `/${slugs.org}/${slugs.repo}${slugs.ref ? '/' + slugs.ref : ''}`
+  if (req.query.type) {
+    target += `?type=${req.query.type}`
+  }
+  res.redirect(target)
+})
+
 app.get('*', (req, res, next) => {
   match({ routes: uiRoutes(), location: req.url }, (err, redirectLocation, renderProps) => {
     if (err) return next(err)
