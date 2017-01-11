@@ -92,7 +92,7 @@
     "redux-thunk": "^2.1.0",
     "request": "^2.53.0",
     "rimraf": "^2.4.3",
-    "rss": "^1.1.1",
+    "rss": "^1.2.2",
     "semver": "^5.0.1",
     "serve-favicon": "^2.2.0",
     "uglify-js": "^2.7.0",
