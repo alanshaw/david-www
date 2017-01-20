@@ -22,6 +22,22 @@ export default ({db, registry, github, githubConfig}) => {
    */
   const Manifest = new EventEmitter()
 
+  Manifest.hasCachedManifest = (user, repo, opts, cb) => {
+    if (!cb) {
+      cb = opts
+      opts = {}
+    }
+
+    opts = opts || {}
+
+    const manifestKey = createManifestKey(user, repo, opts)
+
+    db.get(manifestKey, (err) => {
+      if (err) return err.notFound ? cb(null, false) : cb(err)
+      cb(null, true)
+    })
+  }
+
   Manifest.getManifest = (user, repo, opts, cb) => {
     if (!cb) {
       cb = opts
@@ -30,17 +46,7 @@ export default ({db, registry, github, githubConfig}) => {
 
     opts = opts || {}
 
-    let manifestKey = `manifest/${user}/${repo}`
-
-    if (opts.path && opts.path[opts.path.length - 1] === '/') {
-      opts.path = opts.path.slice(0, -1)
-    }
-
-    if (opts.path) {
-      manifestKey += '/' + opts.path
-    }
-
-    manifestKey += '/#' + (opts.ref || '')
+    const manifestKey = createManifestKey(user, repo, opts)
 
     db.get(manifestKey, (err, manifest) => {
       if (err && !err.notFound) return cb(err)
@@ -210,6 +216,22 @@ export default ({db, registry, github, githubConfig}) => {
       })
     })
   })
+
+  function createManifestKey (user, repo, opts) {
+    opts = opts || {}
+
+    let manifestKey = `manifest/${user}/${repo}`
+
+    if (opts.path && opts.path[opts.path.length - 1] === '/') {
+      opts.path = opts.path.slice(0, -1)
+    }
+
+    if (opts.path) {
+      manifestKey += `/${opts.path}`
+    }
+
+    return `${manifestKey}/#${opts.ref || ''}`
+  }
 
   return Manifest
 }

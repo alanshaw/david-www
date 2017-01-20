@@ -105,20 +105,37 @@ export default (app, manifest, brains) => {
       const { user, repo, ref } = req.params
       const path = req.query.path
 
-      manifest.getManifest(user, repo, { path, ref, authToken }, (err, manifest) => {
+      manifest.hasCachedManifest(user, repo, { path, ref, authToken }, (err, isCached) => {
         if (err) {
-          console.error('Failed to get manifest', user, repo, path, ref, authToken, err)
-          return res.status(404).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
+          console.error('Failed to determine if manifest was cached', user, repo, path, ref, authToken, err)
+          return res.status(500).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
         }
 
-        brains.getInfo(manifest, opts, (err, info) => {
-          if (err) {
-            console.error('Failed to get info', manifest, opts, err)
-            return res.status(500).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
-          }
+        if (isCached) {
+          manifest.getManifest(user, repo, { path, ref, authToken }, (err, manifest) => {
+            if (err) {
+              console.error('Failed to get manifest', user, repo, path, ref, authToken, err)
+              return res.status(404).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
+            }
 
-          res.sendFile(getBadgePath(info.status, badgePathOpts), sendFileOpts, sendFileCb)
-        })
+            brains.getInfo(manifest, opts, (err, info) => {
+              if (err) {
+                console.error('Failed to get info', manifest, opts, err)
+                return res.status(500).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
+              }
+
+              res.sendFile(getBadgePath(info.status, badgePathOpts), sendFileOpts, sendFileCb)
+            })
+          })
+        } else {
+          res.sendFile(getBadgePath('pending', badgePathOpts), sendFileOpts, sendFileCb)
+
+          manifest.getManifest(user, repo, { path, ref, authToken }, (err) => {
+            if (err) {
+              console.error('Failed to get manifest', user, repo, path, ref, authToken, err)
+            }
+          })
+        }
       })
     })
   }
