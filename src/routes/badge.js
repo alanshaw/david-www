@@ -132,8 +132,14 @@ export default (app, manifest, brains) => {
 
           manifest.getManifest(user, repo, { path, ref, authToken }, (err) => {
             if (err) {
-              console.error('Failed to get manifest', user, repo, path, ref, authToken, err)
+              return console.error('Failed to get manifest', user, repo, path, ref, authToken, err)
             }
+
+            brains.getInfo(manifest, opts, (err, info) => {
+              if (err) {
+                return console.error('Failed to get info', manifest, opts, err)
+              }
+            })
           })
         }
       })
