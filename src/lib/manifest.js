@@ -32,9 +32,14 @@ export default ({db, registry, github, githubConfig}) => {
 
     const manifestKey = createManifestKey(user, repo, opts)
 
-    db.get(manifestKey, (err) => {
+    db.get(manifestKey, (err, manifest) => {
       if (err) return err.notFound ? cb(null, false) : cb(err)
-      cb(null, true)
+
+      if (!opts.noCache && manifest && !manifest.private && manifest.expires > Date.now()) {
+        return cb(null, true)
+      }
+
+      cb(null, false)
     })
   }
 
