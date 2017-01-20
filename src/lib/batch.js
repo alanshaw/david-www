@@ -26,7 +26,7 @@ export default () => {
      */
     call (key, fn) {
       const cbs = batch[key]
-      delete batch[key]
+      batch[key] = null
       cbs.forEach(fn)
     }
   }
