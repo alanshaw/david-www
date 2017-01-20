@@ -103,9 +103,9 @@ app.get('*', (req, res, next) => {
           .map((c) => c.requestData({ store, location, params, history }))
       )
       .then(() => {
-        const head = Helmet.rewind()
         const body = bodyTpl({ store, props: renderProps })
         const state = store.getState()
+        const head = Helmet.rewind()
 
         res.send(layoutTpl({ head, body, state, version: pkg.version }))
       })
