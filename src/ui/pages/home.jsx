@@ -140,7 +140,7 @@ const Home = React.createClass({
         </div>
         <div className='cite'>
           <div className='author'>David Blog</div>
-          <time dateTime={item.pubDate} pubdate>
+          <time dateTime={item.pubDate}>
             {dateFormat(item.pubDate, 'mmmm dS yyyy, hh:MM')}
           </time>
         </div>

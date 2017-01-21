@@ -2,10 +2,10 @@ import { EventEmitter } from 'events'
 import moment from 'moment'
 import depDiff from 'dep-diff'
 import githubUrl from 'github-url'
-import createBatch from './batch'
+import Batch from 'david/lib/batch'
 
 export default ({db, registry, github, githubConfig}) => {
-  const batch = createBatch()
+  const batch = new Batch()
 
   /**
    * Events:
