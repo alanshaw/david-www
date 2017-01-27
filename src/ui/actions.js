@@ -101,9 +101,9 @@ export function requestProject (params) {
     dispatch({ type: REQUEST_PROJECT, params })
 
     if (['optional', 'dev', 'info', 'peer'].indexOf(params.type) === -1) {
-        params.type = "dev"
+      params.type = 'dev'
     }
-    
+
     const { user, repo, path, ref } = params
 
     let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
