@@ -100,9 +100,8 @@ export function requestProject (params) {
 
     dispatch({ type: REQUEST_PROJECT, params })
 
-    if (["optional","dev","info","peer"].indexOf(params.type) === -1)
-    {
-        params.type = "dev";
+    if (['optional', 'dev', 'info', 'peer'].indexOf(params.type) === -1) {
+        params.type = "dev"
     }
     
     const { user, repo, path, ref } = params
