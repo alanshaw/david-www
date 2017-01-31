@@ -136,7 +136,7 @@ export default ({db, registry, github, githubConfig}) => {
           manifest = {
             data,
             private: repoData.private,
-            expires: moment().add(moment.duration({hours: 1})).valueOf()
+            expires: moment().add(moment.duration({ hours: 2 })).valueOf()
           }
 
           db.put(manifestKey, manifest, (err) => {
