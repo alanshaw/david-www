@@ -98,7 +98,13 @@ export default ({db, registry, github, githubConfig}) => {
 
         if (!opts.noCache && manifest && resp.meta && resp.meta.status === '304 Not Modified') {
           console.log('Using unmodified manifest', manifest.data.name, manifest.data.version, opts.ref)
-          return batch.call(batchKey, (cb) => cb(null, manifest.data))
+
+          manifest.expires = moment().add(moment.duration({ hours: 1 })).valueOf()
+
+          return db.put(manifestKey, manifest, (err) => {
+            if (err) return batch.call(batchKey, (cb) => cb(err))
+            batch.call(batchKey, (cb) => cb(null, manifest.data))
+          })
         }
 
         let data
@@ -108,16 +114,14 @@ export default ({db, registry, github, githubConfig}) => {
           data = JSON.parse(new Buffer(resp.content, resp.encoding).toString().trim())
         } catch (err) {
           console.error('Failed to parse package.json', resp, err)
-          return batch.call(batchKey, function (cb) {
+          return batch.call(batchKey, (cb) => {
             cb(new Error('Failed to parse package.json: ' + (resp && resp.content)))
           })
         }
 
         if (!data) {
           console.error('Empty package.json')
-          return batch.call(batchKey, function (cb) {
-            cb(new Error('Empty package.json'))
-          })
+          return batch.call(batchKey, (cb) => cb(new Error('Empty package.json')))
         }
 
         console.log('Got manifest', data.name, data.version, opts.ref)
@@ -133,7 +137,7 @@ export default ({db, registry, github, githubConfig}) => {
         function onGetRepo (err, repoData) {
           if (err) {
             console.error('Failed to get repo data', user, repo, err)
-            return batch.call(batchKey, function (cb) { cb(err) })
+            return batch.call(batchKey, (cb) => cb(err))
           }
 
           const oldManifest = manifest
