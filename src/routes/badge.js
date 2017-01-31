@@ -2,74 +2,74 @@ import Path from 'path'
 import getDepsType from './helpers/get-deps-type'
 
 export default (app, manifest, brains) => {
-  app.get('/:user/:repo/:ref?/status.svg', (req, res) => {
-    sendStatusBadge(req, res, {extension: 'svg'})
+  app.get('/:user/:repo/:ref?/status.svg', (req, res, next) => {
+    sendStatusBadge(req, res, next, {extension: 'svg'})
   })
 
-  app.get('/:user/:repo/:ref?/status.png', (req, res) => {
-    sendStatusBadge(req, res, {extension: 'png'})
+  app.get('/:user/:repo/:ref?/status.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?/status@2x.png', (req, res) => {
-    sendStatusBadge(req, res, {retina: true, extension: 'png'})
+  app.get('/:user/:repo/:ref?/status@2x.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {retina: true, extension: 'png'})
   })
 
   /* dev */
 
-  app.get('/:user/:repo/:ref?/dev-status.svg', (req, res) => {
-    sendStatusBadge(req, res, {dev: true, extension: 'svg'})
+  app.get('/:user/:repo/:ref?/dev-status.svg', (req, res, next) => {
+    sendStatusBadge(req, res, next, {dev: true, extension: 'svg'})
   })
 
-  app.get('/:user/:repo/:ref?/dev-status.png', (req, res) => {
-    sendStatusBadge(req, res, {dev: true, extension: 'png'})
+  app.get('/:user/:repo/:ref?/dev-status.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {dev: true, extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?/dev-status@2x.png', (req, res) => {
-    sendStatusBadge(req, res, {dev: true, retina: true, extension: 'png'})
+  app.get('/:user/:repo/:ref?/dev-status@2x.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {dev: true, retina: true, extension: 'png'})
   })
 
   /* peer */
 
-  app.get('/:user/:repo/:ref?/peer-status.png', (req, res) => {
-    sendStatusBadge(req, res, {peer: true, extension: 'png'})
+  app.get('/:user/:repo/:ref?/peer-status.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {peer: true, extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?/peer-status@2x.png', (req, res) => {
-    sendStatusBadge(req, res, {peer: true, retina: true, extension: 'png'})
+  app.get('/:user/:repo/:ref?/peer-status@2x.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {peer: true, retina: true, extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?/peer-status.svg', (req, res) => {
-    sendStatusBadge(req, res, {peer: true, extension: 'svg'})
+  app.get('/:user/:repo/:ref?/peer-status.svg', (req, res, next) => {
+    sendStatusBadge(req, res, next, {peer: true, extension: 'svg'})
   })
 
   /* optional */
 
-  app.get('/:user/:repo/:ref?/optional-status.svg', (req, res) => {
-    sendStatusBadge(req, res, {optional: true, extension: 'svg'})
+  app.get('/:user/:repo/:ref?/optional-status.svg', (req, res, next) => {
+    sendStatusBadge(req, res, next, {optional: true, extension: 'svg'})
   })
 
-  app.get('/:user/:repo/:ref?/optional-status.png', (req, res) => {
-    sendStatusBadge(req, res, {optional: true, extension: 'png'})
+  app.get('/:user/:repo/:ref?/optional-status.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {optional: true, extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?/optional-status@2x.png', (req, res) => {
-    sendStatusBadge(req, res, {optional: true, retina: true, extension: 'png'})
+  app.get('/:user/:repo/:ref?/optional-status@2x.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {optional: true, retina: true, extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?.svg', (req, res) => {
-    sendStatusBadge(req, res, {extension: 'svg'})
+  app.get('/:user/:repo/:ref?.svg', (req, res, next) => {
+    sendStatusBadge(req, res, next, {extension: 'svg'})
   })
 
-  app.get('/:user/:repo/:ref?@2x.png', (req, res) => {
-    sendStatusBadge(req, res, {retina: true, extension: 'png'})
+  app.get('/:user/:repo/:ref?@2x.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {retina: true, extension: 'png'})
   })
 
-  app.get('/:user/:repo/:ref?.png', (req, res) => {
-    sendStatusBadge(req, res, {extension: 'png'})
+  app.get('/:user/:repo/:ref?.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {extension: 'png'})
   })
 
   // Send the status badge for this user and repository
-  function sendStatusBadge (req, res, opts) {
+  function sendStatusBadge (req, res, next, opts) {
     opts = opts || {}
 
     const badgePathOpts = {
@@ -82,8 +82,11 @@ export default (app, manifest, brains) => {
     const sendFileCb = function (err) {
       if (err) {
         console.error('Failed to send status badge', err)
-        if (err.code === 'ENOENT') return res.status(404).end()
-        res.status(500).end()
+
+        // https://github.com/expressjs/express/blob/76eaa326ee8c4dda05568c6452286a16adb84c0b/lib/response.js#L417
+        if (err.code !== 'ECONNABORTED' && err.syscall !== 'write') {
+          next(err)
+        }
       }
     }
 
