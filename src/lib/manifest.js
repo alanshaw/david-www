@@ -76,6 +76,10 @@ export default ({db, registry, github, githubConfig}) => {
         ghOpts.ref = opts.ref
       }
 
+      if (manifest) {
+        ghOpts.headers = { 'If-None-Match': manifest.etag }
+      }
+
       gh.repos.getContent(ghOpts, (err, resp) => {
         if (err) {
           if (err.code === '504' && !opts.noCache && manifest && !manifest.private) {
@@ -84,14 +88,17 @@ export default ({db, registry, github, githubConfig}) => {
           }
 
           console.error('Failed to get package.json', user, repo, opts.path, opts.ref, err)
-          return batch.call(batchKey, function (cb) { cb(err) })
+          return batch.call(batchKey, (cb) => cb(err))
         }
 
         if (!opts.noCache && manifest && manifest.expires > Date.now()) {
           console.log('Using cached private manifest', manifest.data.name, manifest.data.version, opts.ref)
-          return batch.call(batchKey, function (cb) {
-            cb(null, manifest.data)
-          })
+          return batch.call(batchKey, (cb) => cb(null, manifest.data))
+        }
+
+        if (!opts.noCache && manifest && resp.meta && resp.meta.status === '304 Not Modified') {
+          console.log('Using unmodified manifest', manifest.data.name, manifest.data.version, opts.ref)
+          return batch.call(batchKey, (cb) => cb(null, manifest.data))
         }
 
         let data
@@ -134,8 +141,9 @@ export default ({db, registry, github, githubConfig}) => {
           data.ref = opts.ref
           manifest = {
             data,
+            etag: resp.meta.etag,
             private: repoData.private,
-            expires: moment().add(moment.duration({ hours: 2 })).valueOf()
+            expires: moment().add(moment.duration({ hours: 1 })).valueOf()
           }
 
           db.put(manifestKey, manifest, (err) => {
