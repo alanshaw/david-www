@@ -52,24 +52,23 @@ export default ({db, registry, github, githubConfig}) => {
     opts = opts || {}
 
     const manifestKey = createManifestKey(user, repo, opts)
+    const batchKey = manifestKey + (opts.authToken || '')
+
+    if (batch.exists(batchKey)) {
+      return batch.push(batchKey, cb)
+    }
+
+    batch.push(batchKey, cb)
 
     db.get(manifestKey, (err, manifest) => {
-      if (err && !err.notFound) return cb(err)
+      if (err && !err.notFound) return batch.call(batchKey, (cb) => cb(err))
 
       if (!opts.noCache && manifest && !manifest.private && manifest.expires > Date.now()) {
         console.log('Using cached manifest', manifestKey, manifest.data.name, manifest.data.version)
-        return cb(null, JSON.parse(JSON.stringify(manifest.data)))
+        return batch.call(batchKey, (cb) => cb(null, manifest.data))
       }
 
       const gh = github.getInstance(opts.authToken)
-      const batchKey = manifestKey + (opts.authToken || '')
-
-      if (batch.exists(batchKey)) {
-        return batch.push(batchKey, cb)
-      }
-
-      batch.push(batchKey, cb)
-
       const ghOpts = {user: user, repo: repo, path: (opts.path ? opts.path + '/' : '') + 'package.json'}
 
       // Add "ref" options if ref is set. Otherwise use default branch.
