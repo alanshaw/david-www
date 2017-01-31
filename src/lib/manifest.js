@@ -2,11 +2,8 @@ import { EventEmitter } from 'events'
 import moment from 'moment'
 import depDiff from 'dep-diff'
 import githubUrl from 'github-url'
-import Batch from 'david/lib/batch'
 
 export default ({db, registry, github, githubConfig}) => {
-  const batch = new Batch()
-
   /**
    * Events:
    * dependenciesChange(differences, manifest, user, repo, private)
@@ -52,20 +49,13 @@ export default ({db, registry, github, githubConfig}) => {
     opts = opts || {}
 
     const manifestKey = createManifestKey(user, repo, opts)
-    const batchKey = manifestKey + (opts.authToken || '')
-
-    if (batch.exists(batchKey)) {
-      return batch.push(batchKey, cb)
-    }
-
-    batch.push(batchKey, cb)
 
     db.get(manifestKey, (err, manifest) => {
-      if (err && !err.notFound) return batch.call(batchKey, (cb) => cb(err))
+      if (err && !err.notFound) return cb(err)
 
       if (!opts.noCache && manifest && !manifest.private && manifest.expires > Date.now()) {
         console.log('Using cached manifest', manifestKey, manifest.data.name, manifest.data.version)
-        return batch.call(batchKey, (cb) => cb(null, manifest.data))
+        return cb(null, manifest.data)
       }
 
       const gh = github.getInstance(opts.authToken)
@@ -84,16 +74,16 @@ export default ({db, registry, github, githubConfig}) => {
         if (err) {
           if (err.code === '504' && !opts.noCache && manifest && !manifest.private) {
             console.log('Using expired cached manifest', manifestKey, manifest.data.name, manifest.data.version)
-            return batch.call(batchKey, (cb) => cb(null, manifest.data))
+            return cb(null, manifest.data)
           }
 
           console.error('Failed to get package.json', user, repo, opts.path, opts.ref, err)
-          return batch.call(batchKey, (cb) => cb(err))
+          return cb(err)
         }
 
         if (!opts.noCache && manifest && manifest.expires > Date.now()) {
           console.log('Using cached private manifest', manifest.data.name, manifest.data.version, opts.ref)
-          return batch.call(batchKey, (cb) => cb(null, manifest.data))
+          return cb(null, manifest.data)
         }
 
         if (!opts.noCache && manifest && resp.meta && resp.meta.status === '304 Not Modified') {
@@ -102,8 +92,8 @@ export default ({db, registry, github, githubConfig}) => {
           manifest.expires = moment().add(moment.duration({ hours: 1 })).valueOf()
 
           return db.put(manifestKey, manifest, (err) => {
-            if (err) return batch.call(batchKey, (cb) => cb(err))
-            batch.call(batchKey, (cb) => cb(null, manifest.data))
+            if (err) return cb(err)
+            cb(null, manifest.data)
           })
         }
 
@@ -114,14 +104,12 @@ export default ({db, registry, github, githubConfig}) => {
           data = JSON.parse(new Buffer(resp.content, resp.encoding).toString().trim())
         } catch (err) {
           console.error('Failed to parse package.json', resp, err)
-          return batch.call(batchKey, (cb) => {
-            cb(new Error('Failed to parse package.json: ' + (resp && resp.content)))
-          })
+          return cb(new Error('Failed to parse package.json: ' + (resp && resp.content)))
         }
 
         if (!data) {
           console.error('Empty package.json')
-          return batch.call(batchKey, (cb) => cb(new Error('Empty package.json')))
+          return cb(new Error('Empty package.json'))
         }
 
         console.log('Got manifest', data.name, data.version, opts.ref)
@@ -137,7 +125,7 @@ export default ({db, registry, github, githubConfig}) => {
         function onGetRepo (err, repoData) {
           if (err) {
             console.error('Failed to get repo data', user, repo, err)
-            return batch.call(batchKey, (cb) => cb(err))
+            return cb(err)
           }
 
           const oldManifest = manifest
@@ -153,12 +141,12 @@ export default ({db, registry, github, githubConfig}) => {
           db.put(manifestKey, manifest, (err) => {
             if (err) {
               console.error('Failed to save manifest', manifestKey, err)
-              return batch.call(batchKey, (cb) => cb(err))
+              return cb(err)
             }
 
             console.log('Cached at', manifestKey)
 
-            batch.call(batchKey, (cb) => cb(null, manifest.data))
+            cb(null, manifest.data)
 
             if (!oldManifest) {
               Manifest.emit('retrieve', manifest.data, user, repo, opts.path, opts.ref, repoData.private)
