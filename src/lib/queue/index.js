@@ -6,7 +6,7 @@ export default ({ db, manifest, brains, cache, queueConfig = {} }) => {
   const name = `queue${Math.random().toString(36)}`
 
   queueConfig.workers = queueConfig.workers || 5
-  queueConfig.interval = queueConfig.interval || 1000
+  queueConfig.interval = queueConfig.interval || 500
 
   const workers = []
 
@@ -30,7 +30,7 @@ export default ({ db, manifest, brains, cache, queueConfig = {} }) => {
         console.log(`Got next: ${key} (${user}/${repo})`)
 
         Async.parallel([
-          (cb) => db.del(createQueueKey(value), cb),
+          (cb) => db.del(createQueueKey(name, value), cb),
           (cb) => db.del(key, cb)
         ], (err) => {
           if (err) return cb(err)
@@ -69,7 +69,7 @@ export default ({ db, manifest, brains, cache, queueConfig = {} }) => {
   const Queue = {
     // Push onto the queue, callback with true if joined, false if already in queue
     push ({ user, repo, opts }, cb) {
-      const key = createQueueKey({ user, repo, opts })
+      const key = createQueueKey(name, { user, repo, opts })
 
       db.get(key, (err) => {
         if (err && !err.notFound) return cb(err)
@@ -93,20 +93,20 @@ export default ({ db, manifest, brains, cache, queueConfig = {} }) => {
   }
 
   return Queue
+}
 
-  function createQueueKey ({ user, repo, opts }) {
-    opts = opts || {}
+function createQueueKey (prefix, { user, repo, opts }) {
+  opts = opts || {}
 
-    let key = `${name}~queued~${user}~${repo}`
+  let key = `${prefix}~queued~${user}~${repo}`
 
-    if (opts.path && opts.path[opts.path.length - 1] === '/') {
-      opts.path = opts.path.slice(0, -1)
-    }
-
-    if (opts.path) {
-      key += `~${opts.path.replace(/\//g, '~')}`
-    }
-
-    return `${key}~#${opts.ref || ''}`
+  if (opts.path && opts.path[opts.path.length - 1] === '/') {
+    opts.path = opts.path.slice(0, -1)
   }
+
+  if (opts.path) {
+    key += `~${opts.path.replace(/\//g, '~')}`
+  }
+
+  return `${key}~#${opts.ref || ''}`
 }
