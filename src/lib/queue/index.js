@@ -1,20 +1,42 @@
 import once from 'once'
-import Worker from './worker'
+import Async from 'async'
+import createWorker from './worker'
 
-export default (queueName, db, queueConfig = {}) => {
+export default ({ db, manifest, brains, cache, queueConfig = {} }) => {
+  const name = `queue${Math.random().toString(36)}`
+
   queueConfig.workers = queueConfig.workers || 5
   queueConfig.interval = queueConfig.interval || 1000
 
   const workers = []
 
   for (let i = 0; i < queueConfig.workers; i++) {
-    workers.push(new Worker())
+    workers.push(createWorker({ db, manifest, brains, cache }))
   }
+
+  setInterval(() => {
+    let count = 0
+    db.createReadStream({ gt: `${name}~next~`, lt: `${name}~next~~` })
+      .on('data', () => count++)
+      .on('end', () => console.log('Queue length is', count))
+  }, 60000)
 
   const getNext = (cb) => {
     cb = once(cb)
-    db.createReadStream({ gte: `${queueName}-`, limit: 1 })
-      .on('data', (data) => db.del(data.key, (err) => cb(err, data.value)))
+    db.createReadStream({ gt: `${name}~next~`, lt: `${name}~next~~`, limit: 1 })
+      .on('data', ({ key, value }) => {
+        const { user, repo } = value
+
+        console.log(`Got next: ${key} (${user}/${repo})`)
+
+        Async.parallel([
+          (cb) => db.del(createQueueKey(value), cb),
+          (cb) => db.del(key, cb)
+        ], (err) => {
+          if (err) return cb(err)
+          cb(null, value)
+        })
+      })
       .on('error', cb)
       .on('end', cb)
   }
@@ -31,7 +53,7 @@ export default (queueName, db, queueConfig = {}) => {
       scheduleProcess()
 
       if (err) return console.error('Failed to get next queue item', err)
-      if (!item) return console.log('No queued items')
+      if (!item) return // console.log('No queued items')
 
       const worker = workers.pop()
 
@@ -45,11 +67,46 @@ export default (queueName, db, queueConfig = {}) => {
   processor()
 
   const Queue = {
-    push (user, repo, opts, cb) {
-      // If exists in queue discard
-      // Push onto back of queue
+    // Push onto the queue, callback with true if joined, false if already in queue
+    push ({ user, repo, opts }, cb) {
+      const key = createQueueKey({ user, repo, opts })
+
+      db.get(key, (err) => {
+        if (err && !err.notFound) return cb(err)
+
+        // Push onto back of queue
+        if (err && err.notFound) {
+          return Async.parallel([
+            (cb) => db.put(key, true, cb),
+            (cb) => db.put(`${name}~next~${Date.now()}`, { user, repo, opts }, cb)
+          ], (err) => {
+            if (err) return cb(err)
+            console.log(`${key} joined the queue`)
+            cb(null, true)
+          })
+        }
+
+        console.log(`${key} already in queue`)
+        cb(null, false) // If exists in queue discard
+      })
     }
   }
 
   return Queue
+
+  function createQueueKey ({ user, repo, opts }) {
+    opts = opts || {}
+
+    let key = `${name}~queued~${user}~${repo}`
+
+    if (opts.path && opts.path[opts.path.length - 1] === '/') {
+      opts.path = opts.path.slice(0, -1)
+    }
+
+    if (opts.path) {
+      key += `~${opts.path.replace(/\//g, '~')}`
+    }
+
+    return `${key}~#${opts.ref || ''}`
+  }
 }

@@ -25,6 +25,8 @@ import createChangelog from './lib/changelog'
 import createProfile from './lib/profile'
 import createFeed from './lib/feed'
 import createStats from './lib/stats'
+import createCache from './lib/cache'
+import createQueue from './lib/queue'
 
 const nspApiClient = createNspApiClient()
 const db = createDb({ dbConfig: config.db })
@@ -40,6 +42,8 @@ const changelog = createChangelog({ github, githubConfig: config.github, npmConf
 const profile = createProfile({ manifest, brains, github }) // eslint-disable-line
 const feed = createFeed({ npm, npmConfig: config.npm, siteConfig: config.site })
 const stats = createStats({ registry, manifest })
+const cache = createCache({ db })
+const queue = createQueue({ db, manifest, brains, cache })
 
 const app = express()
 
@@ -70,7 +74,7 @@ routes.api.news(app)
 routes.api.project(app, manifest)
 routes.api.user(app)
 routes.rss.feed(app, feed, manifest)
-routes.badge(app, manifest, brains)
+routes.badge(app, manifest, brains, cache, queue)
 
 import uiRoutes from './ui/routes.jsx'
 

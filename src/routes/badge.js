@@ -1,7 +1,7 @@
 import Path from 'path'
 import getDepsType from './helpers/get-deps-type'
 
-export default (app, manifest, brains) => {
+export default (app, manifest, brains, cache, queue) => {
   app.get('/:user/:repo/:ref?/status.svg', (req, res, next) => {
     sendStatusBadge(req, res, next, {extension: 'svg'})
   })
@@ -107,42 +107,21 @@ export default (app, manifest, brains) => {
 
       const { user, repo, ref } = req.params
       const path = req.query.path
+      const opts = { path, ref, authToken }
 
-      manifest.hasCachedManifest(user, repo, { path, ref, authToken }, (err, isCached) => {
+      cache.getInfo({ user, repo, opts }, (err, info) => {
         if (err) {
-          console.error('Failed to determine if manifest was cached', user, repo, path, ref, authToken, err)
+          console.error('Failed to determine if info was cached', user, repo, path, ref, authToken, err)
           return res.status(500).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
         }
 
-        if (isCached) {
-          manifest.getManifest(user, repo, { path, ref, authToken }, (err, manifest) => {
-            if (err) {
-              console.error('Failed to get manifest', user, repo, path, ref, authToken, err)
-              return res.status(404).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
-            }
-
-            brains.getInfo(manifest, opts, (err, info) => {
-              if (err) {
-                console.error('Failed to get info', manifest, opts, err)
-                return res.status(500).sendFile(getBadgePath('unknown', badgePathOpts), sendFileOpts, sendFileCb)
-              }
-
-              res.sendFile(getBadgePath(info.status, badgePathOpts), sendFileOpts, sendFileCb)
-            })
-          })
+        if (info) {
+          res.sendFile(getBadgePath(info.status, badgePathOpts), sendFileOpts, sendFileCb)
         } else {
           res.sendFile(getBadgePath('pending', badgePathOpts), sendFileOpts, sendFileCb)
 
-          manifest.getManifest(user, repo, { path, ref, authToken }, (err) => {
-            if (err) {
-              return console.error('Failed to get manifest', user, repo, path, ref, authToken, err)
-            }
-
-            brains.getInfo(manifest, opts, (err, info) => {
-              if (err) {
-                return console.error('Failed to get info', manifest, opts, err)
-              }
-            })
+          queue.push({ user, repo, opts }, (err) => {
+            if (err) console.log('Failed to queue', err)
           })
         }
       })
