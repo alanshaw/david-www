@@ -23,8 +23,11 @@ export default ({ db, manifest, brains, cache, queueConfig = {} }) => {
 
   const getNext = (cb) => {
     cb = once(cb)
+    let hasNext = false
+
     db.createReadStream({ gt: `${name}~next~`, lt: `${name}~next~~`, limit: 1 })
       .on('data', ({ key, value }) => {
+        hasNext = true
         const { user, repo } = value
 
         console.log(`Got next: ${key} (${user}/${repo})`)
@@ -38,7 +41,9 @@ export default ({ db, manifest, brains, cache, queueConfig = {} }) => {
         })
       })
       .on('error', cb)
-      .on('end', cb)
+      .on('end', () => {
+        if (!hasNext) cb()
+      })
   }
 
   const scheduleProcess = () => setTimeout(processor, queueConfig.interval)

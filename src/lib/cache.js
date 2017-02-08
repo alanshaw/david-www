@@ -4,7 +4,6 @@ export default ({ db }) => {
   return {
     getManifest ({ user, repo, opts }, cb) {
       const key = createKey(`${name}~manifest`, { user, repo, opts })
-      console.log(`getManifest ${key}`)
       db.get(key, (err, manifest) => {
         if (err) return err.notFound ? cb() : cb(err)
         cb(null, manifest)
@@ -13,13 +12,11 @@ export default ({ db }) => {
 
     setManifest ({ user, repo, opts }, manifest, cb) {
       const key = createKey(`${name}~manifest`, { user, repo, opts })
-      console.log(`setManifest ${key}`)
       db.put(key, manifest, cb)
     },
 
     getInfo ({ user, repo, opts }, cb) {
       const key = createKey(`${name}~info`, { user, repo, opts })
-      console.log(`getInfo ${key}`)
       db.get(key, (err, info) => {
         if (err) return err.notFound ? cb() : cb(err)
         cb(null, info)
@@ -28,7 +25,6 @@ export default ({ db }) => {
 
     setInfo ({ user, repo, opts }, info, cb) {
       const key = createKey(`${name}~info`, { user, repo, opts })
-      console.log(`setInfo ${key}`)
       db.put(key, info, cb)
     }
   }
