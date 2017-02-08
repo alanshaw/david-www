@@ -17,6 +17,7 @@ export default ({ db }) => {
 
     getInfo ({ user, repo, opts }, cb) {
       const key = createKey(`${name}~info`, { user, repo, opts })
+      console.log(`getInfo ${key}`)
       db.get(key, (err, info) => {
         if (err) return err.notFound ? cb() : cb(err)
         cb(null, info)
@@ -25,6 +26,7 @@ export default ({ db }) => {
 
     setInfo ({ user, repo, opts }, info, cb) {
       const key = createKey(`${name}~info`, { user, repo, opts })
+      console.log(`setInfo ${key}`)
       db.put(key, info, cb)
     }
   }
