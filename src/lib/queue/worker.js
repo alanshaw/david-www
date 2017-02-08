@@ -9,9 +9,10 @@ export default ({ manifest, brains, cache }) => {
       }
     ], (err, manifest, info) => {
       if (err) return cb(err)
+      console.log(`Worker done for ${user}/${repo}`)
       Async.parallel([
-        (cb) => cache.setManifest({ user, repo, opts }, manifest, cb),
-        (cb) => cache.setInfo({ user, repo, opts }, info, cb)
+        (cb) => cache.setInfo({ user, repo, opts }, info, cb),
+        (cb) => cache.setManifest({ user, repo, opts }, manifest, cb)
       ], cb)
     })
   }
