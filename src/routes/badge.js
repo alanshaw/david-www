@@ -119,7 +119,7 @@ export default (app, manifest, brains, cache, queue) => {
         if (info) {
           res.sendFile(getBadgePath(info.status, badgePathOpts), sendFileOpts, sendFileCb)
         } else {
-          res.status(202).sendFile(getBadgePath('pending', badgePathOpts), sendFileOpts, sendFileCb)
+          res.sendFile(getBadgePath('pending', badgePathOpts), sendFileOpts, sendFileCb)
         }
 
         queue.push({ user, repo, opts }, (err) => {
