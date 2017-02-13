@@ -107,7 +107,8 @@ export default (app, manifest, brains, cache, queue) => {
 
       const { user, repo, ref } = req.params
       const path = req.query.path
-      const opts = { path, ref, authToken }
+
+      Object.assign(opts, { path, ref, authToken })
 
       cache.getInfo({ user, repo, opts }, (err, info) => {
         if (err) {
@@ -118,7 +119,7 @@ export default (app, manifest, brains, cache, queue) => {
         if (info) {
           res.sendFile(getBadgePath(info.status, badgePathOpts), sendFileOpts, sendFileCb)
         } else {
-          res.sendFile(getBadgePath('pending', badgePathOpts), sendFileOpts, sendFileCb)
+          res.status(202).sendFile(getBadgePath('pending', badgePathOpts), sendFileOpts, sendFileCb)
         }
 
         queue.push({ user, repo, opts }, (err) => {

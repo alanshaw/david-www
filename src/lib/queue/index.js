@@ -113,5 +113,17 @@ function createQueueKey (prefix, { user, repo, opts }) {
     key += `~${opts.path.replace(/\//g, '~')}`
   }
 
-  return `${key}~#${opts.ref || ''}`
+  key += `~${opts.ref || 'master'}`
+
+  if (opts.dev) {
+    key += '~devDependencies'
+  } else if (opts.peer) {
+    key += '~peerDependencies'
+  } else if (opts.optional) {
+    key += '~optionalDependencies'
+  } else {
+    key += '~dependencies'
+  }
+
+  return key
 }
