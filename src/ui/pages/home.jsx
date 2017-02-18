@@ -24,8 +24,19 @@ const Home = React.createClass({
   },
 
   componentDidMount () {
-    this.props.requestStats()
     this.props.requestLatestNews()
+
+    const requestStats = () => {
+      this.props.requestStats().then(() => {
+        this._requestStatsTimeout = setTimeout(requestStats, 5000)
+      })
+    }
+
+    requestStats()
+  },
+
+  componentWillUnmount () {
+    clearTimeout(this._requestStatsTimeout)
   },
 
   render () {

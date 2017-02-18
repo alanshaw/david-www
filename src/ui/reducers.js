@@ -118,8 +118,6 @@ function dependencyGraph (state = null, action) {
 
 function stats (state = null, action) {
   switch (action.type) {
-    case REQUEST_STATS:
-      return null
     case RECEIVE_STATS:
       return action.stats
     default:
@@ -140,8 +138,6 @@ function dependencyCounts (state = null, action) {
 
 function latestNews (state = null, action) {
   switch (action.type) {
-    case REQUEST_LATEST_NEWS:
-      return null
     case RECEIVE_LATEST_NEWS:
       return action.news
     default:
