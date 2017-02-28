@@ -95,7 +95,7 @@
     "rimraf": "^2.4.3",
     "rss": "^1.1.1",
     "semver": "^5.0.1",
-    "serve-favicon": "^2.2.0",
+    "serve-favicon": "^2.4.1",
     "uglify-js": "^2.7.0",
     "xml2js": "^0.4.16"
   },
