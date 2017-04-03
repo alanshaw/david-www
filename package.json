@@ -80,7 +80,7 @@
     "nsp-advisories-api": "^2.0.2",
     "once": "^1.4.0",
     "postcss-cli": "^2.5.2",
-    "rc": "^1.1.5",
+    "rc": "^1.2.1",
     "react": "^15.0.2",
     "react-dom": "^15.0.2",
     "react-helmet": "^3.1.0",
