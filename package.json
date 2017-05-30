@@ -30,7 +30,7 @@
     "build:css": "node-sass --include-path node_modules src/ui/main.scss public/bundle.css",
     "minify": "run-p minify:*",
     "minify:js": "uglifyjs public/bundle.js -o public/bundle.js",
-    "minify:css": "postcss -u cssnano -i public/bundle.css -o public/bundle.css",
+    "minify:css": "postcss public/bundle.css -u cssnano -o public/bundle.css",
     "lint": "standard",
     "test": "run-s lint build test:*",
     "test:unit": "tape test/*.js",
