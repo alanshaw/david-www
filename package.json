@@ -88,7 +88,7 @@
     "react-redux": "^4.4.5",
     "react-router": "^2.4.0",
     "react-router-redux": "^4.0.4",
-    "react-router-scroll": "^0.3.2",
+    "react-router-scroll": "^0.4.2",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "request": "^2.53.0",
@@ -96,7 +96,7 @@
     "rss": "^1.1.1",
     "semver": "^5.0.1",
     "serve-favicon": "^2.2.0",
-    "uglify-js": "^2.7.0",
+    "uglify-js": "^3.0.13",
     "xml2js": "^0.4.16"
   },
   "devDependencies": {
