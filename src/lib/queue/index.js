@@ -1,9 +1,12 @@
 import once from 'once'
 import Async from 'async'
 import createWorker from './worker'
+import Batch from 'david/lib/batch'
+import copy from 'utils-copy-error'
 
 export default ({ db, manifest, brains, cache, queueConfig = {} }) => {
   const name = `queue${Math.random().toString(36)}`
+  const batch = new Batch()
 
   queueConfig.workers = queueConfig.workers || 5
   queueConfig.interval = queueConfig.interval || 500
@@ -76,23 +79,29 @@ export default ({ db, manifest, brains, cache, queueConfig = {} }) => {
     push ({ user, repo, opts }, cb) {
       const key = createQueueKey(name, { user, repo, opts })
 
+      if (batch.exists(key)) {
+        return batch.push(key, cb)
+      }
+
+      batch.push(key, cb)
+
       db.get(key, (err) => {
-        if (err && !err.notFound) return cb(err)
+        if (err && !err.notFound) return batch.call(key, (cb) => cb(copy(err)))
 
         // Push onto back of queue
         if (err && err.notFound) {
-          return Async.parallel([
+          return Async.series([
             (cb) => db.put(key, true, cb),
             (cb) => db.put(`${name}~next~${Date.now()}`, { user, repo, opts }, cb)
           ], (err) => {
             if (err) return cb(err)
             console.log(`${key} joined the queue`)
-            cb(null, true)
+            batch.call(key, (cb) => cb(null, true))
           })
         }
 
         console.log(`${key} already in queue`)
-        cb(null, false) // If exists in queue discard
+        batch.call(key, (cb) => cb(null, false)) // If exists in queue discard
       })
     }
   }

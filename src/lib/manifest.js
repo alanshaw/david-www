@@ -62,7 +62,7 @@ export default ({db, registry, github, githubConfig}) => {
     batch.push(batchKey, cb)
 
     db.get(manifestKey, (err, manifest) => {
-      if (err && !err.notFound) return batch.call(batchKey, (cb) => cb(err))
+      if (err && !err.notFound) return batch.call(batchKey, (cb) => cb(copy(err)))
 
       if (!opts.noCache && manifest && !manifest.private && manifest.expires > Date.now()) {
         console.log('Using cached manifest', manifestKey, manifest.data.name, manifest.data.version)
