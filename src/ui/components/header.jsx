@@ -1,27 +1,27 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { requestCsrfToken, requestUser } from '../actions'
 
-const Header = React.createClass({
-  propTypes: {
+class Header extends Component {
+  static propTypes = {
     user: PropTypes.object,
     config: PropTypes.object.isRequired,
     csrfToken: PropTypes.string,
     requestCsrfToken: PropTypes.func.isRequired
-  },
+  }
 
   componentDidMount () {
     this.props.requestCsrfToken()
     this.props.requestUser()
-  },
+  }
 
   componentWillReceiveProps (nextProps) {
     if (this.props.user && !nextProps.user) {
       this.props.requestCsrfToken()
     }
-  },
+  }
 
   render () {
     return (
@@ -36,7 +36,7 @@ const Header = React.createClass({
       </div>
     )
   }
-})
+}
 
 const SignedIn = () => (
   <a className='auth'>Signed in <i className='fa fa-github' /></a>

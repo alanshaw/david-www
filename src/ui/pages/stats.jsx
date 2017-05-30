@@ -1,20 +1,20 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { requestStats } from '../actions'
 
-const Stats = React.createClass({
-  propTypes: {
+class Stats extends Component {
+  static propTypes = {
     config: PropTypes.object.isRequired,
     stats: PropTypes.object,
     requestStats: PropTypes.func.isRequired
-  },
+  }
 
   componentDidMount () {
     if (!this.props.stats) this.props.requestStats()
-  },
+  }
 
   render () {
     const stats = this.props.stats
@@ -72,7 +72,7 @@ const Stats = React.createClass({
       </div>
     )
   }
-})
+}
 
 Stats.requestData = ({ store }) => {
   return Promise.all([

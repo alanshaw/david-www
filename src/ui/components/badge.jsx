@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-export default React.createClass({
-  propTypes: {
+export default class Badge extends Component {
+  static propTypes = {
     project: PropTypes.shape({
       user: PropTypes.string.isRequired,
       repo: PropTypes.string.isRequired,
@@ -14,19 +14,17 @@ export default React.createClass({
     title: PropTypes.string,
     className: PropTypes.string,
     onClick: PropTypes.func
-  },
+  }
 
-  getDefaultProps () {
-    return { className: 'badge' }
-  },
+  static defaultProps = { className: 'badge' }
 
-  onClick (e) {
+  onClick = (e) => {
     if (this.props.onClick) {
       this.props.onClick(e, this.props.project)
     }
-  },
+  }
 
-  getProjectUrl () {
+  getProjectUrl = () => {
     const project = this.props.project
     if (!project) return null
 
@@ -35,9 +33,9 @@ export default React.createClass({
     url += project.path ? `?path=${project.path}` : ''
 
     return url
-  },
+  }
 
-  getProjectBadgeSrc () {
+  getProjectBadgeSrc = () => {
     const project = this.props.project
     if (!project) return null
 
@@ -49,7 +47,7 @@ export default React.createClass({
     src += project.path ? `?path=${project.path}` : ''
 
     return src
-  },
+  }
 
   render () {
     const project = this.props.project
@@ -66,4 +64,4 @@ export default React.createClass({
       <a className={this.props.className} href={this.props.href || this.getProjectUrl()} title={this.props.title} data-type={project.type} onClick={this.onClick}><img src={this.getProjectBadgeSrc()} alt={`${name} status`} /></a>
     )
   }
-})
+}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import cycle from 'cycle'
@@ -9,8 +9,8 @@ import Loading from '../loading.jsx'
 const diagonal = d3.svg.diagonal().projection(({ x, y }) => [y, x])
 let id = 0 // For nodes with no ID
 
-const DependencyGraph = React.createClass({
-  propTypes: {
+class DependencyGraph extends Component {
+  static propTypes = {
     project: PropTypes.shape({
       user: PropTypes.string.isRequired,
       repo: PropTypes.string.isRequired,
@@ -20,11 +20,11 @@ const DependencyGraph = React.createClass({
     }).isRequired,
     requestDependencyGraph: PropTypes.func,
     dependencyGraph: PropTypes.object
-  },
+  }
 
   componentDidMount () {
     this.props.requestDependencyGraph(this.props.project)
-  },
+  }
 
   render () {
     return (
@@ -34,7 +34,7 @@ const DependencyGraph = React.createClass({
           : <Loading />}
       </div>
     )
-  },
+  }
 
   componentDidUpdate () {
     const data = this.props.dependencyGraph
@@ -50,7 +50,7 @@ const DependencyGraph = React.createClass({
       updateGraph(vis, root)
     })
   }
-})
+}
 
 // Transform data from possibly cyclic structure into max 10 levels deep visual structure
 function transformData (rootDep, cb) {

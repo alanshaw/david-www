@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
@@ -14,8 +14,8 @@ import DependencyTable from '../components/project/dependency-table.jsx'
 import DependencyGraph from '../components/project/dependency-graph.jsx'
 import BadgeEmbed from '../components/project/badge-embed.jsx'
 
-const Project = React.createClass({
-  propTypes: {
+class Project extends Component {
+  static propTypes = {
     config: PropTypes.shape({
       githubUrl: PropTypes.string.isRequired
     }).isRequired,
@@ -46,11 +46,9 @@ const Project = React.createClass({
       })
     }).isRequired,
     requestProject: PropTypes.func.isRequired
-  },
+  }
 
-  getInitialState () {
-    return { badgeModalIsOpen: false }
-  },
+  state = { badgeModalIsOpen: false }
 
   componentWillReceiveProps (props) {
     const currType = this.props.location.query.type
@@ -60,27 +58,27 @@ const Project = React.createClass({
       const params = this.getProjectRequestParams(props.params, props.location.query)
       this.props.requestInfo(params)
     }
-  },
+  }
 
   componentDidMount () {
     const params = this.getProjectRequestParams(this.props.params, this.props.location.query)
     this.props.requestProject(params)
     this.props.requestInfo(params)
-  },
+  }
 
   // Get project data from the URL
   getProjectRequestParams (params, query) {
     const { user, repo, ref } = params
     const { path, type } = query
     return { user, repo, ref, path, type }
-  },
+  }
 
-  getLinkTo (query) {
+  getLinkTo = (query) => {
     const params = this.props.params
     let pathname = `/${params.user}/${params.repo}`
     pathname += params.ref ? `/${params.ref}` : ''
     return { pathname, query: merge(true, this.props.location.query, query) }
-  },
+  }
 
   render () {
     const params = this.props.params
@@ -105,12 +103,17 @@ const Project = React.createClass({
         {this.renderHeader()}
         {this.renderTabs()}
         {this.renderInfo()}
-        <Modal isOpen={this.state.badgeModalIsOpen} onRequestClose={this.onBadgeModalClose} className='modal modal-badge' overlayClassName='modal-overlay'>
+        <Modal
+          isOpen={this.state.badgeModalIsOpen}
+          onRequestClose={this.onBadgeModalClose}
+          className='modal modal-badge'
+          overlayClassName='modal-overlay'
+          contentLabel='Badge modal'>
           <BadgeEmbed project={this.getProjectRequestParams(params, this.props.location.query)} />
         </Modal>
       </div>
     )
-  },
+  }
 
   renderHeader () {
     const params = this.props.params
@@ -148,7 +151,7 @@ const Project = React.createClass({
         </div>
       )
     }
-  },
+  }
 
   renderTabs () {
     const project = this.props.project
@@ -162,7 +165,7 @@ const Project = React.createClass({
         {this.renderTab('optional', 'sliders')}
       </ul>
     )
-  },
+  }
 
   renderTab (type, icon) {
     const project = this.props.project
@@ -181,7 +184,7 @@ const Project = React.createClass({
     return (
       <li><Link to={to} className={className} title={`Show ${name}`}><i className={`fa fa-${icon}`} /> {name}</Link></li>
     )
-  },
+  }
 
   renderInfo () {
     const info = this.props.info
@@ -200,7 +203,7 @@ const Project = React.createClass({
         <Summary />
       </div>
     )
-  },
+  }
 
   renderViewSwitcher () {
     return (
@@ -209,7 +212,7 @@ const Project = React.createClass({
         {this.renderViewSwitcherButton('tree', 'sitemap')}
       </ul>
     )
-  },
+  }
 
   renderViewSwitcherButton (view, icon) {
     const { query } = this.props.location
@@ -219,17 +222,17 @@ const Project = React.createClass({
     return (
       <li><Link to={to} className={className} title={`Show dependencies in a ${view}`}><i className={`fa fa-${icon}`} /> {view}</Link></li>
     )
-  },
+  }
 
-  onBadgeClick (e) {
+  onBadgeClick = (e) => {
     e.preventDefault()
     this.setState({ badgeModalIsOpen: true })
-  },
+  }
 
-  onBadgeModalClose () {
+  onBadgeModalClose = () => {
     this.setState({ badgeModalIsOpen: false })
   }
-})
+}
 
 Project.requestData = ({ params, location, store }) => {
   const { user, repo, ref } = params

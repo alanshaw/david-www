@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-const BadgeModal = React.createClass({
-  propTypes: {
+class BadgeModal extends Component {
+  static propTypes = {
     project: PropTypes.shape({
       user: PropTypes.string.isRequired,
       repo: PropTypes.string.isRequired,
@@ -14,20 +14,16 @@ const BadgeModal = React.createClass({
     config: PropTypes.shape({
       siteUrl: PropTypes.string.isRequired
     }).isRequired
-  },
+  }
 
-  getDefaultProps () {
-    return {
-      className: 'modal modal-badge',
-      overlayClassName: 'modal-overlay'
-    }
-  },
+  static defaultProps = {
+    className: 'modal modal-badge',
+    overlayClassName: 'modal-overlay'
+  }
 
-  getInitialState () {
-    return { theme: 'svg' }
-  },
+  state = { theme: 'svg' }
 
-  getProjectUrl () {
+  getProjectUrl = () => {
     const project = this.props.project
     if (!project) return null
 
@@ -44,9 +40,9 @@ const BadgeModal = React.createClass({
     }
 
     return url
-  },
+  }
 
-  getProjectBadgeSrc (theme) {
+  getProjectBadgeSrc = (theme) => {
     const project = this.props.project
     if (!project) return null
 
@@ -67,11 +63,11 @@ const BadgeModal = React.createClass({
     }
 
     return src
-  },
+  }
 
-  onBadgeThemeChange (e) {
+  onBadgeThemeChange = (e) => {
     this.setState({ theme: e.target.value })
-  },
+  }
 
   render () {
     const project = this.props.project
@@ -100,6 +96,6 @@ const BadgeModal = React.createClass({
       </div>
     )
   }
-})
+}
 
 export default connect(({ config }) => ({ config }))(BadgeModal)

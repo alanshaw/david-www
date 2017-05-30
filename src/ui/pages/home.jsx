@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router'
@@ -7,22 +7,20 @@ import dateFormat from 'dateformat'
 import { requestStats, requestLatestNews } from '../actions'
 import DependencyCountsGraph from '../components/home/dependency-counts-graph.jsx'
 
-const Home = React.createClass({
-  propTypes: {
+class Home extends Component {
+  static propTypes = {
     config: PropTypes.object.isRequired,
     stats: PropTypes.object,
     latestNews: PropTypes.array,
     requestStats: PropTypes.func.isRequired,
     requestLatestNews: PropTypes.func.isRequired
-  },
+  }
 
-  getInitialState () {
-    return {
-      badgeUrlClass: 'nope',
-      badgeImgClass: '',
-      badgeSrc: '/img/status/outofdate.svg'
-    }
-  },
+  state = {
+    badgeUrlClass: 'nope',
+    badgeImgClass: '',
+    badgeSrc: '/img/status/outofdate.svg'
+  }
 
   componentDidMount () {
     this.props.requestLatestNews()
@@ -34,11 +32,11 @@ const Home = React.createClass({
     }
 
     requestStats()
-  },
+  }
 
   componentWillUnmount () {
     clearTimeout(this._requestStatsTimeout)
-  },
+  }
 
   render () {
     return (
@@ -103,7 +101,7 @@ const Home = React.createClass({
         </aside>
       </div>
     )
-  },
+  }
 
   renderStats () {
     const stats = this.props.stats
@@ -136,7 +134,7 @@ const Home = React.createClass({
         </div>
       </div>
     )
-  },
+  }
 
   renderNews () {
     const news = this.props.latestNews
@@ -158,25 +156,25 @@ const Home = React.createClass({
         </div>
       </article>
     )
-  },
+  }
 
-  onBadgeKeyPress (e) {
+  onBadgeKeyPress = (e) => {
     if (e.key === 'Enter') e.preventDefault()
-  },
+  }
 
-  onBadgeInput (e) {
+  onBadgeInput = (e) => {
     const badgeSrc = `${this.props.config.siteUrl}/${e.currentTarget.textContent}.svg`
     this.setState({ badgeSrc })
-  },
+  }
 
-  onBadgeLoad () {
+  onBadgeLoad = () => {
     this.setState({ badgeUrlClass: '', badgeImgClass: '' })
-  },
+  }
 
-  onBadgeError () {
+  onBadgeError = () => {
     this.setState({ badgeUrlClass: 'nope', badgeImgClass: 'hidden' })
   }
-})
+}
 
 Home.requestData = ({ store }) => {
   return Promise.all([

@@ -1,26 +1,24 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Modal from 'react-modal'
 import Changes from './changes.jsx'
 
-const DependencyTable = React.createClass({
-  propTypes: {
+class DependencyTable extends Component {
+  static propTypes = {
     info: PropTypes.object
-  },
+  }
 
-  getInitialState () {
-    return { changesModalIsOpen: null }
-  },
+  state = { changesModalIsOpen: null }
 
-  onChangesIconClick (e) {
+  onChangesIconClick = (e) => {
     e.preventDefault()
     this.setState({ changesModalIsOpen: e.currentTarget.getAttribute('data-dep-name') })
-  },
+  }
 
-  onChangesModalClose () {
+  onChangesModalClose = () => {
     this.setState({ changesModalIsOpen: null })
-  },
+  }
 
   render () {
     const info = this.props.info
@@ -63,7 +61,7 @@ const DependencyTable = React.createClass({
         </table>
       </div>
     )
-  },
+  }
 
   renderChangesIcon (dep) {
     if (!dep.outOfDate) return null
@@ -72,13 +70,18 @@ const DependencyTable = React.createClass({
     return (
       <div>
         <a href='#' title='View closed issues and commits' className='changes-icon' data-dep-name={dep.name} onClick={this.onChangesIconClick}><i className='fa fa-file-code-o' /></a>
-        <Modal isOpen={isOpen} onRequestClose={this.onChangesModalClose} className='modal modal-changes' overlayClassName='modal-overlay'>
+        <Modal
+          isOpen={isOpen}
+          onRequestClose={this.onChangesModalClose}
+          className='modal modal-changes'
+          overlayClassName='modal-overlay'
+          contentLabel='Changes modal'>
           <Changes dep={dep} />
         </Modal>
       </div>
     )
   }
-})
+}
 
 function Advisories ({ dep }) {
   if (!dep.advisories) return

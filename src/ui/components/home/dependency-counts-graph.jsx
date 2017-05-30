@@ -1,22 +1,22 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import d3 from 'd3'
 import { requestDependencyCounts } from '../../actions'
 
-const DependencyCountsGraph = React.createClass({
-  propTypes: {
+class DependencyCountsGraph extends Component {
+  static propTypes = {
     dependencyCounts: PropTypes.object,
     requestDependencyCounts: PropTypes.func.isRequired
-  },
+  }
 
   componentDidMount () {
     this.props.requestDependencyCounts()
-  },
+  }
 
   render () {
     return (<div className='dependency-counts-graph' ref={(r) => { this.graphContainer = r }} />)
-  },
+  }
 
   componentDidUpdate () {
     const data = this.props.dependencyCounts
@@ -81,7 +81,7 @@ const DependencyCountsGraph = React.createClass({
 
     nodes.exit().transition().remove().select('circle').attr('r', 0)
   }
-})
+}
 
 const mapStateToProps = ({ dependencyCounts }) => ({ dependencyCounts })
 

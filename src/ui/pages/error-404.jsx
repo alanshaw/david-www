@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-export default React.createClass({
+export default class Error404 extends Component {
   render () {
     return (
       <div className='container'>
@@ -9,4 +9,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

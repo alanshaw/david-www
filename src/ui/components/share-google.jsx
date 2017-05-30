@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
 
-export default React.createClass({
+export default class ShareGoogle extends Component {
   componentDidMount () {
     window.___gcfg = window.___gcfg || { lang: 'en-GB' }
-  },
+  }
 
   shouldComponentUpdate () {
     return !(window && window.___gcfg)
-  },
+  }
 
   render () {
     return (
@@ -18,4 +18,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

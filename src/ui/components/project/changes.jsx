@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { requestChanges } from '../../actions'
 import Loading from '../loading.jsx'
 
-const Changes = React.createClass({
-  propTypes: {
+class Changes extends Component {
+  static propTypes = {
     dep: PropTypes.shape({
       name: PropTypes.string.isRequired,
       required: PropTypes.string.isRequired,
@@ -19,12 +19,12 @@ const Changes = React.createClass({
     config: PropTypes.shape({
       apiUrl: PropTypes.string.isRequired
     }).isRequired
-  },
+  }
 
   componentDidMount () {
     const { name, required: from, stable: to } = this.props.dep
     this.props.requestChanges({ name, from, to })
-  },
+  }
 
   render () {
     const changes = this.props.changes
@@ -40,7 +40,7 @@ const Changes = React.createClass({
       </div>
     )
   }
-})
+}
 
 function Commits ({ commits }) {
   return (

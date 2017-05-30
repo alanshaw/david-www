@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import Qs from 'querystring'
 
-const Analytics = React.createClass({
-  propTypes: {
+class Analytics extends Component {
+  static propTypes = {
     routing: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired
-  },
+  }
 
   componentDidMount () {
     window.GoogleAnalyticsObject = 'ga'
@@ -18,7 +18,7 @@ const Analytics = React.createClass({
     window.ga.l = 1 * new Date()
     window.ga('create', this.props.config.google.trackingId)
     window.ga('send', 'pageview')
-  },
+  }
 
   componentWillReceiveProps (props) {
     const currUrl = this.buildUrl(this.props.routing.locationBeforeTransitions)
@@ -27,22 +27,22 @@ const Analytics = React.createClass({
     if (currUrl !== nextUrl) {
       window.ga('send', 'pageview')
     }
-  },
+  }
 
   buildUrl (location) {
     let qs = Qs.stringify(location)
     qs = qs ? `?${qs}` : ''
     return `${location.pathname}${qs}${location.search}`
-  },
+  }
 
   shouldComponentUpdate () {
     return !(window && window.ga)
-  },
+  }
 
   render () {
     return <Helmet><script src='//www.google-analytics.com/analytics.js' /></Helmet>
   }
-})
+}
 
 const mapStateToProps = ({ routing, config }) => ({ routing, config })
 

@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
 
-export default React.createClass({
+export default class ShareTwitter extends Component {
   shouldComponentUpdate () {
     return false
-  },
+  }
 
   render () {
     return (
@@ -14,4 +14,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

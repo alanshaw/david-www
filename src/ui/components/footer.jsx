@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import ShareGoogle from './share-google.jsx'
 import ShareTwitter from './share-twitter.jsx'
 
-const Footer = React.createClass({
-  propTypes: {
+class Footer extends Component {
+  static propTypes = {
     version: PropTypes.string.isRequired
-  },
+  }
 
   render () {
     return (
@@ -37,7 +37,7 @@ const Footer = React.createClass({
       </footer>
     )
   }
-})
+}
 
 const mapStateToProps = ({ version }) => ({ version })
 
