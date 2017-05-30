@@ -92,9 +92,6 @@ function ClosedIssues ({ issues }) {
 }
 
 const mapStateToProps = ({ config, changes }) => ({ config, changes })
-
-const mapDispatchToProps = (dispatch) => {
-  return { requestChanges: ({ name, from, to }) => dispatch(requestChanges({ name, from, to })) }
-}
+const mapDispatchToProps = { requestChanges }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Changes)

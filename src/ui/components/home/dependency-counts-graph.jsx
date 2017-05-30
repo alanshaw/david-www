@@ -84,9 +84,6 @@ class DependencyCountsGraph extends Component {
 }
 
 const mapStateToProps = ({ dependencyCounts }) => ({ dependencyCounts })
-
-const mapDispatchToProps = (dispatch) => {
-  return { requestDependencyCounts: () => dispatch(requestDependencyCounts()) }
-}
+const mapDispatchToProps = { requestDependencyCounts }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DependencyCountsGraph)

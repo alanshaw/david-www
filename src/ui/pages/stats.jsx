@@ -80,14 +80,7 @@ Stats.requestData = ({ store }) => {
   ])
 }
 
-const mapStateToProps = ({ config, stats }) => {
-  return { config, stats }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    requestStats: () => dispatch(requestStats())
-  }
-}
+const mapStateToProps = ({ config, stats }) => ({ config, stats })
+const mapDispatchToProps = { requestStats }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stats)

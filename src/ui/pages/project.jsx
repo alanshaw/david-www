@@ -251,15 +251,7 @@ Project.shouldUpdateScroll = (prevRouterProps, { routes }) => {
   return prevRoutes[prevRoutes.length - 1] !== routes[routes.length - 1]
 }
 
-const mapStateToProps = ({ config, project, info }) => {
-  return { config, project, info }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    requestProject: (params) => dispatch(requestProject(params)),
-    requestInfo: (params) => dispatch(requestInfo(params))
-  }
-}
+const mapStateToProps = ({ config, project, info }) => ({ config, project, info })
+const mapDispatchToProps = { requestProject, requestInfo }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Project)

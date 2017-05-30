@@ -183,15 +183,7 @@ Home.requestData = ({ store }) => {
   ])
 }
 
-const mapStateToProps = ({ config, stats, latestNews }) => {
-  return { config, stats, latestNews }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    requestStats: () => dispatch(requestStats()),
-    requestLatestNews: () => dispatch(requestLatestNews())
-  }
-}
+const mapStateToProps = ({ config, stats, latestNews }) => ({ config, stats, latestNews })
+const mapDispatchToProps = { requestStats, requestLatestNews }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

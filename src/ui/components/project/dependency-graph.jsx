@@ -222,9 +222,6 @@ function updateGraph (vis, root, source) {
 }
 
 const mapStateToProps = ({ dependencyGraph }) => ({ dependencyGraph })
-
-const mapDispatchToProps = (dispatch) => {
-  return { requestDependencyGraph: (params) => dispatch(requestDependencyGraph(params)) }
-}
+const mapDispatchToProps = { requestDependencyGraph }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DependencyGraph)
