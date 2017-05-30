@@ -28,6 +28,11 @@ import createStats from './lib/stats'
 import createCache from './lib/cache'
 import createQueue from './lib/queue'
 
+import statics from './statics'
+import middleware from './middleware'
+import routes from './routes'
+import uiRoutes from './ui/routes.jsx'
+
 const nspApiClient = createNspApiClient()
 const db = createDb({ dbConfig: config.db })
 const nsp = createNsp({ nspApiClient, db })
@@ -49,18 +54,12 @@ const app = express()
 
 app.use(compress())
 
-import statics from './statics'
-
 statics({ app, version: pkg.version })
-
-import middleware from './middleware'
 
 middleware.session({ app, db })
 middleware.user({ app })
 middleware.cors({ app })
 middleware.errorHandler({ app })
-
-import routes from './routes'
 
 routes.session.oauthCallback(app, auth)
 routes.rss.news(app)
@@ -75,8 +74,6 @@ routes.api.project(app, manifest)
 routes.api.user(app)
 routes.rss.feed(app, feed, manifest)
 routes.badge(app, manifest, brains, cache, queue)
-
-import uiRoutes from './ui/routes.jsx'
 
 app.get('*', (req, res, next) => {
   match({ routes: uiRoutes(), location: req.url }, (err, redirectLocation, renderProps) => {

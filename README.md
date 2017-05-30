@@ -5,7 +5,6 @@
 <a href="https://david-dm.org/alanshaw/david-www/?type=dev"><img src="https://david-dm.org/alanshaw/david-www/dev-status.svg" alt="devDependency Status"></a>
 <a href="https://www.gittip.com/_alanshaw/"><img src="http://img.shields.io/gratipay/_alanshaw.svg?style=flat" alt="Donate to help support David development"></a>
 </p>
-___
 
 Node.js based web service that tells you when your project npm dependencies are out of date.
 To use David, your project must include a [package.json](https://docs.npmjs.com/files/package.json)

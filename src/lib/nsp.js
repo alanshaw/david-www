@@ -44,7 +44,10 @@ export default ({nspApiClient, db}) => {
           if (done) return cb()
 
           nspApiClient.advisories({limit: limit - 1, offset}, (err, response) => {
-            if (err) return cb('Failed to get advisories page', offset, err)
+            if (err) {
+              console.error('Failed to get advisories page', offset)
+              return cb(err)
+            }
 
             async.eachSeries(response.results, (advisory, cb) => {
               if (done) return cb()

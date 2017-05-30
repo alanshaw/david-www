@@ -101,7 +101,7 @@
   },
   "devDependencies": {
     "nodemon": "^1.9.2",
-    "standard": "^8.1.0",
+    "standard": "^10.0.2",
     "tape": "^4.5.1",
     "watchify": "^3.7.0"
   },

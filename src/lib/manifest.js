@@ -111,7 +111,7 @@ export default ({db, registry, github, githubConfig}) => {
 
         try {
           // JSON.parse will barf with a SyntaxError if the body is ill.
-          data = JSON.parse(new Buffer(resp.content, resp.encoding).toString().trim())
+          data = JSON.parse(Buffer.from(resp.content, resp.encoding).toString().trim())
         } catch (err) {
           console.error('Failed to parse package.json', resp, err)
           return batch.call(batchKey, (cb) => {
