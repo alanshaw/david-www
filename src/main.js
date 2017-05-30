@@ -2,7 +2,7 @@ import express from 'express'
 import compress from 'compression'
 import david from 'david'
 import npm from 'npm'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet'
 import { match } from 'react-router'
 import { createStore, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
@@ -106,7 +106,7 @@ app.get('*', (req, res, next) => {
       .then(() => {
         const body = bodyTpl({ store, props: renderProps })
         const state = store.getState()
-        const head = Helmet.rewind()
+        const head = Helmet.renderStatic()
 
         res.send(layoutTpl({ head, body, state, version: pkg.version }))
       })

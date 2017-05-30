@@ -1,5 +1,5 @@
 import React from 'react'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import { requestStats } from '../actions'
@@ -21,8 +21,7 @@ const Stats = React.createClass({
 
     return (
       <div>
-        <Helmet htmlAttributes={{class: 'stats-page'}} />
-
+        <Helmet><html className='stats-page' /></Helmet>
         <div id='recently-watched' className='box'>
           <h2>Recently started watching</h2>
           <ul className='border-list'>

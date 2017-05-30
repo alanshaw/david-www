@@ -1,5 +1,5 @@
 import React from 'react'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import dateFormat from 'dateformat'
@@ -42,7 +42,7 @@ const Home = React.createClass({
   render () {
     return (
       <div>
-        <Helmet htmlAttributes={{class: 'home-page'}} />
+        <Helmet><html className='home-page' /></Helmet>
         <div>
 
           <h1>

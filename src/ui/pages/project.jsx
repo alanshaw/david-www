@@ -1,5 +1,5 @@
 import React from 'react'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import merge from 'merge'
@@ -96,12 +96,11 @@ const Project = React.createClass({
 
     return (
       <div>
-        <Helmet
-          htmlAttributes={{class: 'project-page'}}
-          title={title}
-          link={[
-            { rel: 'alternate', type: 'application/rss+xml', title: 'RSS', href: `/${params.user}/${params.repo}${params.ref ? '/' + params.ref : ''}/rss.xml` }
-          ]} />
+        <Helmet>
+          <html className='project-page' />
+          <title>{title}</title>
+          <link rel='alternate' type='application/rss+xml' title='RSS' href={`/${params.user}/${params.repo}${params.ref ? '/' + params.ref : ''}/rss.xml`} />
+        </Helmet>
         {this.renderHeader()}
         {this.renderTabs()}
         {this.renderInfo()}

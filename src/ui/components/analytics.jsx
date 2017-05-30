@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet'
 import Qs from 'querystring'
 
 const Analytics = React.createClass({
@@ -39,7 +39,7 @@ const Analytics = React.createClass({
   },
 
   render () {
-    return <Helmet script={[{ src: '//www.google-analytics.com/analytics.js' }]} />
+    return <Helmet><script src='//www.google-analytics.com/analytics.js' /></Helmet>
   }
 })
 

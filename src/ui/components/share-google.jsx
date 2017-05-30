@@ -1,5 +1,5 @@
 import React from 'react'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet'
 
 export default React.createClass({
   componentDidMount () {
@@ -13,7 +13,7 @@ export default React.createClass({
   render () {
     return (
       <div>
-        <Helmet script={[{ src: '//apis.google.com/js/plusone.js' }]} />
+        <Helmet><script src='//apis.google.com/js/plusone.js' /></Helmet>
         <div className='g-plusone' data-size='medium' data-annotation='none' data-href='https://david-dm.org' />
       </div>
     )
