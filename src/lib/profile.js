@@ -50,15 +50,18 @@ export default ({manifest, brains, github}) => {
 
     setImmediate(() => {
       const gh = github.getInstance(authToken)
-      const repoMethod = authToken ? 'getAll' : 'getFromUser'
+      const repoMethod = authToken ? 'getAll' : 'getForUser'
+      const ghOpts = { page: opts.page, per_page: opts.pageSize }
 
-      gh.repos[repoMethod]({user, page: opts.page, per_page: opts.pageSize}, (err, data) => {
+      if (authToken) ghOpts.username = user
+
+      gh.repos[repoMethod](ghOpts, (err, resp) => {
         if (err) return cb(err)
 
-        if (data.length) {
-          opts.repos = opts.repos.concat(data)
+        if (resp.data.length) {
+          opts.repos = opts.repos.concat(resp.data)
 
-          if (data.length === opts.pageSize) {
+          if (resp.data.length === opts.pageSize) {
             // Maybe another page?
             opts.page++
 

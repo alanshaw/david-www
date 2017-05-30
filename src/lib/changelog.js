@@ -120,7 +120,7 @@ export default ({github, githubConfig, npmConfig}) => {
             if (err) return cb(err)
 
             const issuesOpts = {
-              user: user,
+              owner: user,
               repo: repo,
               state: 'closed',
               sort: 'created',
@@ -128,17 +128,17 @@ export default ({github, githubConfig, npmConfig}) => {
               per_page: 100
             }
 
-            gh.issues.getForRepo(issuesOpts, (err, issues) => {
+            gh.issues.getForRepo(issuesOpts, (err, resp) => {
               if (err) return cb(err)
 
-              issues = issues.filter((issue) => dates[1] > moment(issue.closed_at).toDate())
+              const issues = resp.data.filter((issue) => dates[1] > moment(issue.closed_at).toDate())
 
-              const commitsOpts = {user, repo, since: dates[0], until: dates[1]}
+              const commitsOpts = {owner: user, repo, since: dates[0], until: dates[1]}
 
-              gh.repos.getCommits(commitsOpts, (err, commits) => {
+              gh.repos.getCommits(commitsOpts, (err, resp) => {
                 if (err) return cb(err)
 
-                issues = issues.map((issue) => {
+                const closedIssues = issues.map((issue) => {
                   return extract(issue, [
                     'number',
                     'title',
@@ -155,7 +155,7 @@ export default ({github, githubConfig, npmConfig}) => {
                   return 0
                 })
 
-                commits = commits.map((commit) => {
+                const commits = resp.data.map((commit) => {
                   return extract(commit, [
                     'html_url',
                     ['author', ['login', 'html_url', 'avatar_url']],
@@ -167,7 +167,7 @@ export default ({github, githubConfig, npmConfig}) => {
                   ])
                 })
 
-                cb(null, {closedIssues: issues, commits})
+                cb(null, { closedIssues, commits })
               })
             })
           })

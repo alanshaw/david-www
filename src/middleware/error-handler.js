@@ -8,7 +8,7 @@ export default ({ app }) => {
       console.error(err.stack)
     }
 
-    err = Boom.wrap(err)
+    err = err.isBoom ? err : Boom.wrap(err)
     res.status(err.output.statusCode)
 
     // respond with html page

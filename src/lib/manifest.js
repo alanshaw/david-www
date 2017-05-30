@@ -3,6 +3,7 @@ import moment from 'moment'
 import depDiff from 'dep-diff'
 import githubUrl from 'github-url'
 import Batch from 'david/lib/batch'
+import copy from 'utils-copy-error'
 
 export default ({db, registry, github, githubConfig}) => {
   const batch = new Batch()
@@ -69,7 +70,7 @@ export default ({db, registry, github, githubConfig}) => {
       }
 
       const gh = github.getInstance(opts.authToken)
-      const ghOpts = {user: user, repo: repo, path: (opts.path ? opts.path + '/' : '') + 'package.json'}
+      const ghOpts = {owner: user, repo, path: (opts.path ? opts.path + '/' : '') + 'package.json'}
 
       // Add "ref" options if ref is set. Otherwise use default branch.
       if (opts.ref) {
@@ -88,7 +89,7 @@ export default ({db, registry, github, githubConfig}) => {
           }
 
           console.error('Failed to get package.json', user, repo, opts.path, opts.ref, err)
-          return batch.call(batchKey, (cb) => cb(err))
+          return batch.call(batchKey, (cb) => cb(copy(err)))
         }
 
         if (!opts.noCache && manifest && manifest.expires > Date.now()) {
@@ -102,7 +103,7 @@ export default ({db, registry, github, githubConfig}) => {
           manifest.expires = moment().add(moment.duration({ hours: 1 })).valueOf()
 
           return db.put(manifestKey, manifest, (err) => {
-            if (err) return batch.call(batchKey, (cb) => cb(err))
+            if (err) return batch.call(batchKey, (cb) => cb(copy(err)))
             batch.call(batchKey, (cb) => cb(null, manifest.data))
           })
         }
@@ -111,11 +112,13 @@ export default ({db, registry, github, githubConfig}) => {
 
         try {
           // JSON.parse will barf with a SyntaxError if the body is ill.
-          data = JSON.parse(Buffer.from(resp.content, resp.encoding).toString().trim())
+          const buffer = Buffer.from(resp.data.content, resp.data.encoding)
+          data = JSON.parse(buffer.toString().trim())
         } catch (err) {
           console.error('Failed to parse package.json', resp, err)
           return batch.call(batchKey, (cb) => {
-            cb(new Error('Failed to parse package.json: ' + (resp && resp.content)))
+            const content = resp && resp.data && resp.data.content
+            cb(new Error('Failed to parse package.json: ' + content))
           })
         }
 
@@ -137,7 +140,7 @@ export default ({db, registry, github, githubConfig}) => {
         function onGetRepo (err, repoData) {
           if (err) {
             console.error('Failed to get repo data', user, repo, err)
-            return batch.call(batchKey, (cb) => cb(err))
+            return batch.call(batchKey, (cb) => cb(copy(err)))
           }
 
           const oldManifest = manifest
@@ -153,7 +156,7 @@ export default ({db, registry, github, githubConfig}) => {
           db.put(manifestKey, manifest, (err) => {
             if (err) {
               console.error('Failed to save manifest', manifestKey, err)
-              return batch.call(batchKey, (cb) => cb(err))
+              return batch.call(batchKey, (cb) => cb(copy(err)))
             }
 
             console.log('Cached at', manifestKey)
