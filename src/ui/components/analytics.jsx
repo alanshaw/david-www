@@ -1,12 +1,13 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Helmet } from 'react-helmet'
 import Qs from 'querystring'
 
 const Analytics = React.createClass({
   propTypes: {
-    routing: React.PropTypes.object.isRequired,
-    config: React.PropTypes.object.isRequired
+    routing: PropTypes.object.isRequired,
+    config: PropTypes.object.isRequired
   },
 
   componentDidMount () {

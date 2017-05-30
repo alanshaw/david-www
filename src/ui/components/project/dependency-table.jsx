@@ -1,11 +1,12 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Modal from 'react-modal'
 import Changes from './changes.jsx'
 
 const DependencyTable = React.createClass({
   propTypes: {
-    info: React.PropTypes.object
+    info: PropTypes.object
   },
 
   getInitialState () {

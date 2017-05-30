@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
@@ -15,36 +16,36 @@ import BadgeEmbed from '../components/project/badge-embed.jsx'
 
 const Project = React.createClass({
   propTypes: {
-    config: React.PropTypes.shape({
-      githubUrl: React.PropTypes.string.isRequired
+    config: PropTypes.shape({
+      githubUrl: PropTypes.string.isRequired
     }).isRequired,
-    project: React.PropTypes.shape({
-      name: React.PropTypes.string,
-      version: React.PropTypes.string,
-      description: React.PropTypes.string,
-      dependencies: React.PropTypes.object,
-      devDependencies: React.PropTypes.object,
-      peerDependencies: React.PropTypes.object,
-      optionalDependencies: React.PropTypes.object
+    project: PropTypes.shape({
+      name: PropTypes.string,
+      version: PropTypes.string,
+      description: PropTypes.string,
+      dependencies: PropTypes.object,
+      devDependencies: PropTypes.object,
+      peerDependencies: PropTypes.object,
+      optionalDependencies: PropTypes.object
     }),
-    info: React.PropTypes.shape({
-      status: React.PropTypes.string,
-      deps: React.PropTypes.array,
-      totals: React.PropTypes.object
+    info: PropTypes.shape({
+      status: PropTypes.string,
+      deps: PropTypes.array,
+      totals: PropTypes.object
     }),
-    params: React.PropTypes.shape({
-      user: React.PropTypes.string.isRequired,
-      repo: React.PropTypes.string.isRequired,
-      ref: React.PropTypes.string
+    params: PropTypes.shape({
+      user: PropTypes.string.isRequired,
+      repo: PropTypes.string.isRequired,
+      ref: PropTypes.string
     }).isRequired,
-    location: React.PropTypes.shape({
-      query: React.PropTypes.shape({
-        path: React.PropTypes.string,
-        type: React.PropTypes.string,
-        view: React.PropTypes.string
+    location: PropTypes.shape({
+      query: PropTypes.shape({
+        path: PropTypes.string,
+        type: PropTypes.string,
+        view: PropTypes.string
       })
     }).isRequired,
-    requestProject: React.PropTypes.func.isRequired
+    requestProject: PropTypes.func.isRequired
   },
 
   getInitialState () {

@@ -1,12 +1,13 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import d3 from 'd3'
 import { requestDependencyCounts } from '../../actions'
 
 const DependencyCountsGraph = React.createClass({
   propTypes: {
-    dependencyCounts: React.PropTypes.object,
-    requestDependencyCounts: React.PropTypes.func.isRequired
+    dependencyCounts: PropTypes.object,
+    requestDependencyCounts: PropTypes.func.isRequired
   },
 
   componentDidMount () {

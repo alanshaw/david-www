@@ -1,18 +1,19 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 export default React.createClass({
   propTypes: {
-    project: React.PropTypes.shape({
-      user: React.PropTypes.string.isRequired,
-      repo: React.PropTypes.string.isRequired,
-      path: React.PropTypes.string,
-      ref: React.PropTypes.string,
-      type: React.PropTypes.string
+    project: PropTypes.shape({
+      user: PropTypes.string.isRequired,
+      repo: PropTypes.string.isRequired,
+      path: PropTypes.string,
+      ref: PropTypes.string,
+      type: PropTypes.string
     }),
-    href: React.PropTypes.string,
-    title: React.PropTypes.string,
-    className: React.PropTypes.string,
-    onClick: React.PropTypes.func
+    href: PropTypes.string,
+    title: PropTypes.string,
+    className: PropTypes.string,
+    onClick: PropTypes.func
   },
 
   getDefaultProps () {

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import cycle from 'cycle'
 import d3 from 'd3'
@@ -10,15 +11,15 @@ let id = 0 // For nodes with no ID
 
 const DependencyGraph = React.createClass({
   propTypes: {
-    project: React.PropTypes.shape({
-      user: React.PropTypes.string.isRequired,
-      repo: React.PropTypes.string.isRequired,
-      path: React.PropTypes.string,
-      ref: React.PropTypes.string,
-      type: React.PropTypes.string
+    project: PropTypes.shape({
+      user: PropTypes.string.isRequired,
+      repo: PropTypes.string.isRequired,
+      path: PropTypes.string,
+      ref: PropTypes.string,
+      type: PropTypes.string
     }).isRequired,
-    requestDependencyGraph: React.PropTypes.func,
-    dependencyGraph: React.PropTypes.object
+    requestDependencyGraph: PropTypes.func,
+    dependencyGraph: PropTypes.object
   },
 
   componentDidMount () {

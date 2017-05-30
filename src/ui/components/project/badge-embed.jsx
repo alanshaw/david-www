@@ -1,17 +1,18 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 const BadgeModal = React.createClass({
   propTypes: {
-    project: React.PropTypes.shape({
-      user: React.PropTypes.string.isRequired,
-      repo: React.PropTypes.string.isRequired,
-      path: React.PropTypes.string,
-      ref: React.PropTypes.string,
-      type: React.PropTypes.string
+    project: PropTypes.shape({
+      user: PropTypes.string.isRequired,
+      repo: PropTypes.string.isRequired,
+      path: PropTypes.string,
+      ref: PropTypes.string,
+      type: PropTypes.string
     }),
-    config: React.PropTypes.shape({
-      siteUrl: React.PropTypes.string.isRequired
+    config: PropTypes.shape({
+      siteUrl: PropTypes.string.isRequired
     }).isRequired
   },
 

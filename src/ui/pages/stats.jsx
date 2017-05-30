@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
@@ -6,9 +7,9 @@ import { requestStats } from '../actions'
 
 const Stats = React.createClass({
   propTypes: {
-    config: React.PropTypes.object.isRequired,
-    stats: React.PropTypes.object,
-    requestStats: React.PropTypes.func.isRequired
+    config: PropTypes.object.isRequired,
+    stats: PropTypes.object,
+    requestStats: PropTypes.func.isRequired
   },
 
   componentDidMount () {

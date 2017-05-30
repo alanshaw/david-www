@@ -1,22 +1,23 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { requestChanges } from '../../actions'
 import Loading from '../loading.jsx'
 
 const Changes = React.createClass({
   propTypes: {
-    dep: React.PropTypes.shape({
-      name: React.PropTypes.string.isRequired,
-      required: React.PropTypes.string.isRequired,
-      stable: React.PropTypes.string,
-      latest: React.PropTypes.string
+    dep: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      required: PropTypes.string.isRequired,
+      stable: PropTypes.string,
+      latest: PropTypes.string
     }).isRequired,
-    changes: React.PropTypes.shape({
-      closedIssues: React.PropTypes.array,
-      commits: React.PropTypes.array
+    changes: PropTypes.shape({
+      closedIssues: PropTypes.array,
+      commits: PropTypes.array
     }),
-    config: React.PropTypes.shape({
-      apiUrl: React.PropTypes.string.isRequired
+    config: PropTypes.shape({
+      apiUrl: PropTypes.string.isRequired
     }).isRequired
   },
 

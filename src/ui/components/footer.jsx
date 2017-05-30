@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import ShareGoogle from './share-google.jsx'
@@ -6,7 +7,7 @@ import ShareTwitter from './share-twitter.jsx'
 
 const Footer = React.createClass({
   propTypes: {
-    version: React.PropTypes.string.isRequired
+    version: PropTypes.string.isRequired
   },
 
   render () {

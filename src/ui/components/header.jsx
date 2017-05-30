@@ -1,14 +1,15 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { requestCsrfToken, requestUser } from '../actions'
 
 const Header = React.createClass({
   propTypes: {
-    user: React.PropTypes.object,
-    config: React.PropTypes.object.isRequired,
-    csrfToken: React.PropTypes.string,
-    requestCsrfToken: React.PropTypes.func.isRequired
+    user: PropTypes.object,
+    config: PropTypes.object.isRequired,
+    csrfToken: PropTypes.string,
+    requestCsrfToken: PropTypes.func.isRequired
   },
 
   componentDidMount () {
