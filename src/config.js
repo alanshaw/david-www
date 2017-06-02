@@ -9,7 +9,8 @@ export default rc('david', {
       version: '3.0.0',
       protocol: 'https',
       host: 'api.github.com',
-      timeout: 5000
+      timeout: 5000,
+      caFile: null
     },
     protocol: 'https',
     host: 'github.com',
