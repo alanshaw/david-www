@@ -1,4 +1,5 @@
 import GitHubApi from 'github'
+import fs from 'fs'
 
 export default ({githubConfig}) => {
   const apiOpts = {
@@ -7,7 +8,8 @@ export default ({githubConfig}) => {
     port: githubConfig.api.port,
     version: githubConfig.api.version,
     pathPrefix: githubConfig.api.pathPrefix,
-    timeout: githubConfig.api.timeout
+    timeout: githubConfig.api.timeout,
+    ca: (githubConfig.api.caFile ? fs.readFileSync(githubConfig.api.caFile) : undefined)
   }
 
   const defaultInstance = new GitHubApi(apiOpts)
