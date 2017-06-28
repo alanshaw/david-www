@@ -33,11 +33,11 @@ export default ({github, githubConfig}) => {
         gh.users.get({}, (err, data) => {
           if (err) {
             return cb(err)
-          } else if (!data.login) {
+          } else if (!data.data.login) {
             return cb(new Error('Unable to find user from token'))
           }
 
-          authData.user = data.login
+          authData.user = data.data.login;
           cb(null, authData)
         })
       })
