@@ -37,7 +37,7 @@ export default ({github, githubConfig}) => {
             return cb(new Error('Unable to find user from token'))
           }
 
-          authData.user = data.data.login;
+          authData.user = data.data.login
           cb(null, authData)
         })
       })
