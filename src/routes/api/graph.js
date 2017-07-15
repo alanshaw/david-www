@@ -2,6 +2,22 @@ import Boom from 'boom'
 import getDepsType from '../helpers/get-deps-type'
 
 export default (app, graph, manifest) => {
+  app.get('/r/:remote/:user/:repo/:ref?/graph.json', (req, res) => {
+    sendDependencyGraph(req, res, {driver: req.params.remote})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?/dev-graph.json', (req, res) => {
+    sendDependencyGraph(req, res, {driver: req.params.remote, dev: true})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?/peer-graph.json', (req, res) => {
+    sendDependencyGraph(req, res, {driver: req.params.remote, peer: true})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?/optional-graph.json', (req, res) => {
+    sendDependencyGraph(req, res, {driver: req.params.remote, optional: true})
+  })
+
   app.get('/:user/:repo/:ref?/graph.json', (req, res, next) => {
     sendDependencyGraph(req, res, next, {})
   })

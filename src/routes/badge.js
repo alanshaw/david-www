@@ -68,6 +68,72 @@ export default (app, manifest, brains, cache, queue) => {
     sendStatusBadge(req, res, next, {extension: 'png'})
   })
 
+  app.get('/r/:remote/:user/:repo/:ref?/status.svg', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, extension: 'svg'})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?/status.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, extension: 'png'})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?/status@2x.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, retina: true, extension: 'png'})
+  })
+
+  /* dev */
+
+  app.get('/r/:remote/:user/:repo/:ref?/dev-status.svg', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, dev: true, extension: 'svg'})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?/dev-status.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, dev: true, extension: 'png'})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?/dev-status@2x.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, dev: true, retina: true, extension: 'png'})
+  })
+
+  /* peer */
+
+  app.get('/r/:remote/:user/:repo/:ref?/peer-status.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, peer: true, extension: 'png'})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?/peer-status@2x.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, peer: true, retina: true, extension: 'png'})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?/peer-status.svg', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, peer: true, extension: 'svg'})
+  })
+
+  /* optional */
+
+  app.get('/r/:remote/:user/:repo/:ref?/optional-status.svg', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, optional: true, extension: 'svg'})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?/optional-status.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, optional: true, extension: 'png'})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?/optional-status@2x.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, optional: true, retina: true, extension: 'png'})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?.svg', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, extension: 'svg'})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?@2x.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, retina: true, extension: 'png'})
+  })
+
+  app.get('/r/:remote/:user/:repo/:ref?.png', (req, res, next) => {
+    sendStatusBadge(req, res, next, {driver: req.params.remote, extension: 'png'})
+  })
+
   // Send the status badge for this user and repository
   function sendStatusBadge (req, res, next, opts) {
     opts = opts || {}
