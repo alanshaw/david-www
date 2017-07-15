@@ -17,6 +17,7 @@ import createDb from './lib/db'
 import createNsp from './lib/nsp'
 import createRegistry from './lib/registry'
 import createGithub from './lib/github'
+import createGitlab from './lib/gitlab'
 import createAuth from './lib/auth'
 import createManifest from './lib/manifest'
 import createBrains from './lib/brains'
@@ -38,8 +39,9 @@ const db = createDb({ dbConfig: config.db })
 const nsp = createNsp({ nspApiClient, db })
 const registry = createRegistry({ npmConfig: config.npm })
 const github = createGithub({ githubConfig: config.github })
+const gitlab = createGitlab({ gitlabConfig: config.gitlab })
 const auth = createAuth({ github, githubConfig: config.github })
-const manifest = createManifest({ db, registry, github, githubConfig: config.github })
+const manifest = createManifest({ db, registry, github, githubConfig: config.github, gitlab, gitlabConfig: config.gitlab })
 const brains = createBrains({ david, db, registry, nsp, brainsConfig: config.brains, npmConfig: config.npm })
 const graph = createGraph({ db, npmConfig: config.npm })
 const changelog = createChangelog({ github, githubConfig: config.github, npmConfig: config.npm })

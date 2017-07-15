@@ -5,7 +5,7 @@ import githubUrl from 'github-url'
 import Batch from 'david/lib/batch'
 import copy from 'utils-copy-error'
 
-export default ({db, registry, github, githubConfig}) => {
+export default ({db, registry, github, githubConfig, gitlab, gitlabConfig}) => {
   const batch = new Batch()
 
   /**
@@ -69,8 +69,14 @@ export default ({db, registry, github, githubConfig}) => {
         return batch.call(batchKey, (cb) => cb(null, manifest.data))
       }
 
-      const gh = github.getInstance(opts.authToken)
+      let gh
       const ghOpts = {owner: user, repo, path: (opts.path ? opts.path + '/' : '') + 'package.json'}
+
+      if (opts.driver === 'gitlab') {
+        gh = gitlab.getInstance()
+      } else {
+        gh = github.getInstance(opts.authToken)
+      }
 
       // Add "ref" options if ref is set. Otherwise use default branch.
       if (opts.ref) {
@@ -240,6 +246,10 @@ export default ({db, registry, github, githubConfig}) => {
     opts = opts || {}
 
     let manifestKey = `manifest/${user}/${repo}`
+
+    if (opts.driver !== 'gitlab' && !!opts.driver) {
+      manifestKey += '/gitlab'
+    }
 
     if (opts.path && opts.path[opts.path.length - 1] === '/') {
       opts.path = opts.path.slice(0, -1)
