@@ -1,8 +1,10 @@
-FROM node:6
+FROM node:6-alpine
 
 WORKDIR /opt
 EXPOSE 1337
 VOLUME ["/opt/data"]
+
+RUN apk add --no-cache make gcc g++ python
 
 ADD . /opt
 RUN npm install &&            \
