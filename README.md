@@ -8,7 +8,7 @@
 
 Node.js based web service that tells you when your project npm dependencies are out of date.
 To use David, your project must include a [package.json](https://docs.npmjs.com/files/package.json)
-file in the root of your repository.
+file in your repository.
 
 ## Getting Started
 
@@ -45,6 +45,12 @@ Get the current build status badge:
 ```sh
 curl http://localhost:1337/alanshaw/grunt-jsio.png
 ```
+
+### Monorepo or package.json not in root?
+
+You can use the `path` querystring parameter to specify the path to your `package.json` file. e.g.
+
+https://david-dm.org/alanshaw/non-root-package.json?path=src/test
 
 ## Configuration
 
