@@ -9,6 +9,7 @@ export default rc('david', {
       version: '3.0.0',
       protocol: 'https',
       host: 'api.github.com',
+      pathPrefix: null,
       timeout: 5000,
       caFile: null
     },
