@@ -90,7 +90,7 @@ function Advisories ({ dep }) {
     <ul className='vulns'>
       {dep.advisories.map((a) => (
         <li key={a.slug}>
-          <a href={`https://nodesecurity.io/advisories/${a.slug}`}>
+          <a href={`https://nodesecurity.io/advisories/${a.id}`}>
             <i className='fa fa-exclamation-circle' /> {a.title}
           </a>
         </li>
