@@ -25,7 +25,7 @@
   "scripts": {
     "start": "node dist/main",
     "build": "run-p build:**",
-    "build:js:server": "BABEL_ENV=server babel src --out-dir dist",
+    "build:js:server": "cross-env BABEL_ENV=server babel src --out-dir dist",
     "build:js:client": "browserify -g envify src/ui/main.jsx -o public/bundle.js",
     "build:css": "node-sass --include-path node_modules src/ui/main.scss public/bundle.css",
     "minify": "run-p minify:*",
@@ -35,7 +35,7 @@
     "test": "run-s lint build test:*",
     "test:unit": "tape test/*.js",
     "watch": "run-p watch:**",
-    "watch:js:server": "BABEL_ENV=server babel -w src --out-dir dist",
+    "watch:js:server": "cross-env BABEL_ENV=server babel -w src --out-dir dist",
     "watch:js:client": "watchify src/ui/main.jsx -o public/bundle.js -v",
     "watch:css": "node-sass --include-path node_modules -w src/ui/main.scss public/bundle.css",
     "watch:server": "nodemon --watch dist --watch public -e js,css -x 'npm start'",
@@ -104,6 +104,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
+    "cross-env": "^5.1.1",
     "nodemon": "^1.9.2",
     "standard": "^10.0.2",
     "tape": "^4.5.1",
