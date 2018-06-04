@@ -87,6 +87,16 @@ class Home extends Component {
             It's all in Github so <a href='https://github.com/alanshaw/david-www'>feel free to help</a>.
           </p>
 
+          <h2>A color full of information.</h2>
+
+          <p>See a dependencies badge on a repo, but you're not sure what the colors mean? We've got you covered. Here are the various badge states you might encounter, so that you can understand and properly react to what you see.</p>
+
+          <ul>
+            <li>Green is all up to date</li>
+            <li>Yellow is mostly up to date (&lt;25% out of date)</li>
+            <li>Red is out of date, or it has a security vulnerability</li>
+          </ul>
+
           <h2>Most used dependencies</h2>
 
           <p>These are the most used NPM dependencies based on open source GitHub projects that are using them.</p>
