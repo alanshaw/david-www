@@ -68,7 +68,7 @@ class Home extends Component {
           <h2>Giving you badges.</h2>
 
           <p>
-            Got a <a href='http://nodejs.org/'>Node.js</a> project? Get a badge. David is free for public projects on <a href='https://github.com/'>Github</a>.
+            Got a <a href='http://nodejs.org/'>Node.js</a> project? Get a badge. David is free for public projects on <a href='https://github.com/'>GitHub</a>.
           </p>
 
           <p>
@@ -78,13 +78,13 @@ class Home extends Component {
           <p>Type your username / repo name in below and get yours...</p>
 
           <p className='badge-maker'>
-            <strong>{this.props.config.siteUrl}/<span contentEditable className={this.state.badgeUrlClass} id='username' title='[Github username] / [repo name]' onInput={this.onBadgeInput} onKeyPress={this.onBadgeKeyPress}>username/repo</span>.svg</strong>
+            <strong>{this.props.config.siteUrl}/<span contentEditable className={this.state.badgeUrlClass} id='username' title='[GitHub username] / [repo name]' onInput={this.onBadgeInput} onKeyPress={this.onBadgeKeyPress}>username/repo</span>.svg</strong>
             <img id='badge' src={this.state.badgeSrc} alt='badge' onLoad={this.onBadgeLoad} onError={this.onBadgeError} className={this.state.badgeImgClass} />
           </p>
 
           <p>
             David is currently <em>BETA</em>, which means it may be unreliable, unavailable or not working. That said, it's already useful and we're working to make it rock solid.
-            It's all in Github so <a href='https://github.com/alanshaw/david-www'>feel free to help</a>.
+            It's all in GitHub so <a href='https://github.com/alanshaw/david-www'>feel free to help</a>.
           </p>
 
           <h2>A color full of information.</h2>
@@ -99,7 +99,7 @@ class Home extends Component {
 
           <h2>Most used dependencies</h2>
 
-          <p>These are the most used NPM dependencies based on open source GitHub projects that are using them.</p>
+          <p>These are the most used npm dependencies based on open source GitHub projects that are using them.</p>
 
           <DependencyCountsGraph />
 
@@ -132,7 +132,7 @@ class Home extends Component {
         </div>
 
         <div id='recently-updated-npm' className='box'>
-          <h2>Recently updated NPM packages</h2>
+          <h2>Recently updated npm packages</h2>
           <ul className='border-list'>
             {stats.recentlyUpdatedPackages.map(({ name, previous, version }) => {
               const url = `https://www.npmjs.com/package/${name}`

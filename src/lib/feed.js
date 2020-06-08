@@ -16,7 +16,7 @@ export default ({npm, npmConfig, siteConfig}) => {
 
       opts = opts || {}
 
-      // Assume we're probably going to have to use NPM
+      // Assume we're probably going to have to use npm
       npm.load(npmConfig.options, (err) => {
         if (err) return cb(err)
 
@@ -114,7 +114,7 @@ export default ({npm, npmConfig, siteConfig}) => {
 
 function Package (name, versions, repo) {
   this.name = name // The name of the package
-  this.versions = versions // Versions and their pubdate as returned by NPM
+  this.versions = versions // Versions and their pubdate as returned by npm
   this.repo = repo // Repository data
   this.expires = moment().add(Package.TTL) // When the versions information is considered stale
 }

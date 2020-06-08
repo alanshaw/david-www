@@ -30,7 +30,7 @@ function Module ({ name, version, dependencies = [] }) {
 export default ({db, npmConfig}) => {
   const Graph = {
     /**
-     * Get dependency graph for a non-NPM project
+     * Get dependency graph for a non-npm project
      *
      * @param name
      * @param version
@@ -92,7 +92,7 @@ export default ({db, npmConfig}) => {
   }
 
   /**
-   * Get the dependency graph for a given NPM dependency name and version.
+   * Get the dependency graph for a given npm dependency name and version.
    *
    * Must be executed in `npm.load()` callback.
    *

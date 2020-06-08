@@ -6,7 +6,7 @@ test("Test get feed for dependency with no 'time' information", (t) => {
 
   const pkgName = 'sprintf'
 
-  // Create a mock NPM
+  // Create a mock npm
   const mockNpm = {
     load (opts, cb) {
       process.nextTick(cb)
@@ -15,7 +15,7 @@ test("Test get feed for dependency with no 'time' information", (t) => {
       view (args, silent, cb) {
         process.nextTick(() => {
           if (args[0] === pkgName) {
-            // Simulate NPM response for no time information
+            // Simulate npm response for no time information
             if (args[1] === 'time') {
               cb(null, {})
               return
@@ -27,7 +27,7 @@ test("Test get feed for dependency with no 'time' information", (t) => {
             }
           }
 
-          cb(new Error(`Unexpected arguments to mock NPM view command ${args}`))
+          cb(new Error(`Unexpected arguments to mock npm view command ${args}`))
         })
       }
     }
@@ -58,7 +58,7 @@ test('Test get feed for package with invalid semver range dependency', (t) => {
 
   const pkgName = 'sprintf'
 
-  // Create a mock NPM
+  // Create a mock npm
   const mockNpm = {
     load (opts, cb) {
       process.nextTick(cb)
@@ -73,7 +73,7 @@ test('Test get feed for package with invalid semver range dependency', (t) => {
             }
           }
 
-          cb(new Error(`Unexpected arguments to mock NPM view command ${args}`))
+          cb(new Error(`Unexpected arguments to mock npm view command ${args}`))
         })
       }
     }
