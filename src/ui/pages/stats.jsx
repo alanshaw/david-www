@@ -36,7 +36,7 @@ class Stats extends Component {
         </div>
 
         <div id='recently-updated-npm' className='box'>
-          <h2>Recently updated NPM packages</h2>
+          <h2>Recently updated npm packages</h2>
           <ul className='border-list'>
             {stats.recentlyUpdatedPackages.map(({ name, previous, version }) => {
               const url = `https://www.npmjs.com/package/${name}`
