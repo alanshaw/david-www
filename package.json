@@ -113,7 +113,7 @@
     "watchify": "^3.7.0"
   },
   "engines": {
-    "node": "^6.1.0"
+    "node": "^14"
   },
   "directories": {
     "test": "test"

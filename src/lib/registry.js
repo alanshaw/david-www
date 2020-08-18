@@ -1,7 +1,7 @@
 import couchwatch from 'couchwatch'
 import { EventEmitter } from 'events'
 
-export default ({npmConfig}) => {
+export default ({ npmConfig }) => {
   const Registry = new EventEmitter()
   const watcher = couchwatch(npmConfig.feed, -1)
 
