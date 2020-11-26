@@ -1,13 +1,10 @@
-FROM node:14
-
-WORKDIR /opt
+FROM node:14-alpine
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+WORKDIR /home/node/app
+COPY package*.json ./
+COPY src ./src/
+COPY --chown=node:node public ./public/
+USER node
+RUN npm install
 EXPOSE 1337
-VOLUME ["/opt/data"]
-
-ADD . /opt
-RUN npm install &&            \
-    npm run build &&          \
-    npm prune --production && \
-    npm cache clean
-
-CMD ["npm", "start"]
+CMD [ "node", "dist/main.js" ]
