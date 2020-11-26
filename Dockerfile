@@ -1,4 +1,4 @@
-FROM node:6
+FROM node:14
 
 WORKDIR /opt
 EXPOSE 1337
