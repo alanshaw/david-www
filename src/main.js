@@ -118,4 +118,4 @@ nsp.syncAdvisories()
 nsp.syncAdvisoriesPeriodically(config.nsp && config.nsp.syncAdvisoriesInterval)
 
 const port = parseInt(process.env.PORT || 1337, 10)
-const server = app.listen(port, () => console.log('David started', server.address()))
+app.listen(port, () => console.log('David started', `http://localhost:${port}`))
