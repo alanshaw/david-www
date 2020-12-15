@@ -3,7 +3,8 @@ import getDepsType from './helpers/get-deps-type'
 
 export default (app, manifest, brains, cache, queue) => {
   app.get('/:user/:repo/:ref?/status.svg', (req, res, next) => {
-    sendStatusBadge(req, res, next, {extension: 'svg'})
+    // sendStatusBadge(req, res, next, {extension: 'svg'})
+    redirectStatusBadge(req, res)
   })
 
   app.get('/:user/:repo/:ref?/status.png', (req, res, next) => {
@@ -17,7 +18,8 @@ export default (app, manifest, brains, cache, queue) => {
   /* dev */
 
   app.get('/:user/:repo/:ref?/dev-status.svg', (req, res, next) => {
-    sendStatusBadge(req, res, next, {dev: true, extension: 'svg'})
+    // sendStatusBadge(req, res, next, {dev: true, extension: 'svg'})
+    redirectStatusBadge(req, res, 'dev')
   })
 
   app.get('/:user/:repo/:ref?/dev-status.png', (req, res, next) => {
@@ -39,13 +41,15 @@ export default (app, manifest, brains, cache, queue) => {
   })
 
   app.get('/:user/:repo/:ref?/peer-status.svg', (req, res, next) => {
-    sendStatusBadge(req, res, next, {peer: true, extension: 'svg'})
+    // sendStatusBadge(req, res, next, {peer: true, extension: 'svg'})
+    redirectStatusBadge(req, res, 'peer')
   })
 
   /* optional */
 
   app.get('/:user/:repo/:ref?/optional-status.svg', (req, res, next) => {
-    sendStatusBadge(req, res, next, {optional: true, extension: 'svg'})
+    // sendStatusBadge(req, res, next, {optional: true, extension: 'svg'})
+    redirectStatusBadge(req, res, 'optional')
   })
 
   app.get('/:user/:repo/:ref?/optional-status.png', (req, res, next) => {
@@ -57,7 +61,8 @@ export default (app, manifest, brains, cache, queue) => {
   })
 
   app.get('/:user/:repo/:ref?.svg', (req, res, next) => {
-    sendStatusBadge(req, res, next, {extension: 'svg'})
+    // sendStatusBadge(req, res, next, {extension: 'svg'})
+    redirectStatusBadge(req, res)
   })
 
   app.get('/:user/:repo/:ref?@2x.png', (req, res, next) => {
@@ -141,4 +146,13 @@ function getBadgePath (status, opts) {
   const style = extension === 'svg' && opts.style === 'flat-square' ? '-' + opts.style : ''
 
   return Path.join(badgePath, `${type}${status}${retina}${style}.${extension}`)
+}
+
+function redirectStatusBadge (req, res, type) {
+  const { user, repo, ref } = req.params
+  const { style, path } = req.query
+  const url = new URL('https://status.david-dm.org')
+  url.pathname = `/gh/${encodeURIComponent(user)}/${encodeURIComponent(repo)}.svg`
+  url.search = new URLSearchParams(Object.entries({ path, ref, style, type }).filter(([, v]) => !!v)).toString()
+  res.redirect(301, url.toString())
 }
