@@ -102,14 +102,13 @@ export function requestProject (params) {
 
     const { user, repo, path, ref } = params
 
-    let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
-    url += ref ? `/${e(ref)}` : ''
-    url += '/project.json'
-    url += path ? `?path=${e(path)}` : ''
+    const url = new URL(getState().config.projectApiUrl)
+    url.pathname = `/gh/${e(user)}/${e(repo)}`
+    url.search = new URLSearchParams(Object.entries({ path, ref }).filter(([, v]) => !!v)).toString()
 
     // TODO: Cache?
 
-    return fetch(url)
+    return fetch(url.toString())
       .then((res) => {
         return res.json().then((json) => {
           if (res.ok) {
@@ -150,14 +149,13 @@ export function requestInfo (params) {
 
     const { user, repo, path, ref, type } = params
 
-    let url = `${getState().config.apiUrl}/${e(user)}/${e(repo)}`
-    url += ref ? `/${e(ref)}` : ''
-    url += type ? `/${e(type)}-info.json` : '/info.json'
-    url += path ? `?path=${e(path)}` : ''
+    const url = new URL(getState().config.statusApiUrl)
+    url.pathname = `/gh/${e(user)}/${e(repo)}`
+    url.search = new URLSearchParams(Object.entries({ path, ref, type }).filter(([, v]) => !!v)).toString()
 
     // TODO: Cache?
 
-    return fetch(url)
+    return fetch(url.toString())
       .then((res) => {
         return res.json().then((json) => {
           if (res.ok) {

@@ -21,7 +21,7 @@ class BadgeModal extends Component {
     overlayClassName: 'modal-overlay'
   }
 
-  state = { theme: 'svg' }
+  state = { theme: '' }
 
   getProjectUrl = () => {
     const project = this.props.project
@@ -42,27 +42,13 @@ class BadgeModal extends Component {
     return url
   }
 
-  getProjectBadgeSrc = (theme) => {
-    const project = this.props.project
-    if (!project) return null
-
-    const prefix = project.type ? `${project.type}-` : ''
-
-    let src = `${this.props.config.siteUrl}/${project.user}/${project.repo}`
-    src += project.ref ? `/${project.ref}` : ''
-
-    if (theme === 'flat-square') {
-      src += `/${prefix}status.svg?style=flat-square`
-      src += project.path ? `&path=${project.path}` : ''
-    } else if (theme === 'png') {
-      src += `/${prefix}status.png`
-      src += project.path ? `?path=${project.path}` : ''
-    } else {
-      src += `/${prefix}status.svg`
-      src += project.path ? `?path=${project.path}` : ''
-    }
-
-    return src
+  getProjectBadgeSrc = style => {
+    if (!this.props.project) return null
+    const { user, repo, path, ref, type } = this.props.project
+    const url = new URL(this.props.config.statusApiUrl)
+    url.pathname = `/gh/${encodeURIComponent(user)}/${encodeURIComponent(repo)}.svg`
+    url.search = new URLSearchParams(Object.entries({ path, ref, type, style }).filter(([, v]) => !!v)).toString()
+    return url.toString()
   }
 
   onBadgeThemeChange = (e) => {
@@ -80,10 +66,9 @@ class BadgeModal extends Component {
     return (
       <div className='badge-embed'>
         <h1>Embed badge</h1>
-        <label htmlFor='badge-theme'>Type</label>
+        <label htmlFor='badge-theme'>Style</label>
         <select id='badge-theme' onChange={this.onBadgeThemeChange} value={this.state.theme}>
-          <option value='svg'>SVG</option>
-          <option value='png'>PNG</option>
+          <option value=''>Default</option>
           <option value='flat-square'>Flat Square</option>
         </select>
         <div className={`theme theme-${this.state.theme}`}>

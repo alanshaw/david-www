@@ -40,6 +40,10 @@ export default rc('david', {
   public: {
     siteUrl: 'http://localhost:1337',
     apiUrl: 'http://localhost:1337',
+    projectApiUrl: 'http://localhost:3001',
+    statusApiUrl: 'http://localhost:3002',
+    // statusApiUrl: 'https://status.david-dm.org',
+    // projectApiUrl: 'https://project.david-dm.org',
     githubUrl: 'https://github.com',
     github: {
       protocol: 'https',

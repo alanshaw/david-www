@@ -84,7 +84,7 @@ class DependencyTable extends Component {
 }
 
 function Advisories ({ dep }) {
-  if (!dep.advisories) return
+  if (!dep.advisories) return null
 
   return (
     <ul className='vulns'>
