@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-export default class Badge extends Component {
+export class Badge extends Component {
   static propTypes = {
     project: PropTypes.shape({
       user: PropTypes.string.isRequired,
@@ -10,6 +11,9 @@ export default class Badge extends Component {
       ref: PropTypes.string,
       type: PropTypes.string
     }),
+    config: PropTypes.shape({
+      statusApiUrl: PropTypes.string.isRequired
+    }).isRequired,
     href: PropTypes.string,
     title: PropTypes.string,
     className: PropTypes.string,
@@ -36,17 +40,12 @@ export default class Badge extends Component {
   }
 
   getProjectBadgeSrc = () => {
-    const project = this.props.project
-    if (!project) return null
-
-    const prefix = project.type ? `${project.type}-` : ''
-
-    let src = `/${project.user}/${project.repo}`
-    src += project.ref ? `/${project.ref}` : ''
-    src += `/${prefix}status.svg`
-    src += project.path ? `?path=${project.path}` : ''
-
-    return src
+    if (!this.props.project) return null
+    const { user, repo, path, ref, type } = this.props.project
+    const url = new URL(this.props.config.statusApiUrl)
+    url.pathname = `/gh/${encodeURIComponent(user)}/${encodeURIComponent(repo)}.svg`
+    url.search = new URLSearchParams(Object.entries({ path, ref, type }).filter(([, v]) => !!v)).toString()
+    return url.toString()
   }
 
   render () {
@@ -65,3 +64,5 @@ export default class Badge extends Component {
     )
   }
 }
+
+export default connect(({ config }) => ({ config }))(Badge)

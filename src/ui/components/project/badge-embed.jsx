@@ -12,7 +12,8 @@ class BadgeModal extends Component {
       type: PropTypes.string
     }),
     config: PropTypes.shape({
-      siteUrl: PropTypes.string.isRequired
+      siteUrl: PropTypes.string.isRequired,
+      statusApiUrl: PropTypes.string.isRequired
     }).isRequired
   }
 
