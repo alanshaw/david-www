@@ -3,17 +3,19 @@
  */
 
 import semver from 'semver'
-import async from 'async'
+import * as david from 'david'
 
-export default ({david, db, registry, nsp, brainsConfig, npmConfig}) => {
+export default ({ db, registry, brainsConfig, npmConfig }) => {
   brainsConfig = brainsConfig || {}
   npmConfig = npmConfig || {}
 
   // When a user publishes a package, delete cached david info
-  registry.on('change', (change) => {
-    db.del(`brains/${change.doc.name}`, (err) => {
-      if (err && !err.notFound) console.error('Failed to delete cached dependency info', err)
-    })
+  registry.on('change', async change => {
+    try {
+      await db.del(`brains/${change.doc.name}`)
+    } catch (err) {
+      if (!err.notFound) console.error('Failed to delete cached dependency info', err)
+    }
   })
 
   const Brains = {
@@ -23,16 +25,10 @@ export default ({david, db, registry, nsp, brainsConfig, npmConfig}) => {
      * @param {Boolean} [opts.dev] Consider devDependencies
      * @param {Boolean} [opts.peer] Consider peerDependencies
      * @param {Boolean} [opts.optional] Consider optionalDependencies
-     * @param {Function} cb Function that receives the results
+     * @return
      */
-    getInfo (manifest, opts, cb) {
-      // Allow cb to be passed as second parameter
-      if (!cb) {
-        cb = opts
-        opts = {}
-      } else {
-        opts = opts || {}
-      }
+    getInfo (manifest, opts) {
+      opts = opts || {}
 
       if (npmConfig.options) {
         opts.npm = npmConfig.options
@@ -53,92 +49,88 @@ export default ({david, db, registry, nsp, brainsConfig, npmConfig}) => {
           getUpdatedDependencies(manifest, davidOpts, (err, updatedStableDeps) => {
             if (err) return cb(err)
 
-            nsp.getAdvisories(Object.keys(deps), (err, advisories) => {
-              if (err) return cb(err)
-
-              const depNames = Object.keys(deps).sort()
-              const totals = {
+            const depNames = Object.keys(deps).sort()
+            const totals = {
+              upToDate: 0,
+              outOfDate: 0,
+              pinned: {
                 upToDate: 0,
-                outOfDate: 0,
-                pinned: {
-                  upToDate: 0,
-                  outOfDate: 0
-                },
-                unpinned: {
-                  upToDate: 0,
-                  outOfDate: 0
-                },
-                advisories: 0
-              }
+                outOfDate: 0
+              },
+              unpinned: {
+                upToDate: 0,
+                outOfDate: 0
+              },
+              advisories: 0
+            }
 
-              const depList = depNames.map((depName) => {
-                // Lets disprove this
-                let status = 'uptodate'
+            const depList = depNames.map((depName) => {
+              // Lets disprove this
+              let status = 'uptodate'
 
-                const rangeVersions = filterVersionsInRange(deps[depName].versions, deps[depName].required)
-                const depAdvisories = filterAdvisories(advisories[depName], rangeVersions)
+              const rangeVersions = filterVersionsInRange(deps[depName].versions, deps[depName].required)
+              const depAdvisories = filterAdvisories(advisories[depName], rangeVersions)
 
-                // If there's an advisory then these dependencies are insecure
-                if (depAdvisories.length) {
-                  status = 'insecure'
-                // If there is an updated STABLE dependency then this dep is out of date
-                } else if (updatedStableDeps[depName]) {
-                  status = 'outofdate'
-                // If it is in the UNSTABLE list, and has no stable version then consider out of date
-                } else if (updatedDeps[depName] && !updatedDeps[depName].stable) {
-                  status = 'outofdate'
-                }
-
-                const pinned = isPinned(deps[depName].required)
-
-                const info = {
-                  name: depName,
-                  required: deps[depName].required,
-                  stable: deps[depName].stable,
-                  latest: deps[depName].latest,
-                  status,
-                  pinned,
-                  advisories: depAdvisories
-                }
-
-                if (status === 'uptodate' && pinned) {
-                  info.upToDate = true
-                  totals.upToDate++
-                  totals.pinned.upToDate++
-                } else if (status === 'uptodate' && !pinned) {
-                  info.upToDate = true
-                  totals.upToDate++
-                  totals.unpinned.upToDate++
-                } else if (status === 'outofdate' && pinned) {
-                  info.outOfDate = true
-                  totals.outOfDate++
-                  totals.pinned.outOfDate++
-                } else if (status === 'outofdate' && !pinned) {
-                  info.outOfDate = true
-                  totals.outOfDate++
-                  totals.unpinned.outOfDate++
-                }
-
-                totals.advisories += depAdvisories.length
-
-                return info
-              })
-
-              // Figure out the overall status for this manifest
-              let status = depList.length ? 'uptodate' : 'none'
-
-              if (totals.advisories) {
+              // If there's an advisory then these dependencies are insecure
+              if (depAdvisories.length) {
                 status = 'insecure'
-              } else if (totals.unpinned.outOfDate) {
-                if (totals.unpinned.outOfDate / depList.length > 0.25) {
-                  status = 'outofdate'
-                } else {
-                  status = 'notsouptodate'
-                }
+              // If there is an updated STABLE dependency then this dep is out of date
+              } else if (updatedStableDeps[depName]) {
+                status = 'outofdate'
+              // If it is in the UNSTABLE list, and has no stable version then consider out of date
+              } else if (updatedDeps[depName] && !updatedDeps[depName].stable) {
+                status = 'outofdate'
               }
 
-              cb(null, {status, deps: depList, totals})
+              const pinned = isPinned(deps[depName].required)
+
+              const info = {
+                name: depName,
+                required: deps[depName].required,
+                stable: deps[depName].stable,
+                latest: deps[depName].latest,
+                status,
+                pinned,
+                advisories: depAdvisories
+              }
+
+              if (status === 'uptodate' && pinned) {
+                info.upToDate = true
+                totals.upToDate++
+                totals.pinned.upToDate++
+              } else if (status === 'uptodate' && !pinned) {
+                info.upToDate = true
+                totals.upToDate++
+                totals.unpinned.upToDate++
+              } else if (status === 'outofdate' && pinned) {
+                info.outOfDate = true
+                totals.outOfDate++
+                totals.pinned.outOfDate++
+              } else if (status === 'outofdate' && !pinned) {
+                info.outOfDate = true
+                totals.outOfDate++
+                totals.unpinned.outOfDate++
+              }
+
+              totals.advisories += depAdvisories.length
+
+              return info
             })
+
+            // Figure out the overall status for this manifest
+            let status = depList.length ? 'uptodate' : 'none'
+
+            if (totals.advisories) {
+              status = 'insecure'
+            } else if (totals.unpinned.outOfDate) {
+              if (totals.unpinned.outOfDate / depList.length > 0.25) {
+                status = 'outofdate'
+              } else {
+                status = 'notsouptodate'
+              }
+            }
+
+            cb(null, {status, deps: depList, totals})
           })
         })
       })
@@ -314,27 +306,4 @@ function getDepList (manifest, opts) {
  */
 function filterVersionsInRange (versions, range) {
   return (versions || []).filter((v) => semver.satisfies(v, range, true))
-}
-
-/**
- * Filter advisories that apply to the passed versions
- * @param {Array} advisories Advisories for this module
- * @param {Array} versions Version numbers to consider
- */
-function filterAdvisories (advisories, versions) {
-  if (!advisories || !advisories.length) return []
-
-  // Filter out the advisories that don't apply to the given versions
-  return advisories.filter((a) => {
-    for (let i = 0; i < versions.length; i++) {
-      try {
-        if (semver.satisfies(versions[i], a.vulnerable_versions, true)) {
-          return true
-        }
-      } catch (err) {
-        console.error('Failed to filter advisory', versions[i], a, err)
-      }
-    }
-    return false
-  })
 }

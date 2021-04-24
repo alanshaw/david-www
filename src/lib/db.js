@@ -4,7 +4,7 @@ import mkdirp from 'mkdirp'
 import rimraf from 'rimraf'
 import level from 'level'
 
-export default ({dbConfig}) => {
+export default ({ dbConfig }) => {
   const dbPath = path.resolve(dbConfig.path, process.env.NODE_ENV || 'development')
 
   try {
@@ -17,5 +17,5 @@ export default ({dbConfig}) => {
 
   mkdirp.sync(dbPath)
 
-  return level(dbPath, {valueEncoding: 'json'})
+  return level(dbPath, { valueEncoding: 'json' })
 }

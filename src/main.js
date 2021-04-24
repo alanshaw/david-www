@@ -1,6 +1,5 @@
 import express from 'express'
 import compress from 'compression'
-import david from 'david'
 import npm from 'npm'
 import { Helmet } from 'react-helmet'
 import { match } from 'react-router'
@@ -40,7 +39,7 @@ const registry = createRegistry({ npmConfig: config.npm })
 const github = createGithub({ githubConfig: config.github })
 const auth = createAuth({ github, githubConfig: config.github })
 const manifest = createManifest({ db, registry, github, githubConfig: config.github })
-const brains = createBrains({ david, db, registry, nsp, brainsConfig: config.brains, npmConfig: config.npm })
+const brains = createBrains({ db, registry, nsp, brainsConfig: config.brains, npmConfig: config.npm })
 const graph = createGraph({ db, npmConfig: config.npm })
 const changelog = createChangelog({ github, githubConfig: config.github, npmConfig: config.npm })
 // TODO: Reinstate paginated
