@@ -1,10 +1,28 @@
 import Path from 'path'
 import getDepsType from './helpers/get-deps-type'
+import Referer from './referer'
 
 export default (app, manifest, brains, cache, queue) => {
   app.get('/:user/:repo/:ref?/status.svg', (req, res, next) => {
     // sendStatusBadge(req, res, next, {extension: 'svg'})
     redirectStatusBadge(req, res)
+  })
+
+  const { buildStatusBadgeLink } = Referer
+  app.get('/auto.svg', (req, res) => {
+    doRefererRedirect(req, res, {extension: 'svg'})
+  })
+
+  app.get('/auto.png', (req, res) => {
+    doRefererRedirect(req, res, {extension: 'png'})
+  })
+
+  app.get('/auto@2x.png', (req, res) => {
+    doRefererRedirect(req, res, {extension: 'png', retina: true})
+  })
+
+  app.get('/:user/:repo/:ref?/status.svg', (req, res) => {
+    sendStatusBadge(req, res, {extension: 'svg'})
   })
 
   app.get('/:user/:repo/:ref?/status.png', (req, res, next) => {
@@ -22,6 +40,22 @@ export default (app, manifest, brains, cache, queue) => {
     redirectStatusBadge(req, res, 'dev')
   })
 
+  app.get('/dev-auto.svg', (req, res) => {
+    doRefererRedirect(req, res, {dev: true, extension: 'svg'})
+  })
+
+  app.get('/dev-auto.png', (req, res) => {
+    doRefererRedirect(req, res, {dev: true, extension: 'png'})
+  })
+
+  app.get('/dev-auto@2x.png', (req, res) => {
+    doRefererRedirect(req, res, {dev: true, retina: true, extension: 'png'})
+  })
+
+  app.get('/:user/:repo/:ref?/dev-status.svg', (req, res) => {
+    sendStatusBadge(req, res, {dev: true, extension: 'svg'})
+  })
+
   app.get('/:user/:repo/:ref?/dev-status.png', (req, res, next) => {
     sendStatusBadge(req, res, next, {dev: true, extension: 'png'})
   })
@@ -34,6 +68,22 @@ export default (app, manifest, brains, cache, queue) => {
 
   app.get('/:user/:repo/:ref?/peer-status.png', (req, res, next) => {
     sendStatusBadge(req, res, next, {peer: true, extension: 'png'})
+  })
+
+  app.get('/peer-auto.svg', (req, res) => {
+    doRefererRedirect(req, res, {peer: true, extension: 'png'})
+  })
+
+  app.get('/peer-auto.png', (req, res) => {
+    doRefererRedirect(req, res, {peer: true, extension: 'svg'})
+  })
+
+  app.get('/peer-auto@2x.png', (req, res) => {
+    doRefererRedirect(req, res, {peer: true, retina: true, extension: 'png'})
+  })
+
+  app.get('/:user/:repo/:ref?/peer-status.png', (req, res) => {
+    sendStatusBadge(req, res, {peer: true, extension: 'png'})
   })
 
   app.get('/:user/:repo/:ref?/peer-status@2x.png', (req, res, next) => {
@@ -50,6 +100,22 @@ export default (app, manifest, brains, cache, queue) => {
   app.get('/:user/:repo/:ref?/optional-status.svg', (req, res, next) => {
     // sendStatusBadge(req, res, next, {optional: true, extension: 'svg'})
     redirectStatusBadge(req, res, 'optional')
+  })
+
+  app.get('/optional-auto.svg', (req, res) => {
+    doRefererRedirect(req, res, {optional: true, extension: 'svg'})
+  })
+
+  app.get('/optional-auto.png', (req, res) => {
+    doRefererRedirect(req, res, {optional: true, extension: 'png'})
+  })
+
+  app.get('/optional-auto@2x.png', (req, res) => {
+    doRefererRedirect(req, res, {optional: true, retina: true, extension: 'png'})
+  })
+
+  app.get('/:user/:repo/:ref?/optional-status.svg', (req, res) => {
+    sendStatusBadge(req, res, {optional: true, extension: 'svg'})
   })
 
   app.get('/:user/:repo/:ref?/optional-status.png', (req, res, next) => {
@@ -133,19 +199,39 @@ export default (app, manifest, brains, cache, queue) => {
       })
     })
   }
+
+  function doRefererRedirect (req, res, opts) {
+    const badgePathOpts = {
+      type: getDepsType(opts),
+      retina: opts.retina,
+      style: req.query.style,
+      extension: opts.extension
+    }
+    const referer = req.get('Referer')
+    const badgeFile = buildBadgeFilename('status', badgePathOpts)
+    const badgeLink = buildStatusBadgeLink(referer, badgeFile)
+    if (badgeLink === undefined) {
+      // send unknown instead
+      res.status(404).sendFile(getBadgePath('unknown', badgePathOpts))
+      return
+    }
+    res.redirect(badgeLink)
+  }
 }
 
 const badgePath = Path.resolve(__dirname, '..', '..', 'public', 'img', 'status')
 
-function getBadgePath (status, opts) {
-  opts = opts || {}
-
+function buildBadgeFilename (status, opts) {
   const type = opts.type ? opts.type + '-' : ''
   const retina = opts.retina ? '@2x' : ''
   const extension = opts.extension === 'png' ? 'png' : 'svg'
   const style = extension === 'svg' && opts.style === 'flat-square' ? '-' + opts.style : ''
+  return `${type}${status}${retina}${style}.${extension}`
+}
 
-  return Path.join(badgePath, `${type}${status}${retina}${style}.${extension}`)
+function getBadgePath (status, opts) {
+  opts = opts || {}
+  return Path.join(badgePath, buildBadgeFilename(status, opts))
 }
 
 function redirectStatusBadge (req, res, type) {
